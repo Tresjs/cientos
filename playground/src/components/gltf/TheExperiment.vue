@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sRGBEncoding, BasicShadowMap, NoToneMapping, Object3D } from 'three'
 import { reactive, ref, watchEffect } from 'vue'
-import { TresCanvas, TresObject } from '@tresjs/core'
+import { TresCanvas, TresObject, useRenderLoop, useTres } from '@tresjs/core'
 import { GLTFModel, OrbitControls } from '@cientos'
 
 /* import { OrbitControls, GLTFModel } from '@tresjs/cientos' */
@@ -18,29 +18,39 @@ const state = reactive({
 
 const venomSnake = ref(null)
 
-watchEffect(() => {
-  if (venomSnake.value) {
-    const { model } : { model: Object3D} = venomSnake.value
-    model.scale.set(0.02, 0.02, 0.02)
-    model.position.set(0, 2, 0)
-    model.traverse(child => {
-      if (child.isMesh) {
-        child.castShadow = true
-        child.receiveShadow = true
-      }
-    })
+// watchEffect(() => {
+//   if (venomSnake.value) {
+//     const { model } : { model: Object3D} = venomSnake.value
+//     model.scale.set(0.02, 0.02, 0.02)
+//     model.position.set(0, 2, 0)
+//     model.traverse(child => {
+//       if (child.isMesh) {
+//         child.castShadow = true
+//         child.receiveShadow = true
+//       }
+//     })
+//   }
+// })
+
+const { onLoop } = useRenderLoop()
+onLoop(() => {
+  if(venomSnake.value) {
+    venomSnake.value.model.rotation.y += 0.01
   }
 })
 
 </script>
 <template>
   <TresCanvas v-bind="state">
-    <TresPerspectiveCamera :position="[5, 5, 5]" :fov="45" :near="0.1" :far="1000" :look-at="[-8, 3, -3]" />
+    <TresPerspectiveCamera :position="[1, 1, 5]" :fov="45" :near="0.1" :far="1000" :look-at="[-8, 3, -3]" />
     <OrbitControls make-default />
     <TresAmbientLight :intensity="0.5" />
 
     <Suspense>
       <GLTFModel
+      :position="[0, 0, -3]"
+      name="model"
+      :scale="[0.02, 0.02, 0.02]"
         ref="venomSnake"
         path="https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/venom-snake-sculpt/scene.gltf"
         draco
