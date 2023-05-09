@@ -10,12 +10,10 @@
   },
   "dependencies": {
     "vue-router": "^4.1.6",
-    "@tresjs/core": "workspace:^2.0.0-rc.2",
     "@tresjs/cientos": "workspace:^2.0.0-rc.3"
   },
   "devDependencies": {
     "@tresjs/cientos": "workspace:^2.0.0-rc.3",
-    "@tresjs/core": "workspace:^2.0.0-rc.2",
     "unplugin-auto-import": "^0.15.3",
     "vite-plugin-glsl": "^1.1.2"
   }
