@@ -108,8 +108,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       vitepress:
-        specifier: 1.0.0-alpha.75
-        version: 1.0.0-alpha.75(@algolia/client-search@4.17.0)(@types/node@20.2.3)
+        specifier: 1.0.0-beta.1
+        version: 1.0.0-beta.1(@algolia/client-search@4.17.0)(@types/node@20.2.3)
 
   playground:
     dependencies:
@@ -6249,35 +6249,6 @@ packages:
       rollup: 3.23.0
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
-
-  /vitepress@1.0.0-alpha.75(@algolia/client-search@4.17.0)(@types/node@20.2.3):
-    resolution: {integrity: sha512-twpPZ/6UnDR8X0Nmj767KwKhXlTQQM9V/J1i2BP9ryO29/w4hpxBfEum6nvfpNhJ4H3h+cIhwzAK/e9crZ6HEQ==}
-    hasBin: true
-    dependencies:
-      '@docsearch/css': 3.3.5
-      '@docsearch/js': 3.3.5(@algolia/client-search@4.17.0)
-      '@vitejs/plugin-vue': 4.2.3(vite@4.3.8)(vue@3.3.4)
-      '@vue/devtools-api': 6.5.0
-      '@vueuse/core': 10.1.2(vue@3.3.4)
-      body-scroll-lock: 4.0.0-beta.0
-      mark.js: 8.11.1
-      minisearch: 6.1.0
-      shiki: 0.14.2
-      vite: 4.3.8(@types/node@20.2.3)
-      vue: 3.3.4
-    transitivePeerDependencies:
-      - '@algolia/client-search'
-      - '@types/node'
-      - '@types/react'
-      - '@vue/composition-api'
-      - less
-      - react
-      - react-dom
-      - sass
-      - stylus
-      - sugarss
-      - terser
     dev: true
 
   /vitepress@1.0.0-beta.1(@algolia/client-search@4.17.0)(@types/node@20.2.3):
