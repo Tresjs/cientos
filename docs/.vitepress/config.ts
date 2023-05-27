@@ -10,6 +10,9 @@ export default defineConfig({
   head: [['link', { rel: 'icon', type: 'image/svg', href: '/favicon.svg' }]],
   themeConfig: {
     logo: '/logo.svg',
+    search: {
+      provider: 'local',
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Guide', link: '/guide/' },
@@ -28,10 +31,12 @@ export default defineConfig({
           { text: 'useAnimations', link: '/guide/abstractions/use-animations' },
           { text: 'Environment', link: '/guide/abstractions/environment' },
           { text: 'useEnvironment', link: '/guide/abstractions/use-environment' },
-          { text: 'usePamMouse', link: '/guide/abstractions/pam-camera-mouse' },
+          { text: 'MouseParallax', link: '/guide/abstractions/mouse-parallax' },
           { text: 'Stars', link: '/guide/abstractions/stars' },
           { text: 'Smoke', link: '/guide/abstractions/smoke' },
           { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
+          { text: 'Contact Shadows', link: '/guide/abstractions/contact-shadows' },
+          { text: 'Precipitation', link: '/guide/abstractions/precipitation' },
         ],
       },
       {
@@ -83,15 +88,32 @@ export default defineConfig({
     ],
 
     socialLinks: [
+      { icon: 'github', link: 'https://github.com/tresjs/cientos' },
       { icon: 'twitter', link: 'https://twitter.com/tresjs_dev' },
       { icon: 'discord', link: 'https://discord.gg/UCr96AQmWn' },
     ],
   },
   vite: {
-    plugins: [svgLoader(), Unocss()],
+    optimizeDeps: {
+      exclude: ['vitepress'],
+      include: ['three'],
+    },
+    server: {
+      hmr: {
+        overlay: false,
+      },
+    },
     resolve: {
       alias: {
-        '/@': resolve(__dirname, '../../src'),
+        '@tresjs/cientos': resolve(__dirname, '../../dist/trescientos.js'),
+      },
+      dedupe: ['three'],
+    },
+  },
+  vue: {
+    template: {
+      compilerOptions: {
+        isCustomElement: tag => tag.startsWith('Tres') && tag !== 'TresCanvas',
       },
     },
   },
