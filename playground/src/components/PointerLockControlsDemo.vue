@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { PointerLockControls, Sphere, KeyboardControls, OrbitControls } from '@cientos'
+import { PointerLockControls, Sphere, KeyboardControls } from '@tresjs/cientos'
 import { BasicShadowMap, NoToneMapping } from 'three'
 
 const gl = {
@@ -15,13 +15,16 @@ const gl = {
 <template>
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 1, 10]" />
-    <!-- <OrbitControls make-default />  -->
-    <KeyboardControls :head-bobbing="false" :jump="['x']">
-      <!-- <PointerLockControls make-default  /> -->
+    <PointerLockControls make-default  />
+    <KeyboardControls head-bobbing>
       <Sphere>
         <TresMeshNormalMaterial />
       </Sphere>
     </KeyboardControls>
+    <!-- <KeyboardControls forward="i" back="k" left="j" right="l">
+    </KeyboardControls> -->
+      <Sphere>
+      </Sphere>
     <TresGridHelper :args="[10, 10]" />
     <TresAmbientLight :intensity="1" />
   </TresCanvas>
