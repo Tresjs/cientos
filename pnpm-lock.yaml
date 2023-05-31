@@ -6,16 +6,16 @@ importers:
     dependencies:
       '@tresjs/core':
         specifier: 2.1.2
-        version: 2.1.2(three@0.152.2)(vue@3.3.4)
+        version: 2.1.2(three@0.153.0)(vue@3.3.4)
       '@vueuse/core':
         specifier: ^10.1.2
         version: 10.1.2(vue@3.3.4)
       three:
-        specifier: ^0.152.2
-        version: 0.152.2
+        specifier: ^0.153.0
+        version: 0.153.0
       three-stdlib:
         specifier: ^2.22.4
-        version: 2.22.4(three@0.152.2)
+        version: 2.22.4(three@0.153.0)
       vue:
         specifier: ^3.3.4
         version: 3.3.4
@@ -119,7 +119,7 @@ importers:
     dependencies:
       '@tresjs/core':
         specifier: 2.1.2
-        version: 2.1.2(three@0.152.2)(vue@3.3.4)
+        version: 2.1.2(three@0.153.0)(vue@3.3.4)
       vue-router:
         specifier: ^4.2.1
         version: 4.2.1(vue@3.3.4)
@@ -1029,7 +1029,7 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /@tresjs/core@2.1.2(three@0.152.2)(vue@3.3.4):
+  /@tresjs/core@2.1.2(three@0.153.0)(vue@3.3.4):
     resolution: {integrity: sha512-dK/wR4X2NFg2VFMhw4mAUFel/tkPQtPsKkSiIn+qU5ejmRqTf2rKaVoql80CvbW+y2GVjYLUGl83oYEETH3WUA==}
     peerDependencies:
       three: latest
@@ -1037,7 +1037,7 @@ packages:
     dependencies:
       '@alvarosabu/utils': 2.3.0
       '@vueuse/core': 10.1.2(vue@3.3.4)
-      three: 0.152.2
+      three: 0.153.0
       vue: 3.3.4
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5560,7 +5560,7 @@ packages:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
 
-  /three-stdlib@2.22.4(three@0.152.2):
+  /three-stdlib@2.22.4(three@0.153.0):
     resolution: {integrity: sha512-p0weU9twEEaXxZF1b5eG7eWJ7br8DlfggjeDC2ATwP7yArJjPYhEZ2HTk/fJHl394SMPJf365P4yENNFoUqcgA==}
     peerDependencies:
       three: '>=0.122.0'
@@ -5575,12 +5575,12 @@ packages:
       mmd-parser: 1.0.4
       opentype.js: 1.3.4
       potpack: 1.0.2
-      three: 0.152.2
+      three: 0.153.0
       zstddec: 0.0.2
     dev: false
 
-  /three@0.152.2:
-    resolution: {integrity: sha512-Ff9zIpSfkkqcBcpdiFo2f35vA9ZucO+N8TNacJOqaEE6DrB0eufItVMib8bK8Pcju/ZNT6a7blE1GhTpkdsILw==}
+  /three@0.153.0:
+    resolution: {integrity: sha512-OCP2/uQR6GcDpSLnJt/3a4mdS0kNWcbfUXIwLoEMgLzEUIVIYsSDwskpmOii/AkDM+BBwrl6+CKgrjX9+E2aWg==}
     dev: false
 
   /through2@2.0.5:

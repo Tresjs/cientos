@@ -80,7 +80,7 @@
   "dependencies": {
     "@tresjs/core": "2.1.2",
     "@vueuse/core": "^10.1.2",
-    "three": "^0.152.2",
+    "three": "^0.153.0",
     "three-stdlib": "^2.22.4",
     "vue": "^3.3.4"
   }
