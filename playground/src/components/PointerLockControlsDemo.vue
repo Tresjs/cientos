@@ -16,10 +16,7 @@ const gl = {
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 1, 10]" />
     <PointerLockControls make-default  />
-    <KeyboardControls head-bobbing>
-      <Sphere>
-        <TresMeshNormalMaterial />
-      </Sphere>
+    <KeyboardControls head-bobbing >
     </KeyboardControls>
     <!-- <KeyboardControls forward="i" back="k" left="j" right="l">
     </KeyboardControls> -->

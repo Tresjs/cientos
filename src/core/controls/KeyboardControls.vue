@@ -9,7 +9,7 @@ export type KeyboardControlsProps = {
   /**
    * Keys to go forward.
    * @type {string[]}
-   * @default '[w, W, ArrowUp]'
+   * @default '[w, W]'
    * @memberof KeyboardControlsProps
    *
    **/
@@ -17,7 +17,7 @@ export type KeyboardControlsProps = {
   /**
    * Keys to go back.
    * @type {string[]}
-   * @default '[s, S, ArrowDown]'
+   * @default '[s, S]'
    * @memberof KeyboardControlsProps
    *
    **/
@@ -25,7 +25,7 @@ export type KeyboardControlsProps = {
   /**
    * Keys to go left.
    * @type {string[]}
-   * @default '[a, A, ArrowLeft]'
+   * @default '[a, A]'
    * @memberof KeyboardControlsProps
    *
    **/
@@ -33,7 +33,7 @@ export type KeyboardControlsProps = {
   /**
    * Keys to go right.
    * @type {string[]}
-   * @default '[d, D, ArrowRight]'
+   * @default '[d, D]'
    * @memberof KeyboardControlsProps
    *
    **/
@@ -41,7 +41,7 @@ export type KeyboardControlsProps = {
   /**
    * Key to jump (only with PointerLockControls).
    * @type {string[]}
-   * @default '[space]'
+   * @default 'space'
    * @memberof KeyboardControlsProps
    *
    **/
@@ -55,7 +55,7 @@ export type KeyboardControlsProps = {
    **/
   gravity?: number
   /**
-   * The?? .
+   * Speed movement.
    * @type {number}
    * @default 0.1
    * @memberof KeyboardControlsProps
@@ -70,19 +70,27 @@ export type KeyboardControlsProps = {
    *
    **/
   headBobbing?: boolean
+  /**
+   * Indicates if the forward movement is in the Z axis or Y axis.
+   * @type {boolean}
+   * @default false
+   * @memberof KeyboardControlsProps
+   *
+   **/
+  is2D?: boolean
 }
 // TODO: remove disable once eslint is updated to support vue 3.3
 // eslint-disable-next-line vue/no-setup-props-destructure
 const {
-  forward = ['w', 'W', 'ArrowUp'],
-  back = ['s', 'S', 'ArrowDown'],
-  left = ['a', 'A', 'ArrowLeft'],
-  right = ['d', 'D', 'ArrowRight'],
+  forward = ['w', 'W'],
+  back = ['s', 'S'],
+  left = ['a', 'A'],
+  right = ['d', 'D'],
   jump = [' '],
   gravity = 9.8,
   moveSpeed = 0.1,
   headBobbing = false,
-  // 2D
+  is2D = false,
 } = defineProps<KeyboardControlsProps>()
 
 const { state } = useCientos()
@@ -96,11 +104,7 @@ const jumpSpeed = 6
 const HBAmplitude = 0.3
 const initJumpTime = ref(0)
 const wrapperRef = shallowRef()
-
-// limpiar loop
-// 1 mover press functions
-// 2 mover helper functions
-// 3 add jump to slot
+const _forward = is2D ? 'y' : 'z'
 
 // FORWARD DIRECTION MOVEMENTS
 onKeyStroke(
@@ -190,7 +194,7 @@ onLoop(({ elapsed }) => {
     }
   } else if (wrapperRef.value.children.length > 0 && !(state.controls instanceof PointerLockControls)) {
     wrapperRef.value.position.x += xMove.value
-    wrapperRef.value.position.z += -zMove.value
+    wrapperRef.value.position[_forward] +=  is2D ? zMove.value : -zMove.value
   }
 })
 </script>
