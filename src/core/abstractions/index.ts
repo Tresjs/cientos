@@ -10,4 +10,14 @@ import ContactShadows from './ContactShadows.vue'
 
 export * from './useParallax'
 export * from './useEnvironment'
-export { Text3D, useAnimations, Environment, MouseParallax, Stars, Smoke, Levioso, ContactShadows, Precipitation }
+export {
+  Text3D,
+  useAnimations,
+  Environment,
+  MouseParallax,
+  Stars,
+  Smoke,
+  Levioso,
+  ContactShadows,
+  Precipitation,
+}
