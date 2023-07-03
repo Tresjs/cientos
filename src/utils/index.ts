@@ -1,3 +1,5 @@
+import { useLogger } from '@tresjs/core'
+const { logWarning } = useLogger()
 /**
  * Update the function signature to explicitly specify the type of the props parameter
  *
@@ -29,4 +31,10 @@ export function pick<T extends object, K extends keyof T>(obj: T, props: K[]): P
 export function hasSetter(obj: any, prop: string): boolean {
   const setterName = `set${prop[0].toUpperCase()}${prop.slice(1)}`
   return obj[setterName] !== undefined
+}
+
+export function greaterThanZero(key: string, value: number) {
+  if(value <= 0){
+    logWarning(`${key}, Cannot be less than or equal to 0`)
+  }
 }
