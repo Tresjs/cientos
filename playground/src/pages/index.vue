@@ -2,6 +2,6 @@
 </script>
 <template>
   <Suspense>
-    <PointerLockControlsDemo />
+    <OrbitControlsDemo />
   </Suspense>
 </template>

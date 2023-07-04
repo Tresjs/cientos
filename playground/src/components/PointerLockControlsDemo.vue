@@ -14,15 +14,13 @@ const gl = {
 
 <template>
   <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 1, 10]" />
+    <TresPerspectiveCamera :position="[0, 2, 10]" />
     <PointerLockControls make-default  />
     <KeyboardControls head-bobbing >
     </KeyboardControls>
     <!-- <KeyboardControls forward="i" back="k" left="j" right="l">
     </KeyboardControls> -->
-      <Sphere>
-      </Sphere>
-    <TresGridHelper :args="[10, 10]" />
+    <TresGridHelper :position="[0,-4,0]" :args="[100, 100]" />
     <TresAmbientLight :intensity="1" />
   </TresCanvas>
 </template>

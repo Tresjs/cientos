@@ -1,5 +1,6 @@
-import { useTres } from '@tresjs/core'
-import { inject } from 'vue'
+import { TresState, useTresContext } from '@tresjs/core'
+import { watch } from 'fs'
+import { inject, toRefs, watchEffect } from 'vue'
 /* import { useLogger } from '@tresjs/core' */
 /**
  * Allows to use and extend the state of the core package.
@@ -9,7 +10,11 @@ import { inject } from 'vue'
  */
 export function useCientos() {
   /* const { logWarning } = useLogger() */
-  const { state, setState } = inject('useTres', useTres())
+  const { renderer, camera, scene, cameras } = inject<TresState>('useTres', useTresContext())
+
+  watchEffect(() => {
+    console.log('useCientos watchEffect', camera.value)
+  })
   const extend =
     inject<(objects: any) => void>('extend') ||
     (() => {
@@ -17,8 +22,8 @@ export function useCientos() {
     })
 
   return {
-    state,
-    setState,
-    extend,
+    camera,
+    renderer,
+    extend
   }
 }

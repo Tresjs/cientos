@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Camera, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { TresVector3, useRenderLoop } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
@@ -256,20 +256,20 @@ const {
   target = [0, 0, 0],
 } = defineProps<OrbitControlsProps>()
 
-const { state, setState, extend } = useCientos()
+const { camera: activeCamera, renderer, extend } = useCientos()
 
 const controls = ref<OrbitControls | null>(null)
 
 extend({ OrbitControls })
 
-watch(controls, value => {
+/* watch(controls, value => {
   addEventListeners()
   if (value && makeDefault) {
     setState('controls', value)
   } else {
     setState('controls', null)
   }
-})
+}) */
 
 const emit = defineEmits(['change', 'start', 'end'])
 
@@ -296,7 +296,7 @@ onUnmounted(() => {
 
 <template>
   <TresOrbitControls
-    v-if="state.camera && state.renderer"
+    v-if="activeCamera && renderer"
     ref="controls"
     :target="target"
     :auto-rotate="autoRotate"
@@ -319,6 +319,6 @@ onUnmounted(() => {
     :zoom-speed="zoomSpeed"
     :enable-rotate="enableRotate"
     :rotate-speed="rotateSpeed"
-    :args="[state.camera || camera, state.renderer?.domElement || domElement]"
+    :args="[activeCamera || camera, renderer?.domElement || domElement]"
   />
 </template>
