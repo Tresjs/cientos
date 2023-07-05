@@ -107,9 +107,8 @@ const wrapperRef = shallowRef()
 const _forward = is2D ? 'y' : 'z'
 let initCameraPos = 0
 
-watch(state.container, () => {
+watch(() => state.camera, () => {
   initCameraPos = state.camera?.position?.y || 0
-  
 })
 
 // FORWARD DIRECTION MOVEMENTS
