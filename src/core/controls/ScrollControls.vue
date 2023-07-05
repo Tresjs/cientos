@@ -2,19 +2,10 @@
 import { watch, ref } from 'vue'
 import { useWindowScroll, useWindowSize, useScroll } from '@vueuse/core'
 import { useCientos } from '../../core/useCientos'
-import { useRenderLoop, useLogger } from '@tresjs/core'
+import { useRenderLoop } from '@tresjs/core'
 import { greaterThanZero } from '../../utils'
 
 export interface ScrollControlsProps {
-  /**
-   * Whether to make this the default controls.
-   *
-   * @default false
-   * @type {boolean}
-   * @memberof ScrollControlsProps
-   * @see https://threejs.org/docs/#examples/en/controls/MapControls
-   */
-  makeDefault?: boolean
   /**
    * The scroll size.
    *
@@ -57,8 +48,6 @@ export interface ScrollControlsProps {
   htmlScroll?: boolean
 }
 
-// TODO: remove disable once eslint is updated to support vue 3.3
-// eslint-disable-next-line vue/no-setup-props-destructure
 const props = withDefaults(
   defineProps<{
     pages?: number
