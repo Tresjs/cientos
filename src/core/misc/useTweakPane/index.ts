@@ -10,14 +10,12 @@ let fpsGraph: any
 export /**
  * Creates a TweakPane instance and returns it.
  *
- * @param {string} [selector='tres-container']
+ * @param {string} [selector='body']
  * @return {*}
  */
-const useTweakPane = (selector = 'tres-container') => {
+const useTweakPane = (selector = 'body') => {
   if (!pane) {
-    pane = new Pane({
-      container: (document.querySelector(selector) as HTMLElement) || undefined,
-    }) as TweakPane
+    pane = new Pane() as TweakPane
     pane.registerPlugin(EssentialsPlugin)
 
     fpsGraph = pane.addBlade({
