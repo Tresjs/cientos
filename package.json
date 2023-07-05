@@ -64,7 +64,7 @@
     "gsap": "^3.12.1",
     "kolorist": "^1.8.0",
     "pathe": "^1.1.1",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.0",
     "release-it": "^15.11.0",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-visualizer": "^5.9.2",
