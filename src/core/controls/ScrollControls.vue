@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, shallowRef } from 'vue'
 import { useWindowScroll, useWindowSize, useScroll } from '@vueuse/core'
 import { useCientos } from '../../core/useCientos'
 import { useRenderLoop } from '@tresjs/core'
@@ -26,7 +26,7 @@ export interface ScrollControlsProps {
    * The smooth factor of the scrolling.
    *
    * @type {Number}
-   * @default 4
+   * @default 0.5
    * @memberof ScrollControlsProps
    */
   smoothScroll?: number
@@ -71,6 +71,7 @@ greaterThanZero('pages', props.pages)
 // TODO delete warnings in console ALVARO
 
 const { state } = useCientos()
+const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')
 
 const { y: windowY } = useWindowScroll()
@@ -135,7 +136,7 @@ watch(
         canvas.style.left = '0'
       }
       scrollNodeY.value = document.body.scrollHeight
-    } else  {
+    } else {
       const fixed = document.createElement('div')
       const fill = document.createElement('div')
 
@@ -166,11 +167,17 @@ onLoop(() => {
   if (state.camera?.position) {
     state.camera.position[direction] +=
       (progress.value * props.distance - state.camera.position[direction] + initCameraPos) * props.smoothScroll
+    if (wrapperRef.value.children.length > 0) {
+      wrapperRef.value.position[direction] +=
+        (progress.value * props.distance - state.camera.position[direction] + initCameraPos) * props.smoothScroll
+    }
   }
 })
 </script>
 <template>
-  <slot />
+  <TresGroup ref="wrapperRef">
+    <slot />
+  </TresGroup>
 </template>
 <style>
 .scrollContainer {

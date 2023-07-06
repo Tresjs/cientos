@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { ScrollControls, Stars, Sphere } from '@tresjs/cientos'
+import { ScrollControls, Stars, Sphere, Box } from '@tresjs/cientos'
 import { SRGBColorSpace, NoToneMapping } from 'three'
 
 const scRef = ref()
 const sphereRef = ref()
-const scrollState = ref()
+const boxRef = ref()
 const progress = ref(0)
 
 watchEffect(() => {
@@ -21,9 +21,8 @@ const gl = {
 }
 const { onLoop } = useRenderLoop()
 onLoop(() => {
-   if (sphereRef.value) {
-     sphereRef.value.value.position.x = Math.sin(progress.value * 10) 
-
+   if (boxRef.value) {
+    boxRef.value.value.rotation.x = progress.value * 10
    }
 })
 </script>
@@ -44,17 +43,15 @@ onLoop(() => {
       <TresPerspectiveCamera :position="[0, 2, 5]" />
       <Stars :radius="1" />
       <TresGridHelper :args="[10, 10]" />
-      <Sphere ref="sphereRef" :scale="0.1" :position="[1, 2, 0]" />
-
+      
       <ScrollControls ref="scRef" 
       v-model="progress"
-      :distance="0"
+      :distance="10"
       :smooth-scroll="0.1"
       >
+      <Sphere ref="sphereRef" :scale="0.1" :position="[1, 2, 0]" />
+      <Box ref="boxRef" :scale="0.5" :color="0xff00ff" :position="[-1, 1, 0]" />
     </ScrollControls>
-    <!-- :pages="20" -->
-      <!-- v-model:scrollState="scrollState" -->
-       <!-- <Sphere :scale="0.2" :color="0xff00ff" :position="[1,-2,0]" /> -->
     </TresCanvas>
   <!-- </div> -->
 </template>
