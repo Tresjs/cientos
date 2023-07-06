@@ -6,13 +6,13 @@ importers:
     dependencies:
       '@tresjs/core':
         specifier: '>=2.1.3'
-        version: 2.1.3(three@0.153.0)(vue@3.3.4)
+        version: 2.1.3(three@0.154.0)(vue@3.3.4)
       '@vueuse/core':
         specifier: ^10.1.2
         version: 10.1.2(vue@3.3.4)
       three-stdlib:
         specifier: ^2.23.9
-        version: 2.23.9(three@0.153.0)
+        version: 2.23.9(three@0.154.0)
       vue:
         specifier: '>=3.3'
         version: 3.3.4
@@ -30,8 +30,8 @@ importers:
         specifier: ^20.3.1
         version: 20.3.1
       '@types/three':
-        specifier: ^0.152.1
-        version: 0.152.1
+        specifier: ^0.153.0
+        version: 0.153.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.59.11
         version: 5.59.11(@typescript-eslint/parser@5.59.11)(eslint@8.42.0)(typescript@5.1.3)
@@ -72,8 +72,8 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
       three:
-        specifier: ^0.153.0
-        version: 0.153.0
+        specifier: ^0.154.0
+        version: 0.154.0
       tweakpane:
         specifier: ^3.1.9
         version: 3.1.9
@@ -122,7 +122,7 @@ importers:
     dependencies:
       '@tresjs/core':
         specifier: 2.3.0
-        version: 2.3.0(react@18.2.0)(three@0.153.0)(vue@3.3.4)
+        version: 2.3.0(react@18.2.0)(three@0.154.0)(vue@3.3.4)
       vue-router:
         specifier: ^4.2.2
         version: 4.2.2(vue@3.3.4)
@@ -1163,7 +1163,7 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
-  /@tresjs/core@2.1.3(three@0.153.0)(vue@3.3.4):
+  /@tresjs/core@2.1.3(three@0.154.0)(vue@3.3.4):
     resolution: {integrity: sha512-imLAn1icEtaPmNXl7/pwcp3mRlfaIpy/zwOS72MRqqDRYwaCxh5KWxusNc4tgK8sbEu2H3FaymdBu7Wg9kr/cw==}
     peerDependencies:
       three: '>=0.133'
@@ -1171,13 +1171,13 @@ packages:
     dependencies:
       '@alvarosabu/utils': 3.1.1
       '@vueuse/core': 10.1.2(vue@3.3.4)
-      three: 0.153.0
+      three: 0.154.0
       vue: 3.3.4
     transitivePeerDependencies:
       - '@vue/composition-api'
     dev: false
 
-  /@tresjs/core@2.3.0(react@18.2.0)(three@0.153.0)(vue@3.3.4):
+  /@tresjs/core@2.3.0(react@18.2.0)(three@0.154.0)(vue@3.3.4):
     resolution: {integrity: sha512-MKPX/tOx1G1G/p2js9ut9PJKL2YRrIOe51j8Vvq3p+YGqDrk02DQbfBFi45BOKXOCmDjYqIkcFxSpWvHziEWZQ==}
     peerDependencies:
       three: '>=0.133'
@@ -1185,7 +1185,7 @@ packages:
     dependencies:
       '@alvarosabu/utils': 3.1.1
       '@vueuse/core': 10.1.2(vue@3.3.4)
-      three: 0.153.0
+      three: 0.154.0
       vue: 3.3.4
       vue-zustand: 0.5.0(vue@3.3.4)(zustand@4.3.8)
       zustand: 4.3.8(react@18.2.0)
@@ -1265,8 +1265,8 @@ packages:
     resolution: {integrity: sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==}
     dev: true
 
-  /@types/three@0.152.1:
-    resolution: {integrity: sha512-PMOCQnx9JRmq+2OUGTPoY9h1hTWD2L7/nmuW/SyNq1Vbq3Lwt3MNdl3wYSa4DvLTGv62NmIXD9jYdAOwohwJyw==}
+  /@types/three@0.153.0:
+    resolution: {integrity: sha512-L9quzIP4lsl6asDCw5zqN5opewCVOKRuB09apw5Acf2AIkoj5gLnUOY5AMB/ntFUt/QfFey0uKZaAd5t+HXSUw==}
     dependencies:
       '@tweenjs/tween.js': 18.6.4
       '@types/stats.js': 0.17.0
@@ -5746,7 +5746,7 @@ packages:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
 
-  /three-stdlib@2.23.9(three@0.153.0):
+  /three-stdlib@2.23.9(three@0.154.0):
     resolution: {integrity: sha512-fYBClVGQptD7UZcoRZGNlR3sKcUW37hVPoEW1v68E4XuiwD0Ml/VqDUJ0yEMVE2DlooDvqgqv/rIcHC/B4N5pg==}
     peerDependencies:
       three: '>=0.128.0'
@@ -5761,12 +5761,12 @@ packages:
       mmd-parser: 1.0.4
       opentype.js: 1.3.4
       potpack: 1.0.2
-      three: 0.153.0
+      three: 0.154.0
       zstddec: 0.0.2
     dev: false
 
-  /three@0.153.0:
-    resolution: {integrity: sha512-OCP2/uQR6GcDpSLnJt/3a4mdS0kNWcbfUXIwLoEMgLzEUIVIYsSDwskpmOii/AkDM+BBwrl6+CKgrjX9+E2aWg==}
+  /three@0.154.0:
+    resolution: {integrity: sha512-Uzz8C/5GesJzv8i+Y2prEMYUwodwZySPcNhuJUdsVMH2Yn4Nm8qlbQe6qRN5fOhg55XB0WiLfTPBxVHxpE60ug==}
 
   /through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
