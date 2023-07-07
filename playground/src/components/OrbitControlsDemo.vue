@@ -5,6 +5,8 @@ import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
 import { OrbitControls, useTweakPane } from '@tresjs/cientos'
 import { reactive } from 'vue'
+import { TresLeches, useControls } from '@tresjs/leches'
+import '@tresjs/leches/styles'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -14,6 +16,8 @@ const gl = {
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
+
+useControls('fpsgraph')
 
 const controlsState = reactive({
   enableDamping: true,
@@ -128,6 +132,7 @@ function onEnd() {
 </script>
 
 <template>
+  <TresLeches />
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[3, 3, 3]" />
     <OrbitControls v-bind="controlsState" @change="onChange" @start="onStart" @end="onEnd" />
