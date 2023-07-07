@@ -3,7 +3,7 @@ import { watch, ref, shallowRef } from 'vue'
 import { useWindowScroll, useWindowSize, useScroll } from '@vueuse/core'
 import { useCientos } from '../../core/useCientos'
 import { useRenderLoop } from '@tresjs/core'
-import { greaterThanZero } from '../../utils'
+import { useLogger } from '@tresjs/core'
 
 export interface ScrollControlsProps {
   /**
@@ -65,8 +65,10 @@ const props = withDefaults(
   },
 )
 
-greaterThanZero('smoothScroll', props.smoothScroll)
-greaterThanZero('pages', props.pages)
+const { logWarning } = useLogger()
+
+if (props.smoothScroll < 0) logWarning('SmoothControl must be greater than zero')
+if (props.pages < 0) logWarning('Pages must be greater than zero')
 
 // TODO delete warnings in console ALVARO
 
@@ -95,7 +97,7 @@ const unWatch = watch(
       unWatch()
       return
     }
-    initCameraPos = props.horizontal ? value.position.x || 0 : value.position.y || 0
+    initCameraPos = props.horizontal ? value?.position.x || 0 : value?.position.y || 0
     initialized.value = true
   },
 )
@@ -165,11 +167,12 @@ const { onLoop } = useRenderLoop()
 
 onLoop(() => {
   if (state.camera?.position) {
-    state.camera.position[direction] +=
+    const delta =
       (progress.value * props.distance - state.camera.position[direction] + initCameraPos) * props.smoothScroll
+
+    state.camera.position[direction] += delta
     if (wrapperRef.value.children.length > 0) {
-      wrapperRef.value.position[direction] +=
-        (progress.value * props.distance - state.camera.position[direction] + initCameraPos) * props.smoothScroll
+      wrapperRef.value.position[direction] += delta
     }
   }
 })
