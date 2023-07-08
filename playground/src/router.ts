@@ -25,6 +25,11 @@ const routes = [
     path: '/abstractions/smoke',
     name: 'Smoke',
     component: () => import('./pages/SmokeDemo.vue'),
+  },
+  {
+    path: '/abstractions/precipitation',
+    name: 'Precipitation',
+    component: () => import('./pages/PrecipitationDemo.vue'),
   }
 ]
 
