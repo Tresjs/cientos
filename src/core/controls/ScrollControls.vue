@@ -2,7 +2,7 @@
 import { watch, ref, shallowRef } from 'vue'
 import { useWindowScroll, useWindowSize, useScroll } from '@vueuse/core'
 import { useCientos } from '../../core/useCientos'
-import { useRenderLoop } from '@tresjs/core'
+import { Camera, useRenderLoop } from '@tresjs/core'
 import { useLogger } from '@tresjs/core'
 
 export interface ScrollControlsProps {
@@ -70,8 +70,6 @@ const { logWarning } = useLogger()
 if (props.smoothScroll < 0) logWarning('SmoothControl must be greater than zero')
 if (props.pages < 0) logWarning('Pages must be greater than zero')
 
-// TODO delete warnings in console ALVARO
-
 const { state } = useCientos()
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')
@@ -92,7 +90,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const unWatch = watch(
   () => state.camera,
-  value => {
+  (value: Camera | undefined) => {
     if (initialized.value) {
       unWatch()
       return
@@ -177,11 +175,13 @@ onLoop(() => {
   }
 })
 </script>
+
 <template>
   <TresGroup ref="wrapperRef">
     <slot />
   </TresGroup>
 </template>
+
 <style>
 .scrollContainer {
   position: absolute;
