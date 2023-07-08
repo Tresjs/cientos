@@ -35,6 +35,11 @@ const routes = [
     path: '/abstractions/stars',
     name: 'Stars',
     component: () => import('./pages/StarsDemo.vue'),
+  },
+  {
+    path: '/abstractions/text-3d',
+    name: 'Text3D',
+    component: () => import('./pages/Text3DDemo.vue'),
   }
 ]
 
