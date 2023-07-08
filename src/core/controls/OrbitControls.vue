@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 import { Camera, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, toRefs } from 'vue'
 import { TresVector3, useRenderLoop } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
 import { useCientos } from '../useCientos'
-import { toRefs } from 'vue'
 
 export interface OrbitControlsProps {
   /**
