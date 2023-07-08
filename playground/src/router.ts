@@ -20,6 +20,11 @@ const routes = [
     path: '/controls/first-person-controls',
     name: 'FirstPersonControls',
     component: () => import('./pages/FirstPersonControlsDemo.vue'),
+  },
+  {
+    path: '/abstractions/smoke',
+    name: 'Smoke',
+    component: () => import('./pages/SmokeDemo.vue'),
   }
 ]
 
