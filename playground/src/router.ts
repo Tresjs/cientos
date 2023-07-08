@@ -16,6 +16,11 @@ const routes = [
     name: 'TransformControls',
     component: () => import('./pages/TransformControlsDemo.vue'),
   },
+  {
+    path: '/controls/first-person-controls',
+    name: 'FirstPersonControls',
+    component: () => import('./pages/FirstPersonControlsDemo.vue'),
+  }
 ]
 
 export const router = createRouter({
