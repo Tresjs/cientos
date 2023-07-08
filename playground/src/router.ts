@@ -7,9 +7,14 @@ const routes = [
     component: () => import('./pages/index.vue'),
   },
   {
-    path: '/demo/orbit-controls',
+    path: '/controls/orbit-controls',
     name: 'OrbitControls',
     component: () => import('./pages/OrbitControlsDemo.vue'),
+  },
+  {
+    path: '/controls/transform-controls',
+    name: 'TransformControls',
+    component: () => import('./pages/TransformControlsDemo.vue'),
   },
 ]
 

@@ -131,6 +131,9 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
     devDependencies:
+      '@tresjs/leches':
+        specifier: ^0.4.0
+        version: 0.4.0(three@0.154.0)(vue@3.3.4)
       unplugin-auto-import:
         specifier: ^0.16.6
         version: 0.16.6(@vueuse/core@10.2.1)
@@ -1052,6 +1055,19 @@ packages:
       - '@vue/composition-api'
     dev: false
 
+  /@tresjs/leches@0.4.0(three@0.154.0)(vue@3.3.4):
+    resolution: {integrity: sha512-H1CJV6SGIW2k7g0OB5ZdkVM5b8r9HoEOvaL/3mzs8FAVFUvbltDsFZQPJ2qr+SBoNqAqq3LqENGU/bPfRiAiMQ==}
+    peerDependencies:
+      three: '>=0.133'
+      vue: '>=3.3'
+    dependencies:
+      '@vueuse/components': 10.2.1(vue@3.3.4)
+      three: 0.154.0
+      vue: 3.3.4
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+    dev: true
+
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
@@ -1779,6 +1795,17 @@ packages:
       '@vue/language-core': 1.8.4(typescript@5.1.6)
     transitivePeerDependencies:
       - typescript
+    dev: true
+
+  /@vueuse/components@10.2.1(vue@3.3.4):
+    resolution: {integrity: sha512-S21ZAfNSRouD/UokdGjBIrzvXH8WS7sz4t47ZWP+QRVWfsK9aIc5PmKMgkQrR5e8K3aNLiczqX8TuBa+l+CmDA==}
+    dependencies:
+      '@vueuse/core': 10.2.1(vue@3.3.4)
+      '@vueuse/shared': 10.2.1(vue@3.3.4)
+      vue-demi: 0.14.5(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
     dev: true
 
   /@vueuse/core@10.1.2(vue@3.3.4):
