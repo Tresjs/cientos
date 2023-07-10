@@ -70,3 +70,9 @@ export async function useGLTF(
 ): Promise<GLTFResult> {
   return (await useLoader(GLTFLoader, path, setExtensions(options, extendLoader))) as unknown as GLTFResult
 }
+
+export function useDracoLoaderDispose() {
+  dracoLoader?.dispose()
+  dracoLoader = null
+}
+
