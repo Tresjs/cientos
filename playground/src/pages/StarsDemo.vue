@@ -12,7 +12,6 @@ const gl = {
 }
 
 const star = shallowRef<Stars>(null)
-
 </script>
 <template>
   <TresCanvas v-bind="gl" ref="canvas">
