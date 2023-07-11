@@ -3,7 +3,7 @@
   "description": "Collection of useful helpers and fully functional, ready-made abstractions for Tres",
   "version": "2.3.0",
   "type": "module",
-  "packageManager": "pnpm@8.4.0",
+  "packageManager": "pnpm@8.6.7",
   "author": "Alvaro Saburido <hola@alvarosaburido.dev> (https://github.com/alvarosabu/)",
   "license": "MIT",
   "sideEffects": false,
