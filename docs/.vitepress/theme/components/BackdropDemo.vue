@@ -3,9 +3,9 @@ import { TresCanvas } from '@tresjs/core'
 import { PCFSoftShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
 import { OrbitControls, Backdrop, GLTFModel } from '@tresjs/cientos'
-import { ref } from 'vue';
-import { watch } from 'vue';
-import { watchEffect } from 'vue';
+import { ref } from 'vue'
+import { watch } from 'vue'
+import { watchEffect } from 'vue'
 
 const gl = {
   clearColor: 'pink',
@@ -17,8 +17,8 @@ const gl = {
 
 const model = ref(null)
 
-watch(model, ({value}) => {
-  value.traverse((child) => {
+watch(model, ({ value }) => {
+  value.traverse(child => {
     if (child.isMesh) {
       child.castShadow = true
     }
@@ -33,29 +33,50 @@ const cameraRef = ref(null)
 
 watchEffect(() => {
   if (cameraRef.value) {
-    cameraRef.value.lookAt(0,5,0)
+    cameraRef.value.lookAt(0, 5, 0)
   }
 })
-
-
 </script>
 
 <template>
   <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera ref="camerRef" :position="[0.07224002153117198, 0.5245876539770153, 2.9469498522622626]" :rotation="[-0.04419077275543715, 0.025561987075415186, 0.0011302162688196786]" :fov="35"  />
-    
-   <!--  <TresMesh cast-shadow>
+    <TresPerspectiveCamera
+      ref="camerRef"
+      :position="[0.07224002153117198, 0.5245876539770153, 2.9469498522622626]"
+      :rotation="[-0.04419077275543715, 0.025561987075415186, 0.0011302162688196786]"
+      :fov="35"
+    />
+
+    <!--  <TresMesh cast-shadow>
         <TresBoxGeometry :args="[1,1,1]" />
         <TresMeshStandardMaterial :color="0x808080" :side="2"/>
     </TresMesh> -->
     <Suspense>
-      <GLTFModel ref="model" cast-shadow :path="'/public/card-bo-bot/CardBoBotv3.glb'" draco :rotation="[0, 0.5, 0]" />
+      <GLTFModel ref="model" cast-shadow :path="'/card-bo-bot/CardBoBotv3.glb'" draco :rotation="[0, 0.5, 0]" />
     </Suspense>
-    <Backdrop :floor="1.5" :scale="[10, 3, 3]" :position="[0,0,-3]" receive-shadow>
-        <TresMeshPhysicalMaterial  :roughness="1" color="pink" :side="2" />
+    <Backdrop :floor="1.5" :scale="[10, 3, 3]" :position="[0, 0, -3]" receive-shadow>
+      <TresMeshPhysicalMaterial :roughness="1" color="pink" :side="2" />
     </Backdrop>
     <TresAmbientLight :intensity="0.5" />
-    <TresDirectionalLight :args="['white', 2]" cast-shadow :position="[3, 4, 4]" :look-at="[0,0,0]" :shadow-mapSize-width="256" :shadow-mapSize-height="256" :shadow-camera-near="0.5" :shadow-camera-left="-10" />
-    <TresDirectionalLight :args="['pink', 1]" cast-shadow :position="[-3, 2, 4]" :look-at="[0,0,0]" :shadow-mapSize-width="256" :shadow-mapSize-height="256" :shadow-camera-near="0.5" :shadow-camera-left="-10" />
+    <TresDirectionalLight
+      :args="['white', 2]"
+      cast-shadow
+      :position="[3, 4, 4]"
+      :look-at="[0, 0, 0]"
+      :shadow-mapSize-width="256"
+      :shadow-mapSize-height="256"
+      :shadow-camera-near="0.5"
+      :shadow-camera-left="-10"
+    />
+    <TresDirectionalLight
+      :args="['pink', 1]"
+      cast-shadow
+      :position="[-3, 2, 4]"
+      :look-at="[0, 0, 0]"
+      :shadow-mapSize-width="256"
+      :shadow-mapSize-height="256"
+      :shadow-camera-near="0.5"
+      :shadow-camera-left="-10"
+    />
   </TresCanvas>
 </template>
