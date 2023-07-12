@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     BackdropDemo: typeof import('./src/components/BackdropDemo.vue')['default']
     ContactShadowsDemo: typeof import('./src/components/ContactShadowsDemo.vue')['default']
-    Environment: typeof import('./src/components/Environment.vue')['default']
     EnvironmentDemo: typeof import('./src/components/EnvironmentDemo.vue')['default']
     Gltf: typeof import('./src/components/gltf/index.vue')['default']
     LeviosoDemo: typeof import('./src/components/LeviosoDemo.vue')['default']
@@ -20,6 +19,7 @@ declare module 'vue' {
     PrecipitationDemo: typeof import('./src/components/PrecipitationDemo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScrollDemo: typeof import('./src/components/ScrollDemo.vue')['default']
     TheGizmos: typeof import('./src/components/TheGizmos.vue')['default']
     TheSmoke: typeof import('./src/components/TheSmoke.vue')['default']
     TheStars: typeof import('./src/components/TheStars.vue')['default']
