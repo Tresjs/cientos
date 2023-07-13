@@ -40,6 +40,11 @@ const routes = [
     path: '/abstractions/text-3d',
     name: 'Text3D',
     component: () => import('./pages/Text3DDemo.vue'),
+  },
+  {
+    path: '/misc/html',
+    name: 'HTML',
+    component: () => import('./pages/HTMLDemo.vue'),
   }
 ]
 

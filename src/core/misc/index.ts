@@ -1,3 +1,3 @@
 import { useTweakPane } from './useTweakPane'
-
-export { useTweakPane }
+import Html from './HTML.vue'
+export { useTweakPane, Html }
