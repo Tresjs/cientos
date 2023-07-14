@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { computed, createVNode, shallowRef, toRefs, render, watchEffect, ref, watch } from 'vue'
-import { DoubleSide, Group, OrthographicCamera, PerspectiveCamera, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
+import { computed, createVNode, shallowRef, toRefs, render, watchEffect, ref, watch, useAttrs } from 'vue'
+import {
+  DoubleSide,
+  Group,
+  Matrix4,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneGeometry,
+  ShaderMaterial,
+  Vector3,
+} from 'three'
 import { TresCamera, TresObject3D, useRenderLoop } from '@tresjs/core'
 import { useCientos } from '../useCientos'
 import { Mutable } from '@vueuse/core'
-import { nextTick } from 'vue'
+import { VNode } from 'vue'
 
 const v1 = new Vector3(0, 0, 0)
 const v2 = new Vector3(0, 0, 0)
@@ -36,6 +45,37 @@ function objectScale(el: TresObject3D, camera: TresCamera) {
   }
 }
 
+const epsilon = (value: number) => (Math.abs(value) < 1e-10 ? 0 : value)
+
+function getCSSMatrix(matrix: Matrix4, multipliers: number[], prepend = '') {
+  let matrix3d = 'matrix3d('
+  for (let i = 0; i !== 16; i++) {
+    matrix3d += epsilon(multipliers[i] * matrix.elements[i]) + (i !== 15 ? ',' : ')')
+  }
+  return prepend + matrix3d
+}
+
+const getCameraCSSMatrix = ((multipliers: number[]) => {
+  return (matrix: Matrix4) => getCSSMatrix(matrix, multipliers)
+})([1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1])
+
+const getObjectCSSMatrix = ((scaleMultipliers: (n: number) => number[]) => {
+  return (matrix: Matrix4, factor: number) => getCSSMatrix(matrix, scaleMultipliers(factor), 'translate(-50%,-50%)')
+})((f: number) => [1 / f, 1 / f, 1 / f, 1, -1 / f, -1 / f, -1 / f, -1, 1 / f, 1 / f, 1 / f, 1, 1, 1, 1, 1])
+
+type PointerEventsProperties =
+  | 'auto'
+  | 'none'
+  | 'visiblePainted'
+  | 'visibleFill'
+  | 'visibleStroke'
+  | 'visible'
+  | 'painted'
+  | 'fill'
+  | 'stroke'
+  | 'all'
+  | 'inherit'
+
 export interface HTMLProps {
   geometry?: any
   material?: any
@@ -47,24 +87,40 @@ export interface HTMLProps {
   distanceFactor?: number
   fullscreen?: boolean
   center?: boolean
+  pointerEvents?: PointerEventsProperties
+  sprite?: boolean
 }
 
 const props = withDefaults(defineProps<HTMLProps>(), {
   geometry: new PlaneGeometry(),
-  material: new ShaderMaterial({
-    side: DoubleSide,
-  }),
+
   as: 'div',
   transform: false,
   eps: 0.0001,
+  pointerEvents: 'auto',
+  sprite: false,
 })
+
+const attrs = useAttrs()
 
 const slots = defineSlots()
 
-const groupRef = shallowRef<TresObject3D>()
+const groupRef = ref<TresObject3D>()
 
-const { geometry, material, as, transform, portal, wrapperClass, eps, distanceFactor, fullscreen, center, style } =
-  toRefs(props)
+const {
+  geometry,
+  material,
+  as,
+  transform,
+  portal,
+  wrapperClass,
+  eps,
+  distanceFactor,
+  fullscreen,
+  center,
+  pointerEvents,
+  sprite,
+} = toRefs(props)
 
 const { state } = useCientos()
 
@@ -72,6 +128,7 @@ const el = computed(() => document.createElement(as.value))
 
 const previousPosition = ref([0, 0])
 const previousZoom = ref(0)
+const vnode = ref<VNode>()
 
 const styles = computed(() => {
   if (transform.value) {
@@ -79,8 +136,8 @@ const styles = computed(() => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: state.renderer?.domElement.width,
-      height: state.renderer?.domElement.height,
+      width: state.container.value.offsetWidth,
+      height: state.container.value.offsetHeight,
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
     }
@@ -94,16 +151,21 @@ const styles = computed(() => {
         width: state.container.value.offsetWidth,
         height: state.container.value.offsetHeight,
       }),
-      ...style?.value,
+      ...attrs.style,
     }
   }
 })
+
+const transformInnerStyles = computed(() => ({
+  position: 'absolute',
+  pointerEvents: pointerEvents.value,
+}))
 
 watch(
   () => [groupRef.value, state.renderer],
   ([group, renderer]) => {
     if (group && renderer) {
-      const target = portal?.value || renderer.domElement
+      const target = portal?.value || renderer?.domElement
       state.scene?.updateMatrixWorld()
 
       if (transform.value) {
@@ -120,15 +182,16 @@ watch(
         target.parentNode?.appendChild(el.value)
       }
 
-      let vnode: any
-
       if (transform.value) {
-        el.value.style.width = `${geometry.value.parameters.width}px`
-        el.value.style.height = `${geometry.value.parameters.height}px`
+        vnode.value = createVNode('div', { id: 'outer', style: styles.value }, [
+          createVNode('div', { id: 'inner', style: transformInnerStyles.value }, [
+            createVNode('div', { id: state?.scene?.uuid, class: attrs.class, style: attrs.style }, slots.default?.()),
+          ]),
+        ])
       } else {
-        vnode = createVNode('div', { ref: 'el', style: styles.value }, slots.default?.())
+        vnode.value = createVNode('div', { id: state?.scene?.uuid, style: styles.value }, slots.default?.())
       }
-      render(vnode, el.value)
+      render(vnode.value, el.value)
     }
   },
 )
@@ -154,12 +217,38 @@ onLoop(() => {
         })
 
     if (
-      transform.value ||
+      transform.value /* ||
       Math.abs(previousZoom.value - state.camera.zoom) > eps.value ||
       Math.abs(previousPosition.value[0] - vector[0]) > eps.value ||
-      Math.abs(previousPosition.value[1] - vector[1]) > eps.value
+      Math.abs(previousPosition.value[1] - vector[1]) > eps.value */
     ) {
       if (transform.value) {
+        const [widthHalf, heightHalf] = [state.container.value.offsetWidth / 2, state.container.value.offsetHeight / 2]
+        const fov = state.camera.projectionMatrix.elements[5] * heightHalf
+        const { isOrthographicCamera, top, left, bottom, right } = state.camera as OrthographicCamera
+        const cameraMatrix = getCameraCSSMatrix(state.camera.matrixWorldInverse)
+        const cameraTransform = isOrthographicCamera
+          ? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
+          : `translateZ(${fov}px)`
+        let matrix = groupRef.value.matrixWorld
+        if (sprite.value) {
+          matrix = state.camera.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(groupRef.value.scale)
+          matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0
+          matrix.elements[15] = 1
+        }
+        el.value.style.width = state.container.value.offsetWidth + 'px'
+        el.value.style.height = state.container.value.offsetHeight + 'px'
+        el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
+
+        if (vnode.value?.el && vnode.value?.children) {
+          vnode.value.el.style.width = state.container.value.offsetWidth + 'px'
+          vnode.value.el.style.height = state.container.value.offsetHeight + 'px'
+          vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
+          vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
+            matrix,
+            1 / ((distanceFactor?.value || 10) / 400),
+          )
+        }
       } else {
         const scale =
           distanceFactor?.value === undefined ? 1 : objectScale(groupRef.value, state.camera) * distanceFactor?.value
@@ -214,11 +303,21 @@ const shaders = computed(() => ({
   }
   `,
 }))
+
+const shaderMaterial = computed(() => {
+  const shader = shaders.value
+  return (
+    material.value ||
+    new ShaderMaterial({
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader,
+      side: DoubleSide,
+    })
+  )
+})
 </script>
 <template>
   <TresGroup ref="groupRef">
-    <TresMesh :geometry="geometry">
-      <primitive :object="material" :fragment-shader="shaders.fragmentShader" />
-    </TresMesh>
+    <TresMesh :geometry="geometry" :material="shaderMaterial"> </TresMesh>
   </TresGroup>
 </template>

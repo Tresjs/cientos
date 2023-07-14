@@ -17,23 +17,32 @@ const gl = {
 const state = reactive({
   wrapperClass: 'wrapper',
   as: 'div',
-  transform: false,
   center: true,
 })
 </script>
 
 <template>
   <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[3, 0, 4]" />
+    <TresPerspectiveCamera :position="[3, 0, 8]" />
     <OrbitControls />
-
+    <!-- <Html v-bind="state" transform>
+      <iframe src="https://tresjs.org" frameborder="0" class="web"></iframe>
+    </Html> -->
     <TresMesh :position="[1, 1, 1]">
       <TresBoxGeometry />
       <TresMeshNormalMaterial />
-      <Html v-bind="state">
-        <h1 class="awiwi" style="background: #008080; color: #fff; padding: 1rem; border-radius: 0.5rem">Box</h1>
+      <Html v-bind="state" transform>
+        <h1 class="bg-white text-xs p-0.5 rounded">Box</h1>
       </Html>
     </TresMesh>
     <TresAmbientLight :intensity="1" />
   </TresCanvas>
 </template>
+
+<style scoped>
+.web {
+  width: 600px;
+  height: 400px;
+  border-radius: 10px;
+}
+</style>
