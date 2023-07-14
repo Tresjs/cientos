@@ -136,8 +136,8 @@ const styles = computed(() => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: state.container.value.offsetWidth,
-      height: state.container.value.offsetHeight,
+      width: state.container.value.offsetWidth + 'px',
+      height: state.container.value.offsetHeight + 'px',
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
     }
@@ -148,8 +148,8 @@ const styles = computed(() => {
       ...(fullscreen.value && {
         top: -state.container.value.offsetHeight / 2,
         left: -state.container.value.offsetWidth / 2,
-        width: state.container.value.offsetWidth,
-        height: state.container.value.offsetHeight,
+        width: state.container.value.offsetWidth + 'px',
+        height: state.container.value.offsetHeight + 'px',
       }),
       ...attrs.style,
     }
@@ -241,8 +241,6 @@ onLoop(() => {
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
         if (vnode.value?.el && vnode.value?.children) {
-          vnode.value.el.style.width = state.container.value.offsetWidth + 'px'
-          vnode.value.el.style.height = state.container.value.offsetHeight + 'px'
           vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
           vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
             matrix,
