@@ -14,6 +14,7 @@ declare module 'vue' {
     LeviosoDemo: typeof import('./src/components/LeviosoDemo.vue')['default']
     MapControlsDemo: typeof import('./src/components/MapControlsDemo.vue')['default']
     ModelsDemo: typeof import('./src/components/ModelsDemo.vue')['default']
+    ReflectorDemo: typeof import('./src/components/ReflectorDemo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDemo: typeof import('./src/components/ScrollDemo.vue')['default']
