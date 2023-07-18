@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { shallowRef, watch, reactive, toRefs } from 'vue'
+import { shallowRef, reactive, toRefs } from 'vue'
 import { TresColor } from '@tresjs/core'
 import { useCientos } from '../../core/useCientos'
 import { Reflector } from 'three/addons/objects/Reflector'
@@ -55,23 +55,23 @@ export interface ReflectorProps {
    * The number of samples to render.
    *
    * @default Reflector.ReflectorShader
-   * @type {string}
+   * @type {object}
    * @memberof ReflectorProps
    *
    */
-  shader?: string
+  shader?: object
 }
 
 const props = withDefaults(defineProps<ReflectorProps>(), {
-  color: '#000000',
-  textureWidth: window.innerWidth,
-  textureHeight: window.innerHeight,
+  color: '#333',
+  textureWidth: 512,
+  textureHeight: 512,
   clipBias: 0,
   multisample: 4,
   shader: Reflector.ReflectorShader,
 })
 
-const reflector = shallowRef<Reflector>()
+const reflectorRef = shallowRef<Reflector>()
 
 const { extend } = useCientos()
 
@@ -85,15 +85,16 @@ const options = reactive({
   textureHeight: textureHeight.value,
   clipBias: clipBias.value,
   multisample: multisample.value,
-  shader: shader.value,
+  shader: {...Reflector.ReflectorShader,...shader.value },
 })
-watch(clipBias, value => {
-    options.clipBias = value
+
+defineExpose({
+  value: reflectorRef,
 })
 </script>
 
 <template>
-  <TresReflector ref="reflector" :args="[new PlaneGeometry(), options]">
+  <TresReflector ref="reflectorRef" :args="[new PlaneGeometry(), options]" :material-uniforms-color-value="color">
     <slot>
       <TresPlaneGeometry />
     </slot>
