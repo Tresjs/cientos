@@ -63,7 +63,10 @@ export default defineConfig({
       {
         text: 'Materials',
         collapsed: true,
-        items: [{ text: 'WobbleMaterial', link: '/guide/materials/wobble-material' }],
+        items: [
+          { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
+          { text: 'Reflector', link: '/guide/materials/reflector' }
+        ],
       },
       {
         text: 'Shapes',
