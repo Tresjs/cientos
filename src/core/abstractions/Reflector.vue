@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { shallowRef, reactive, toRefs } from 'vue'
+import { shallowRef, reactive, toRefs, watchEffect } from 'vue'
 import { TresColor } from '@tresjs/core'
 import { useCientos } from '../../core/useCientos'
 import { Reflector } from 'three/addons/objects/Reflector'
@@ -86,6 +86,14 @@ const options = reactive({
   clipBias: clipBias.value,
   multisample: multisample.value,
   shader: {...Reflector.ReflectorShader,...shader.value },
+})
+
+watchEffect(() =>{
+  if(!reflectorRef?.value) return
+  if (clipBias.value) options.clipBias = clipBias.value
+  const currentGeo =  reflectorRef.value.geometry
+  reflectorRef.value.dispose()
+  reflectorRef.value = new Reflector(currentGeo, options)
 })
 
 defineExpose({

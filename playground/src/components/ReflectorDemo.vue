@@ -50,13 +50,14 @@ const customShader = {
 
 const options = reactive({
   color: '#f7f7f7',
-  clipBias: 0.003,
+  clipBias: 1,
   textureWidth: 1024,
 })
 
 const { pane } = useTweakPane()
 
 pane.addInput(options, 'color', { label: 'MirrorColor' })
+pane.addInput(options, 'clipBias', { label: 'clipBias', min: 0, max:1, step: 0.001 })
 
 </script>
 

@@ -2,16 +2,10 @@
 
 The `cientos` package provides an abstraction of the Reflector class, which creates a reflector material in real time of your scene `<Reflector >` component that makes a geometry as an argument to create a mirror. This Mesh extends from `Mesh` so all the default props can be passed as well:
 
-- `color` The base color that's combine with the mirror effect
-- `textureWidth` the width of the texture to render on the mirror
-- `textureHeight` the height of the texture to render on the mirror
-- `clipBias` to use the clipBias property
-- `multisample` how many samplers will be render (default is 4)
-
 ## Usage
 
 ```html
-<Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" color="#fff">
+<Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" color="#F7F7F7">
   <TresCircleGeometry :args="[10, 10]" />
 </Reflector>
 ```
@@ -32,8 +26,8 @@ const customShader = {
   <TresCanvas shadows alpha>
     <TresPerspectiveCamera :position="[0, 0, 3]" />
     ...
-    <Reflector :rotation="[-Math.PI * 0.5, 0, 0]" 
-    :position-y="-2" 
+    <Reflector :rotation="[-Math.PI * 0.5, 0, 0]"
+    :position-y="-2"
     color="#fff"
     :shader="customShader"
     >
@@ -44,9 +38,25 @@ const customShader = {
 </template>
 ```
 
-## The Reflector shader use the following object:
+| Prop              | Description                                          | Default                   |
+| :---------------- | :--------------------------------------------------- | ------------------------- |
+| **color**         | The base color that's combine with the mirror effect | '#000000'                 |
+| **textureWidth**  | the width of the texture to render on the mirror     | 512                       |
+| **textureHeight** | the height of the texture to render on the mirror    | 512                       |
+| **clipBias**      | to use the clipBias property                         | 0                         |
+| **multisample**   | how many samplers will be render                     | 4                         |
+| **shader**        | The texture of the smoke.                            | Reflector.ReflectorShader |
+
+
+## The Reflector shader use the following configuration by default:
 
 You can extend, modify or just play with them
+
+### name
+
+```js
+	name:"ReflectorShader"
+```
 
 ### Uniforms
 
@@ -63,7 +73,9 @@ You can extend, modify or just play with them
 		}
 	},
 ```
+
 ### VertexShader
+
 ```glsl
 	vertexShader: /* glsl */`
 		uniform mat4 textureMatrix;
@@ -82,7 +94,9 @@ You can extend, modify or just play with them
 
 		}`
 ```
+
 ### FragmentShader
+
 ```glsl
 	fragmentShader: /* glsl */`
 		uniform vec3 color;

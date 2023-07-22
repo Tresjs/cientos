@@ -37,6 +37,7 @@ export default defineConfig({
           { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
           { text: 'Contact Shadows', link: '/guide/abstractions/contact-shadows' },
           { text: 'Precipitation', link: '/guide/abstractions/precipitation' },
+          { text: 'Reflector', link: '/guide/abstractions/reflector' }
         ],
       },
       {
@@ -65,7 +66,6 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
-          { text: 'Reflector', link: '/guide/materials/reflector' }
         ],
       },
       {
