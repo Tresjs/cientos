@@ -1,4 +1,4 @@
-import { TresState, useTresContext } from '@tresjs/core'
+import { useTresContext } from '@tresjs/core'
 import { EventDispatcher } from 'three'
 
 import { Ref, inject, ref, toRefs, watchEffect } from 'vue'
@@ -10,8 +10,8 @@ import { Ref, inject, ref, toRefs, watchEffect } from 'vue'
  * @return {*}
  */
 export function useCientos() {
-  const { renderer, camera } = inject<TresState>('useTres', useTresContext())
-  const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref() 
+  const { renderer, camera } = useTresContext()
+  const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref()
 
   const extend =
     inject<(objects: any) => void>('extend') ||

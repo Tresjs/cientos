@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Camera, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { ref, onUnmounted, toRefs } from 'vue'
+import { ref, watch, onUnmounted, toRefs } from 'vue'
 import { TresVector3, useRenderLoop } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
@@ -278,40 +278,40 @@ const {
   target,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend } = useCientos()
+const { camera: activeCamera, renderer, extend, controls } = useCientos()
 
-const controls = ref<OrbitControls | null>(null)
+const controlsRef = ref<OrbitControls | null>(null)
 
 extend({ OrbitControls })
 
-/* watch(controls, value => {
+watch(controlsRef, value => {
   addEventListeners()
   if (value && makeDefault.value) {
-    setState('controls', value)
+    controls.value = value
   } else {
-    setState('controls', null)
+    controls.value = null
   }
-}) */
+})
 
 const emit = defineEmits(['change', 'start', 'end'])
 
 function addEventListeners() {
-  useEventListener(controls.value as any, 'change', () => emit('change', controls.value))
-  useEventListener(controls.value as any, 'start', () => emit('start', controls.value))
-  useEventListener(controls.value as any, 'end', () => emit('end', controls.value))
+  useEventListener(controlsRef.value as any, 'change', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'start', () => emit('start', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
 }
 
 const { onLoop } = useRenderLoop()
 
 onLoop(() => {
-  if (controls.value && (enableDamping.value || autoRotate.value)) {
-    controls.value.update()
+  if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
+    controlsRef.value.update()
   }
 })
 
 onUnmounted(() => {
-  if (controls.value) {
-    controls.value.dispose()
+  if (controlsRef.value) {
+    controlsRef.value.dispose()
   }
 })
 </script>
@@ -319,7 +319,7 @@ onUnmounted(() => {
 <template>
   <TresOrbitControls
     v-if="activeCamera && renderer"
-    ref="controls"
+    ref="controlsRef"
     :target="target"
     :auto-rotate="autoRotate"
     :auto-rotate-speed="autoRotateSpeed"
