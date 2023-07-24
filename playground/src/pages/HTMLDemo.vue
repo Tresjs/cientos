@@ -15,6 +15,7 @@ const gl = {
 }
 
 const sphereRef = ref(null)
+const torusRef = ref(null)
 
 const state = reactive({
   wrapperClass: 'wrapper',
@@ -40,9 +41,13 @@ const state = reactive({
     <TresMesh ref="sphereRef" :position="[4, 1, 1]">
       <TresSphereGeometry />
       <TresMeshNormalMaterial />
-      <Html v-bind="state" transform>
+      <Html v-bind="state" transform >
         <h1 class="bg-white text-xs p-0.5 rounded">Sphere</h1>
       </Html>
+    </TresMesh>
+    <TresMesh ref="torusRef" :position="[7, 1, 1]">
+      <TresTorusGeometry />
+      <TresMeshNormalMaterial />
     </TresMesh>
     <TresAmbientLight :intensity="1" />
   </TresCanvas>

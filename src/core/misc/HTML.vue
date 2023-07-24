@@ -8,6 +8,7 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   Raycaster,
+  Scene,
   ShaderMaterial,
   Vector3,
 } from 'three'
@@ -40,16 +41,15 @@ function isObjectBehindCamera(el: TresObject3D, camera: TresCamera) {
   return deltaCamObj.angleTo(camDir) > Math.PI / 2
 }
 
-function isObjectVisible(el: TresObject3D, camera: TresCamera, raycaster: Raycaster, occlude: TresObject3D[]) {
+function isObjectVisible(el: TresObject3D, camera: TresCamera, raycaster: Raycaster, occlude: any) {
   const elPos = v1.setFromMatrixPosition(el.matrixWorld)
-  const screenPos = elPos.clone()
-  screenPos.project(camera)
-  raycaster.setFromCamera(screenPos, camera)
+  raycaster.setFromCamera(elPos, camera)
   const intersects = raycaster.intersectObjects(occlude, true)
-  console.log(intersects)
+  
   if (intersects.length > 0) {
     const intersectionDistance = intersects[0].distance
     const pointDistance = elPos.distanceTo(raycaster.ray.origin)
+
     return pointDistance < intersectionDistance
   }
   return true
@@ -131,7 +131,8 @@ export interface HTMLProps {
   // Occlusion based off work by Jerome Etienne and James Baicoianu
   // https://www.youtube.com/watch?v=ScZcUEDGjJI
   // as well as Joe Pea in CodePen: https://codepen.io/trusktr/pen/RjzKJx
-  occlude?: Ref<TresObject3D>[] | boolean | 'raycast' | 'blending'
+  /* occlude?: Ref<Ref<TresObject3D>>[] | boolean | 'raycast' | 'blending' */
+  occlude?: TresObject3D[] | boolean | 'raycast' | 'blending'
 }
 
 const emits = defineEmits(['onOcclude'])
@@ -171,6 +172,7 @@ const {
 } = toRefs(props)
 
 const { state } = useCientos()
+const raycaster = new Raycaster()
 
 const el = computed(() => document.createElement(as.value))
 
@@ -300,17 +302,16 @@ onLoop(() => {
       const isBehindCamera = isObjectBehindCamera(groupRef.value, state.camera)
       let raytraceTarget: null | undefined | boolean | TresObject3D[] = false
 
-      if (isRayCastOcclusion.value) {
+      if (isRayCastOcclusion.value ) {
         if (occlude?.value !== 'blending') {
           raytraceTarget = [state.scene]
-        } else if (Array.isArray(occlude)) {
-          raytraceTarget = occlude.value.map(item => item.value) as TresObject3D[]
         }
       }
 
       const previouslyVisible = visible.value
+
       if (raytraceTarget) {
-        const isVisible = isObjectVisible(groupRef.value, state.camera, state.raycaster, raytraceTarget)
+        const isVisible = isObjectVisible(groupRef.value, state.camera, raycaster, raytraceTarget as TresObject3D[])
         visible.value = isVisible && !isBehindCamera
       } else {
         visible.value = !isBehindCamera
@@ -413,6 +414,7 @@ onLoop(() => {
   }
 })
 
+//TODO: Check ShaderMaterial disposal
 const shaders = computed(() => ({
   vertexShader: transform.value
     ? undefined
@@ -470,6 +472,8 @@ const shaderMaterial = computed(() => {
 </script>
 <template>
   <TresGroup ref="groupRef">
-    <TresMesh ref="meshRef" :geometry="geometry" :material="shaderMaterial"> </TresMesh>
+    <template v-if="occlude && !isRayCastOcclusion">
+      <TresMesh ref="meshRef" :geometry="geometry" :material="shaderMaterial"> </TresMesh>
+    </template>
   </TresGroup>
 </template>
