@@ -32,7 +32,7 @@ export async function useEnvironment({
   path = '/',
   preset = undefined,
 }: Partial<EnvironmentOptions>): Promise<Texture | CubeTexture> {
-  const { state } = useCientos()
+  const { scene } = useCientos()
 
   if (preset) {
     if (!(preset in environmentPresets))
@@ -62,13 +62,13 @@ export async function useEnvironment({
     texture.colorSpace = SRGBColorSpace
   }
 
-  if (state.scene) {
-    state.scene.environment = texture
+  if (scene.value) {
+    scene.value.environment = texture
     if (background) {
-      state.scene.background = texture
+      scene.value.background = texture
     }
     if (blur) {
-      state.scene.backgroundBlurriness = blur | 0
+      scene.value.backgroundBlurriness = blur | 0
     }
   }
 

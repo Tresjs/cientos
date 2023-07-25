@@ -115,15 +115,15 @@ zoomFolder.addInput(controlsState, 'zoomSpeed', {
 })
 
 function onChange() {
-  console.log('change')
+  /* console.log('change') */
 }
 
 function onStart() {
-  console.log('start')
+  /*  console.log('start') */
 }
 
 function onEnd() {
-  console.log('end')
+  /*   console.log('end') */
 }
 </script>
 

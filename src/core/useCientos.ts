@@ -10,7 +10,7 @@ import { Ref, inject, ref, toRefs, watchEffect } from 'vue'
  * @return {*}
  */
 export function useCientos() {
-  const { renderer, camera } = useTresContext()
+  const { renderer, camera, scene } = useTresContext()
   const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref()
 
   const extend =
@@ -23,6 +23,7 @@ export function useCientos() {
     controls,
     camera,
     renderer,
+    scene,
     extend
   }
 }
