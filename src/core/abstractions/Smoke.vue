@@ -104,17 +104,17 @@ const calculateOpacity = (scale: number, density: number): number => (scale / 6)
 
 const { map } = await useTexture({ map: texture.value })
 
-const { state } = useCientos()
-const colorSpace = computed(() => state.renderer?.outputColorSpace)
+const { renderer, camera } = useCientos()
+const colorSpace = computed(() => renderer.value?.outputColorSpace)
 
 const { onLoop } = useRenderLoop()
 
 onLoop(() => {
-  if (smokeRef.value && state.camera && groupRef.value) {
+  if (smokeRef.value && camera.value && groupRef.value) {
     groupRef.value?.children.forEach((child: Object3D, index: number) => {
       child.rotation.z += smoke[index].rotation
     })
-    smokeRef.value.lookAt(state.camera?.position)
+    smokeRef.value.lookAt(camera.value?.position)
   }
 })
 </script>
