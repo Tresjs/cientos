@@ -10,6 +10,8 @@ import {
 import { RGBELoader } from 'three-stdlib'
 import { useCientos } from '../../../core/useCientos'
 import { EnvironmentOptions, environmentPresets } from './const'
+import { computed, shallowRef, toValue, watch } from 'vue'
+import type { ShallowRef } from 'vue'
 
 /**
  * Component that loads an environment map and sets it as the scene's background and environment.
@@ -31,7 +33,7 @@ export async function useEnvironment({
   background = false,
   path = '/',
   preset = undefined,
-}: Partial<EnvironmentOptions>): Promise<Texture | CubeTexture> {
+}: Partial<EnvironmentOptions>): Promise<Texture | CubeTexture| null> {
   const { state } = useCientos()
 
   if (preset) {
@@ -41,36 +43,41 @@ export async function useEnvironment({
     path = 'https://raw.githubusercontent.com/Tresjs/assets/main/textures/hdr/'
   }
 
-  const isCubeMap = Array.isArray(files)
+  const isCubeMap = computed(() => Array.isArray(toValue(files)));
 
-  const loader = isCubeMap ? CubeTextureLoader : RGBELoader
+  const loader = isCubeMap.value ? CubeTextureLoader : RGBELoader
 
   const result = await useLoader(
     // @ts-expect-error There is a bug in the types for useLoader
     loader,
-    isCubeMap ? [files] : files,
+    isCubeMap.value ? [files] : files,
     (loader: any) => {
       if (path) loader.setPath(path)
       /* if (colorSpace) loader.colorSpace = colorSpace */
     },
   )
 
-  const texture: Texture | CubeTexture = isCubeMap ? result[0] : result
+  const texture: ShallowRef<Texture | CubeTexture> = shallowRef(isCubeMap.value ? result[0] : result)
 
-  if (texture) {
-    texture.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping
-    texture.colorSpace = SRGBColorSpace
-  }
+  watch(texture, () => {
+    if (texture.value) {
+      texture.value.mapping = isCubeMap.value ? CubeReflectionMapping : EquirectangularReflectionMapping
+      texture.value.colorSpace = SRGBColorSpace
+    }
+  }, {immediate: true})
 
-  if (state.scene) {
-    state.scene.environment = texture
-    if (background) {
-      state.scene.background = texture
+  watch([blur, background], () => {
+    state.scene.environment = texture.value
+    if(state.scene){
+      if (toValue(background)) {
+        state.scene.background = texture.value
+      }
+  
+      if(toValue(blur)){
+        state.scene.backgroundBlurriness = blur | 0
+      }
     }
-    if (blur) {
-      state.scene.backgroundBlurriness = blur | 0
-    }
-  }
+  }, {immediate: true})
 
   return texture
 }

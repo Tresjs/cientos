@@ -1,6 +1,6 @@
 import Text3D from './Text3D.vue'
 import { useAnimations } from './useAnimations'
-import { Environment } from './useEnvironment/component'
+import Environment from './useEnvironment/component.vue'
 // import { MouseParallax } from './mouseParallax'
 import Stars from './Stars.vue'
 import Precipitation from './Precipitation.vue'
