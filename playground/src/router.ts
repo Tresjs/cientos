@@ -27,6 +27,11 @@ const routes = [
     component: () => import('./pages/SmokeDemo.vue'),
   },
   {
+    path: '/abstractions/levioso',
+    name: 'Levioso',
+    component: () => import('./pages/LeviosoDemo.vue'),
+  },
+  {
     path: '/abstractions/precipitation',
     name: 'Precipitation',
     component: () => import('./pages/PrecipitationDemo.vue'),
