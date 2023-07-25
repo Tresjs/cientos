@@ -11,7 +11,7 @@ import { Ref, inject, ref, toRefs, watchEffect } from 'vue'
  */
 export function useCientos() {
   const { renderer, camera, scene } = useTresContext()
-  const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref()
+  const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref(null)
 
   const extend =
     inject<(objects: any) => void>('extend') ||

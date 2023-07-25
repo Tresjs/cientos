@@ -45,6 +45,11 @@ const routes = [
     path: '/abstractions/environment',
     name: 'Environment',
     component: () => import('./pages/EnvironmentDemo.vue'),
+  },
+  {
+    path: '/staging/backdrop',
+    name: 'Backdrop',
+    component: () => import('./pages/BackdropDemo.vue'),
   }
 ]
 
