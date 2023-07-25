@@ -50,7 +50,17 @@ const routes = [
     path: '/staging/backdrop',
     name: 'Backdrop',
     component: () => import('./pages/BackdropDemo.vue'),
-  }
+  },
+  {
+    path: '/abstractions/contact-shadows',
+    name: 'ContactShadows',
+    component: () => import('./pages/ContactShadowsDemo.vue'),
+  },
+  {
+    path: '/abstractions/mouse-parallax',
+    name: 'MouseParallax',
+    component: () => import('./pages/MouseParallaxDemo.vue'),
+  },
 ]
 
 export const router = createRouter({

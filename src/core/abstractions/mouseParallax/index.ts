@@ -35,23 +35,31 @@ export const MouseParallax = defineComponent<MouseParallaxProps>({
   name: 'MouseParallax',
   props: ['disabled', 'factor', 'ease'] as unknown as undefined,
   setup(props) {
-    const { state } = useCientos()
+    const { scene, camera } = useCientos()
 
     const { x, y } = useMouse()
     const { width, height } = useWindowSize()
 
     const { onLoop } = useRenderLoop()
     const cameraGroup = new Group()
-    state.scene?.add(cameraGroup)
+    scene.value?.add(cameraGroup)
+
     const easeFactor = props.ease || 2.5
     const factor = props.factor || 2.5
 
     const cursorX = computed(() => (x.value / width.value - 0.5) * factor)
     const cursorY = computed(() => -(y.value / height.value - 0.5) * factor)
 
-    watchOnce(() => state.camera, () => {
-      if(state.camera){
-        cameraGroup.add(state.camera)
+    watchOnce(() => camera.value, () => {
+      if (camera.value) {
+        cameraGroup.add(camera.value)
+      }
+    })
+
+    watchOnce(() => scene.value, () => {
+      if (scene.value) {
+        scene.value.add(cameraGroup)
+        console.log('added camera group', scene.value)
       }
     })
 

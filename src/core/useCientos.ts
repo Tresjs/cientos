@@ -1,16 +1,13 @@
-import { useTresContext } from '@tresjs/core'
+import { useTresContext, type TresContext } from '@tresjs/core'
 import { EventDispatcher } from 'three'
 
-import { Ref, inject, ref, toRefs, watchEffect } from 'vue'
-/* import { useLogger } from '@tresjs/core' */
-/**
- * Allows to use and extend the state of the core package.
- *
- * @export
- * @return {*}
- */
-export function useCientos() {
-  const { renderer, camera, scene } = useTresContext()
+import { Ref, inject, ref } from 'vue'
+
+export interface CientosReturn extends ReturnType<TresContext> {
+  controls: Ref<(EventDispatcher & { enabled: boolean }) | null>
+  extend: (objects: any) => void
+}
+export function useCientos(): CientosReturn {
   const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref(null)
 
   const extend =
@@ -21,9 +18,7 @@ export function useCientos() {
 
   return {
     controls,
-    camera,
-    renderer,
-    scene,
+    ...useTresContext(),
     extend
   }
 }
