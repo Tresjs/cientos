@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@alvarosabu/prettier-config": "^1.3.0",
-    "@release-it/conventional-changelog": "^6.0.0",
+    "@release-it/conventional-changelog": "^7.0.0",
     "@tweakpane/core": "^1.1.9",
     "@tweakpane/plugin-essentials": "^0.1.8",
     "@types/node": "^20.4.1",
