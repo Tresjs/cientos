@@ -13,7 +13,6 @@ export {
   useAnimations,
   Environment,
   MouseParallax,
-  // MouseParallax,
   Stars,
   Smoke,
   Levioso,
