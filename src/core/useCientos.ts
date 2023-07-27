@@ -7,9 +7,9 @@ export interface CientosReturn extends ReturnType<TresContext> {
   controls: Ref<(EventDispatcher & { enabled: boolean }) | null>
   extend: (objects: any) => void
 }
-export function useCientos(): CientosReturn {
-  const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref(null)
+const controls: Ref<(EventDispatcher & { enabled: boolean }) | null> = ref(null)
 
+export function useCientos(): CientosReturn {
   const extend =
     inject<(objects: any) => void>('extend') ||
     (() => {
