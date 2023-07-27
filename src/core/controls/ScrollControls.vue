@@ -69,8 +69,6 @@ const { logWarning } = useLogger()
 if (props.smoothScroll < 0) logWarning('SmoothControl must be greater than zero')
 if (props.pages < 0) logWarning('Pages must be greater than zero')
 
-// TODO delete warnings in console ALVARO
-
 const { camera, controls, renderer } = useCientos()
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')

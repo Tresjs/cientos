@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, toRefs, watch } from 'vue'
+import { ref, shallowRef, toRefs } from 'vue'
 import { useRenderLoop } from '@tresjs/core'
 import { PointerLockControls } from 'three-stdlib'
 import { onKeyStroke } from '@vueuse/core'
@@ -95,7 +95,8 @@ const props = withDefaults(defineProps<KeyboardControlsProps>(), {
 
 const { forward, back, left, right, jump, gravity, moveSpeed, headBobbing, is2D } = toRefs(props)
 
-const { state } = useCientos()
+const { camera: activeCamera, controls } = useCientos()
+
 const xMove = ref(0)
 const zMove = ref(0)
 const isHeadBobbing = ref(false)
@@ -106,14 +107,7 @@ const HBAmplitude = 0.3
 const initJumpTime = ref(0)
 const wrapperRef = shallowRef()
 const _forward = is2D.value ? 'y' : 'z'
-let initCameraPos = 0
-
-watch(
-  () => state.camera,
-  () => {
-    initCameraPos = state.camera?.position?.y || 0
-  },
-)
+let initCameraPos = activeCamera.value.position?.y || 0
 
 // FORWARD DIRECTION MOVEMENTS
 onKeyStroke(
@@ -193,15 +187,16 @@ const getJump = () => {
 const { onLoop } = useRenderLoop()
 
 onLoop(({ elapsed }) => {
+
   // has PointerLockControls?
-  if (state.controls instanceof PointerLockControls && state?.controls?.isLocked) {
-    state.controls.moveForward(zMove.value)
-    state.controls.moveRight(xMove.value)
-    if (state.camera?.position) {
-      state.camera.position.y = headBobbing.value ? headBobbingMov(elapsed) : initCameraPos
-      state.camera.position.y += getJump()
+  if (controls.value instanceof PointerLockControls && controls.value?.isLocked) {
+    controls.value.moveForward(zMove.value)
+    controls.value.moveRight(xMove.value)
+    if (activeCamera.value.position) {
+      activeCamera.value.position.y = headBobbing.value ? headBobbingMov(elapsed) : initCameraPos
+      activeCamera.value.position.y += getJump()
     }
-  } else if (wrapperRef.value.children.length > 0 && !(state.controls instanceof PointerLockControls)) {
+  } else if (wrapperRef.value.children.length > 0 && !(controls.value instanceof PointerLockControls)) {
     wrapperRef.value.position.x += xMove.value
     wrapperRef.value.position[_forward] += is2D.value ? zMove.value : -zMove.value
   }
