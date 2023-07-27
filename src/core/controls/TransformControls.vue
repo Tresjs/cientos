@@ -44,10 +44,6 @@ const { controls, camera, renderer, extend } = useCientos()
 extend({ TransformControls })
 
 const onDragingChange = (e: Event) => {
-  console.log('dragging', {
-    value: e.value,
-    controls: controls.value,
-  })
   if (controls.value) controls.value.enabled = !e.value
   emit('dragging', e.value)
 }
