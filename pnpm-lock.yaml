@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tresjs/core':
-        specifier: '>=2.1.3'
-        version: 2.1.3(three@0.154.0)(vue@3.3.0)
+        specifier: 2.4.0-next.10
+        version: 2.4.0-next.10(three@0.154.0)(vue@3.3.0)
       '@vueuse/core':
         specifier: ^10.2.1
         version: 10.2.1(vue@3.3.0)
@@ -1022,8 +1022,8 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
-  /@tresjs/core@2.1.3(three@0.154.0)(vue@3.3.0):
-    resolution: {integrity: sha512-imLAn1icEtaPmNXl7/pwcp3mRlfaIpy/zwOS72MRqqDRYwaCxh5KWxusNc4tgK8sbEu2H3FaymdBu7Wg9kr/cw==}
+  /@tresjs/core@2.4.0-next.10(three@0.154.0)(vue@3.3.0):
+    resolution: {integrity: sha512-OA6ybkTR4Srbd7yo93RRqBv2mTYj8/Uq8hzzwLfE51EKP9Aum0BVL9uyOwsoFX1L5pCk0e0epBybpNM59xIvPg==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.3'
