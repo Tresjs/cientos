@@ -22,6 +22,11 @@ const routes = [
     component: () => import('./pages/FirstPersonControlsDemo.vue'),
   },
   {
+    path: '/controls/scroll-controls',
+    name: 'ScrollControls',
+    component: () => import('./pages/ScrollControlsDemo.vue'),
+  },
+  {
     path: '/abstractions/smoke',
     name: 'Smoke',
     component: () => import('./pages/SmokeDemo.vue'),
