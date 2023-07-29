@@ -5,7 +5,7 @@
 // As well, basically the same implementation as in pmndrs drei but with Vue Composition API
 // https://github.com/pmndrs/drei/blob/master/src/core/ContactShadows.tsx#L113
 
-import { TresColor, useRenderLoop } from '@tresjs/core'
+import { TresColor, useRenderLoop, useTresContext } from '@tresjs/core'
 import {
   Color,
   ColorRepresentation,
@@ -20,7 +20,6 @@ import {
 } from 'three'
 import { computed, shallowRef, watchEffect } from 'vue'
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib'
-import { useCientos } from '../../core/useCientos'
 
 export interface ContactShadowsProps {
   /**
@@ -158,7 +157,7 @@ let renderTarget: WebGLRenderTarget, renderTargetBlur: WebGLRenderTarget
 let planeGeometry: PlaneGeometry, blurPlane: Mesh
 let depthMaterial: MeshDepthMaterial
 
-const { renderer, scene } = useCientos()
+const { renderer, scene } = useTresContext()
 
 const cameraW = computed(() => props.width * (Array.isArray(props.scale) ? props.scale[0] : props.scale || 1))
 const cameraH = computed(() => props.height * (Array.isArray(props.scale) ? props.scale[1] : props.scale || 1))

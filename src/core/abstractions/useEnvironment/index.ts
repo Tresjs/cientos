@@ -1,4 +1,4 @@
-import { useLoader } from '@tresjs/core'
+import { useLoader, useTresContext } from '@tresjs/core'
 import {
   CubeReflectionMapping,
   CubeTexture,
@@ -8,7 +8,6 @@ import {
   Texture,
 } from 'three'
 import { RGBELoader } from 'three-stdlib'
-import { useCientos } from '../../../core/useCientos'
 import { EnvironmentOptions, environmentPresets } from './const'
 
 /**
@@ -32,7 +31,7 @@ export async function useEnvironment({
   path = '/',
   preset = undefined,
 }: Partial<EnvironmentOptions>): Promise<Texture | CubeTexture> {
-  const { scene } = useCientos()
+  const { scene } = useTresContext()
 
   if (preset) {
     if (!(preset in environmentPresets))

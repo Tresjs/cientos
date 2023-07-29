@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useSlots, shallowRef, watchEffect, toRefs, toValue } from 'vue'
 import { TextGeometry, FontLoader, TextGeometryParameters } from 'three-stdlib'
-import { useCientos } from '../../core/useCientos'
+import { useTresContext } from '@tresjs/core'
 
 export type Glyph = {
   _cachedOutline: string[]
@@ -150,7 +150,7 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend } = useCientos()
+const { extend } = useTresContext()
 
 extend({ TextGeometry })
 

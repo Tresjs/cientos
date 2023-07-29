@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, toRefs } from 'vue'
-import { useCientos } from '../useCientos'
 import { Group } from 'three'
-import { useRenderLoop } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useMouse, useWindowSize } from '@vueuse/core'
 import { watch } from 'vue'
 
@@ -39,7 +38,7 @@ const props = withDefaults(defineProps<MouseParallaxProps>(), {
   ease: 0.1,
 })
 
-const { camera } = useCientos()
+const { camera } = useTresContext()
 
 const { disabled, factor, ease } = toRefs(props)
 

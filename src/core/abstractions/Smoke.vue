@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, computed, toRefs } from 'vue'
-import { TresColor, useTexture, useRenderLoop } from '@tresjs/core'
-import { Object3D } from 'three'
-
-import { useCientos } from '../../core/useCientos'
+import { TresColor, useTexture, useRenderLoop, useTresContext } from '@tresjs/core'
+import { Object3D, Texture } from 'three'
 
 export type SmokeProps = {
   /**
@@ -102,9 +100,9 @@ const smoke = [...new Array(segments)].map((_, index) => ({
 
 const calculateOpacity = (scale: number, density: number): number => (scale / 6) * density * opacity.value
 
-const { map } = await useTexture({ map: texture.value })
+const { map } = (await useTexture({ map: texture.value })) as { map: Texture }
 
-const { renderer, camera } = useCientos()
+const { renderer, camera } = useTresContext()
 const colorSpace = computed(() => renderer.value?.outputColorSpace)
 
 const { onLoop } = useRenderLoop()

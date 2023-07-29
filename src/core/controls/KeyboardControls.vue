@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, shallowRef, toRefs } from 'vue'
-import { useRenderLoop } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { PointerLockControls } from 'three-stdlib'
 import { onKeyStroke } from '@vueuse/core'
-import { useCientos } from '../../core/useCientos'
 
 export type KeyboardControlsProps = {
   /**
@@ -95,7 +94,7 @@ const props = withDefaults(defineProps<KeyboardControlsProps>(), {
 
 const { forward, back, left, right, jump, gravity, moveSpeed, headBobbing, is2D } = toRefs(props)
 
-const { camera: activeCamera, controls } = useCientos()
+const { camera: activeCamera, controls } = useTresContext()
 
 const xMove = ref(0)
 const zMove = ref(0)
@@ -187,7 +186,6 @@ const getJump = () => {
 const { onLoop } = useRenderLoop()
 
 onLoop(({ elapsed }) => {
-
   // has PointerLockControls?
   if (controls.value instanceof PointerLockControls && controls.value?.isLocked) {
     controls.value.moveForward(zMove.value)

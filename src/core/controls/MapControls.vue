@@ -1,9 +1,8 @@
 <script lang="ts" setup>
+import { useTresContext } from '@tresjs/core'
 import { Camera } from 'three'
 import { MapControls } from 'three-stdlib'
 import { ref, watch, onUnmounted } from 'vue'
-
-import { useCientos } from '../../core/useCientos'
 
 export interface MapControlsProps {
   /**
@@ -37,7 +36,7 @@ const props = withDefaults(defineProps<MapControlsProps>(), {
   makeDefault: false,
 })
 
-const { camera: activeCamera, renderer, extend, controls } = useCientos()
+const { camera: activeCamera, renderer, extend, controls } = useTresContext()
 
 const controlsRef = ref<MapControls | null>(null)
 

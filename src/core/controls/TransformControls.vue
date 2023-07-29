@@ -3,8 +3,7 @@ import { onUnmounted, shallowRef, ShallowRef, watchEffect, toRefs } from 'vue'
 import { Object3D, type Event } from 'three'
 import { TransformControls } from 'three-stdlib'
 import { useEventListener } from '@vueuse/core'
-
-import { useCientos } from '../useCientos'
+import { useTresContext } from '@tresjs/core'
 
 export interface TransformControlsProps {
   object: Object3D
@@ -39,7 +38,7 @@ const emit = defineEmits(['dragging', 'change', 'mouseDown', 'mouseUp', 'objectC
 
 const controlsRef: ShallowRef<TransformControls | undefined> = shallowRef()
 
-const { controls, camera, renderer, extend } = useCientos()
+const { controls, camera, renderer, extend } = useTresContext()
 
 extend({ TransformControls })
 

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { watch, ref, shallowRef } from 'vue'
-import { useRenderLoop, useLogger } from '@tresjs/core'
+import { useRenderLoop, useLogger, useTresContext } from '@tresjs/core'
 import { useWindowScroll, useWindowSize, useScroll } from '@vueuse/core'
-import { useCientos } from '../../core/useCientos'
 
 export interface ScrollControlsProps {
   /**
@@ -69,7 +68,7 @@ const { logWarning } = useLogger()
 if (props.smoothScroll < 0) logWarning('SmoothControl must be greater than zero')
 if (props.pages < 0) logWarning('Pages must be greater than zero')
 
-const { camera, controls, renderer } = useCientos()
+const { camera, controls, renderer } = useTresContext()
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')
 

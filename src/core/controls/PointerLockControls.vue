@@ -3,7 +3,7 @@ import { ref, watch, onUnmounted } from 'vue'
 import { PointerLockControls } from 'three-stdlib'
 import { Camera } from 'three'
 import { useEventListener } from '@vueuse/core'
-import { useCientos } from '../../core/useCientos'
+import { useTresContext } from '@tresjs/core'
 
 export interface PointerLockControlsProps {
   /**
@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
   makeDefault: false,
 })
 
-const { camera: activeCamera, renderer, extend, controls } = useCientos()
+const { camera: activeCamera, renderer, extend, controls } = useTresContext()
 
 const controlsRef = ref<null | PointerLockControls>(null)
 let triggerSelector: HTMLElement | undefined
@@ -63,7 +63,7 @@ watch(controlsRef, value => {
   triggerSelector = selector ? selector : renderer.value.domElement
 
   useEventListener(triggerSelector, 'click', () => {
-    value.lock()
+    value?.lock()
   })
 })
 

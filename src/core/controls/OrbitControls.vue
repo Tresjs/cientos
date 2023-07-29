@@ -2,10 +2,8 @@
 import { Camera, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
 import { ref, watch, onUnmounted, toRefs } from 'vue'
-import { TresVector3, useRenderLoop } from '@tresjs/core'
+import { TresVector3, useRenderLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
-
-import { useCientos } from '../useCientos'
 
 export interface OrbitControlsProps {
   /**
@@ -278,7 +276,7 @@ const {
   target,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls } = useCientos()
+const { camera: activeCamera, renderer, extend, controls } = useTresContext()
 
 const controlsRef = ref<OrbitControls | null>(null)
 
