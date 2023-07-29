@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping } from 'three'
-import { PointerLockControls, KeyboardControls, Box } from '@tresjs/cientos'
+import { PointerLockControls, KeyboardControls } from '@tresjs/cientos'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -16,7 +16,7 @@ const gl = {
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 3, 10]" />
     <PointerLockControls />
-    <KeyboardControls head-bobbing >
+    <KeyboardControls head-bobbing>
       <!-- <Box /> -->
     </KeyboardControls>
 

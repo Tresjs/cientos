@@ -3,7 +3,6 @@ import { ref, watchEffect } from 'vue'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import { ScrollControls, Stars, Sphere, Box } from '@tresjs/cientos'
 import { SRGBColorSpace, NoToneMapping } from 'three'
-import { useScroll, useWindowScroll } from '@vueuse/core'
 
 const scRef = ref()
 const sphereRef = ref()
@@ -11,6 +10,7 @@ const boxRef = ref()
 const progress = ref(0)
 
 watchEffect(() => {
+  // eslint-disable-next-line no-console
   console.log('jaime ~ progress:', progress.value)
 })
 
