@@ -127,8 +127,8 @@ importers:
   playground:
     dependencies:
       '@tresjs/core':
-        specifier: 2.4.0
-        version: 2.4.0(three@0.154.0)(vue@3.3.4)
+        specifier: 3.0.1
+        version: 3.0.1(three@0.154.0)(vue@3.3.4)
       vue-router:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
@@ -1047,8 +1047,8 @@ packages:
       - '@vue/composition-api'
     dev: false
 
-  /@tresjs/core@2.4.0(three@0.154.0)(vue@3.3.4):
-    resolution: {integrity: sha512-T9WEW8SNqTquNjeO73BirNmG2ZSeCEtFdO3YcA3mBpwgDr3jPpgttfImpdR5kh3H5819rqpkm0Ur0kJbi4Zk0w==}
+  /@tresjs/core@3.0.1(three@0.154.0)(vue@3.3.4):
+    resolution: {integrity: sha512-bhLOXqDXCT527dFwdyvUpq7H+WpOgJrmJTFK3tCxrULv996+rIgS0Nz6QRLsFAuyVJwqg29FPD0H/MYEjrviSQ==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.3'
