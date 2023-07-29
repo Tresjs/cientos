@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@tresjs/core':
+        specifier: 3.0.0
+        version: 3.0.0(three@0.155.0)(vue@3.3.4)
       '@vueuse/core':
         specifier: ^10.2.1
         version: 10.2.1(vue@3.3.4)
@@ -27,9 +30,6 @@ importers:
       '@release-it/conventional-changelog':
         specifier: ^7.0.0
         version: 7.0.0(release-it@16.1.3)
-      '@tresjs/core':
-        specifier: 3.0.0
-        version: 3.0.0(three@0.155.0)(vue@3.3.4)
       '@tweakpane/core':
         specifier: ^1.1.9
         version: 1.1.9
@@ -304,6 +304,7 @@ packages:
 
   /@alvarosabu/utils@3.1.1:
     resolution: {integrity: sha512-DdZNe0i0UsqA2X/+JtaznG4qGorU24FaHqxMAhVspQaC1my+YAVQLpfw8GilHpzMxPxX4sGVzuTnBF8GOdG5oA==}
+    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
@@ -1042,6 +1043,7 @@ packages:
       vue: 3.3.4
     transitivePeerDependencies:
       - '@vue/composition-api'
+    dev: false
 
   /@tresjs/leches@0.4.0(three@0.155.0)(vue@3.3.4):
     resolution: {integrity: sha512-H1CJV6SGIW2k7g0OB5ZdkVM5b8r9HoEOvaL/3mzs8FAVFUvbltDsFZQPJ2qr+SBoNqAqq3LqENGU/bPfRiAiMQ==}
