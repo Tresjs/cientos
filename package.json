@@ -54,7 +54,7 @@
     "@tweakpane/core": "^1.1.9",
     "@tweakpane/plugin-essentials": "^0.1.8",
     "@types/node": "^20.4.5",
-    "@types/three": "^0.154.0",
+    "@types/three": "^0.155.0",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "@vitejs/plugin-vue": "^4.2.3",
