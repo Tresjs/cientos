@@ -1,5 +1,7 @@
 <script setup lang="ts">
 </script>
 <template>
-    <BackdropDemo/>
+    <Suspense>
+        <UseVideoTextureDemo />
+    </Suspense>
 </template>
