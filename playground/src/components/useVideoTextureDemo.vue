@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useVideoTexture } from '@tresjs/cientos'
+import { useVideoTexture, OrbitControls } from '@tresjs/cientos'
 import { Sphere } from '../../../src/core'
 import { TresCanvas } from '@tresjs/core'
 import { SRGBColorSpace, NoToneMapping } from 'three'
+import videoExample from '../assets/useVideoTexture.mp4'
 
 const gl = {
   clearColor: '#333',
@@ -14,15 +15,18 @@ const gl = {
 }
 
 const exampleVideo = 'https://raw.githubusercontent.com/Tresjs/assets/main/textures/video-textures/useVideoTexture.mp4'
+
 const texture = ref()
 
-texture.value = await useVideoTexture(exampleVideo)
+texture.value = await useVideoTexture(videoExample, 
+ { muted: false }
+)
 
 </script>
 <template>
   <TresCanvas v-bind="gl" ref="canvas">
     <TresPerspectiveCamera :position="[0, 2, 5]" />
-    <!-- <OrbitControls /> -->
+    <OrbitControls />
     <Sphere :position="[0, 2, 0]">
       <TresMeshBasicMaterial :map="texture" />
     </Sphere>

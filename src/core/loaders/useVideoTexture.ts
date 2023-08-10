@@ -1,49 +1,11 @@
 import { VideoTexture } from 'three'
+import { useLogger } from '../../composables/useLogger'
 
-export interface VideoTextureOptions {
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {string}
-   * @memberof VideoTextureOptions
-   */
-  unsuspend?: string
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {string}
-   * @memberof VideoTextureOptions
-   */
-  crossOrigin?: string
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {boolean}
-   * @memberof VideoTextureOptions
-   */
-  muted?: boolean
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {boolean}
-   * @memberof VideoTextureOptions
-   */
-  loop?: boolean
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {boolean}
-   * @memberof VideoTextureOptions
-   */
+interface VideoTextureProps extends HTMLVideoElement {
+  unsuspend?: 'canplay' | 'canplaythrough' | 'loadstart' | 'loadedmetadata'
   start?: boolean
-  /**
-   * Whether to use Draco compression.
-   *
-   * @type {boolean}
-   * @memberof VideoTextureOptions
-   */
-  playsInline?: boolean
 }
+
 
 /**
  * Composable for loading video textures.
@@ -67,15 +29,8 @@ export interface VideoTextureOptions {
  * @return {VideoTexture}  {VideoTexture}
  */
 export async function useVideoTexture(
-  src: string,
-  options: VideoTextureOptions = {
-    unsuspend: 'loadedmetadata',
-    crossOrigin: 'Anonymous',
-    muted: true,
-    loop: true,
-    start: true,
-    playsInline: true,
-  },
+  src: string | MediaStream,
+  options?: Partial<VideoTextureProps>,
 ) {
   /**
    * Load a video as a texture.
@@ -83,32 +38,32 @@ export async function useVideoTexture(
    * @param {src} string
    * @return {VideoTexture}  {VideoTexture}
    */
-  if (!src) return // TODO throw error
+  const { logError } = useLogger()
+  if (!src) return logError('Error no path provided')
 
-  const loadTexture = (src: string): VideoTexture => {
-    let texture: VideoTexture
-    new Promise((res, rej) => {
-      const video = Object.assign(document.createElement('video'), {
-        src: (typeof src === 'string' && src) || undefined,
-        crossOrigin: options.crossOrigin,
-        loop: options.loop,
-        muted: options.muted,
-        autoplay: true
-      })
-      console.log('jaime ~ video ~ options.loop:', options.loop);
-      console.log('jaime ~ video ~ video:', video)
-      texture = new VideoTexture(video)
-      return res(texture)
-      // if ('colorSpace' in texture) (texture as any).colorSpace = (gl as any).outputColorSpace
-      // else texture.encoding = gl.outputEncoding
-
-      //video.addEventListener(unsuspend, () => res(texture))
-    })
-    return texture
+  const { unsuspend, start, crossOrigin, muted, loop, ...rest } = {
+    unsuspend: 'loadedmetadata',
+    crossOrigin: 'Anonymous',
+    muted: true,
+    loop: true,
+    start: true,
+    playsInline: true,
+    ...options,
   }
-  const texture = await loadTexture(src)
+  const texture = async ():Promise<VideoTexture>  =>  await new Promise(res => {
+    const video = Object.assign(document.createElement('video'), {
+      src: (typeof src === 'string' && src) || undefined,
+      crossOrigin,
+      loop,
+      muted,
+      autoplay: true,
+      ...rest
+    })
+    const texture = new VideoTexture(video)
+    video.addEventListener(unsuspend, () => res(texture))
+  })
 
-  if(options.start && texture.image) texture.image.play()
+  if (start && texture.image) texture.image.play()
 
   return texture
 }
