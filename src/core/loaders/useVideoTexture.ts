@@ -6,7 +6,6 @@ interface VideoTextureProps extends HTMLVideoElement {
   start?: boolean
 }
 
-
 /**
  * Composable for loading video textures.
  *
@@ -16,22 +15,19 @@ interface VideoTextureProps extends HTMLVideoElement {
  * import MyVideo from 'MyVideo.mp4'
  *
  * const texture = ref()
- * texture.value = useVideoTexture(MyVideo)
+ * texture.value = await useVideoTexture(MyVideo)
  * ```
  * Then you can use the texture in your material.
  *
  * ```vue
  * <TresMeshBasicMaterial :map="texture" />
  * ```
- * @see https://tresjs.org/examples/load-textures.html // TODO cambiar
+ * @see https://threejs.org/docs/index.html?q=video#api/en/textures/VideoTexture
  * @export
  * @param {HTMLVideoElement} src
  * @return {VideoTexture}  {VideoTexture}
  */
-export async function useVideoTexture(
-  src: string | MediaStream,
-  options?: Partial<VideoTextureProps>,
-) {
+export async function useVideoTexture(src: string | MediaStream, options?: Partial<VideoTextureProps>) {
   /**
    * Load a video as a texture.
    *
@@ -50,18 +46,24 @@ export async function useVideoTexture(
     playsInline: true,
     ...options,
   }
-  const texture = async ():Promise<VideoTexture>  =>  await new Promise(res => {
-    const video = Object.assign(document.createElement('video'), {
-      src: (typeof src === 'string' && src) || undefined,
-      crossOrigin,
-      loop,
-      muted,
-      autoplay: true,
-      ...rest
+
+  function loadTexture(): Promise<VideoTexture> {
+    return new Promise(res => {
+      const video = Object.assign(document.createElement('video'), {
+        src: (typeof src === 'string' && src) || undefined,
+        crossOrigin,
+        loop,
+        muted,
+        autoplay: true,
+        ...rest,
+      })
+      const texture = new VideoTexture(video)
+      video.addEventListener(unsuspend, () => res(texture))
+      return texture
     })
-    const texture = new VideoTexture(video)
-    video.addEventListener(unsuspend, () => res(texture))
-  })
+  }
+
+  const texture = await loadTexture()
 
   if (start && texture.image) texture.image.play()
 

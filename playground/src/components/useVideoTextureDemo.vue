@@ -4,7 +4,6 @@ import { useVideoTexture, OrbitControls } from '@tresjs/cientos'
 import { Sphere } from '../../../src/core'
 import { TresCanvas } from '@tresjs/core'
 import { SRGBColorSpace, NoToneMapping } from 'three'
-import videoExample from '../assets/useVideoTexture.mp4'
 
 const gl = {
   clearColor: '#333',
@@ -18,9 +17,7 @@ const exampleVideo = 'https://raw.githubusercontent.com/Tresjs/assets/main/textu
 
 const texture = ref()
 
-texture.value = await useVideoTexture(videoExample, 
- { muted: false }
-)
+texture.value = await useVideoTexture(exampleVideo, { loop: false})
 
 </script>
 <template>
