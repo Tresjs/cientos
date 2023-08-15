@@ -48,7 +48,7 @@ export async function useVideoTexture(src: string | MediaStream, options?: Parti
   }
 
   function loadTexture(): Promise<VideoTexture> {
-    return new Promise(res => {
+    return new Promise((res, rej) => {
       const video = Object.assign(document.createElement('video'), {
         src: (typeof src === 'string' && src) || undefined,
         crossOrigin,
@@ -59,13 +59,15 @@ export async function useVideoTexture(src: string | MediaStream, options?: Parti
       })
       const texture = new VideoTexture(video)
       video.addEventListener(unsuspend, () => res(texture))
+      video.addEventListener('error', () => rej())
       return texture
     })
   }
-
-  const texture = await loadTexture()
-
-  if (start && texture.image) texture.image.play()
-
-  return texture
+  try {
+    const texture = await loadTexture()
+    if (start && texture.image) texture.image.play()
+    return texture
+  } catch {
+    logError('Error loading resource')
+  }
 }
