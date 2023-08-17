@@ -1,6 +1,5 @@
 import { GLTFLoader, DRACOLoader } from 'three-stdlib'
-import { TresObject, TresObject3D, useLoader } from '@tresjs/core'
-import { Object3D } from 'three'
+import { TresObject3D, useLoader } from '@tresjs/core'
 
 export interface GLTFLoaderOptions {
   /**
