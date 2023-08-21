@@ -15,9 +15,11 @@ const gl = {
 
 const context = ref()
 const glassMaterialRef = shallowRef()
+const boxRef = shallowRef()
 
 watch(glassMaterialRef, value => {
-  console.log('jaime ~ value:', value.materialRef)
+  boxRef.value.value.material.dispose()
+  boxRef.value.value.material = value.MeshGlassMaterialClass
 })
 </script>
 
@@ -31,13 +33,11 @@ watch(glassMaterialRef, value => {
     <Sphere :scale="0.5">
       <MeshGlassMaterial />
     </Sphere>
-    <Box :position-x="-3">
-      <MeshGlassMaterial />
-    </Box>
-    <TresMesh :position="[0,0, -1]" >
+    <Box ref="boxRef" :position-x="-3" />
+    <TresMesh :position="[0, 0, -1]">
       <TresPlaneGeometry :args="[3, 3]" />
       <TresMeshBasicMaterial :color="0xff1111" />
-  </TresMesh>
+    </TresMesh>
     <TresGridHelper :args="[10, 10]" />
     <TresAmbientLight :intensity="1" />
     <TresDirectionalLight :intensity="1" :position="[2, 2, 2]" />

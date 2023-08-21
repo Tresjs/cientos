@@ -4,14 +4,14 @@ import { useTresContext } from '@tresjs/core'
 
 import MeshGlassMaterial from './material'
 
-const materialRef = shallowRef()
+const MeshGlassMaterialClass = shallowRef()
 
 const { extend } = useTresContext()
 
 extend({ MeshGlassMaterial })
 
-defineExpose({ materialRef })
+defineExpose({ MeshGlassMaterialClass })
 </script>
 <template>
-  <TresMeshGlassMaterial ref="materialRef" v-bind="$attrs" />
+  <TresMeshGlassMaterial ref="MeshGlassMaterialClass" />
 </template>
