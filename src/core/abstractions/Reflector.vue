@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { shallowRef, reactive, toRefs, watchEffect } from 'vue'
 import { TresColor } from '@tresjs/core'
-import { useCientos } from '../../core/useCientos'
+import { useTresContext } from '@tresjs/core'
 import { Reflector } from 'three/addons/objects/Reflector'
 import { PlaneGeometry } from 'three'
 
@@ -73,7 +73,7 @@ const props = withDefaults(defineProps<ReflectorProps>(), {
 
 const reflectorRef = shallowRef<Reflector>()
 
-const { extend } = useCientos()
+const { extend } = useTresContext()
 
 extend({ Reflector })
 

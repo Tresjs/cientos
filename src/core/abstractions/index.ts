@@ -7,13 +7,13 @@ import Smoke from './Smoke.vue'
 import Levioso from './Levioso.vue'
 import ContactShadows from './ContactShadows.vue'
 import Reflector from './Reflector.vue'
-
-export * from './mouseParallax'
+import MouseParallax from './MouseParallax.vue'
 export * from './useEnvironment'
 export {
   Text3D,
   useAnimations,
   Environment,
+  MouseParallax,
   Stars,
   Smoke,
   Levioso,
