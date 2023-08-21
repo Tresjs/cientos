@@ -48,7 +48,7 @@ export async function useVideoTexture(src: string | MediaStream, options?: Parti
   }
 
   function loadTexture(): Promise<VideoTexture> {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       const video = Object.assign(document.createElement('video'), {
         src: (typeof src === 'string' && src) || undefined,
         crossOrigin,
@@ -58,8 +58,8 @@ export async function useVideoTexture(src: string | MediaStream, options?: Parti
         ...rest,
       })
       const texture = new VideoTexture(video)
-      video.addEventListener(unsuspend, () => res(texture))
-      video.addEventListener('error', () => rej())
+      video.addEventListener(unsuspend, () => resolve(texture))
+      video.addEventListener('error', () => reject())
       return texture
     })
   }
