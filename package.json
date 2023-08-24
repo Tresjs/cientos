@@ -53,7 +53,7 @@
     "@alvarosabu/prettier-config": "^1.3.0",
     "@release-it/conventional-changelog": "^7.0.0",
     "@tweakpane/core": "^1.1.9",
-    "@tweakpane/plugin-essentials": "^0.1.8",
+    "@tweakpane/plugin-essentials": "^0.2.0",
     "@types/node": "^20.5.4",
     "@types/three": "^0.155.1",
     "@typescript-eslint/eslint-plugin": "^6.4.1",

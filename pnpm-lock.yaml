@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -34,8 +30,8 @@ importers:
         specifier: ^1.1.9
         version: 1.1.9
       '@tweakpane/plugin-essentials':
-        specifier: ^0.1.8
-        version: 0.1.8(tweakpane@3.1.10)
+        specifier: ^0.2.0
+        version: 0.2.0(tweakpane@3.1.10)
       '@types/node':
         specifier: ^20.5.4
         version: 20.5.4
@@ -1084,10 +1080,10 @@ packages:
     resolution: {integrity: sha512-9tq+KAhaqPiOgsFyLPAz1IMXkVfhRqxGzAgy1ps3As6o3W7XjnU7sev6OlD/Z+Pzw8uZVMukkSHf2e0uCU6u0A==}
     dev: true
 
-  /@tweakpane/plugin-essentials@0.1.8(tweakpane@3.1.10):
-    resolution: {integrity: sha512-tWBXzWafcjiq+/XvZnOgSz0B+YikwZj0NnqiZPba+AwTiDqNk/6PU3so0Bs0qyxLIJKT/+AUPRL8jBmtERYzwA==}
+  /@tweakpane/plugin-essentials@0.2.0(tweakpane@3.1.10):
+    resolution: {integrity: sha512-/kO90nfm0y0CYJPUvoNrjXhjNoqr+RaoySIdJmy++pb5vrSHi/DXdxG/sPszUPZggDY9M31RTacnxXi6Dv7r8Q==}
     peerDependencies:
-      tweakpane: ^3.1.4
+      tweakpane: ^4.0.0-beta.2
     dependencies:
       tweakpane: 3.1.10
     dev: true
@@ -6772,3 +6768,7 @@ packages:
   /zstddec@0.0.2:
     resolution: {integrity: sha512-DCo0oxvcvOTGP/f5FA6tz2Z6wF+FIcEApSTu0zV5sQgn9hoT5lZ9YRAKUraxt9oP7l4e8TnNdi8IZTCX6WCkwA==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
