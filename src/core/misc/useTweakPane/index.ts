@@ -1,7 +1,7 @@
 import { onUnmounted, onMounted } from 'vue'
 import { Pane } from 'tweakpane'
 import { useRenderLoop } from '@tresjs/core'
-import { useLogger } from '../composables/useLogger'
+import { useLogger } from '../../../composables/useLogger'
 
 type TweakPane = Pane & { addBlade(blade: any): void }
 let pane: TweakPane
