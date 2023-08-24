@@ -5,7 +5,6 @@ import { useLogger } from '../../../composables/useLogger'
 
 type TweakPane = Pane & { addBlade(blade: any): void }
 let pane: TweakPane
-let fpsGraph: any
 
 export /**
  * Creates a TweakPane instance and returns it.
@@ -39,14 +38,12 @@ export /**
     }
 
     onMounted(() => {
-      const { onBeforeLoop, onAfterLoop, resume } = useRenderLoop()
+      const { resume } = useRenderLoop()
       resume()
-      onBeforeLoop(() => fpsGraph.begin())
-      onAfterLoop(() => fpsGraph.end())
     })
     onUnmounted(() => {
       disposeTweakPane()
     })
 
-    return { pane, fpsGraph, disposeTweakPane }
+    return { pane, disposeTweakPane }
   }
