@@ -7,9 +7,11 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AkuAku: typeof import('./src/components/AkuAku.vue')['default']
     BackdropDemo: typeof import('./src/components/BackdropDemo.vue')['default']
     ContactShadowsDemo: typeof import('./src/components/ContactShadowsDemo.vue')['default']
     EnvironmentDemo: typeof import('./src/components/EnvironmentDemo.vue')['default']
+    GlassMaterialDemo: typeof import('./src/components/GlassMaterialDemo.vue')['default']
     Gltf: typeof import('./src/components/gltf/index.vue')['default']
     LeviosoDemo: typeof import('./src/components/LeviosoDemo.vue')['default']
     MapControlsDemo: typeof import('./src/components/MapControlsDemo.vue')['default']
@@ -18,6 +20,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDemo: typeof import('./src/components/ScrollDemo.vue')['default']
     TheGizmos: typeof import('./src/components/TheGizmos.vue')['default']
+    UseVideoTextureDemo: typeof import('./src/components/useVideoTextureDemo.vue')['default']
     WobbleMaterial: typeof import('./src/components/WobbleMaterial.vue')['default']
   }
 }

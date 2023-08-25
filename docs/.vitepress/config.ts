@@ -43,6 +43,7 @@ export default defineConfig({
         text: 'Controls',
         items: [
           { text: 'OrbitControls', link: '/guide/controls/orbit-controls' },
+          { text: 'CameraControls', link: '/guide/controls/camera-controls' },
           { text: 'TransformControls', link: '/guide/controls/transform-controls' },
           { text: 'PointerLockControls', link: '/guide/controls/pointer-lock-controls' },
           { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
@@ -58,12 +59,16 @@ export default defineConfig({
           { text: 'GLTFModel', link: '/guide/loaders/gltf-model' },
           { text: 'useFBX', link: '/guide/loaders/use-fbx' },
           { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
+          { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
         ],
       },
       {
         text: 'Materials',
         collapsed: true,
-        items: [{ text: 'WobbleMaterial', link: '/guide/materials/wobble-material' }],
+        items: [
+          { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
+          { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
+        ],
       },
       {
         text: 'Shapes',
@@ -87,9 +92,7 @@ export default defineConfig({
       {
         text: 'Staging',
         collapsed: true,
-        items: [
-          { text: 'Backdrop', link: '/guide/staging/backdrop' },
-        ]
+        items: [{ text: 'Backdrop', link: '/guide/staging/backdrop' }],
       },
       {
         text: 'Misc',

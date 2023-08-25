@@ -1,5 +1,82 @@
 
 
+## [3.2.0](https://github.com/Tresjs/cientos/compare/3.1.0...3.2.0) (2023-08-25)
+
+
+### Features
+
+* 107 use video texture ([#167](https://github.com/Tresjs/cientos/issues/167)) ([f0f1f9b](https://github.com/Tresjs/cientos/commit/f0f1f9bc6107c2d040195ca76f647ef6dcbeb2d3))
+* add glass material ([#172](https://github.com/Tresjs/cientos/issues/172)) ([5f60864](https://github.com/Tresjs/cientos/commit/5f608640ccd4eaa14357101a3784eeeac3592646))
+
+
+### Bug Fixes
+
+* 179 tweakpane plugin essentials ([#180](https://github.com/Tresjs/cientos/issues/180)) ([67b8d57](https://github.com/Tresjs/cientos/commit/67b8d57bbfdbdcd01e7a24f470934acafa6ae300))
+
+## [3.2.0-next.0](https://github.com/Tresjs/cientos/compare/3.1.0...3.2.0-next.0) (2023-08-23)
+
+
+### Features
+
+* 107 use video texture ([#167](https://github.com/Tresjs/cientos/issues/167)) ([f0f1f9b](https://github.com/Tresjs/cientos/commit/f0f1f9bc6107c2d040195ca76f647ef6dcbeb2d3))
+
+
+### Bug Fixes
+
+* remove tweakpane essentials import ([eeed334](https://github.com/Tresjs/cientos/commit/eeed334398374089d17b3ebf34bfc7b5f963372b))
+
+## [3.1.0](https://github.com/Tresjs/cientos/compare/3.0.1...3.1.0) (2023-08-17)
+
+
+### Features
+
+* add camera controls to new context ([21ab955](https://github.com/Tresjs/cientos/commit/21ab955b9e8560d513a1804387e6bac707245a38))
+* chg to event, rmv vmodel, ([9b739a2](https://github.com/Tresjs/cientos/commit/9b739a23ef860ba8f3fe8120beaba76fc794fade))
+* remove tweakpane deps from final bundle ([#169](https://github.com/Tresjs/cientos/issues/169)) ([b99ac3c](https://github.com/Tresjs/cientos/commit/b99ac3cdc957d3fb1cd8257d03cde316ab22b573))
+
+
+### Bug Fixes
+
+* useGLTF return types ([#174](https://github.com/Tresjs/cientos/issues/174)) ([7f78106](https://github.com/Tresjs/cientos/commit/7f781069ca7d04986790ff644e8b3c8b62446a20))
+
+## [3.0.1](https://github.com/Tresjs/cientos/compare/3.0.0...3.0.1) (2023-07-29)
+
+
+### Bug Fixes
+
+* removed axesHelper from Contact Shadows ([#152](https://github.com/Tresjs/cientos/issues/152)) ([821205a](https://github.com/Tresjs/cientos/commit/821205ad3780a28b18554de9f1f544c884287181))
+
+## [3.0.0](https://github.com/Tresjs/cientos/compare/2.3.0...3.0.0) (2023-07-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* core v3 provides a new state context `useTresContext` which impacts all the abstractions depending on the state
+
+* chore: move core to deps
+
+* chore: updated lock
+
+* chore: fix lint
+
+* feat: removed useCientos and useTresContext instead
+
+### Features
+
+* 120 refactor usecientos to new state context provider ([#143](https://github.com/Tresjs/cientos/issues/143)) ([723a323](https://github.com/Tresjs/cientos/commit/723a3231da239a1214d0ffdfb3b6a6e7cb62eedc))
+* add more camera-controls playground examples ([d3c5dd3](https://github.com/Tresjs/cientos/commit/d3c5dd3ceefe3d816abd268f4b1a994d024f0d37))
+* add preliminary camera-controls abstraction ([bef41b9](https://github.com/Tresjs/cientos/commit/bef41b9f0ef6508ecd56735cd5e2d6fb205e114a))
+* backdrop stage abstraction ([#116](https://github.com/Tresjs/cientos/issues/116)) ([62f677c](https://github.com/Tresjs/cientos/commit/62f677c881dfc7b0386a79f9d5b0c162596c2838))
+
+
+### Bug Fixes
+
+* add reactivity to stars component, rmv factor as props unnecessary ([#144](https://github.com/Tresjs/cientos/issues/144)) ([ad5c6c8](https://github.com/Tresjs/cientos/commit/ad5c6c8572f2ac472063886fde48c63f81b667dc))
+* background not checked right useEnvironment ([#138](https://github.com/Tresjs/cientos/issues/138)) ([28d40fd](https://github.com/Tresjs/cientos/commit/28d40fde9a690cb44943c875799e48f3c17d5eb4))
+* map correct camera-controls events ([e7095eb](https://github.com/Tresjs/cientos/commit/e7095ebe958e690de0a8aba37a55679f6a321e10))
+* MouseParallax, clean code ([#134](https://github.com/Tresjs/cientos/issues/134)) ([257238a](https://github.com/Tresjs/cientos/commit/257238aa38bc921983dc4ae37ac4891becfb5113))
+* nuxt problem with scrollControls ([#130](https://github.com/Tresjs/cientos/issues/130)) ([1739965](https://github.com/Tresjs/cientos/commit/1739965dbbd3e7aef9921a91c6ffbfe5502074aa))
+
 ## [2.3.0](https://github.com/Tresjs/cientos/compare/2.2.0...2.3.0) (2023-07-11)
 
 
