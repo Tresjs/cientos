@@ -3,7 +3,7 @@ import { Pane } from 'tweakpane'
 import { useRenderLoop } from '@tresjs/core'
 import { useLogger } from '../../../composables/useLogger'
 
-type TweakPane = Pane & { addBlade(blade: any): void }
+type TweakPane = Pane & { addBlade(blade: any): void, addInput(blade: any): void }
 let pane: TweakPane
 
 export /**
