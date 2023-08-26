@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { computed, createVNode, shallowRef, toRefs, render, watchEffect, ref, watch, useAttrs, Ref } from 'vue'
+import { computed, createVNode, toRefs, render, watchEffect, ref, watch, useAttrs } from 'vue'
 import {
   DoubleSide,
-  Group,
   Matrix4,
   OrthographicCamera,
   PerspectiveCamera,
   PlaneGeometry,
   Raycaster,
-  Scene,
   ShaderMaterial,
   Vector3,
+  WebGLRenderer,
 } from 'three'
-import { TresCamera, TresObject3D, useRenderLoop } from '@tresjs/core'
-import { useCientos } from '../useCientos'
+import { TresCamera, TresObject3D, useRenderLoop, useTresContext } from '@tresjs/core'
+
 import { Mutable } from '@vueuse/core'
 import { VNode } from 'vue'
 import { isRef } from 'vue'
@@ -45,7 +44,7 @@ function isObjectVisible(el: TresObject3D, camera: TresCamera, raycaster: Raycas
   const elPos = v1.setFromMatrixPosition(el.matrixWorld)
   raycaster.setFromCamera(elPos, camera)
   const intersects = raycaster.intersectObjects(occlude, true)
-  
+
   if (intersects.length > 0) {
     const intersectionDistance = intersects[0].distance
     const pointDistance = elPos.distanceTo(raycaster.ray.origin)
@@ -171,7 +170,7 @@ const {
   zIndexRange,
 } = toRefs(props)
 
-const { state } = useCientos()
+const { renderer, scene, camera } = useTresContext()
 const raycaster = new Raycaster()
 
 const el = computed(() => document.createElement(as.value))
@@ -186,21 +185,23 @@ const styles = computed(() => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: state.container.value.offsetWidth + 'px',
-      height: state.container.value.offsetHeight + 'px',
+      width: renderer.value.domElement.parentElement?.offsetWidth + 'px',
+      height: renderer.value.domElement.parentElement?.offsetHeight + 'px',
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
+      zIndex: 2,
     }
   } else {
     return {
       position: 'absolute',
       transform: center.value ? 'translate3d(-50%,-50%,0)' : 'none',
       ...(fullscreen.value && {
-        top: -state.container.value.offsetHeight / 2,
-        left: -state.container.value.offsetWidth / 2,
-        width: state.container.value.offsetWidth + 'px',
-        height: state.container.value.offsetHeight + 'px',
+        top: -(renderer.value.domElement.parentElement?.offsetHeight || 0) / 2,
+        left: -(renderer.value.domElement.parentElement?.offsetWidth || 0) / 2,
+        width: renderer.value.domElement.parentElement?.offsetWidth + 'px',
+        height: renderer.value.domElement.parentElement?.offsetHeight + 'px',
       }),
+      zIndex: 2,
       ...attrs.style,
     }
   }
@@ -237,18 +238,18 @@ watch(
 )
 
 watch(
-  () => [groupRef.value, state.renderer],
-  ([group, renderer]) => {
-    if (group && renderer) {
-      const target = portal?.value || renderer?.domElement
-      state.scene?.updateMatrixWorld()
+  () => [groupRef.value, renderer.value],
+  ([group, _renderer]: [TresObject3D | null, WebGLRenderer]): void => {
+    if (group && _renderer) {
+      const target = portal?.value || _renderer.domElement
+      scene.value?.updateMatrixWorld()
 
       if (transform.value) {
         el.value.style.cssText = `position:absolute;top:0;left:0;pointer-events:none;overflow:hidden;`
       } else {
-        const vector = calculatePosition(group, state.camera, {
-          width: state.container.value.offsetWidth,
-          height: state.container.value.offsetHeight,
+        const vector = calculatePosition(group, camera.value as TresCamera, {
+          width: _renderer?.domElement?.parentElement?.offsetWidth || 0,
+          height: _renderer?.domElement?.parentElement?.offsetHeight || 0,
         })
         el.value.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;`
       }
@@ -260,11 +261,11 @@ watch(
       if (transform.value) {
         vnode.value = createVNode('div', { id: 'outer', style: styles.value }, [
           createVNode('div', { id: 'inner', style: transformInnerStyles.value }, [
-            createVNode('div', { id: state?.scene?.uuid, class: attrs.class, style: attrs.style }, slots.default?.()),
+            createVNode('div', { id: scene?.value.uuid, class: attrs.class, style: attrs.style }, slots.default?.()),
           ]),
         ])
       } else {
-        vnode.value = createVNode('div', { id: state?.scene?.uuid, style: styles.value }, slots.default?.())
+        vnode.value = createVNode('div', { id: scene?.value.uuid, style: styles.value }, slots.default?.())
       }
       render(vnode.value, el.value)
     }
@@ -282,36 +283,41 @@ const visible = ref(true)
 const { onLoop } = useRenderLoop()
 
 onLoop(() => {
-  if (groupRef.value && state.camera && state.renderer) {
-    state?.camera?.updateMatrixWorld()
+  if (groupRef.value && camera.value && renderer.value) {
+    camera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)
 
     const vector = transform.value
       ? previousPosition.value
-      : calculatePosition(groupRef.value, state.camera, {
-          width: state.container.value.offsetWidth,
-          height: state.container.value.offsetHeight,
+      : calculatePosition(groupRef.value, camera.value as TresCamera, {
+          width: renderer.value.domElement.parentElement?.offsetWidth || 0,
+          height: renderer.value.domElement.parentElement?.offsetHeight || 0,
         })
 
     if (
       transform.value ||
-      Math.abs(previousZoom.value - state.camera.zoom) > eps.value ||
+      Math.abs(previousZoom.value - camera.value.zoom) > eps.value ||
       Math.abs(previousPosition.value[0] - vector[0]) > eps.value ||
       Math.abs(previousPosition.value[1] - vector[1]) > eps.value
     ) {
-      const isBehindCamera = isObjectBehindCamera(groupRef.value, state.camera)
+      const isBehindCamera = isObjectBehindCamera(groupRef.value, camera.value as TresCamera)
       let raytraceTarget: null | undefined | boolean | TresObject3D[] = false
 
-      if (isRayCastOcclusion.value ) {
+      if (isRayCastOcclusion.value) {
         if (occlude?.value !== 'blending') {
-          raytraceTarget = [state.scene]
+          raytraceTarget = [scene.value as unknown as TresObject3D]
         }
       }
 
       const previouslyVisible = visible.value
 
       if (raytraceTarget) {
-        const isVisible = isObjectVisible(groupRef.value, state.camera, raycaster, raytraceTarget as TresObject3D[])
+        const isVisible = isObjectVisible(
+          groupRef.value,
+          camera.value as TresCamera,
+          raycaster,
+          raytraceTarget as TresObject3D[],
+        )
         visible.value = isVisible && !isBehindCamera
       } else {
         visible.value = !isBehindCamera
@@ -329,24 +335,27 @@ onLoop(() => {
           : [halfRange - 1, 0]
         : zIndexRange
 
-      el.value.style.zIndex = `${objectZIndex(groupRef.value, state.camera, zRange)}`
+      el.value.style.zIndex = `${objectZIndex(groupRef.value, camera.value as TresCamera, zRange)}`
 
       if (transform.value) {
-        const [widthHalf, heightHalf] = [state.container.value.offsetWidth / 2, state.container.value.offsetHeight / 2]
-        const fov = state.camera.projectionMatrix.elements[5] * heightHalf
-        const { isOrthographicCamera, top, left, bottom, right } = state.camera as OrthographicCamera
-        const cameraMatrix = getCameraCSSMatrix(state.camera.matrixWorldInverse)
+        const [widthHalf, heightHalf] = [
+          (renderer.value.domElement.parentElement?.offsetWidth || 0) / 2,
+          (renderer.value.domElement.parentElement?.offsetHeight || 0) / 2,
+        ]
+        const fov = camera.value.projectionMatrix.elements[5] * heightHalf
+        const { isOrthographicCamera, top, left, bottom, right } = camera.value as OrthographicCamera
+        const cameraMatrix = getCameraCSSMatrix(camera.value.matrixWorldInverse)
         const cameraTransform = isOrthographicCamera
           ? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
           : `translateZ(${fov}px)`
         let matrix = groupRef.value.matrixWorld
         if (sprite.value) {
-          matrix = state.camera.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(groupRef.value.scale)
+          matrix = camera.value.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(groupRef.value.scale)
           matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0
           matrix.elements[15] = 1
         }
-        el.value.style.width = state.container.value.offsetWidth + 'px'
-        el.value.style.height = state.container.value.offsetHeight + 'px'
+        el.value.style.width = renderer.value.domElement.parentElement?.offsetWidth + 'px'
+        el.value.style.height = renderer.value.domElement.parentElement?.offsetHeight + 'px'
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
         if (vnode.value?.el && vnode.value?.children) {
@@ -358,13 +367,15 @@ onLoop(() => {
         }
       } else {
         const scale =
-          distanceFactor?.value === undefined ? 1 : objectScale(groupRef.value, state.camera) * distanceFactor?.value
+          distanceFactor?.value === undefined
+            ? 1
+            : objectScale(groupRef.value, camera.value as TresCamera) * distanceFactor?.value
         el.value.style.transform = `translate3d(${vector[0]}px,${vector[1]}px,0) scale(${scale})`
       }
     }
 
     previousPosition.value = vector
-    previousZoom.value = state.camera.zoom
+    previousZoom.value = camera.value.zoom
   }
 
   if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
@@ -373,7 +384,7 @@ onLoop(() => {
         const el = vnode.value?.children[0]
 
         if (el?.clientWidth && el?.clientHeight) {
-          const { isOrthographicCamera } = state.camera as OrthographicCamera
+          const { isOrthographicCamera } = camera.value as OrthographicCamera
 
           if (isOrthographicCamera || geometry) {
             if (attrs.scale) {
@@ -409,7 +420,7 @@ onLoop(() => {
         isMeshSizeSet.value = true
       }
 
-      occlusionMeshRef.value.lookAt(state.camera.position)
+      occlusionMeshRef.value.lookAt(camera.value?.position)
     }
   }
 })

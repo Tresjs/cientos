@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
@@ -34,14 +35,14 @@ const state = reactive({
     <TresMesh :position="[1, 1, 1]">
       <TresBoxGeometry />
       <TresMeshNormalMaterial />
-      <Html v-bind="state" transform :occlude="[sphereRef]">
+      <Html v-bind="state" transform :occlude="[sphereRef, torusRef]">
         <h1 class="bg-white text-xs p-0.5 rounded">Box</h1>
       </Html>
     </TresMesh>
     <TresMesh ref="sphereRef" :position="[4, 1, 1]">
       <TresSphereGeometry />
       <TresMeshNormalMaterial />
-      <Html v-bind="state" transform >
+      <Html v-bind="state" transform>
         <h1 class="bg-white text-xs p-0.5 rounded">Sphere</h1>
       </Html>
     </TresMesh>
