@@ -1,5 +1,38 @@
 
 
+## [3.2.1](https://github.com/Tresjs/cientos/compare/3.2.0...3.2.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @tresjs/core to v3.1.1 ([#186](https://github.com/Tresjs/cientos/issues/186)) ([0f5d9cf](https://github.com/Tresjs/cientos/commit/0f5d9cf2b4b00f9762a1de6df617b6b63cda7f75))
+* removed `toFixed` for progress value ([#191](https://github.com/Tresjs/cientos/issues/191)) ([d46f90f](https://github.com/Tresjs/cientos/commit/d46f90f6e11c66f2fdf570340d91f63996bc94b1))
+
+## [3.2.0](https://github.com/Tresjs/cientos/compare/3.1.0...3.2.0) (2023-08-25)
+
+
+### Features
+
+* 107 use video texture ([#167](https://github.com/Tresjs/cientos/issues/167)) ([f0f1f9b](https://github.com/Tresjs/cientos/commit/f0f1f9bc6107c2d040195ca76f647ef6dcbeb2d3))
+* add glass material ([#172](https://github.com/Tresjs/cientos/issues/172)) ([5f60864](https://github.com/Tresjs/cientos/commit/5f608640ccd4eaa14357101a3784eeeac3592646))
+
+
+### Bug Fixes
+
+* 179 tweakpane plugin essentials ([#180](https://github.com/Tresjs/cientos/issues/180)) ([67b8d57](https://github.com/Tresjs/cientos/commit/67b8d57bbfdbdcd01e7a24f470934acafa6ae300))
+
+## [3.2.0-next.0](https://github.com/Tresjs/cientos/compare/3.1.0...3.2.0-next.0) (2023-08-23)
+
+
+### Features
+
+* 107 use video texture ([#167](https://github.com/Tresjs/cientos/issues/167)) ([f0f1f9b](https://github.com/Tresjs/cientos/commit/f0f1f9bc6107c2d040195ca76f647ef6dcbeb2d3))
+
+
+### Bug Fixes
+
+* remove tweakpane essentials import ([eeed334](https://github.com/Tresjs/cientos/commit/eeed334398374089d17b3ebf34bfc7b5f963372b))
+
 ## [3.1.0](https://github.com/Tresjs/cientos/compare/3.0.1...3.1.0) (2023-08-17)
 
 

@@ -59,12 +59,17 @@ export default defineConfig({
           { text: 'GLTFModel', link: '/guide/loaders/gltf-model' },
           { text: 'useFBX', link: '/guide/loaders/use-fbx' },
           { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
+          { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
+          { text: 'SVG', link: '/guide/loaders/svg' },
         ],
       },
       {
         text: 'Materials',
         collapsed: true,
-        items: [{ text: 'WobbleMaterial', link: '/guide/materials/wobble-material' }],
+        items: [
+          { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
+          { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
+        ],
       },
       {
         text: 'Shapes',
