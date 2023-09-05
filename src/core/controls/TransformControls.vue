@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ShallowRef } from 'vue'
 import { onUnmounted, shallowRef, watchEffect, toRefs } from 'vue'
-import type { Object3D, type Event } from 'three'
+import type { Object3D, Event } from 'three'
 
 import { TransformControls } from 'three-stdlib'
 import { useEventListener } from '@vueuse/core'
