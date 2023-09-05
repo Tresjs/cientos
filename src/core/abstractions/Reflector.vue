@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { shallowRef, reactive, toRefs, watchEffect } from 'vue'
-import { TresColor } from '@tresjs/core'
+import { shallowRef, reactive, toRefs, watchEffect, useSlots } from 'vue'
 import { useTresContext } from '@tresjs/core'
+import type { TresColor } from '@tresjs/core'
 import { Reflector } from 'three/addons/objects/Reflector'
 import { PlaneGeometry } from 'three'
 
@@ -71,13 +71,18 @@ const props = withDefaults(defineProps<ReflectorProps>(), {
   shader: Reflector.ReflectorShader,
 })
 
-const reflectorRef = shallowRef<Reflector>()
-
 const { extend } = useTresContext()
+
+const reflectorRef = shallowRef<Reflector>()
 
 extend({ Reflector })
 
-const { color, textureWidth, textureHeight, clipBias, multisample, shader } = toRefs(props)
+const slots = useSlots()
+const currentGeo = slots.default()[0]
+console.log('jaime ~ slots:', currentGeo)
+
+const { color, textureWidth, textureHeight, clipBias, multisample, shader }
+  = toRefs(props)
 
 const options = reactive({
   color: color.value,
@@ -85,24 +90,28 @@ const options = reactive({
   textureHeight: textureHeight.value,
   clipBias: clipBias.value,
   multisample: multisample.value,
-  shader: {...Reflector.ReflectorShader,...shader.value },
+  shader: { ...Reflector.ReflectorShader, ...shader.value },
 })
 
-watchEffect(() =>{
-  if(!reflectorRef?.value) return
+watchEffect(() => {
+  if (!reflectorRef?.value) return
   if (clipBias.value) options.clipBias = clipBias.value
-  const currentGeo =  reflectorRef.value.geometry
+  const currentGeo = reflectorRef.value.geometry
   reflectorRef.value.dispose()
   reflectorRef.value = new Reflector(currentGeo, options)
 })
 
 defineExpose({
-  value: reflectorRef,
+  reflectorRef,
 })
 </script>
 
 <template>
-  <TresReflector ref="reflectorRef" :args="[new PlaneGeometry(), options]" :material-uniforms-color-value="color">
+  <TresReflector
+    ref="reflectorRef"
+    :args="[new PlaneGeometry(), options]"
+    :material-uniforms-color-value="color"
+  >
     <slot>
       <TresPlaneGeometry />
     </slot>

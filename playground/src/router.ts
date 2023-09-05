@@ -52,6 +52,11 @@ const routes = [
     component: () => import('./pages/StarsDemo.vue'),
   },
   {
+    path: '/abstractions/reflector',
+    name: 'Stars',
+    component: () => import('./pages/ReflectorDemo.vue'),
+  },
+  {
     path: '/abstractions/text-3d',
     name: 'Text3D',
     component: () => import('./pages/Text3DDemo.vue'),

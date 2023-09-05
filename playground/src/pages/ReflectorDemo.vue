@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { shallowRef, reactive, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, MeshWobbleMaterial, Reflector, Stars, useTweakPane } from '@tresjs/cientos'
+import {
+  OrbitControls,
+  MeshWobbleMaterial,
+  Reflector,
+  Stars,
+  useTweakPane,
+} from '@tresjs/cientos'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
 const gl = {
@@ -13,6 +19,11 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
+const reflectorRef = shallowRef()
+
+watch(reflectorRef, (value) => {
+  console.log(value)
+})
 const customShader = {
   name: 'customShader',
 
@@ -31,7 +42,9 @@ const customShader = {
 
 		vec3 blendOverlay( vec3 base, vec3 blend ) {
 
-			return vec3( blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) );
+			return vec3(
+                blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) 
+                );
 
 		}
 
@@ -54,28 +67,46 @@ const options = reactive({
   textureWidth: 1024,
 })
 
-const { pane } = useTweakPane()
+// const { pane } = useTweakPane()
 
-pane.addInput(options, 'color', { label: 'MirrorColor' })
-pane.addInput(options, 'clipBias', { label: 'clipBias', min: 0, max:1, step: 0.001 })
-
+// pane.addInput(options, 'color', { label: 'MirrorColor' })
+// pane.addInput(options, 'clipBias', {
+//   label: 'clipBias',
+//   min: 0,
+//   max: 1,
+//   step: 0.001,
+// })
 </script>
 
 <template>
-  <TresCanvas v-bind="gl" ref="context">
-    <TresPerspectiveCamera :position="[3, 3, 6]" :look-at="[0, 0, 0]" />
+  <TresCanvas
+    v-bind="gl"
+  >
+    <TresPerspectiveCamera
+      :position="[3, 3, 6]"
+      :look-at="[0, 0, 0]"
+    />
     <Stars />
-    <TresMesh >
+    <TresMesh>
       <TresTorusGeometry />
-      <MeshWobbleMaterial color="orange" :speed="1" :factor="2" />
+      <MeshWobbleMaterial
+        color="orange"
+        :speed="1"
+        :factor="2"
+      />
     </TresMesh>
-    <Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" :color="options.color" :shader="customShader"
-    :clip-bias="options.clipBias"
-    :texture-width="options.textureWidth"
+    <Reflector
+      ref="reflectorRef"
+      :rotation="[-Math.PI * 0.5, 0, 0]"
+      :position="[0, -2, 0]"
+      :color="options.color"
+      :shader="customShader"
+      :clip-bias="options.clipBias"
+      :texture-width="options.textureWidth"
     >
-      <!-- <TresBoxGeometry :args="[10, 10]" /> -->
       <TresCircleGeometry :args="[10, 10]" />
     </Reflector>
+    <!-- <TresBoxGeometry :args="[10, 10]" /> -->
     <TresAmbientLight :intensity="1" />
     <OrbitControls />
   </TresCanvas>
