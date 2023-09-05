@@ -77,10 +77,15 @@ const routes = [
     component: () => import('./pages/MouseParallaxDemo.vue'),
   },
   {
+    path: '/loaders/svg',
+    name: 'SVG',
+    component: () => import('./pages/SVGDemo.vue'),
+  },
+  {
     path: '/loaders/use-gltf',
     name: 'useGLTF',
     component: () => import('./pages/UseGLTFDemo.vue'),
-  }
+  },
 ]
 
 export const router = createRouter({

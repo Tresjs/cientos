@@ -63,6 +63,8 @@ const props = withDefaults(
   },
 )
 
+const emit = defineEmits(['update:modelValue'])
+
 const { logWarning } = useLogger()
 
 if (props.smoothScroll < 0) logWarning('SmoothControl must be greater than zero')
@@ -85,11 +87,9 @@ const progressScroll = ref(0)
 const scrollNodeY = ref(0)
 const direction = props.horizontal ? 'x' : 'y'
 
-const emit = defineEmits(['update:modelValue'])
-
 const unWatch = watch(
   camera,
-  value => {
+  (value) => {
     if (initialized.value) {
       unWatch()
       return
@@ -104,7 +104,7 @@ const unWatch = watch(
 
 watch(
   isScrolling,
-  value => {
+  (value) => {
     if (controls.value) controls.value.enabled = !value
   },
   {
@@ -112,26 +112,26 @@ watch(
   },
 )
 
-watch(windowY, value => {
+watch(windowY, (value) => {
   if (!isScrolling.value && !props.htmlScroll) return
-  progressScroll.value = parseFloat((value / height.value / (scrollNodeY.value / height.value - 1)).toFixed(2))
+  progressScroll.value = (value / height.value / (scrollNodeY.value / height.value - 1))
   progress.value = -1 * progressScroll.value
   emit('update:modelValue', progressScroll.value)
 })
-watch(containerY, value => {
-  progressScroll.value = parseFloat((value / height.value / (scrollNodeY.value / height.value)).toFixed(2))
+watch(containerY, (value) => {
+  progressScroll.value = (value / height.value / (scrollNodeY.value / height.value))
   progress.value = -1 * progressScroll.value
   emit('update:modelValue', progressScroll.value)
 })
-watch(containerX, value => {
-  progressScroll.value = parseFloat((value / width.value / (scrollNodeY.value / width.value - 1)).toFixed(2))
+watch(containerX, (value) => {
+  progressScroll.value = (value / width.value / (scrollNodeY.value / width.value - 1))
   progress.value = +progressScroll.value
   emit('update:modelValue', progressScroll.value)
 })
 
 watch(
   renderer,
-  value => {
+  (value) => {
     const canvas = value?.domElement
     if (props.htmlScroll && value?.domElement) {
       // use window scroll only Y axis
@@ -143,7 +143,8 @@ watch(
         canvas.style.left = '0'
       }
       scrollNodeY.value = document.body.scrollHeight
-    } else {
+    }
+    else {
       const fixed = document.createElement('div')
       const fill = document.createElement('div')
 
@@ -187,8 +188,8 @@ const { onLoop } = useRenderLoop()
 
 onLoop(() => {
   if (camera.value?.position) {
-    const delta =
-      (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
+    const delta
+      = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
 
     camera.value.position[direction] += delta
     if (wrapperRef.value.children.length > 0) {
@@ -197,6 +198,7 @@ onLoop(() => {
   }
 })
 </script>
+
 <template>
   <TresGroup ref="wrapperRef">
     <slot />

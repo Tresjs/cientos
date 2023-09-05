@@ -37,7 +37,7 @@ export default defineConfig({
           { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
           { text: 'Contact Shadows', link: '/guide/abstractions/contact-shadows' },
           { text: 'Precipitation', link: '/guide/abstractions/precipitation' },
-          { text: 'Reflector', link: '/guide/abstractions/reflector' }
+          { text: 'Reflector', link: '/guide/abstractions/reflector' },
         ],
       },
       {
@@ -60,6 +60,8 @@ export default defineConfig({
           { text: 'GLTFModel', link: '/guide/loaders/gltf-model' },
           { text: 'useFBX', link: '/guide/loaders/use-fbx' },
           { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
+          { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
+          { text: 'SVG', link: '/guide/loaders/svg' },
         ],
       },
       {
@@ -91,9 +93,7 @@ export default defineConfig({
       {
         text: 'Staging',
         collapsed: true,
-        items: [
-          { text: 'Backdrop', link: '/guide/staging/backdrop' },
-        ]
+        items: [{ text: 'Backdrop', link: '/guide/staging/backdrop' }],
       },
       {
         text: 'Misc',
