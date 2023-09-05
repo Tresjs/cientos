@@ -106,9 +106,6 @@ importers:
         specifier: workspace:^
         version: link:..
     devDependencies:
-      gsap:
-        specifier: ^3.12.2
-        version: 3.12.2
       unocss:
         specifier: ^0.53.5
         version: 0.53.5(postcss@8.4.29)(vite@4.4.9)
