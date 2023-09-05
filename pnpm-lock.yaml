@@ -105,10 +105,10 @@ importers:
       '@tresjs/cientos':
         specifier: workspace:^
         version: link:..
+    devDependencies:
       gsap:
         specifier: ^3.12.2
         version: 3.12.2
-    devDependencies:
       unocss:
         specifier: ^0.53.5
         version: 0.53.5(postcss@8.4.29)(vite@4.4.9)
@@ -4107,6 +4107,7 @@ packages:
 
   /gsap@3.12.2:
     resolution: {integrity: sha512-EkYnpG8qHgYBFAwsgsGEqvT1WUidX0tt/ijepx7z8EUJHElykg91RvW1XbkT59T0gZzzszOpjQv7SE41XuIXyQ==}
+    dev: true
 
   /gzip-size@6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
