@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { Camera, TOUCH } from 'three'
+import type { Camera } from 'three'
+import { TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
 import { ref, watch, onUnmounted, toRefs } from 'vue'
-import { TresVector3, useRenderLoop, useTresContext } from '@tresjs/core'
+import type { TresVector3 } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
 export interface OrbitControlsProps {
@@ -252,6 +254,8 @@ const props = withDefaults(defineProps<OrbitControlsProps>(), {
   target: () => [0, 0, 0],
 })
 
+const emit = defineEmits(['change', 'start', 'end'])
+
 const {
   makeDefault,
   autoRotate,
@@ -282,16 +286,15 @@ const controlsRef = ref<OrbitControls | null>(null)
 
 extend({ OrbitControls })
 
-watch(controlsRef, value => {
+watch(controlsRef, (value) => {
   addEventListeners()
   if (value && makeDefault.value) {
     controls.value = value
-  } else {
+  }
+  else {
     controls.value = null
   }
 })
-
-const emit = defineEmits(['change', 'start', 'end'])
 
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'change', () => emit('change', controlsRef.value))
@@ -316,7 +319,7 @@ onUnmounted(() => {
 
 <template>
   <TresOrbitControls
-    v-if="activeCamera && renderer"
+    v-if="(camera || activeCamera) && (domElement || renderer)"
     ref="controlsRef"
     :target="target"
     :auto-rotate="autoRotate"
@@ -339,6 +342,6 @@ onUnmounted(() => {
     :zoom-speed="zoomSpeed"
     :enable-rotate="enableRotate"
     :rotate-speed="rotateSpeed"
-    :args="[activeCamera || camera, renderer?.domElement || domElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
   />
 </template>

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import CameraControls from 'camera-controls'
 import { ref, watchEffect, onUnmounted, toRefs } from 'vue'
-import {
+import type {
   PerspectiveCamera,
   OrthographicCamera,
+  Object3D } from 'three'
+import {
   Box3,
   MathUtils,
   Matrix4,
@@ -14,7 +16,6 @@ import {
   Vector2,
   Vector3,
   Vector4,
-  Object3D,
 } from 'three'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
@@ -84,6 +85,14 @@ export interface CameraControlsProps {
    * @memberof CameraControlsProps
    */
   maxAzimuthAngle?: number
+
+  /**
+   * Current disatnce.
+   *
+   * @type {number}
+   * @memberof CameraControlsProps
+   */
+  distance?: number
 
   /**
    * Minimum distance for dolly. The value must be higher than `0`.
@@ -292,6 +301,7 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   maxPolarAngle: Math.PI,
   minAzimuthAngle: -Infinity,
   maxAzimuthAngle: Infinity,
+  distance: 8,
   minDistance: Number.EPSILON,
   maxDistance: Infinity,
   infinityDolly: false,
@@ -316,12 +326,15 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   // touches: {}
 })
 
+const emit = defineEmits(['change', 'start', 'end'])
+
 const {
   makeDefault,
   minPolarAngle,
   maxPolarAngle,
   minAzimuthAngle,
   maxAzimuthAngle,
+  distance,
   minDistance,
   maxDistance,
   infinityDolly,
@@ -368,12 +381,11 @@ watchEffect(() => {
   addEventListeners()
   if (controlsRef.value && makeDefault.value) {
     controls.value = controlsRef.value
-  } else {
+  }
+  else {
     controls.value = null
   }
 })
-
-const emit = defineEmits(['change', 'start', 'end'])
 
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'update', () => emit('change', controlsRef.value))
@@ -400,12 +412,13 @@ defineExpose({
 
 <template>
   <TresCameraControls
-    v-if="activeCamera && renderer"
+    v-if="(camera || activeCamera) && (domElement || renderer)"
     ref="controlsRef"
     :min-polar-angle="minPolarAngle"
     :max-polar-angle="maxPolarAngle"
     :min-azimuth-angle="minAzimuthAngle"
     :max-azimuth-angle="maxAzimuthAngle"
+    :distance="distance"
     :min-distance="minDistance"
     :max-distance="maxDistance"
     :infinity-dolly="infinityDolly"
@@ -425,6 +438,6 @@ defineExpose({
     :boundary-friction="boundaryFriction"
     :rest-threshold="restThreshold"
     :collider-meshes="colliderMeshes"
-    :args="[activeCamera || camera, renderer?.domElement || domElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
   />
 </template>

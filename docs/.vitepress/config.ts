@@ -28,15 +28,9 @@ export default defineConfig({
         text: 'Abstractions',
         items: [
           { text: 'Text3D', link: '/guide/abstractions/text-3d' },
-          { text: 'useAnimations', link: '/guide/abstractions/use-animations' },
-          { text: 'Environment', link: '/guide/abstractions/environment' },
-          { text: 'useEnvironment', link: '/guide/abstractions/use-environment' },
-          { text: 'MouseParallax', link: '/guide/abstractions/mouse-parallax' },
-          { text: 'Stars', link: '/guide/abstractions/stars' },
-          { text: 'Smoke', link: '/guide/abstractions/smoke' },
           { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
-          { text: 'Contact Shadows', link: '/guide/abstractions/contact-shadows' },
-          { text: 'Precipitation', link: '/guide/abstractions/precipitation' },
+          { text: 'useAnimations', link: '/guide/abstractions/use-animations' },
+          { text: 'MouseParallax', link: '/guide/abstractions/mouse-parallax' },
         ],
       },
       {
@@ -60,6 +54,7 @@ export default defineConfig({
           { text: 'useFBX', link: '/guide/loaders/use-fbx' },
           { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
           { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
+          { text: 'SVG', link: '/guide/loaders/svg' },
         ],
       },
       {
@@ -91,12 +86,29 @@ export default defineConfig({
       },
       {
         text: 'Staging',
-        collapsed: true,
-        items: [{ text: 'Backdrop', link: '/guide/staging/backdrop' }],
+        items: [
+          { text: 'Backdrop', link: '/guide/staging/backdrop' },
+          { text: 'Environment', link: '/guide/staging/environment' },
+          { text: 'useEnvironment', link: '/guide/staging/use-environment' },
+          { text: 'Stars', link: '/guide/staging/stars' },
+          { text: 'Smoke', link: '/guide/staging/smoke' },
+          { text: 'Contact Shadows', link: '/guide/staging/contact-shadows' },
+          { text: 'Precipitation', link: '/guide/staging/precipitation' }],
       },
       {
         text: 'Misc',
-        items: [{ text: 'useTweakpane', link: '/guide/misc/use-tweakpane' }],
+        collapsed: true,
+        items: [
+          { text: 'useTweakpane', link: '/guide/misc/use-tweakpane' },
+          { text: 'Stats', link: '/guide/misc/stats' },
+        ],
+      },
+      {
+        text: 'Directives',
+        collapsed: true,
+        items: [
+          { text: 'v-log', link: '/guide/directives/v-log' },
+        ],
       },
     ],
 
