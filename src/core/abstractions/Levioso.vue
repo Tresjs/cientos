@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRenderLoop } from '@tresjs/core'
 import { MathUtils } from 'three'
-import { ref, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -26,13 +26,14 @@ defineExpose({
 
 const { onLoop } = useRenderLoop()
 
-const offset = ref(Math.random() * 10000)
-let elapsed = 0
+const offset = Math.random() * 10000
+let elapsed = offset
+const SPEED_SCALE = 0.25
 onLoop(({ delta }) => {
   if (!groupRef.value) return
 
-  elapsed += delta * props.speed * 0.25
-  const theta = offset.value + elapsed
+  elapsed += delta * props.speed * SPEED_SCALE
+  const theta = elapsed
   groupRef.value.rotation.x = (Math.cos(theta) / 8) * props.rotationFactor
   groupRef.value.rotation.y = (Math.sin(theta) / 8) * props.rotationFactor
   groupRef.value.rotation.z = (Math.sin(theta) / 20) * props.rotationFactor
