@@ -27,15 +27,16 @@ defineExpose({
 const { onLoop } = useRenderLoop()
 
 const offset = ref(Math.random() * 10000)
-
-onLoop(({ elapsed }) => {
+let elapsed = 0
+onLoop(({ delta }) => {
   if (!groupRef.value) return
 
+  elapsed += delta * props.speed * 0.25
   const theta = offset.value + elapsed
-  groupRef.value.rotation.x = (Math.cos((theta / 4) * props.speed) / 8) * props.rotationFactor
-  groupRef.value.rotation.y = (Math.sin((theta / 4) * props.speed) / 8) * props.rotationFactor
-  groupRef.value.rotation.z = (Math.sin((theta / 4) * props.speed) / 20) * props.rotationFactor
-  let yPosition = Math.sin((theta / 4) * props.speed) / 10
+  groupRef.value.rotation.x = (Math.cos(theta) / 8) * props.rotationFactor
+  groupRef.value.rotation.y = (Math.sin(theta) / 8) * props.rotationFactor
+  groupRef.value.rotation.z = (Math.sin(theta) / 20) * props.rotationFactor
+  let yPosition = Math.sin(theta) / 10
   yPosition = MathUtils.mapLinear(yPosition, -0.1, 0.1, props.range?.[0] ?? -0.1, props.range?.[1] ?? 0.1)
   groupRef.value.position.y = yPosition * props.floatFactor
 })
