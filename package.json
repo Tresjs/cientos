@@ -52,17 +52,17 @@
   },
   "dependencies": {
     "@tresjs/core": "3.2.1",
-    "@vueuse/core": "^10.4.0",
+    "@vueuse/core": "^10.4.1",
     "camera-controls": "^2.7.2",
     "stats.js": "^0.17.0",
-    "three-stdlib": "^2.25.1"
+    "three-stdlib": "^2.26.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^7.0.1",
     "@tresjs/core": "^3.2.1",
     "@tresjs/eslint-config-vue": "^0.2.0",
     "@tweakpane/core": "^1.1.9",
-    "@types/node": "^20.6.0",
+    "@types/node": "^20.6.1",
     "@types/three": "^0.156.0",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
