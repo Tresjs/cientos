@@ -294,17 +294,6 @@ const visible = ref(true)
 
 const { onLoop } = useRenderLoop()
 
-watchEffect(() => {
-  console.log({
-    width: sizes.width.value, 
-    height: sizes.height.value,
-    styles: styles.value,
-    el: el.value.style,
-  })
-})
-
-const consoleCount = ref(0)
-
 onLoop(() => {
   if (groupRef.value && camera.value && renderer.value) {
     camera.value?.updateMatrixWorld()
@@ -456,11 +445,6 @@ onLoop(() => {
 
       occlusionMeshRef.value.lookAt(camera.value?.position)
     }
-  }
-
-  if (consoleCount.value < 50) {
-    console.log({ vnode: vnode.value, el: el.value, styles: styles.value, transformInnerStyles: transformInnerStyles.value, awiwi: vnode.value.el.style.transform })
-    consoleCount.value++
   }
 })
 
