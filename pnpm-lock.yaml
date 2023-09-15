@@ -113,8 +113,8 @@ importers:
         version: 0.2.0(tweakpane@4.0.1)
     devDependencies:
       '@tresjs/leches':
-        specifier: ^0.8.0
-        version: 0.8.0(vue@3.3.4)
+        specifier: ^0.9.1
+        version: 0.9.1(vue@3.3.4)
       unocss:
         specifier: ^0.54.0
         version: 0.54.0(postcss@8.4.29)(vite@4.4.9)
@@ -1080,17 +1080,6 @@ packages:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
-    dev: true
-
-  /@tresjs/leches@0.8.0(vue@3.3.4):
-    resolution: {integrity: sha512-bXTIYJoeM1I1kn4pRM5FIJsY0FJ/IDL2r1UF7dub+V9QT6vNV5uvQeWbsiBRsZkuh/ykp+27gZC/149g0uxlKQ==}
-    peerDependencies:
-      vue: '>=3.3'
-    dependencies:
-      '@vueuse/components': 10.4.1(vue@3.3.4)
-      vue: 3.3.4
-    transitivePeerDependencies:
-      - '@vue/composition-api'
     dev: true
 
   /@tresjs/leches@0.9.1(vue@3.3.4):
