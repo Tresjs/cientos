@@ -3,7 +3,7 @@
 This component allows you to project HTML content to any object in your scene. TresJS will automatically update the position of the HTML content to match the position of the object in the scene.
 
 <DocsDemo>
-  <HtmlDemo />
+  <HtmlLaptopDemo />
 </DocsDemo>
 
 ## Usage
@@ -38,9 +38,7 @@ Html can hide behind geometry using the occlude prop.
 
 You can also choose which objects should occlude the HTML content by passing an array of objects refs to the `occlude` prop.
 
-<DocsDemo>
-  <HtmlOccludeDemo />
-</DocsDemo>
+
 
 ```html
 <script setup lang="ts">
@@ -89,10 +87,6 @@ const sphereRef = ref(null)
 ## Using `iframes`
 
 You can achieve pretty cool results with the `Html` component by using iframes. For example, you can use an iframe to display a YouTube video in your scene or a webpage with a 3D model.
-
-<DocsDemo>
-  <HtmlLaptopDemo />
-</DocsDemo>
 
 ```html
 <script setup lang="ts">

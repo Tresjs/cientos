@@ -30,7 +30,7 @@ const sphereRef = ref(null)
         :occlude="[sphereRef]"
         :distance-factor="4"
       >
-        <h1 class="bg-white text-xs p-1 rounded">
+        <h1 class="bg-white dark:bg-dark text-xs p-1 rounded">
           Move camera
         </h1>
       </Html>
@@ -46,7 +46,7 @@ const sphereRef = ref(null)
         transform
         :distance-factor="4"
       >
-        <h1 class="bg-white text-xs p-1 rounded">
+        <h1 class="bg-white dark:bg-dark text-xs p-1 rounded">
           Sphere
         </h1>
       </Html>

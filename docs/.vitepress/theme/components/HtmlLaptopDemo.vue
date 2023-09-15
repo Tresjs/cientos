@@ -23,24 +23,24 @@ const { nodes }
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[-5, 4, 3]" />
     <OrbitControls />
-    <Levioso>
-      <primitive :object="nodes.Macbook">
-        <Html
-          transform
-          wrapper-class="webpage"
-          :distance-factor="11"
-          :position="[0, 10.5, -13.6]"
-          occlude
-          :rotation-x="-0.256"
-        >
-          <iframe
-            class="rounded-lg w-[1024px] h-[670px]"
-            src="https://tresjs.org"
-            frameborder="0"
-          />
-        </Html>
-      </primitive>
-    </Levioso>
+
+    <primitive :object="nodes.Macbook">
+      <Html
+        transform
+        wrapper-class="webpage"
+        :distance-factor="11"
+        :position="[0, 10.5, -13.6]"
+        occlude
+        :rotation-x="-0.256"
+      >
+        <iframe
+          class="rounded-lg w-[1024px] h-[670px]"
+          src="https://tresjs.org"
+          frameborder="0"
+        />
+      </Html>
+    </primitive>
+ 
     <ContactShadows
       :blur="3.5"
       :resolution="512"

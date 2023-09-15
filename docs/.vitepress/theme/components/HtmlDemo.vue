@@ -29,7 +29,7 @@ const gl = {
         :position="[0, 0, 0.65]"
         :scale="[0.75, 0.75, 0.75]"
       >
-        <h1 class="bg-white text-xs p-1 rounded">
+        <h1 class="bg-white dark:bg-dark text-xs p-1 rounded">
           I'm a Box 📦
         </h1>
       </Html>

@@ -195,6 +195,7 @@ const styles = computed(() => {
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
       zIndex: 2,
+      willChange: 'transform',
     }
   }
   else {
@@ -202,13 +203,14 @@ const styles = computed(() => {
       position: 'absolute',
       transform: center.value ? 'translate3d(-50%,-50%,0)' : 'none',
       ...(fullscreen.value && {
-        top: -(sizes.height.value || 0) / 2,
-        left: -(sizes.width.value || 0) / 2,
+        top: -(sizes.height.value) / 2,
+        left: -(sizes.width.value) / 2,
         width: `${sizes.width.value}px`,
         height: `${sizes.height.value}px`,
       }),
       zIndex: 2,
       ...attrs.style,
+      willChange: 'transform',
     }
   }
 })
@@ -256,8 +258,8 @@ watch(
       }
       else {
         const vector = calculatePosition(group, camera.value as TresCamera, {
-          width: _renderer?.domElement?.parentElement?.offsetWidth || 0,
-          height: _renderer?.domElement?.parentElement?.offsetHeight || 0,
+          width: sizes.width.value,
+          height: sizes.height.value,
         })
         el.value.style.cssText 
         = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;`
@@ -291,6 +293,17 @@ watchEffect(() => {
 const visible = ref(true)
 
 const { onLoop } = useRenderLoop()
+
+watchEffect(() => {
+  console.log({
+    width: sizes.width.value, 
+    height: sizes.height.value,
+    styles: styles.value,
+    el: el.value.style,
+  })
+})
+
+const consoleCount = ref(0)
 
 onLoop(() => {
   if (groupRef.value && camera.value && renderer.value) {
@@ -347,14 +360,14 @@ onLoop(() => {
         ? isRayCastOcclusion.value //
           ? [zIndexRange.value[0], halfRange]
           : [halfRange - 1, 0]
-        : zIndexRange
+        : zIndexRange.value
 
       el.value.style.zIndex = `${objectZIndex(groupRef.value, camera.value as TresCamera, zRange)}`
-
+      el.value.style.willChange = 'transform'
       if (transform.value) {
         const [widthHalf, heightHalf] = [
-          (renderer.value.domElement.parentElement?.offsetWidth || 0) / 2,
-          (sizes.height.value || 0) / 2,
+          (sizes.width.value) / 2,
+          (sizes.height.value) / 2,
         ]
         const fov = camera.value.projectionMatrix.elements[5] * heightHalf
         const { isOrthographicCamera, top, left, bottom, right } = camera.value as OrthographicCamera
@@ -368,12 +381,14 @@ onLoop(() => {
           matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0
           matrix.elements[15] = 1
         }
-        el.value.style.width = `${renderer.value.domElement.parentElement?.offsetWidth}px`
+        el.value.style.width = `${sizes.width.value}px`
         el.value.style.height = `${sizes.height.value}px`
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
         if (vnode.value?.el && vnode.value?.children) {
+          vnode.value.el.style.willChange = 'transform'
           vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
+          vnode.value.children[0].willChange = 'transform'
           vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
             matrix,
             1 / ((distanceFactor?.value || 10) / 400),
@@ -441,6 +456,11 @@ onLoop(() => {
 
       occlusionMeshRef.value.lookAt(camera.value?.position)
     }
+  }
+
+  if (consoleCount.value < 50) {
+    console.log({ vnode: vnode.value, el: el.value, styles: styles.value, transformInnerStyles: transformInnerStyles.value, awiwi: vnode.value.el.style.transform })
+    consoleCount.value++
   }
 })
 
