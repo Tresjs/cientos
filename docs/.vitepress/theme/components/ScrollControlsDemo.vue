@@ -11,11 +11,6 @@ const sphereRef = ref()
 const boxRef = ref()
 const progress = ref(0)
 
-watchEffect(() => {
-  // eslint-disable-next-line no-console
-  console.log('jaime ~ progress:', progress.value)
-})
-
 const gl = {
   clearColor: '#333',
   alpha: true,
