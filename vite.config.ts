@@ -5,6 +5,7 @@ import banner from 'vite-plugin-banner'
 import dts from 'vite-plugin-dts'
 import analyze from 'rollup-plugin-analyzer'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { templateCompilerOptions } from '@tresjs/core'
 
 import { resolve } from 'pathe'
 
@@ -21,15 +22,8 @@ export default defineConfig({
   },
   plugins: [
     vue({
-      script: {
-        propsDestructure: true,
-      },
       isProduction: false,
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag.startsWith('Tres') && tag !== 'TresCanvas',
-        },
-      },
+      ...templateCompilerOptions,
     }),
     dts({
       insertTypesEntry: true,

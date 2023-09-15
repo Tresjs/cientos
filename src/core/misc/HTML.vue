@@ -176,7 +176,7 @@ const {
   zIndexRange,
 } = toRefs(props)
 
-const { renderer, scene, camera, raycaster } = useTresContext()
+const { renderer, scene, camera, raycaster, sizes } = useTresContext()
 
 const el = computed(() => document.createElement(as.value))
 
@@ -190,8 +190,8 @@ const styles = computed(() => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: `${renderer.value.domElement.parentElement?.offsetWidth}px`,
-      height: `${renderer.value.domElement.parentElement?.offsetHeight}px`,
+      width: `${sizes.width.value}px`,
+      height: `${sizes.height.value}px`,
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
       zIndex: 2,
@@ -202,10 +202,10 @@ const styles = computed(() => {
       position: 'absolute',
       transform: center.value ? 'translate3d(-50%,-50%,0)' : 'none',
       ...(fullscreen.value && {
-        top: -(renderer.value.domElement.parentElement?.offsetHeight || 0) / 2,
-        left: -(renderer.value.domElement.parentElement?.offsetWidth || 0) / 2,
-        width: `${renderer.value.domElement.parentElement?.offsetWidth}px`,
-        height: `${renderer.value.domElement.parentElement?.offsetHeight}px`,
+        top: -(sizes.height.value || 0) / 2,
+        left: -(sizes.width.value || 0) / 2,
+        width: `${sizes.width.value}px`,
+        height: `${sizes.height.value}px`,
       }),
       zIndex: 2,
       ...attrs.style,
@@ -245,7 +245,7 @@ watch(
 )
 
 watch(
-  () => [groupRef.value, renderer.value],
+  () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value],
   ([group, _renderer]: [TresObject3D | null, WebGLRenderer]): void => {
     if (group && _renderer) {
       const target = portal?.value || _renderer.domElement
@@ -300,8 +300,8 @@ onLoop(() => {
     const vector = transform.value
       ? previousPosition.value
       : calculatePosition(groupRef.value, camera.value as TresCamera, {
-        width: renderer.value.domElement.parentElement?.offsetWidth || 0,
-        height: renderer.value.domElement.parentElement?.offsetHeight || 0,
+        width: sizes.width.value || 0,
+        height: sizes.height.value || 0,
       })
 
     if (
@@ -354,7 +354,7 @@ onLoop(() => {
       if (transform.value) {
         const [widthHalf, heightHalf] = [
           (renderer.value.domElement.parentElement?.offsetWidth || 0) / 2,
-          (renderer.value.domElement.parentElement?.offsetHeight || 0) / 2,
+          (sizes.height.value || 0) / 2,
         ]
         const fov = camera.value.projectionMatrix.elements[5] * heightHalf
         const { isOrthographicCamera, top, left, bottom, right } = camera.value as OrthographicCamera
@@ -369,7 +369,7 @@ onLoop(() => {
           matrix.elements[15] = 1
         }
         el.value.style.width = `${renderer.value.domElement.parentElement?.offsetWidth}px`
-        el.value.style.height = `${renderer.value.domElement.parentElement?.offsetHeight}px`
+        el.value.style.height = `${sizes.height.value}px`
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
         if (vnode.value?.el && vnode.value?.children) {

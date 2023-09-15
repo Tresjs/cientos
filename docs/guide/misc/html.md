@@ -1,5 +1,0 @@
-# Html
-
-<HtmlLabelDemo />
-
-<HTMLLaptopDemo />
