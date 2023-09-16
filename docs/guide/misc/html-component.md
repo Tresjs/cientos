@@ -157,3 +157,29 @@ const { nodes }
   </TresCanvas>
 </template>
 ```
+
+## Props
+
+| Prop                | Description                                                                                                               | Default                                  |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| **as**              | Wrapping html element.                                                                                                         | `'div'`                                  |
+| **wrapperClass**    | The className of the wrapping element.                                                                                    |                                          |
+| **prepend**         | Project content behind the canvas.                                                                                        | `false`                                  |
+| **center**          | Adds a -50%/-50% CSS transform. [Ignored in transform mode]                                                               | `false`                                  |
+| **fullscreen**      | Aligns to the upper-left corner, fills the screen. [Ignored in transform mode]                                            | `false`                                  |
+| **distanceFactor**  | Children will be scaled by this factor, and also by distance to a PerspectiveCamera / zoom by an OrthographicCamera.      |                                          |
+| **zIndexRange**     | Z-order range.                                                                                                            | `[16777271, 0]`                          |
+| **portal**          | Reference to target container.                                                                                            |                                          |
+| **transform**       | If true, applies matrix3d transformations.                                                                                | `false`                                  |
+| **sprite**          | Renders as sprite, but only in transform mode.                                                                            | `false`                                  |
+| **calculatePosition** | Override default positioning function. [Ignored in transform mode]                                                        |                                          |
+| **occlude**         | Can be `true`, `Ref<TresObject3D>[]`, `'raycast'`, or `'blending'`. True occludes the entire scene.                       |                                          |
+
+
+
+## Events
+
+| Event               | Description                                                                                                               |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------|
+| onOcculde           | Called when the occlusion state changes.                                                                                  |
+
