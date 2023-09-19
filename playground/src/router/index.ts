@@ -6,6 +6,7 @@ import {
   loadersRoutes,
   materialsRoutes,
   miscRoutes,
+  directivesRoutes,
 } from './routes'
 
 const routes = [
@@ -20,6 +21,7 @@ const routes = [
   ...loadersRoutes,
   ...materialsRoutes,
   ...miscRoutes,
+  ...directivesRoutes,
 ]
 
 export const router = createRouter({
