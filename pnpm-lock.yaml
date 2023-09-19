@@ -86,7 +86,7 @@ importers:
         version: 5.2.2
       unocss:
         specifier: ^0.54.0
-        version: 0.54.0(postcss@8.4.29)(vite@4.4.9)
+        version: 0.54.0(postcss@8.4.30)(vite@4.4.9)
       vite:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@20.6.1)
@@ -113,11 +113,11 @@ importers:
         version: 0.2.0(tweakpane@4.0.1)
     devDependencies:
       '@tresjs/leches':
-        specifier: ^0.9.1
-        version: 0.9.1(vue@3.3.4)
+        specifier: ^0.10.0
+        version: 0.10.0(vue@3.3.4)
       unocss:
         specifier: ^0.54.0
-        version: 0.54.0(postcss@8.4.29)(vite@4.4.9)
+        version: 0.54.0(postcss@8.4.30)(vite@4.4.9)
       vite-svg-loader:
         specifier: ^4.0.0
         version: 4.0.0
@@ -125,15 +125,15 @@ importers:
   playground:
     dependencies:
       '@tresjs/core':
-        specifier: 3.2.1
-        version: 3.2.1(three@0.156.1)(vue@3.3.4)
+        specifier: 3.2.2
+        version: 3.2.2(three@0.156.1)(vue@3.3.4)
       vue-router:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
     devDependencies:
       '@tresjs/leches':
-        specifier: ^0.9.1
-        version: 0.9.1(vue@3.3.4)
+        specifier: ^0.10.0
+        version: 0.10.0(vue@3.3.4)
       unplugin-auto-import:
         specifier: ^0.16.6
         version: 0.16.6(@vueuse/core@10.4.1)
@@ -662,8 +662,8 @@ packages:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: true
 
-  /@iconify/utils@2.1.9:
-    resolution: {integrity: sha512-mo+A4n3MwLlWlg1SoSO+Dt6pOPWKElk9sSJ6ZpuzbB9OcjxN8RUWxU3ulPwB1nglErWKRam2x4BAohbYF7FiFA==}
+  /@iconify/utils@2.1.10:
+    resolution: {integrity: sha512-0/+5hxjzCZ9RoYpqxnOzbnpQyMdZRuHcMxPJeuX+x/aZkAAD/N4TajDjAPT7LpX+M0bfLExj/p0bbDkUfp0lrg==}
     dependencies:
       '@antfu/install-pkg': 0.1.1
       '@antfu/utils': 0.7.6
@@ -1013,8 +1013,8 @@ packages:
       - '@vue/composition-api'
     dev: false
 
-  /@tresjs/core@3.2.1(three@0.156.1)(vue@3.3.4):
-    resolution: {integrity: sha512-akmI8v9aoDZkB6ymrbu0PozXFKcA0Bnr1j9FMM8DJOLKx4rFBu8qM0pAwkaOL5YBuz8B0I66pc+f5GxmDlQIqQ==}
+  /@tresjs/core@3.2.2(three@0.156.1)(vue@3.3.4):
+    resolution: {integrity: sha512-zNh32siTJqk2JcnA8hZ8zPGkGvepNP03oCtlnUFl22BGULpQvehMWtMjYx233Gqoq5tiyUEcWeXxBSUHIEJjRg==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.3'
@@ -1091,10 +1091,10 @@ packages:
       - supports-color
     dev: true
 
-  /@tresjs/leches@0.9.1(vue@3.3.4):
-    resolution: {integrity: sha512-LHSkWlSvqZJwjtvObbqVzKmcX9XoxFYyBfg2W65CgYaTzNabZqHYZ05NDPt/SlrGJtaKCsag2ZOcIVYyEVW/iQ==}
+  /@tresjs/leches@0.10.0(vue@3.3.4):
+    resolution: {integrity: sha512-OuVYZE6LttLJPjc7QRnZy/SfWjru0+viirg5xndk8COxiC2GywGTbwwP14zzZVGZvjD4u0hbNrQ8pCjTQXW6dg==}
     peerDependencies:
-      vue: '>=3.3'
+      vue: '>=3.3.4'
     dependencies:
       '@vueuse/components': 10.4.1(vue@3.3.4)
       vue: 3.3.4
@@ -1377,7 +1377,7 @@ packages:
       sirv: 2.0.3
     dev: true
 
-  /@unocss/postcss@0.54.0(postcss@8.4.29):
+  /@unocss/postcss@0.54.0(postcss@8.4.30):
     resolution: {integrity: sha512-t1PmIkp2Qa9F/9swfCVCXMuheQxd1ddrcvf0+d4fOckpFF8YhvOi+WfMoZW4YFwoCmG5pvDg4VYgKbDunGHhRg==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -1388,7 +1388,7 @@ packages:
       css-tree: 2.3.1
       fast-glob: 3.3.1
       magic-string: 0.30.3
-      postcss: 8.4.29
+      postcss: 8.4.30
     dev: true
 
   /@unocss/preset-attributify@0.54.0:
@@ -1400,7 +1400,7 @@ packages:
   /@unocss/preset-icons@0.54.0:
     resolution: {integrity: sha512-WHdkpMzj6tohIkCc/+mEOzn0Yppqoz3y5zbI3WsDqA2/QFNSXx4haWcjV5iJI42uGcLXRp4K3l9JV3EL+oAxbg==}
     dependencies:
-      '@iconify/utils': 2.1.9
+      '@iconify/utils': 2.1.10
       '@unocss/core': 0.54.0
       ofetch: 1.3.3
     transitivePeerDependencies:
@@ -5179,6 +5179,15 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
+  /postcss@8.4.30:
+    resolution: {integrity: sha512-7ZEao1g4kd68l97aWG/etQKPKq07us0ieSZ2TnFDk11i0ZfDW2AwKHYU8qv4MZKqN2fdBfg+7q0ES06UA73C1g==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.6
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
+    dev: true
+
   /potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
     dev: false
@@ -6172,7 +6181,7 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
-  /unocss@0.54.0(postcss@8.4.29)(vite@4.4.9):
+  /unocss@0.54.0(postcss@8.4.30)(vite@4.4.9):
     resolution: {integrity: sha512-SXjyQqt/MP1uW8mjEmQaSa0zd+QB3FwaGD/ityNlu+zNRx1D03BPP9ACbJDB1zZKx4aodMVSsHZ3TV5wsu+VRQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -6185,7 +6194,7 @@ packages:
       '@unocss/cli': 0.54.0
       '@unocss/core': 0.54.0
       '@unocss/extractor-arbitrary-variants': 0.54.0
-      '@unocss/postcss': 0.54.0(postcss@8.4.29)
+      '@unocss/postcss': 0.54.0(postcss@8.4.30)
       '@unocss/preset-attributify': 0.54.0
       '@unocss/preset-icons': 0.54.0
       '@unocss/preset-mini': 0.54.0
