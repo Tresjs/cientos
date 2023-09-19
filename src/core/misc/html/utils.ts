@@ -88,4 +88,4 @@ export const getObjectCSSMatrix
   = ((scaleMultipliers: (n: number) => number[]) =>
     (matrix: Matrix4, factor: number) =>
       getCSSMatrix(matrix, scaleMultipliers(factor), 'translate(-50%,-50%)'))((f: number) =>
-        [1 / f, 1 / f, 1 / f, 1, -1 / f, -1 / f, -1 / f, -1, 1 / f, 1 / f, 1 / f, 1, 1, 1, 1, 1])
+    [1 / f, 1 / f, 1 / f, 1, -1 / f, -1 / f, -1 / f, -1, 1 / f, 1 / f, 1 / f, 1, 1, 1, 1, 1])
