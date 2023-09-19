@@ -60,7 +60,7 @@
   "devDependencies": {
     "@release-it/conventional-changelog": "^7.0.1",
     "@tresjs/core": "^3.2.1",
-    "@tresjs/eslint-config-vue": "^0.2.0",
+    "@tresjs/eslint-config-vue": "^0.2.1",
     "@tweakpane/core": "^1.1.9",
     "@types/node": "^20.6.1",
     "@types/three": "^0.156.0",
