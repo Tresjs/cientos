@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
 import { Sky as SkyImpl } from 'three/examples/jsm/objects/Sky'
 import { computed } from 'vue'
@@ -38,9 +39,9 @@ function getSunPosition(azimuth: number, elevation: number) {
     :object="skyImpl"
     :material-uniforms-turbidity-value="props.turbidity"
     :material-uniforms-rayleigh-value="props.rayleigh"
-    :material-uniforms-mie-coefficient-value="props.mieCoefficient"
-    :material-uniforms-mie-directional-g-value="props.mieDirectionalG"
-    :material-uniforms-sun-position-value="sunPosition"
+    :material-uniforms-mieCoefficient-value="props.mieCoefficient"
+    :material-uniforms-mieDirectionalG-value="props.mieDirectionalG"
+    :material-uniforms-sunPosition-value="sunPosition"
     :scale="props.distance"
   />
 </template>
