@@ -17,7 +17,12 @@ export const vDistanceTo = {
     el.parent.add( arrowHelper )
     // TODO see other way to show the distance
     // eslint-disable-next-line no-console
-    console.log('v-distance-to', el.position.distanceTo(observer))
+    console.table([
+      ['Distance:', el.position.distanceTo(observer)],
+      ['origin:', `x:${el.position.x}, y:${el.position.y}, z:${el.position?.z}`],
+      ['Destiny:', `x:${observer.x}, y:${observer.y}, z:${observer?.z}`],
+    ],
+    )
   },
   unmounted: (el: any) => {
     arrowHelper?.dispose()
