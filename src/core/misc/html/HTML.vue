@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { VNode, Ref } from 'vue'
-import { computed, createVNode, toRefs, render, watchEffect, ref, watch, useAttrs, isRef } from 'vue'
+import { computed, createVNode, toRefs, render, watchEffect, ref, watch, useAttrs, isRef, onUnmounted } from 'vue'
 import type {
   WebGLRenderer,
   OrthographicCamera } from 'three'
@@ -387,6 +387,12 @@ const shaderMaterial = computed(() => {
       side: DoubleSide,
     })
   )
+})
+
+onUnmounted(() => {
+  if (shaderMaterial.value) {
+    shaderMaterial.value.dispose()
+  }
 })
 </script>
 
