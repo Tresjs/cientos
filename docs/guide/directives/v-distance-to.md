@@ -2,7 +2,9 @@
 
 ¿Have you tried to calculate the distance between two object with ThreeJs?
 
-With the new directive `v-distance-to` it's easier than ever, you should only indicate the target object to perform the measure and the result will appear in your console, also an arrowHelper between the two object will be created to indicate which are the object you're measure the distance
+With the new directive `v-distance-to` it's easier than ever, you should only indicate the target object to perform the measure and the result will appear in your console.
+
+In addition an arrowHelper between the two object will be created to indicate which are the object you're measure the distance
 
 ```vue{3}
 <script setup lang="ts">

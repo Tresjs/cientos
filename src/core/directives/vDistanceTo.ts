@@ -1,12 +1,9 @@
-import { Vector3, ArrowHelper } from 'three'
+import { ArrowHelper } from 'three'
+import { extractBindingPosition } from '../../utils/index'
 
 export const vDistanceTo = {
   updated: (el: any, binding: any) => {
-    let observer = binding.value
-    if (binding.value && binding.value?.value?.isMesh) {
-      observer = binding.value.value.position
-    }
-    if (Array.isArray(binding.value)) observer = new Vector3(...observer)
+    const observer = extractBindingPosition(binding)
     if (arrowHelper) {
       arrowHelper.dispose()
       el.parent.remove(arrowHelper) 
@@ -19,8 +16,8 @@ export const vDistanceTo = {
     // eslint-disable-next-line no-console
     console.table([
       ['Distance:', el.position.distanceTo(observer)],
-      ['origin:', `x:${el.position.x}, y:${el.position.y}, z:${el.position?.z}`],
-      ['Destiny:', `x:${observer.x}, y:${observer.y}, z:${observer?.z}`],
+      [`origin: ${el.name || el.type}`, `x:${el.position.x}, y:${el.position.y}, z:${el.position?.z}`],
+      [`Destiny: ${el.name || el.type}`, `x:${observer.x}, y:${observer.y}, z:${observer?.z}`],
     ],
     )
   },
