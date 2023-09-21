@@ -4,7 +4,7 @@ import Levioso from './Levioso.vue'
 import MouseParallax from './MouseParallax.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
-import { useFBO } from './useFBO'
+import { UseFBO } from './useFBO'
 
 export * from '../staging/useEnvironment'
 export {
@@ -14,5 +14,5 @@ export {
   Levioso,
   Lensflare,
   GlobalAudio,
-  useFBO,
+  UseFBO,
 }

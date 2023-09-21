@@ -1,51 +1,59 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { TresCanvas } from '@tresjs/core'
-import { Text3D, OrbitControls, useFBO } from '@tresjs/cientos'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
+import { TresCanvas, useRenderLoop } from '@tresjs/core'
+import { OrbitControls, UseFBO } from '@tresjs/cientos'
+import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
 
 const gl = {
-  clearColor: '#82DBC5',
-  shadows: true,
-  alpha: false,
-  shadowMapType: BasicShadowMap,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
+	clearColor: '#82DBC5',
+	shadows: true,
+	alpha: false,
+	outputColorSpace: SRGBColorSpace,
+	toneMapping: ACESFilmicToneMapping,
 }
 
-const fontPath
-	= 'https://raw.githubusercontent.com/Tresjs/assets/main/fonts/FiraCodeRegular.json'
+const fboRef = shallowRef(null)
+const torusRef = shallowRef(null)
+const capsuleRef = shallowRef(null)
 
-const reactiveText = ref('You can edit me')
+const { onLoop } = useRenderLoop()
 
-const fbo = useFBO({ depth: true })
+onLoop(({ elapsed }) => {
+	torusRef.value.rotation.x = elapsed * 0.745
+	torusRef.value.rotation.y = elapsed * 0.361
+
+	capsuleRef.value.rotation.x = elapsed * 0.471
+	capsuleRef.value.rotation.z = elapsed * 0.632
+})
 </script>
 
 <template>
-  <div class="input-center">
-    <input v-model="reactiveText">
-  </div>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 0.5, 5]" />
-    <OrbitControls />
-    <Suspense>
-      <Text3D
-        :text="reactiveText"
-        :size="0.3"
-        :font="fontPath"
-        center
-        :need-updates="true"
-      />
-    </Suspense>
-    <TresGridHelper :args="[10, 10]" />
-    <TresAmbientLight :intensity="1" />
-  </TresCanvas>
-</template>
+	<TresCanvas v-bind="gl">
+		<TresPerspectiveCamera :position="[0, 0.5, 5]" />
+		<OrbitControls />
 
-<style scoped>
-.input-center {
-	display: flex;
-	justify-content: center;
-	padding: 0.25rem;
-}
-</style>
+		<TresGridHelper :args="[10, 10]" />
+
+		<UseFBO
+			ref="fboRef"
+			:depth="false"
+			:width="1024"
+			:height="1024"
+			:samples="1"
+		/>
+
+		<TresMesh>
+			<TresBoxGeometry :args="[1, 1, 1]" />
+			<TresMeshBasicMaterial :color="0xff8833" :map="fboRef?.texture || null" />
+		</TresMesh>
+
+		<TresMesh :position="[3, 0, 0]" ref="torusRef">
+			<TresTorusGeometry :args="[1, 0.5, 16, 100]" />
+			<TresMeshNormalMaterial />
+		</TresMesh>
+
+		<TresMesh :position="[-2, 0, 0]" ref="capsuleRef">
+			<TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
+			<TresMeshNormalMaterial />
+		</TresMesh>
+	</TresCanvas>
+</template>
