@@ -87,6 +87,14 @@ export interface CameraControlsProps {
   maxAzimuthAngle?: number
 
   /**
+   * Current disatnce.
+   *
+   * @type {number}
+   * @memberof CameraControlsProps
+   */
+  distance?: number
+
+  /**
    * Minimum distance for dolly. The value must be higher than `0`.
    * PerspectiveCamera only.
    *
@@ -293,6 +301,7 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   maxPolarAngle: Math.PI,
   minAzimuthAngle: -Infinity,
   maxAzimuthAngle: Infinity,
+  distance: () => useTresContext().camera.value!.position.z,
   minDistance: Number.EPSILON,
   maxDistance: Infinity,
   infinityDolly: false,
@@ -325,6 +334,7 @@ const {
   maxPolarAngle,
   minAzimuthAngle,
   maxAzimuthAngle,
+  distance,
   minDistance,
   maxDistance,
   infinityDolly,
@@ -364,6 +374,7 @@ const subsetOfTHREE = {
 CameraControls.install({ THREE: subsetOfTHREE })
 
 const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+
 const controlsRef = ref<CameraControls | null>(null)
 extend({ CameraControls })
 
@@ -402,12 +413,13 @@ defineExpose({
 
 <template>
   <TresCameraControls
-    v-if="activeCamera && renderer"
+    v-if="(camera || activeCamera) && (domElement || renderer)"
     ref="controlsRef"
     :min-polar-angle="minPolarAngle"
     :max-polar-angle="maxPolarAngle"
     :min-azimuth-angle="minAzimuthAngle"
     :max-azimuth-angle="maxAzimuthAngle"
+    :distance="distance"
     :min-distance="minDistance"
     :max-distance="maxDistance"
     :infinity-dolly="infinityDolly"
@@ -427,6 +439,6 @@ defineExpose({
     :boundary-friction="boundaryFriction"
     :rest-threshold="restThreshold"
     :collider-meshes="colliderMeshes"
-    :args="[activeCamera || camera, renderer?.domElement || domElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
   />
 </template>
