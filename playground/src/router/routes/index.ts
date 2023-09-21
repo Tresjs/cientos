@@ -12,7 +12,6 @@ export {
   stagingRoutes,
   loadersRoutes,
   materialsRoutes,
-  miscRoutes,
   directivesRoutes,
   miscRoutes,
 }
