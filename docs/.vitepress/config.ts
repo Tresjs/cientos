@@ -109,6 +109,7 @@ export default defineConfig({
           { text: 'useTweakpane', link: '/guide/misc/use-tweakpane' },
           { text: 'Stats', link: '/guide/misc/stats' },
           { text: 'Html', link: '/guide/misc/html-component' },
+          { text: 'StatsGl', link: '/guide/misc/stats-gl' },
         ],
       },
       {

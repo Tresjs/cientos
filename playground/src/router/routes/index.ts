@@ -14,4 +14,5 @@ export {
   materialsRoutes,
   miscRoutes,
   directivesRoutes,
+  miscRoutes,
 }

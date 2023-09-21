@@ -55,7 +55,8 @@
     "@vueuse/core": "^10.4.1",
     "camera-controls": "^2.7.2",
     "stats.js": "^0.17.0",
-    "three-stdlib": "^2.26.0"
+    "stats-gl": "^1.0.5",
+    "three-stdlib": "^2.25.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^7.0.1",
