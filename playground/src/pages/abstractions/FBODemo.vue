@@ -1,46 +1,45 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TresCanvas, useTresContext } from '@tresjs/core'
-import { Text3D, OrbitControls } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+import { Text3D, OrbitControls, useFBO } from '@tresjs/cientos'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
 const gl = {
-  clearColor: '#82DBC5',
-  shadows: true,
-  alpha: false,
-  shadowMapType: BasicShadowMap,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
+	clearColor: '#82DBC5',
+	shadows: true,
+	alpha: false,
+	shadowMapType: BasicShadowMap,
+	outputColorSpace: SRGBColorSpace,
+	toneMapping: NoToneMapping,
 }
 
-const fontPath
-	= 'https://raw.githubusercontent.com/Tresjs/assets/main/fonts/FiraCodeRegular.json'
+const fontPath =
+	'https://raw.githubusercontent.com/Tresjs/assets/main/fonts/FiraCodeRegular.json'
 
 const reactiveText = ref('You can edit me')
 
-const context = useTresContext()
-// const fbo = useFBO(context, 512, 512)
+const fbo = useFBO({ depth: true })
 </script>
 
 <template>
-  <div class="input-center">
-    <input v-model="reactiveText">
-  </div>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 0.5, 5]" />
-    <OrbitControls />
-    <Suspense>
-      <Text3D
-        :text="reactiveText"
-        :size="0.3"
-        :font="fontPath"
-        center
-        :need-updates="true"
-      />
-    </Suspense>
-    <TresGridHelper :args="[10, 10]" />
-    <TresAmbientLight :intensity="1" />
-  </TresCanvas>
+	<div class="input-center">
+		<input v-model="reactiveText" />
+	</div>
+	<TresCanvas v-bind="gl">
+		<TresPerspectiveCamera :position="[0, 0.5, 5]" />
+		<OrbitControls />
+		<Suspense>
+			<Text3D
+				:text="reactiveText"
+				:size="0.3"
+				:font="fontPath"
+				center
+				:need-updates="true"
+			/>
+		</Suspense>
+		<TresGridHelper :args="[10, 10]" />
+		<TresAmbientLight :intensity="1" />
+	</TresCanvas>
 </template>
 
 <style scoped>

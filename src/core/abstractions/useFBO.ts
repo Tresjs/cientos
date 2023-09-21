@@ -11,7 +11,7 @@ type FBOSettings = {
 } & WebGLRenderTargetOptions
 
 export function useFBO(
-  width: number | FBOSettings,
+  width?: number | FBOSettings,
   height?: number,
   settings?: FBOSettings,
 ): WebGLRenderTarget {
