@@ -25,7 +25,9 @@ const props = withDefaults(defineProps<SkyProps>(), {
 })
 
 const skyImpl = new SkyImpl()
-const sunPosition = computed(() => getSunPosition(props.azimuth, props.elevation))
+const sunPosition = computed(() =>
+  getSunPosition(props.azimuth, props.elevation),
+)
 
 function getSunPosition(azimuth: number, elevation: number) {
   const phi = MathUtils.degToRad(90 - elevation)
@@ -39,9 +41,9 @@ function getSunPosition(azimuth: number, elevation: number) {
     :object="skyImpl"
     :material-uniforms-turbidity-value="props.turbidity"
     :material-uniforms-rayleigh-value="props.rayleigh"
-    :material-uniforms-mie-coefficient-value="props.mieCoefficient"
-    :material-uniforms-mie-directional-g-value="props.mieDirectionalG"
-    :material-uniforms-sun-position-value="sunPosition"
+    :material-uniforms-mieCoefficient-value="props.mieCoefficient"
+    :material-uniforms-mieDirectionalG-value="props.mieDirectionalG"
+    :material-uniforms-sunPosition-value="sunPosition"
     :scale="props.distance"
   />
 </template>
