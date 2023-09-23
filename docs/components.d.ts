@@ -19,6 +19,7 @@ declare module 'vue' {
     GltfDemo: typeof import('./.vitepress/theme/components/GltfDemo.vue')['default']
     GltfModelDemo: typeof import('./.vitepress/theme/components/GltfModelDemo.vue')['default']
     GLTFModelDemo: typeof import('./.vitepress/theme/components/GLTFModelDemo.vue')['default']
+    LensflareDemo: typeof import('./.vitepress/theme/components/LensflareDemo.vue')['default']
     LeviosoDemo: typeof import('./.vitepress/theme/components/LeviosoDemo.vue')['default']
     LoveVueThreeJS: typeof import('./.vitepress/theme/components/LoveVueThreeJS.vue')['default']
     MapControlsDemo: typeof import('./.vitepress/theme/components/MapControlsDemo.vue')['default']
