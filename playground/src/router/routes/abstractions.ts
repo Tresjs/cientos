@@ -19,4 +19,9 @@ export const abstractionsRoutes = [
     name: 'Lensflare',
     component: () => import('../../pages/abstractions/LensflareDemo.vue'),
   },
+  {
+    path: '/abstractions/reflector',
+    name: 'Reflector',
+    component: () => import('../../pages/abstractions/ReflectorDemo.vue'),
+  },
 ]

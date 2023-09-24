@@ -1,8 +1,6 @@
 import Text3D from './Text3D.vue'
 import { useAnimations } from './useAnimations'
 import Levioso from './Levioso.vue'
-import ContactShadows from './ContactShadows.vue'
-import Reflector from './Reflector.vue'
 import MouseParallax from './MouseParallax.vue'
 import Lensflare from './Lensflare/component.vue'
 
@@ -12,7 +10,5 @@ export {
   useAnimations,
   MouseParallax,
   Levioso,
-  ContactShadows,
-  Reflector,
   Lensflare,
 }
