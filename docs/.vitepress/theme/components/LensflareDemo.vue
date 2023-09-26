@@ -27,6 +27,6 @@ useRenderLoop().onLoop(({ elapsed }) => {
     >
       <TresMeshPhongMaterial color="#888" />
     </Torus>
-    <TresGridHelper :position="[0,-1,0]" />
+    <TresGridHelper :position="[0, -1, 0]" />
   </TresCanvas>
 </template>
