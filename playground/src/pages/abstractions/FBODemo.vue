@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls, UseFBO } from '@tresjs/cientos'
+import { OrbitControls, useTweakPane, Fbo } from '@tresjs/cientos'
 import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
 
 const gl = {
@@ -17,13 +17,57 @@ const capsuleRef = shallowRef(null)
 
 const { onLoop } = useRenderLoop()
 
+onMounted(async () => {
+  await nextTick()
+
+  setupTweakpane()
+})
+
 onLoop(({ elapsed }) => {
   torusRef.value.rotation.x = elapsed * 0.745
   torusRef.value.rotation.y = elapsed * 0.361
 
   capsuleRef.value.rotation.x = elapsed * 0.471
   capsuleRef.value.rotation.z = elapsed * 0.632
+
+  console.log(fboRef.value.texture.uuid ?? 'no map')
 })
+
+const state = shallowReactive({
+  width: 1280,
+  height: 1280,
+  depth: false,
+  samples: 1,
+})
+
+function setupTweakpane() {
+  const { pane } = useTweakPane()
+
+  pane.title = 'FBO config'
+
+  pane.addInput(state, 'depth', { label: 'Toggle Depth Buffer' })
+
+  pane.addInput(state, 'samples', {
+    label: 'MSAA Samples',
+    min: 0,
+    max: 8,
+    step: 1,
+  })
+
+  pane.addInput(state, 'width', {
+    label: 'Width',
+    min: 256,
+    max: 1280,
+    step: 256,
+  })
+
+  pane.addInput(state, 'height', {
+    label: 'Height',
+    min: 256,
+    max: 1280,
+    step: 256,
+  })
+}
 </script>
 
 <template>
@@ -33,19 +77,19 @@ onLoop(({ elapsed }) => {
 
     <TresGridHelper :args="[10, 10]" />
 
-    <UseFBO
+    <Fbo
       ref="fboRef"
-      :depth="false"
-      :width="1024"
-      :height="1024"
-      :samples="1"
+      :width="state.width"
+      :height="state.height"
+      :depth="state.depth"
+      :samples="state.samples"
     />
 
     <TresMesh>
       <TresBoxGeometry :args="[1, 1, 1]" />
       <TresMeshBasicMaterial
         :color="0xff8833"
-        :map="fboRef?.texture || null"
+        :map="fboRef?.texture ?? null"
       />
     </TresMesh>
 

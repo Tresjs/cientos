@@ -25,8 +25,8 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/GlobalAudioDemo.vue'),
   },
   {
-    path: '/abstractions/use-fbo',
-    name: 'useFBO',
+    path: '/abstractions/fbo',
+    name: 'Fbo',
     component: () => import('../../pages/abstractions/FBODemo.vue'),
   }
 ]
