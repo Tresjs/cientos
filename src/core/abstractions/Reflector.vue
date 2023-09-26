@@ -1,11 +1,20 @@
 <script lang="ts" setup>
-import { shallowRef, reactive, toRefs, watchEffect, useSlots } from 'vue'
+import { shallowRef, toRefs } from 'vue'
 import { useTresContext } from '@tresjs/core'
 import type { TresColor } from '@tresjs/core'
+import type { Geometry } from 'three'
 import { Reflector } from 'three/addons/objects/Reflector'
-import { PlaneGeometry } from 'three'
 
 export interface ReflectorProps {
+  /**
+   * The color of the reflector.
+   *
+   * @default
+   * @type {Geometry}
+   * @memberof ReflectorProps
+   *
+   */
+  geometry?: Geometry
   /**
    * The color of the reflector.
    *
@@ -77,29 +86,8 @@ const reflectorRef = shallowRef<Reflector>()
 
 extend({ Reflector })
 
-const slots = useSlots()
-const currentGeo = slots.default()[0]
-console.log('jaime ~ slots:', currentGeo)
-
-const { color, textureWidth, textureHeight, clipBias, multisample, shader }
+const { geometry, color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
-
-const options = reactive({
-  color: color.value,
-  textureWidth: textureWidth.value,
-  textureHeight: textureHeight.value,
-  clipBias: clipBias.value,
-  multisample: multisample.value,
-  shader: { ...Reflector.ReflectorShader, ...shader.value },
-})
-
-watchEffect(() => {
-  if (!reflectorRef?.value) return
-  if (clipBias.value) options.clipBias = clipBias.value
-  const currentGeo = reflectorRef.value.geometry
-  reflectorRef.value.dispose()
-  reflectorRef.value = new Reflector(currentGeo, options)
-})
 
 defineExpose({
   reflectorRef,
@@ -109,7 +97,7 @@ defineExpose({
 <template>
   <TresReflector
     ref="reflectorRef"
-    :args="[new PlaneGeometry(), options]"
+    :args="[geometry, { textureWidth, textureHeight, clipBias, multisample, shader }]"
     :material-uniforms-color-value="color"
   >
     <slot>
