@@ -8,10 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AkuAku: typeof import('./src/components/AkuAku.vue')['default']
-    DirectivesDemo: typeof import('./src/components/DirectivesDemo.vue')['default']
     Gltf: typeof import('./src/components/gltf/index.vue')['default']
     ModelsDemo: typeof import('./src/components/ModelsDemo.vue')['default']
-    ReflectorDemo: typeof import('./src/components/ReflectorDemo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
