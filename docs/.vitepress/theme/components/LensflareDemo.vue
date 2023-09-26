@@ -11,7 +11,7 @@ useRenderLoop().onLoop(({ elapsed }) => {
 </script>
 
 <template>
-  <TresCanvas clear-color="#82DBC5">
+  <TresCanvas clear-color="#333">
     <OrbitControls />
     <TresPointLight :position="[x, 0, z]">
       <Lensflare
