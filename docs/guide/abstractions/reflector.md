@@ -10,13 +10,26 @@ The `cientos` package provides an abstraction of the Reflector class, which crea
 </Reflector>
 ```
 
+| Prop              | Description                                          | Default                   |
+| :---------------- | :--------------------------------------------------- | ------------------------- |
+| **color**         | The base color that's combine with the mirror effect | '#333'                 |
+| **textureWidth** ⚠️  | the width of the texture to render on the mirror     | 512                       |
+| **textureHeight** ⚠️ | the height of the texture to render on the mirror    | 512                       |
+| **clipBias**   ⚠️    | to use the clipBias property                         | 0                         |
+| **multisample**  ⚠️  | how many samplers will be render                     | 4                         |
+| **shader**    ⚠️     | The texture of the smoke.                            | Reflector.ReflectorShader |
+
+::: warning
+All the props with the ⚠️ symbol are not reactive
+:::
+
 ## Custom mirror effect
 
 For more complex effect you can provide your own shaders, you could do this creating an object and pass the uniforms, vertexShaders or fragmentShaders:
 
 ```vue{3}
 <script setup lang="ts" >
-import vertexShader from "MyCustomvertexShader.glsl"
+import vertexShader from "MyCustomVertexShader.glsl"
 
 const customShader = {
   vertexShader
@@ -37,25 +50,14 @@ const customShader = {
   </TresCanvas>
 </template>
 ```
-
-| Prop              | Description                                          | Default                   |
-| :---------------- | :--------------------------------------------------- | ------------------------- |
-| **color**         | The base color that's combine with the mirror effect | '#000000'                 |
-| **textureWidth**  | the width of the texture to render on the mirror     | 512                       |
-| **textureHeight** | the height of the texture to render on the mirror    | 512                       |
-| **clipBias**      | to use the clipBias property                         | 0                         |
-| **multisample**   | how many samplers will be render                     | 4                         |
-| **shader**        | The texture of the smoke.                            | Reflector.ReflectorShader |
-
-
-## The Reflector shader use the following configuration by default:
+The Reflector shader use the following configuration by default:
 
 You can extend, modify or just play with them
 
 ### name
 
 ```js
-	name:"ReflectorShader"
+name:'ReflectorShader'
 ```
 
 ### Uniforms
