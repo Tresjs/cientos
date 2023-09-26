@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { shallowRef, reactive, watch } from 'vue'
+import { shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import {
   OrbitControls,
   MeshWobbleMaterial,
   Reflector,
   Stars,
-  useTweakPane,
 } from '@tresjs/cientos'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
+import { BasicShadowMap, SRGBColorSpace, NoToneMapping, PlaneGeometry } from 'three'
 
 const gl = {
   clearColor: '#111',
@@ -94,9 +93,8 @@ const options = {
       :clip-bias="options.clipBias"
       :texture-width="options.textureWidth"
       :texture-height="options.textureHeight"
-    >
-      <TresBoxGeometry :args="[10, 10, 1]" />
-    </Reflector>
+    />
+    <!-- <TresBoxGeometry :args="[10, 10, 1]" /> -->
     <!-- <TresBoxGeometry :args="[10, 10]" /> -->
     <TresAmbientLight :intensity="1" />
     <OrbitControls />

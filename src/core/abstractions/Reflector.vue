@@ -2,23 +2,13 @@
 import { shallowRef, toRefs } from 'vue'
 import { useTresContext } from '@tresjs/core'
 import type { TresColor } from '@tresjs/core'
-import type { Geometry } from 'three'
 import { Reflector } from 'three/addons/objects/Reflector'
 
 export interface ReflectorProps {
   /**
    * The color of the reflector.
    *
-   * @default
-   * @type {Geometry}
-   * @memberof ReflectorProps
-   *
-   */
-  geometry?: Geometry
-  /**
-   * The color of the reflector.
-   *
-   * @default '#000000'
+   * @default '#333'
    * @type {TresColor}
    * @memberof ReflectorProps
    *
@@ -86,7 +76,7 @@ const reflectorRef = shallowRef<Reflector>()
 
 extend({ Reflector })
 
-const { geometry, color, textureWidth, textureHeight, clipBias, multisample, shader }
+const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
 
 defineExpose({
@@ -97,11 +87,11 @@ defineExpose({
 <template>
   <TresReflector
     ref="reflectorRef"
-    :args="[geometry, { textureWidth, textureHeight, clipBias, multisample, shader }]"
+    :args="[undefined, { textureWidth, textureHeight, clipBias, multisample, shader }]"
     :material-uniforms-color-value="color"
   >
     <slot>
-      <TresPlaneGeometry />
+      <TresPlaneGeometry :args="[5, 5]" />
     </slot>
   </TresReflector>
 </template>

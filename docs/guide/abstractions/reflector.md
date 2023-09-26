@@ -4,7 +4,7 @@ The `cientos` package provides an abstraction of the Reflector class, which crea
 
 ## Usage
 
-```html
+```html{2}
 <Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" color="#F7F7F7">
   <TresCircleGeometry :args="[10, 10]" />
 </Reflector>
@@ -27,7 +27,7 @@ All the props with the ⚠️ symbol are not reactive
 
 For more complex effect you can provide your own shaders, you could do this creating an object and pass the uniforms, vertexShaders or fragmentShaders:
 
-```vue{3}
+```vue{2,4-6,15}
 <script setup lang="ts" >
 import vertexShader from "MyCustomVertexShader.glsl"
 
