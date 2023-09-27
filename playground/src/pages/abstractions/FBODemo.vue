@@ -4,109 +4,109 @@ import { OrbitControls, useTweakPane, Fbo } from '@tresjs/cientos'
 import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
 
 const gl = {
-  clearColor: '#82DBC5',
-  shadows: true,
-  alpha: false,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: ACESFilmicToneMapping,
+	clearColor: '#82DBC5',
+	shadows: true,
+	alpha: false,
+	outputColorSpace: SRGBColorSpace,
+	toneMapping: ACESFilmicToneMapping,
 }
 
-const fboRef = shallowRef(null)
+const fboRef = ref(null)
+const materialRef = ref(null)
 const torusRef = shallowRef(null)
 const capsuleRef = shallowRef(null)
 
 const { onLoop } = useRenderLoop()
 
 onMounted(async () => {
-  await nextTick()
+	await nextTick()
 
-  setupTweakpane()
+	setupTweakpane()
 })
 
 onLoop(({ elapsed }) => {
-  torusRef.value.rotation.x = elapsed * 0.745
-  torusRef.value.rotation.y = elapsed * 0.361
+	torusRef.value.rotation.x = elapsed * 0.745
+	torusRef.value.rotation.y = elapsed * 0.361
 
-  capsuleRef.value.rotation.x = elapsed * 0.471
-  capsuleRef.value.rotation.z = elapsed * 0.632
+	capsuleRef.value.rotation.x = elapsed * 0.471
+	capsuleRef.value.rotation.z = elapsed * 0.632
 
-  console.log(fboRef.value.texture.uuid ?? 'no map')
+	// console.log(fboRef)
+
+	// if (!!!fboRef.value?.value) return
+	console.log(fboRef.value.value.texture.image.width)
+	materialRef.value.needsUpdate = true
 })
 
 const state = shallowReactive({
-  width: 1280,
-  height: 1280,
-  depth: false,
-  samples: 1,
+	width: 1280,
+	height: 1280,
+	depth: false,
+	samples: 1,
 })
 
 function setupTweakpane() {
-  const { pane } = useTweakPane()
+	const { pane } = useTweakPane()
 
-  pane.title = 'FBO config'
+	pane.title = 'FBO config'
 
-  pane.addInput(state, 'depth', { label: 'Toggle Depth Buffer' })
+	pane.addInput(state, 'depth', { label: 'Toggle Depth Buffer' })
 
-  pane.addInput(state, 'samples', {
-    label: 'MSAA Samples',
-    min: 0,
-    max: 8,
-    step: 1,
-  })
+	pane.addInput(state, 'samples', {
+		label: 'MSAA Samples',
+		min: 0,
+		max: 8,
+		step: 1,
+	})
 
-  pane.addInput(state, 'width', {
-    label: 'Width',
-    min: 256,
-    max: 1280,
-    step: 256,
-  })
+	pane.addInput(state, 'width', {
+		label: 'Width',
+		min: 256,
+		max: 1280,
+		step: 256,
+	})
 
-  pane.addInput(state, 'height', {
-    label: 'Height',
-    min: 256,
-    max: 1280,
-    step: 256,
-  })
+	pane.addInput(state, 'height', {
+		label: 'Height',
+		min: 256,
+		max: 1280,
+		step: 5,
+	})
 }
 </script>
 
 <template>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 0.5, 5]" />
-    <OrbitControls />
+	<TresCanvas v-bind="gl">
+		<TresPerspectiveCamera :position="[0, 0.5, 5]" />
+		<OrbitControls />
 
-    <TresGridHelper :args="[10, 10]" />
+		<TresGridHelper :args="[10, 10]" />
 
-    <Fbo
-      ref="fboRef"
-      :width="state.width"
-      :height="state.height"
-      :depth="state.depth"
-      :samples="state.samples"
-    />
+		<Fbo
+			ref="fboRef"
+			:width="state.width"
+			:height="state.height"
+			:depth="state.depth"
+			:samples="state.samples"
+		/>
 
-    <TresMesh>
-      <TresBoxGeometry :args="[1, 1, 1]" />
-      <TresMeshBasicMaterial
-        :color="0xff8833"
-        :map="fboRef?.texture ?? null"
-      />
-    </TresMesh>
+		<TresMesh>
+			<TresBoxGeometry :args="[1, 1, 1]" />
+			<TresMeshBasicMaterial
+				ref="materialRef"
+				:color="0xff8833"
+				:map="fboRef?.value.texture ?? null"
+			/>
+		</TresMesh>
 
-    <TresMesh
-      ref="torusRef"
-      :position="[3, 0, 0]"
-    >
-      <TresTorusGeometry :args="[1, 0.5, 16, 100]" />
-      <TresMeshNormalMaterial />
-    </TresMesh>
+		<TresMesh ref="torusRef" :position="[3, 0, 0]">
+			<TresTorusGeometry :args="[1, 0.5, 16, 100]" />
+			<TresMeshNormalMaterial />
+		</TresMesh>
 
-    <TresMesh
-      ref="capsuleRef"
-      :position="[-2, 0, 0]"
-    >
-      <TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
-      <TresMeshNormalMaterial />
-    </TresMesh>
-  </TresCanvas>
+		<TresMesh ref="capsuleRef" :position="[-2, 0, 0]">
+			<TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
+			<TresMeshNormalMaterial />
+		</TresMesh>
+	</TresCanvas>
 </template>

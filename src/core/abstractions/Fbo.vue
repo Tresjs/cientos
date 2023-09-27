@@ -1,53 +1,54 @@
 <script setup lang="ts">
 import { useTresContext, useRenderLoop } from '@tresjs/core'
-import type { WebGLRenderTargetOptions } from 'three'
+import type { WebGLRenderTargetOptions, Camera } from 'three'
 import {
-  WebGLRenderTarget,
-  LinearFilter,
-  FloatType,
-  HalfFloatType,
-  DepthTexture,
+	WebGLRenderTarget,
+	LinearFilter,
+	FloatType,
+	HalfFloatType,
+	DepthTexture,
 } from 'three'
-import { watchEffect, onBeforeUnmount } from 'vue'
+import type { Ref } from 'vue'
+import { watchEffect, onBeforeUnmount, toRefs, ref } from 'vue'
 
 export interface FboProps {
-  /*
+	/*
 	 * The width of the frame buffer object.
 	 *
 	 * @default 512
 	 * @type {number}
 	 * @memberof FboProps
 	 */
-  width?: number
+	width?: number
 
-  /*
+	/*
 	 * The height of the frame buffer object.
 	 *
 	 * @default 512
 	 * @type {number}
 	 * @memberof FboProps
 	 */
-  height?: number
+	height?: number
 
-  /*
+	/*
 	 * If set, the scene depth will be rendered into buffer.depthTexture.
 	 *
 	 * @default false
 	 * @type {boolean}
 	 * @memberof FboProps
 	 */
-  depth?: boolean
+	depth?: boolean
 
-  /*
+	/*
 	 * Defines the count of MSAA samples. Can only be used with WebGL 2.
 	 *
 	 * @default 0
 	 * @type {number}
 	 * @memberof FboProps
 	 */
-  samples?: number
+	samples?: number
 
-  /*
+	/*
 	 * Additional settings for the render target.
 	 * See https://threejs.org/docs/#api/en/renderers/WebGLRenderTarget for more information.
 	 *
@@ -55,52 +56,60 @@ export interface FboProps {
 	 * @type {WebGLRenderTargetOptions}
 	 * @memberof FboProps
 	 */
-  settings?: WebGLRenderTargetOptions
+	settings?: WebGLRenderTargetOptions
 }
 
 const props = withDefaults(defineProps<FboProps>(), {
-  width: 512,
-  height: 512,
-  depth: false,
-  samples: 0,
-  settings: undefined,
+	width: 512,
+	height: 512,
+	depth: false,
+	samples: 0,
+	settings: undefined,
 })
 
-let renderTarget: WebGLRenderTarget
+const renderTarget: Ref<WebGLRenderTarget | null> = ref(null)
+
+defineExpose({
+	value: renderTarget,
+})
 
 const { onLoop } = useRenderLoop()
 const { camera, renderer, scene } = useTresContext()
 
+const { height, width, samples, settings, depth } = toRefs(props)
+
 watchEffect(() => {
-  renderTarget?.dispose()
+	// console.log(width.value, height.value)
 
-  const { height, width, samples, settings, depth } = props
+	renderTarget.value?.dispose()
 
-  renderTarget = new WebGLRenderTarget(width, height, {
-    minFilter: LinearFilter,
-    magFilter: LinearFilter,
-    type: HalfFloatType,
-    depthBuffer: depth,
-    samples,
-    ...settings,
-  })
+	renderTarget.value = new WebGLRenderTarget(width.value, height.value, {
+		minFilter: LinearFilter,
+		magFilter: LinearFilter,
+		type: HalfFloatType,
+		depthBuffer: depth.value,
+		samples: samples.value,
+		...settings.value,
+	})
 
-  if (depth) {
-    renderTarget.depthTexture = new DepthTexture(width, height, FloatType)
-  }
+	if (depth) {
+		renderTarget.value.depthTexture = new DepthTexture(
+			width.value,
+			height.value,
+			FloatType
+		)
+	}
 })
 
-defineExpose(renderTarget)
-
 onLoop(() => {
-  renderer.value.setRenderTarget(renderTarget)
-  renderer.value.clear()
-  renderer.value.render(scene.value, camera.value)
+	renderer.value.setRenderTarget(renderTarget.value)
+	renderer.value.clear()
+	renderer.value.render(scene.value, camera.value as Camera)
 
-  renderer.value.setRenderTarget(null)
+	renderer.value.setRenderTarget(null)
 })
 
 onBeforeUnmount(() => {
-  renderTarget.dispose()
+	renderTarget.value?.dispose()
 })
 </script>
