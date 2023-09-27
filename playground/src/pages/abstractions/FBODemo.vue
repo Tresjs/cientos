@@ -82,13 +82,7 @@ function setupTweakpane() {
 
 		<TresGridHelper :args="[10, 10]" />
 
-		<Fbo
-			ref="fboRef"
-			:width="state.width"
-			:height="state.height"
-			:depth="state.depth"
-			:samples="state.samples"
-		/>
+		<Fbo ref="fboRef" v-bind="state" />
 
 		<TresMesh>
 			<TresBoxGeometry :args="[1, 1, 1]" />

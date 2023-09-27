@@ -74,7 +74,7 @@ defineExpose({
 })
 
 const { onLoop } = useRenderLoop()
-const { camera, renderer, scene, sizes } = useTresContext()
+const { camera, renderer, scene } = useTresContext()
 
 const { height, width, samples, settings, depth } = toRefs(props)
 
@@ -85,7 +85,6 @@ watchEffect(() => {
 		minFilter: LinearFilter,
 		magFilter: LinearFilter,
 		type: HalfFloatType,
-		depthBuffer: depth.value,
 		samples: samples.value,
 		...settings.value,
 	})
