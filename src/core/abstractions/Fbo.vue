@@ -74,13 +74,11 @@ defineExpose({
 })
 
 const { onLoop } = useRenderLoop()
-const { camera, renderer, scene } = useTresContext()
+const { camera, renderer, scene, sizes } = useTresContext()
 
 const { height, width, samples, settings, depth } = toRefs(props)
 
 watchEffect(() => {
-	// console.log(width.value, height.value)
-
 	renderTarget.value?.dispose()
 
 	renderTarget.value = new WebGLRenderTarget(width.value, height.value, {
@@ -92,7 +90,7 @@ watchEffect(() => {
 		...settings.value,
 	})
 
-	if (depth) {
+	if (depth.value) {
 		renderTarget.value.depthTexture = new DepthTexture(
 			width.value,
 			height.value,
