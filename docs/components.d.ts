@@ -23,12 +23,20 @@ declare module 'vue' {
     MapControlsDemo: typeof import('./.vitepress/theme/components/MapControlsDemo.vue')['default']
     MouseParallaxDemo: typeof import('./.vitepress/theme/components/MouseParallaxDemo.vue')['default']
     OrbitControlsDemo: typeof import('./.vitepress/theme/components/OrbitControlsDemo.vue')['default']
+    PrecipitationBeamDemo: typeof import('./.vitepress/theme/components/PrecipitationBeamDemo.vue')['default']
     PrecipitationDemo: typeof import('./.vitepress/theme/components/PrecipitationDemo.vue')['default']
+    PrecipitationRainDemo: typeof import('./.vitepress/theme/components/PrecipitationRainDemo.vue')['default']
+    PrecipitationStormDemo: typeof import('./.vitepress/theme/components/PrecipitationStormDemo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollControlsDemo: typeof import('./.vitepress/theme/components/ScrollControlsDemo.vue')['default']
+    SkyDemo: typeof import('./.vitepress/theme/components/SkyDemo.vue')['default']
     SmokeDemo: typeof import('./.vitepress/theme/components/SmokeDemo.vue')['default']
     StarsDemo: typeof import('./.vitepress/theme/components/StarsDemo.vue')['default']
+<<<<<<< HEAD
+=======
+    SVGDemo: typeof import('./.vitepress/theme/components/SVGDemo.vue')['default']
+>>>>>>> main
     Text3Demo: typeof import('./.vitepress/theme/components/Text3Demo.vue')['default']
     TransformControlsDemo: typeof import('./.vitepress/theme/components/TransformControlsDemo.vue')['default']
     VideoTextureDemo: typeof import('./.vitepress/theme/components/VideoTextureDemo.vue')['default']
