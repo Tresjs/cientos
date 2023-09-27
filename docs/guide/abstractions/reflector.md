@@ -1,26 +1,27 @@
 # Reflector
 
-The `cientos` package provides an abstraction of the Reflector class, which creates a reflector material in real time of your scene `<Reflector >` component that makes a geometry as an argument to create a mirror. This Mesh extends from `Mesh` so all the default props can be passed as well:
+The `cientos` package provides an abstraction of the [Reflector class](https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js), which creates a Mesh showing a real-time reflection of your scene.  This Mesh extends from `Mesh` so all the default props can be passed as well:
 
 ## Usage
 
-```html{2}
+```vue{2}
 <Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" color="#F7F7F7">
   <TresCircleGeometry :args="[10, 10]" />
 </Reflector>
 ```
+## Props
 
 | Prop              | Description                                          | Default                   |
 | :---------------- | :--------------------------------------------------- | ------------------------- |
 | **color**         | The base color that's combine with the mirror effect | '#333'                 |
-| **textureWidth** ⚠️  | the width of the texture to render on the mirror     | 512                       |
-| **textureHeight** ⚠️ | the height of the texture to render on the mirror    | 512                       |
-| **clipBias**   ⚠️    | to use the clipBias property                         | 0                         |
-| **multisample**  ⚠️  | how many samplers will be render                     | 4                         |
-| **shader**    ⚠️     | The texture of the smoke.                            | Reflector.ReflectorShader |
+| **textureWidth**  | the width of the texture to render on the mirror     | 512                       |
+| **textureHeight** | the height of the texture to render on the mirror    | 512                       |
+| **clipBias**      | to use the clipBias property                         | 0                         |
+| **multisample**   | how many samplers will be render                     | 4                         |
+| **shader**        | The texture of the smoke.                            | Reflector.ReflectorShader |
 
 ::: warning
-All the props with the ⚠️ symbol are not reactive
+All the props except the `color`, are not reactive
 :::
 
 ## Custom mirror effect
@@ -54,15 +55,11 @@ The Reflector shader use the following configuration by default:
 
 You can extend, modify or just play with them
 
-### name
+### Default shader
 
 ```js
-name:'ReflectorShader'
-```
-
-### Uniforms
-
-```js
+{
+	name:'ReflectorShader',
 	uniforms: {
 		color: {
 			value: null
@@ -74,11 +71,6 @@ name:'ReflectorShader'
 			value: null
 		}
 	},
-```
-
-### VertexShader
-
-```glsl
 	vertexShader: /* glsl */`
 		uniform mat4 textureMatrix;
 		varying vec4 vUv;
@@ -94,12 +86,7 @@ name:'ReflectorShader'
 
 			#include <logdepthbuf_vertex>
 
-		}`
-```
-
-### FragmentShader
-
-```glsl
+		}`,
 	fragmentShader: /* glsl */`
 		uniform vec3 color;
 		uniform sampler2D tDiffuse;
@@ -130,4 +117,6 @@ name:'ReflectorShader'
 			#include <colorspace_fragment>
 
 		}`
+
+}
 ```

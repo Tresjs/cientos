@@ -69,6 +69,7 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
+          { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
         ],
       },
       {
