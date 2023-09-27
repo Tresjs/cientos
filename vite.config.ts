@@ -44,7 +44,6 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'trescientos',
       fileName: 'trescientos',
-      formats: ['es'],
     },
     copyPublicDir: false,
     watch: {
