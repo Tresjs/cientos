@@ -2,7 +2,7 @@
 import { shallowRef, toRefs } from 'vue'
 import { useTresContext } from '@tresjs/core'
 import type { TresColor } from '@tresjs/core'
-import { Reflector } from 'three/addons/objects/Reflector'
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
 
 export interface ReflectorProps {
   /**
@@ -42,7 +42,7 @@ export interface ReflectorProps {
    */
   clipBias?: number
   /**
-   * The number of samples to render.
+   * The multisample.
    *
    * @default 4
    * @type {number}
@@ -51,7 +51,7 @@ export interface ReflectorProps {
    */
   multisample?: number
   /**
-   * The number of samples to render.
+   * Custom shader.
    *
    * @default Reflector.ReflectorShader
    * @type {object}
