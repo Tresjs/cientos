@@ -4,8 +4,9 @@ import Levioso from './Levioso.vue'
 import MouseParallax from './MouseParallax.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
-import Fbo from './Fbo.vue'
+import Fbo from './useFBO/component.vue'
 
+export * from './useFBO'
 export * from '../staging/useEnvironment'
 export {
   Text3D,
