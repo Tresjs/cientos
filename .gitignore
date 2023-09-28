@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 stats.html
-docs/.vitepress/dist
-docs/.vitepress/cache/deps/*.*
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.vitepress/.temp/
