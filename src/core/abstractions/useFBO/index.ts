@@ -6,18 +6,16 @@ import { isReactive, onBeforeUnmount, reactive, ref, toRefs, watchEffect } from 
 
 export interface FboOptions {
   /*
-   * The width of the frame buffer object.
+   * The width of the frame buffer object. Defaults to the width of the canvas.
    *
-   * @default 512
    * @type {number}
    * @memberof FboProps
    */
   width?: number
 
   /*
-   * The height of the frame buffer object.
+   * The height of the frame buffer object. Defaults to the height of the canvas.
    *
-   * @default 512
    * @type {number}
    * @memberof FboProps
    */
