@@ -13,7 +13,6 @@ const gl = {
 }
 
 const fboRef = ref(null)
-const materialRef = ref(null)
 const torusRef = shallowRef(null)
 const capsuleRef = shallowRef(null)
 
@@ -53,8 +52,8 @@ onMounted(async () => {
 
     <TresMesh>
       <TresBoxGeometry :args="[1, 1, 1]" />
+
       <TresMeshBasicMaterial
-        ref="materialRef"
         :color="0xffffff"
         :map="fboRef?.value.texture ?? null"
       />
