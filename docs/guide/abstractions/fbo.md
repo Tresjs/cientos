@@ -161,9 +161,9 @@ onMounted(async () => {
 
 ## Props
 
-| Prop           | Description                                                                                                                                                            | Default |
-| :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| **`width`**    | `number` - The width of the FBO.                                                                                                                                       | `512`   |
-| **`height`**   | `number` - the height of the FBO                                                                                                                                       | `512`   |
-| **`depth`**    | `boolean` - Whether or not the FBO should render the depth to a [`depthTexture`](https://threejs.org/docs/?q=webglre#api/en/renderers/WebGLRenderTarget.depthTexture). | `false` |
-| **`settings`** | `WebGLRenderTargetOptions` - Every other configuration property for the [`WebGLRenderTarget` class](https://threejs.org/docs/#api/en/renderers/WebGLRenderTarget)      | `{}`    |
+| Prop           | Description                                                                                                                                                            | Default              |
+| :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| **`width`**    | `number` - The width of the FBO.                                                                                                                                       | Width of the canvas  |
+| **`height`**   | `number` - the height of the FBO                                                                                                                                       | Height of the canvas |
+| **`depth`**    | `boolean` - Whether or not the FBO should render the depth to a [`depthTexture`](https://threejs.org/docs/?q=webglre#api/en/renderers/WebGLRenderTarget.depthTexture). | `false`              |
+| **`settings`** | `WebGLRenderTargetOptions` - Every other configuration property for the [`WebGLRenderTarget` class](https://threejs.org/docs/#api/en/renderers/WebGLRenderTarget)      | `{}`                 |
