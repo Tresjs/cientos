@@ -1,21 +1,23 @@
-# UseFBO
+# FBO <Badge type="warning" text="^3.5.0" />
 
-TODO:
-Add description of `UseFBO` here.
+An FBO (or Frame Buffer Object) is generally used to render to a texture. This is useful for post-processing effects like blurring, or for rendering to a texture that will be used as a texture in a later draw call.
 
-## Usage
+Cientos provides both a `<Fbo />` component and a `useFBO` composable to make it easy to use FBOs in your application.
+
+## Usage of `<Fbo />`
+
+<DocsDemo>
+  <FboDemo />
+</DocsDemo>
 
 ```ts
-import { shallowRef } from 'vue'
-import { UseFBO } from '@tresjs/cientos'
-
-const fboRef = shallowRef(null)
+import { Fbo } from '@tresjs/cientos'
 ```
 
 ```vue{4}
 <template>
   <TresCanvas>
-    <UseFBO ref="fboRef" />
+    <Fbo />
   </TresCanvas>
 </template>
 ```

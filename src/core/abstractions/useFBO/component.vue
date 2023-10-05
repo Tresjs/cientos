@@ -4,7 +4,6 @@ import { useFBO } from '.'
 
 const props = withDefaults(defineProps<FboOptions>(), {
   depth: false,
-  samples: 0,
   settings: undefined,
 })
 

@@ -12,6 +12,7 @@ declare module 'vue' {
     CatmullRomCurve3Demo: typeof import('./.vitepress/theme/components/CatmullRomCurve3Demo.vue')['default']
     ContactShadowDemo: typeof import('./.vitepress/theme/components/ContactShadowDemo.vue')['default']
     DocsDemo: typeof import('./.vitepress/theme/components/DocsDemo.vue')['default']
+    FboDemo: typeof import('./.vitepress/theme/components/FboDemo.vue')['default']
     FBXModelDemo: typeof import('./.vitepress/theme/components/FBXModelDemo.vue')['default']
     Feather: typeof import('./.vitepress/theme/components/Feather.vue')['default']
     GlassMaterialDemo: typeof import('./.vitepress/theme/components/GlassMaterialDemo.vue')['default']

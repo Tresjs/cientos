@@ -18,28 +18,25 @@ const capsuleRef = shallowRef(null)
 
 const { onLoop } = useRenderLoop()
 
+const state = shallowReactive({
+  depth: false,
+  settings: {
+    samples: 1,
+  },
+})
+
 onMounted(async () => {
   await nextTick()
 
+  onLoop(({ elapsed }) => {
+    torusRef.value.rotation.x = elapsed * 0.745
+    torusRef.value.rotation.y = elapsed * 0.361
+
+    capsuleRef.value.rotation.x = elapsed * 0.471
+    capsuleRef.value.rotation.z = elapsed * 0.632
+  })
+
   setupTweakpane()
-})
-
-onLoop(({ elapsed }) => {
-  torusRef.value.rotation.x = elapsed * 0.745
-  torusRef.value.rotation.y = elapsed * 0.361
-
-  capsuleRef.value.rotation.x = elapsed * 0.471
-  capsuleRef.value.rotation.z = elapsed * 0.632
-
-  // console.log(fboRef)
-
-  // if (!!!fboRef.value?.value) return
-  materialRef.value.needsUpdate = true
-})
-
-const state = shallowReactive({
-  depth: false,
-  samples: 1,
 })
 
 function setupTweakpane() {
@@ -49,30 +46,12 @@ function setupTweakpane() {
 
   pane.addInput(state, 'depth', { label: 'Toggle Depth Buffer' })
 
-  pane.addInput(state, 'samples', {
+  pane.addInput(state.settings, 'samples', {
     label: 'MSAA Samples',
     min: 0,
     max: 8,
     step: 1,
   })
-
-  if (state.width && state.height ) {
-
-    pane.addInput(state, 'width', {
-      label: 'Width',
-      min: 256,
-      max: 1280,
-      step: 256,
-    })
-
-    pane.addInput(state, 'height', {
-      label: 'Height',
-      min: 256,
-      max: 1280,
-      step: 5,
-    })
-  }
-
 }
 </script>
 

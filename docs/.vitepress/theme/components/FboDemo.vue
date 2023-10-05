@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls } from '@tresjs/cientos'
+import { OrbitControls, Fbo } from '@tresjs/cientos'
 import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
+import { ref, shallowRef, shallowReactive, onMounted, nextTick } from 'vue'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -11,10 +12,19 @@ const gl = {
   toneMapping: ACESFilmicToneMapping,
 }
 
+const fboRef = ref(null)
+const materialRef = ref(null)
 const torusRef = shallowRef(null)
 const capsuleRef = shallowRef(null)
 
 const { onLoop } = useRenderLoop()
+
+const state = shallowReactive({
+  depth: false,
+  settings: {
+    samples: 1,
+  },
+})
 
 onMounted(async () => {
   await nextTick()
@@ -36,7 +46,19 @@ onMounted(async () => {
 
     <TresGridHelper :args="[10, 10]" />
 
-    <FboCube />
+    <Fbo
+      ref="fboRef"
+      v-bind="state"
+    />
+
+    <TresMesh>
+      <TresBoxGeometry :args="[1, 1, 1]" />
+      <TresMeshBasicMaterial
+        ref="materialRef"
+        :color="0xffffff"
+        :map="fboRef?.value.texture ?? null"
+      />
+    </TresMesh>
 
     <TresMesh
       ref="torusRef"

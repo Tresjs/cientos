@@ -33,15 +33,6 @@ export interface FboOptions {
   depth?: boolean
 
   /*
-   * Defines the count of MSAA samples. Can only be used with WebGL 2.
-   *
-   * @default 0
-   * @type {number}
-   * @memberof FboProps
-   */
-  samples?: number
-
-  /*
    * Additional settings for the render target.
    * See https://threejs.org/docs/#api/en/renderers/WebGLRenderTarget for more information.
    *
@@ -55,7 +46,7 @@ export interface FboOptions {
 export function useFBO(options: FboOptions) {
   const target: Ref<WebGLRenderTarget | null> = ref(null)
 
-  const { height, width, samples, settings, depth } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
+  const { height, width, settings, depth } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
 
   const { onLoop } = useRenderLoop()
   const { camera, renderer, scene, sizes } = useTresContext()
@@ -67,7 +58,6 @@ export function useFBO(options: FboOptions) {
       minFilter: LinearFilter,
       magFilter: LinearFilter,
       type: HalfFloatType,
-      samples: samples?.value,
       ...settings?.value,
     })
 
