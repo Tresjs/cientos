@@ -1,23 +1,14 @@
 # Sky
 
-![Sky](/cientos/sky.png)
+<DocsDemo>
+  <SkyDemo />
+</DocsDemo>
 
 `<Sky />` is a wrapper for the [Three.js `Sky` add-on](https://threejs.org/examples/?q=sky#webgl_shaders_sky).
 
 ## Usage
 
-```vue{2,8}
-<script setup lang="ts">
-import { Sky } from '@tresjs/cientos'
-</script>
-
-<template>
-  <TresCanvas>
-    <TresPerspectiveCamera :position="[0, 100, 2000]" />
-    <Sky />
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/SkyDemo.vue{3,9}
 
 ## Props
 

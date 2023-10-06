@@ -1,22 +1,14 @@
 # SVG <Badge type="warning" text="^3.3.0" />
 
+<DocsDemo>
+  <SVGDemo />
+</DocsDemo>
+
 A wrapper around the `three` [SVGLoader](https://threejs.org/examples/?q=sv#webgl_loader_svg), this component allows you to easily load and display SVG elements in your **TresJS** scene. 
 
 ## Usage
 
-```ts
-import { SVG } from '@tresjs/cientos'
-```
-
-```vue{4}
-<template>
-  <TresCanvas>
-    <Suspense>
-      <SVG src="/favicon.svg" />
-    </Suspense>
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/SVGDemo.vue{3,12-18}
 
 ## Props
 
@@ -96,3 +88,9 @@ Here are some things to try if you run into problems:
 
 * In the component, [change the `depth` prop](#depth).
 * Increase the distance between the component and other on-screen elements.
+
+### The SVG is not visible
+
+* If importing an SVG, make sure the path is correct – check the console for loading errors.
+* Try scaling the SVG component down, e.g., `:scale="0.01"`.
+* Try moving the SVG component up (+y), e.g., `:position="[0,2,0]"`.

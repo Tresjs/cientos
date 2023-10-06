@@ -1,8 +1,12 @@
 import { defineConfig } from 'vitepress'
-import Unocss from 'unocss/vite'
-import svgLoader from 'vite-svg-loader'
 import { resolve } from 'pathe'
 import { templateCompilerOptions } from '@tresjs/core'
+
+const whitelist = [
+  'TresCanvas',
+  'TresLeches',
+  'TresScene',
+]
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -72,10 +76,12 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Box', link: '/guide/shapes/box' },
+          { text: 'CatmullRomCurve3', link: '/guide/shapes/catmullromcurve3' },
           { text: 'Circle', link: '/guide/shapes/circle' },
           { text: 'Cone', link: '/guide/shapes/cone' },
           { text: 'Dodecahedron', link: '/guide/shapes/dodecahedron' },
           { text: 'Icosahedron', link: '/guide/shapes/icosahedron' },
+          { text: 'Line2', link: '/guide/shapes/line2' },
           { text: 'Octahedron', link: '/guide/shapes/octahedron' },
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
@@ -104,6 +110,8 @@ export default defineConfig({
         items: [
           { text: 'useTweakpane', link: '/guide/misc/use-tweakpane' },
           { text: 'Stats', link: '/guide/misc/stats' },
+          { text: 'Html', link: '/guide/misc/html-component' },
+          { text: 'StatsGl', link: '/guide/misc/stats-gl' },
         ],
       },
       {
@@ -142,6 +150,10 @@ export default defineConfig({
     },
   },
   vue: {
-    ...templateCompilerOptions,
+    template: {
+      compilerOptions: {
+        isCustomElement: (tag: string) => tag.startsWith('Tres') && !whitelist.includes(tag) || tag === 'primitive',
+      },
+    },
   },
 })
