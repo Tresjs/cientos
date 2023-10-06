@@ -5,20 +5,20 @@ import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
 import { shallowRef, onMounted, nextTick } from 'vue'
 
 const fboTarget = useFBO({
-	depth: false,
-	width: 512,
-	height: 512,
-	settings: {
-		samples: 1,
-	},
+  depth: false,
+  width: 512,
+  height: 512,
+  settings: {
+    samples: 1,
+  },
 })
 
 const gl = {
-	clearColor: '#82DBC5',
-	shadows: true,
-	alpha: false,
-	outputColorSpace: SRGBColorSpace,
-	toneMapping: ACESFilmicToneMapping,
+  clearColor: '#82DBC5',
+  shadows: true,
+  alpha: false,
+  outputColorSpace: SRGBColorSpace,
+  toneMapping: ACESFilmicToneMapping,
 }
 
 const torusRef = shallowRef(null)
@@ -27,42 +27,48 @@ const capsuleRef = shallowRef(null)
 const { onLoop } = useRenderLoop()
 
 onMounted(async () => {
-	await nextTick()
+  await nextTick()
 
-	onLoop(({ elapsed }) => {
-		torusRef.value.rotation.x = elapsed * 0.745
-		torusRef.value.rotation.y = elapsed * 0.361
+  onLoop(({ elapsed }) => {
+    torusRef.value.rotation.x = elapsed * 0.745
+    torusRef.value.rotation.y = elapsed * 0.361
 
-		capsuleRef.value.rotation.x = elapsed * 0.471
-		capsuleRef.value.rotation.z = elapsed * 0.632
-	})
+    capsuleRef.value.rotation.x = elapsed * 0.471
+    capsuleRef.value.rotation.z = elapsed * 0.632
+  })
 })
 </script>
 
 <template>
-	<TresCanvas v-bind="gl">
-		<TresPerspectiveCamera :position="[0, 0.5, 5]" />
-		<OrbitControls />
+  <TresCanvas v-bind="gl">
+    <TresPerspectiveCamera :position="[0, 0.5, 5]" />
+    <OrbitControls />
 
-		<TresGridHelper :args="[10, 10]" />
+    <TresGridHelper :args="[10, 10]" />
 
-		<TresMesh>
-			<TresBoxGeometry :args="[1, 1, 1]" />
+    <TresMesh>
+      <TresBoxGeometry :args="[1, 1, 1]" />
 
-			<TresMeshBasicMaterial
-				:color="0xffffff"
-				:map="fboTarget?.texture ?? null"
-			/>
-		</TresMesh>
+      <TresMeshBasicMaterial
+        :color="0xffffff"
+        :map="fboTarget?.texture ?? null"
+      />
+    </TresMesh>
 
-		<TresMesh ref="torusRef" :position="[3, 0, 0]">
-			<TresTorusGeometry :args="[1, 0.5, 16, 100]" />
-			<TresMeshNormalMaterial />
-		</TresMesh>
+    <TresMesh
+      ref="torusRef"
+      :position="[3, 0, 0]"
+    >
+      <TresTorusGeometry :args="[1, 0.5, 16, 100]" />
+      <TresMeshNormalMaterial />
+    </TresMesh>
 
-		<TresMesh ref="capsuleRef" :position="[-2, 0, 0]">
-			<TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
-			<TresMeshNormalMaterial />
-		</TresMesh>
-	</TresCanvas>
+    <TresMesh
+      ref="capsuleRef"
+      :position="[-2, 0, 0]"
+    >
+      <TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
+      <TresMeshNormalMaterial />
+    </TresMesh>
+  </TresCanvas>
 </template>
