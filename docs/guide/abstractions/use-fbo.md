@@ -4,6 +4,10 @@ An FBO (or Frame Buffer Object) is generally used to render to a texture. This i
 
 Cientos provides a `useFBO` composable to make it easy to use FBOs in your application.
 
+::: warning
+The `useFBO` composable must be used inside of a child component since it needs the context of TresCanvas.
+:::
+
 <DocsDemo>
   <UseFBODemo />
 </DocsDemo>
