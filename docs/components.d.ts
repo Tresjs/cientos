@@ -44,6 +44,8 @@ declare module 'vue' {
     SVGDemo: typeof import('./.vitepress/theme/components/SVGDemo.vue')['default']
     Text3Demo: typeof import('./.vitepress/theme/components/Text3Demo.vue')['default']
     TransformControlsDemo: typeof import('./.vitepress/theme/components/TransformControlsDemo.vue')['default']
+    UseFBXDemo: typeof import('./.vitepress/theme/components/UseFBXDemo.vue')['default']
+    UseGLTFDemo: typeof import('./.vitepress/theme/components/UseGLTFDemo.vue')['default']
     VideoTextureDemo: typeof import('./.vitepress/theme/components/VideoTextureDemo.vue')['default']
     WobbleMaterialDemo: typeof import('./.vitepress/theme/components/WobbleMaterialDemo.vue')['default']
   }
