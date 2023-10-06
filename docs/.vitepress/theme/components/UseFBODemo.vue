@@ -1,17 +1,8 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { useFBO, OrbitControls } from '@tresjs/cientos'
+import { OrbitControls } from '@tresjs/cientos'
 import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
 import { shallowRef, onMounted, nextTick } from 'vue'
-
-const fboTarget = useFBO({
-  depth: false,
-  width: 512,
-  height: 512,
-  settings: {
-    samples: 1,
-  },
-})
 
 const gl = {
   clearColor: '#82DBC5',
@@ -46,14 +37,7 @@ onMounted(async () => {
 
     <TresGridHelper :args="[10, 10]" />
 
-    <TresMesh>
-      <TresBoxGeometry :args="[1, 1, 1]" />
-
-      <TresMeshBasicMaterial
-        :color="0xffffff"
-        :map="fboTarget?.texture ?? null"
-      />
-    </TresMesh>
+    <FboCube />
 
     <TresMesh
       ref="torusRef"

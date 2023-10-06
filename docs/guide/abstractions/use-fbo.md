@@ -10,7 +10,13 @@ Cientos provides a `useFBO` composable to make it easy to use FBOs in your appli
 
 ## Usage
 
-<<< @/.vitepress/theme/components/UseFBODemo.vue{3,7,8,9,10,11,12,13,14,54}
+`FboCube.vue`
+
+<<< @/.vitepress/theme/components/FboCube.vue{2,4,5,6,7,8,9,10,11,20}
+
+`Experience.vue`
+
+<<< @/.vitepress/theme/components/UseFBODemo.vue{40}
 
 ## Props
 
