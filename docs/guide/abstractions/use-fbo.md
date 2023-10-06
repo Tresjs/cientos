@@ -5,86 +5,12 @@ An FBO (or Frame Buffer Object) is generally used to render to a texture. This i
 Cientos provides a `useFBO` composable to make it easy to use FBOs in your application.
 
 <DocsDemo>
-  <FboDemo />
+  <UseFBODemo />
 </DocsDemo>
 
 ## Usage
 
-```ts{5,6,7,8,9,10,11,12}
-import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { useFBO, OrbitControls } from '@tresjs/cientos'
-import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
-
-const fboTarget = useFBO({
-	depth: false,
-	width: 512,
-	height: 512,
-	settings: {
-		samples: 1,
-	},
-})
-
-const gl = {
-	clearColor: '#82DBC5',
-	shadows: true,
-	alpha: false,
-	outputColorSpace: SRGBColorSpace,
-	toneMapping: ACESFilmicToneMapping,
-}
-
-const torusRef = shallowRef(null)
-const capsuleRef = shallowRef(null)
-
-const { onLoop } = useRenderLoop()
-
-onMounted(async () => {
-	await nextTick()
-
-	onLoop(({ elapsed }) => {
-		torusRef.value.rotation.x = elapsed * 0.745
-		torusRef.value.rotation.y = elapsed * 0.361
-
-		capsuleRef.value.rotation.x = elapsed * 0.471
-		capsuleRef.value.rotation.z = elapsed * 0.632
-	})
-})
-```
-
-```vue{13}
-<template>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 0.5, 5]" />
-    <OrbitControls />
-
-    <TresGridHelper :args="[10, 10]" />
-
-    <TresMesh>
-      <TresBoxGeometry :args="[1, 1, 1]" />
-
-      <TresMeshBasicMaterial
-        :color="0xffffff"
-        :map="fboTarget?.texture ?? null"
-      />
-    </TresMesh>
-
-    <TresMesh
-      ref="torusRef"
-      :position="[3, 0, 0]"
-    >
-      <TresTorusGeometry :args="[1, 0.5, 16, 100]" />
-      <TresMeshNormalMaterial />
-    </TresMesh>
-
-    <TresMesh
-      ref="capsuleRef"
-      :position="[-2, 0, 0]"
-    >
-      <TresCapsuleGeometry :args="[0.4, 1, 4, 8]" />
-      <TresMeshNormalMaterial />
-    </TresMesh>
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/UseFBODemo.vue{3,7,8,9,10,11,12,13,14,54}
 
 ## Props
 
