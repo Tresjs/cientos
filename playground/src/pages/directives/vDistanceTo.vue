@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
-import { TresCanvas, useRenderLoop } from '@tresjs/core'
+import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, Sphere, vDistanceTo } from '@tresjs/cientos'
 import { SRGBColorSpace, NoToneMapping } from 'three'
 import { useControls, TresLeches } from '@tresjs/leches'
