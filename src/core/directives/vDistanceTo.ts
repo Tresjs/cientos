@@ -8,7 +8,7 @@ export const vDistanceTo = {
   updated: (el: any, binding: any) => {
     const observer = extractBindingPosition(binding)
     if (!observer) {
-      logWarning(`${binding} is not a "Object3D"`)
+      logWarning(`v-distance-to: problem with binding value: ${binding.value}`)
       return
     }
     if (arrowHelper) {

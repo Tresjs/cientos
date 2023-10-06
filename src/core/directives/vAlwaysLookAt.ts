@@ -8,7 +8,7 @@ export const vAlwaysLookAt = {
   updated: (el: Object3D, binding: any) => {
     const observer = extractBindingPosition(binding)
     if (!observer) {
-      logWarning(`${binding} is not a Object3D`)
+      logWarning(`v-always-look-at: problem with binding value: ${binding.value}`)
       return
     }
     const { onLoop } = useRenderLoop()
