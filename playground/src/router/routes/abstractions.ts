@@ -27,7 +27,7 @@ export const abstractionsRoutes = [
   {
     path: '/abstractions/fbo',
     name: 'Fbo',
-    component: () => import('../../pages/abstractions/FboDemo.vue'),
+    component: () => import('../../pages/abstractions/FBODemo.vue'),
   },
   {
     path: '/abstractions/use-fbo',
