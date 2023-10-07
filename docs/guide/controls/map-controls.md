@@ -14,16 +14,10 @@ The `cientos` package provides a component called `<MapControls />`, which is a 
 The nicest part? You don't need to extend the catalog or pass any arguments.
 It just works. 💯
 
-```vue{3}
-<template>
-  <TresCanvas shadows alpha>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <MapControls />
-    <TresGridHelper :args="[10, 10]" />
+## Usage
 
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/MapControlsDemo.vue{3,9}
+
 ::: warning
 Is really important that the Perspective camera is set first in the canvas. Otherwise might break.
 :::

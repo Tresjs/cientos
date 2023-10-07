@@ -10,7 +10,7 @@ import { templateCompilerOptions } from '@tresjs/core'
 import { resolve } from 'pathe'
 
 import { lightGreen, yellow, gray, bold } from 'kolorist'
-
+import glsl from 'vite-plugin-glsl'
 import pkg from './package.json'
 
 // eslint-disable-next-line no-console
@@ -28,6 +28,7 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
     }),
+    glsl(),
     banner({
       content: `/**\n * name: ${pkg.name}\n * version: v${pkg.version
         }\n * (c) ${new Date().getFullYear()}\n * description: ${pkg.description}\n * author: ${pkg.author}\n */`,
@@ -45,7 +46,8 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [
-        /*  analyze(),
+        analyze(),
+        /* analyze(),
         visualizer({
           gzipSize: true,
           brotliSize: true,

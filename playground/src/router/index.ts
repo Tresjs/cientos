@@ -7,6 +7,8 @@ import {
   materialsRoutes,
   miscRoutes,
   directivesRoutes,
+  shapesRoutes,
+  miscRoutes,
 } from './routes'
 
 const routes = [
@@ -22,6 +24,8 @@ const routes = [
   ...materialsRoutes,
   ...miscRoutes,
   ...directivesRoutes,
+  ...shapesRoutes,
+  ...miscRoutes,
 ]
 
 export const router = createRouter({

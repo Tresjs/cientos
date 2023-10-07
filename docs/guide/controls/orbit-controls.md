@@ -15,15 +15,9 @@ The `cientos` package provides a component called `<OrbitControls />` that is a 
 The nicest part? You don't need to extend the catalog or pass any arguments.  
 It just works. 💯
 
-```vue{3}
-<template>
-  <TresCanvas shadows alpha>
-    <TresPerspectiveCamera :args="[45, 1, 0.1, 1000]" />
-    <OrbitControls />
+## Usage
 
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/OrbitControlsDemo.vue{3,9}
 
 ::: warning
 Is really important that the Perspective camera is set first in the canvas. Otherwise might break.
@@ -61,7 +55,7 @@ Is really important that the Perspective camera is set first in the canvas. Othe
 
 ## Events
 
-```html
+```vue
 <OrbitControls @change="onChange" @start="onStart" @end="onEnd" />
 ```
 

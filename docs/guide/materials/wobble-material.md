@@ -11,9 +11,4 @@ The `cientos` package provides a `<MeshWobbleMaterial />` component that makes a
 
 ## Usage
 
-```html
-<TresMesh>
-  <TresTorusGeometry />
-  <MeshWobbleMaterial color="orange" speed="10" factor="5" />
-</TresMesh>
-```
+<<< @/.vitepress/theme/components/WobbleMaterialDemo.vue{3,11-15}

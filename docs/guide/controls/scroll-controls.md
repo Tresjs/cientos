@@ -8,79 +8,51 @@
 
 The `cientos` package create this controls from scratch for you, and comes with really useful props to customize your experiences, try it out. ✨
 
+## Usage
+
 To start using it, you just need to import it and play with it.
 
-```vue{3}
-<template>
-  <TresCanvas window-size>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls />
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/ScrollControlsDemo.vue{3,14}
 
 ::: warning
 Is really important that the Perspective camera is set first in the canvas. Otherwise might break.
 :::
 
-By default `ScrollControls` creates a scroll around the canvas and takes the camera as a default for animate, also it comes with a reactive `progress` param that returns a normalized value from 0 (start point) to 1 (end point) you just need to attach it to a v-model.
+You can use the `horizontal` prop, to makes the scroll horizontal way.
 
-```vue{3}
-<script setup>
-const progress = ref(0) // it will return a normalized number from 0 to 1
-watchEffect(() => {
-  console.log('tresjs ~ progress:', progress.value)
-})
-</script>
-<template>
-  <TresCanvas window-size>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls v-model="progress" />
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
-```
+<DocsDemo>
+  <ScrollControlsHorizontalDemo />
+</DocsDemo>
 
-You can use the `horizontal` prop, to makes the scroll horizontal way,.
-
-```vue{3}
-<template>
-  <TresCanvas window-size>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls v-model="progress" horizontal />
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/ScrollControlsHorizontalDemo.vue{3,14}
 
 With the `pages` prop you can control the length of the scroll, and with the `distance` you can control how much movement is apply to the objects ( you can for example use it with 0 value and use the progress element)
 
-```vue{3}
-<template>
-  <TresCanvas window-size> // 
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls
-    v-model="progress"
-    :pages="20" // the scroll length will be really long
-    :distance="0" // the objects (camera by default) will follow the scroll
-    />
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
-```
+In addition a nice effect could be achieve by using the `smoothScroll` prop like so:
+<DocsDemo>
+  <ScrollControlsPagesDemo />
+</DocsDemo>
 
-But it's not all, you can also pass the `htmlScroll` props and deactivate the custom scroll and use the native html scroll.
+<<< @/.vitepress/theme/components/ScrollControlsPagesDemo.vue{14-18}
 
-```vue{3}
-<template>
-<div style="height="200vh"></div> //
-  <TresCanvas window-size>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls v-model="progress" htmlScroll />
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
+By default `ScrollControls` creates a scroll around the canvas and takes the camera as a default for animate, also it comes with a reactive `progress` param that returns a normalized value from 0 (start point) to 1 (end point) you just need to attach it to a v-model.
+
+<DocsDemo>
+  <ScrollControlsProgressDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/ScrollControlsProgressDemo.vue{7,27-30}
+
+If you don't want to use the default camera movement you can set the distance to 0 a just rely on progress to animate (the progress is not affected by the `smoothScroll` )
+
+<DocsDemo>
+  <ScrollControlsProgressCameraDemo />
+</DocsDemo>
+
+But it's not all, you can also pass the `htmlScroll` props this will deactivate the custom scroll and use the native html scroll.
+
+```vue{1}
+    <ScrollControls htmlScroll />
 ```
 
 ::: warning
@@ -88,22 +60,15 @@ But it's not all, you can also pass the `htmlScroll` props and deactivate the cu
 - The `htmlScroll` will set the TresCanvas as a fixed background.
 :::
 
-## Slots
+### Slots
 
-the elements that you pass as a slot will be affected by the scroll effect, and follow the camera
+The elements that you pass as a slot will be affected by the scroll effect, and follow the camera.
 
-```vue{3}
-<template>
-<div style="height="200vh"></div> //
-  <TresCanvas window-size>
-    <TresPerspectiveCamera :position="[0, 0, 3]" />
-    <ScrollControls v-model="progress" htmlScroll >
-      <Box :args="[1, 1, 1]" color="green" /> // will follow the camera
-    </ScrollControls>
-    <TresGridHelper :args="[10, 10]" />
-  </TresCanvas>
-</template>
-```
+<DocsDemo>
+  <ScrollControlsSlotsDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/ScrollControlsSlotsDemo.vue{31-43}
 
 ## Props
 
@@ -114,3 +79,7 @@ the elements that you pass as a slot will be affected by the scroll effect, and 
 | **smoothScroll** | The smooth factor of the scrolling.                      | `0.5`   |
 | **horizontal**   | Whether the scroll is horizontal or vertical.            | `false` |
 | **htmlScroll**   | Whether to use the native HTML scroll.                   | `false` |
+
+::: warning
+Currently the props are not reactive for this control
+:::

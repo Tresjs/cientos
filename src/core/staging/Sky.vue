@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
 import { Sky as SkyImpl } from 'three/examples/jsm/objects/Sky'
 import { computed } from 'vue'
@@ -24,7 +25,9 @@ const props = withDefaults(defineProps<SkyProps>(), {
 })
 
 const skyImpl = new SkyImpl()
-const sunPosition = computed(() => getSunPosition(props.azimuth, props.elevation))
+const sunPosition = computed(() =>
+  getSunPosition(props.azimuth, props.elevation),
+)
 
 function getSunPosition(azimuth: number, elevation: number) {
   const phi = MathUtils.degToRad(90 - elevation)

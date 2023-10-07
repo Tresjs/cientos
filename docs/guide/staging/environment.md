@@ -10,7 +10,7 @@ It uses the composable [useEnvironment](/guide/staging/use-environment) under th
 
 ## Usage
 
-```html
+```vue
 <Environment
   :files="[
     '/px.jpg',
@@ -25,7 +25,7 @@ It uses the composable [useEnvironment](/guide/staging/use-environment) under th
 
 You can also pass the `.hdr` file directly:
 
-```html
+```vue
 <Environment files="/sunset.hdr" />
 ```
 

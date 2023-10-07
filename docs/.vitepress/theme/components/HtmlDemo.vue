@@ -3,7 +3,6 @@ import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
 import { OrbitControls, Html } from '@tresjs/cientos'
-import { reactive } from 'vue'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -35,6 +34,6 @@ const gl = {
       </Html>
     </TresMesh>
     <TresGridHelper />
-    <TresAmbientLight :intensity="1" />
+    <TresAmbientLight />
   </TresCanvas>
 </template>

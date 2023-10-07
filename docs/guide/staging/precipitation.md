@@ -8,33 +8,41 @@
 
 ## Usage
 
-You can use `<Precipitation />` component without passing any props.
+You can use `<Precipitation />` component without passing any props, this will achieve a snowy effect, like the before example.
 
-```vue
-<template>
-  <TresCanvas>
-    ...
-    <Precipitation />
-    ...
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/PrecipitationDemo.vue{3,9}
 
-To create uniques effects play around with the different props available
+### Rain
 
-```vue
-<template>
-  <TresCanvas>
-    ...
-    <Precipitation
-      :speed="1"
-      :count="2500"
-      :map="myTexture"
-    />
-    ...
-  </TresCanvas>
-</template>
-```
+By setting the randomness to 0, increase the speed  and reduce the count. You can easily achieve a more rainy effect.
+
+<DocsDemo>
+  <PrecipitationRainDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/PrecipitationRainDemo.vue{3,9-13}
+
+### Storm
+
+A storm effect? Easy just increase the randomness.
+
+<DocsDemo>
+  <PrecipitationStormDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/PrecipitationStormDemo.vue{3,9-13}
+
+### Beam
+
+What about an infinite beam? Just set the area, to the axis that you need constrain.
+
+<DocsDemo>
+  <PrecipitationBeamDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/PrecipitationBeamDemo.vue{3,9-15}
+
+You can create much more! ☔
 
 ::: warning
 Be careful with the performance this components render infinite particles in movement

@@ -1,4 +1,4 @@
-# Html <Badge type="warning" text="^3.4.0" />
+# Html <Badge type="warning" text="^3.5.0" />
 
 This component allows you to project HTML content to any object in your scene. TresJS will automatically update the position of the HTML content to match the position of the object in the scene.
 
@@ -8,23 +8,7 @@ This component allows you to project HTML content to any object in your scene. T
 
 ## Usage
 
-```html
-<TresMesh :position="[1, 1, 1]">
-  <TresBoxGeometry />
-  <TresMeshNormalMaterial />
-  <Html
-    center
-    transform
-    :distance-factor="4"
-    :position="[0.5, 0, 0.65]"
-    :scale="[0.75, 0.75, 0.75]"
-  >
-    <h1 class="bg-white text-xs p-1 rounded">
-      I'm a Box 📦
-    </h1>
-  </Html>
-</TresMesh>
-```
+<<< @/.vitepress/theme/components/HtmlDemo.vue{3,13-23}
 
 ## Occlusion
 
@@ -42,49 +26,7 @@ You can also choose which objects should occlude the HTML content by passing an 
   <HtmlOccludeDemo />
 </DocsDemo>
 
-```html
-<script setup lang="ts">
-import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, Html } from '@tresjs/cientos'
-
-const sphereRef = ref(null)
-</script>
-
-<template>
-  <TresCanvas v-bind="gl">
-    <TresMesh :position="[1, 1, 1]">
-      <TresBoxGeometry />
-      <TresMeshNormalMaterial />
-      <Html
-        center
-        transform
-        :occlude="[sphereRef]"
-        :distance-factor="4"
-      >
-        <h1 class="bg-white text-xs p-1 rounded">
-          Box
-        </h1>
-      </Html>
-    </TresMesh>
-    <TresMesh
-      ref="sphereRef"
-      :position="[3, 1, 1]"
-    >
-      <TresSphereGeometry />
-      <TresMeshNormalMaterial />
-      <Html
-        center
-        transform
-        :distance-factor="4"
-      >
-        <h1 class="bg-white text-xs p-1 rounded">
-          Sphere
-        </h1>
-      </Html>
-    </TresMesh>
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/HtmlOccludeDemo.vue{2,6,19,28}
 
 ## Using `iframes`
 
@@ -94,75 +36,13 @@ You can achieve pretty cool results with the `Html` component by using iframes. 
   <HtmlLaptopDemo />
 </DocsDemo>
 
-```html
-<script setup lang="ts">
-import { TresCanvas } from '@tresjs/core'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
-
-import { OrbitControls, Html, useGLTF, Levioso, ContactShadows } from '@tresjs/cientos'
-
-const gl = {
-  clearColor: '#241a1a',
-  shadows: true,
-  alpha: false,
-  shadowMapType: BasicShadowMap,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
-}
-
-const { nodes } 
-  = await useGLTF('https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/macbook/model.gltf', 
-    { draco: true },
-  )
-</script>
-
-<template>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[-5, 4, 3]" />
-    <OrbitControls />
-    <Levioso>
-      <primitive :object="nodes.Macbook">
-        <Html
-          transform
-          wrapper-class="webpage"
-          :distance-factor="11"
-          :position="[0, 10.5, -13.4]"
-          occlude
-          :rotation-x="-0.256"
-        >
-          <iframe
-            class="rounded-lg w-[1024px] h-[670px]"
-            src="https://tresjs.org"
-            frameborder="0"
-          />
-        </Html>
-      </primitive>
-    </Levioso>
-    <ContactShadows
-      :blur="3.5"
-      :resolution="512"
-      :opacity="1"
-    />
-    <TresAmbientLight :intensity="1" />
-    <TresDirectionalLight
-      :intensity="2"
-      :position="[2, 3, 0]"
-      :cast-shadow="true"
-      :shadow-camera-far="50"
-      :shadow-camera-left="-10"
-      :shadow-camera-right="10"
-      :shadow-camera-top="10"
-      :shadow-camera-bottom="-10"
-    />
-  </TresCanvas>
-</template>
-```
+<<< @/.vitepress/theme/components/HtmlLaptopDemo.vue{23-27}
 
 ## Props
 
 | Prop                | Description                                                                                                               | Default                                  |
 |---------------------|---------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
-| **as**              | Wrapping html element.                                                                                                         | `'div'`                                  |
+| **as**              | Wrapping html element.                                                                                                    | `'div'`                                  |
 | **wrapperClass**    | The className of the wrapping element.                                                                                    |                                          |
 | **prepend**         | Project content behind the canvas.                                                                                        | `false`                                  |
 | **center**          | Adds a -50%/-50% CSS transform. [Ignored in transform mode]                                                               | `false`                                  |
@@ -172,10 +52,10 @@ const { nodes }
 | **portal**          | Reference to target container.                                                                                            |                                          |
 | **transform**       | If true, applies matrix3d transformations.                                                                                | `false`                                  |
 | **sprite**          | Renders as sprite, but only in transform mode.                                                                            | `false`                                  |
-| **calculatePosition** | Override default positioning function. [Ignored in transform mode]                                                        |                                          |
+| **calculatePosition** | Override default positioning function. [Ignored in transform mode]                                                      |                                          |
 | **occlude**         | Can be `true`, `Ref<TresObject3D>[]`, `'raycast'`, or `'blending'`. True occludes the entire scene.                       |                                          |
-
-
+| **geometry**         | Custom `geometry` to be use                                                                                              |                    `PlaneGeometry`       |
+| **material**         | Custom shader `material` to be use                                                                                              |                                          |
 
 ## Events
 
