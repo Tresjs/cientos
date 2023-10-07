@@ -7,8 +7,6 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import { ref, watchEffect } from 'vue'
 
-const environmentFiles = ['/px.jpg', '/nx.jpg', '/py.jpg', '/ny.jpg', '/pz.jpg', '/nz.jpg']
-
 const gl = {
   clearColor: '#82DBC5',
   shadows: true,
@@ -48,14 +46,6 @@ const { background, blur, preset } = useControls({
 })
 
 const environmentRef = ref(null)
-
-watchEffect(() => {
-  console.log(background.value.value)
-})
-
-watchEffect(() => {
-  console.log(environmentRef.value)
-})
 
 const { progress, hasFinishLoading } = await useProgress()
 </script>

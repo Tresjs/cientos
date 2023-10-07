@@ -5,7 +5,6 @@ import {
   stagingRoutes,
   loadersRoutes,
   materialsRoutes,
-  miscRoutes,
   directivesRoutes,
   shapesRoutes,
   miscRoutes,

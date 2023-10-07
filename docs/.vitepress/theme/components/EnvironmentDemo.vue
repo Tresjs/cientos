@@ -32,14 +32,6 @@ const { background, blur } = useControls({
 
 const environmentRef = ref(null)
 
-watchEffect(() => {
-  console.log(background.value.value)
-})
-
-watchEffect(() => {
-  console.log(environmentRef.value)
-})
-
 const { progress, hasFinishLoading } = await useProgress()
 </script>
 
