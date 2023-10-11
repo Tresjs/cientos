@@ -316,7 +316,7 @@ onUnmounted(() => {
   }
 })
 
-defineExpose({value:controlsRef})
+defineExpose({ value: controlsRef })
 </script>
 
 <template>
