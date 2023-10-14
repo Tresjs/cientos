@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<SparkleProps>(), {
   lifetimeNoise: 0.0,
 
   colorSequence: () => ['purple', 'blue', 'green', 'red'],
-  alphaSequence: () => [[0.0, 0.0], [0.10, 1.0]],
+  alphaSequence: () => [[0.0, 0.0], [0.10, 1.0], [0.5, 1.0], [0.9, 0.0]],
   offsetSequence: () => [[1.0, 1.0, 1.0]],
   surfaceDistanceSequence: () => [0.05, 0.1, 0.15],
   sizeSequence: () => [0.0, 1.0],
@@ -100,7 +100,7 @@ interface SparkleProps {
 
 const refs = toRefs(props)
 
-const {texture, shaderProps, materialWatcher, addUniform:addTextureUniform } = new ShaderDataBuilder(256)
+const { texture, shaderProps, materialWatcher, addUniform: addTextureUniform } = new ShaderDataBuilder(256)
   .add.GradientTresColor(refs.colorSequence).id('colorSequence')
   .add.Gradient01(refs.alphaSequence).id('alphaSequence')
   .add.Gradient01(refs.surfaceDistanceSequence).id('surfaceDistanceSequence')
@@ -177,9 +177,13 @@ const shaderMaterialParameters: ShaderMaterialParameters = {
       float dotNormal = dot(normal, uNormal) * 0.5 + 0.5;
       float normalP = smoothstep(uNormalThreshold, 1., dotNormal);
       float lifetimeNoise = uLifetimeNoise * mix(normalP, 1.0, uMixNormalLifetimeNoise);
-      float t = uTime + position.x * 1. * uNoiseScale + position.y * 10. * uNoiseScale + position.z * 7.3 * uNoiseScale + sin(lifetimeNoise * (position.x + 13. * position.y)) * lifetimeNoise;
+
+      float t = uTime + position.x * 1. * uNoiseScale + position.y * 10. * uNoiseScale + 
+      position.z * 7.3 * uNoiseScale + sin(lifetimeNoise * (position.x + 13. * position.y)) * lifetimeNoise;
+
       float lifetimeP = max(-0.0001, mix(-uCooldownRatio, 1. + cos(t) * lifetimeNoise, fract(t)));
-      float surfaceDistance = ${shaderProps.use('surfaceDistanceSequence').at('mix(normalP, lifetimeP, uMixNormalLifetimeSurfaceDistance)').get()};
+      float surfaceDistance = ${shaderProps.use('surfaceDistanceSequence')
+      .at('mix(normalP, lifetimeP, uMixNormalLifetimeSurfaceDistance)').get()};
 
       vec4 modelPosition = modelMatrix * vec4(position, 1.0) +  vec4(normal * surfaceDistance, 0.0);
       vec3 noise = ${shaderProps.use('noiseSequence').at('mix(normalP, lifetimeP, uMixNormalLifetimeNoise)').get()};
@@ -200,7 +204,8 @@ const shaderMaterialParameters: ShaderMaterialParameters = {
 
       if (gl_PointSize < 0.6 || lifetimeP < 0.0) { gl_Position = vec4(2, 2, 2, 1); }
       vProgressColor = mix(normalP, lifetimeP, uMixNormalLifetimeColor);
-      vProgressAlpha = ${shaderProps.use('alphaSequence').at('mix(normalP, lifetimeP, uMixNormalLifetimeAlpha)').get()} * uAlpha; 
+      vProgressAlpha = ${shaderProps.use('alphaSequence')
+      .at('mix(normalP, lifetimeP, uMixNormalLifetimeAlpha)').get()} * uAlpha; 
     }`,
   fragmentShader: `
     varying float vProgressColor;
@@ -233,7 +238,9 @@ function isObject3D(o: any): o is Object3D {
   return o && 'isObject3D' in o
 }
 
-function isBufferGeometry(o: any): o is BufferGeometry { return o && 'isBufferGeometry' in o }
+function isBufferGeometry(o: any): o is BufferGeometry { 
+  return o && 'isBufferGeometry' in o 
+}
 
 const mat = new ShaderMaterial(shaderMaterialParameters)
 const sparkles = new Points(undefined, mat)
@@ -258,24 +265,63 @@ const aspect = useTresContext().sizes.aspectRatio
 const NOW = { immediate: true }
 const u = mat.uniforms
 
-watch(aspect, () => { setPixelRatio(mat, aspect.value) }, NOW)
-watch(refs.size, () => { u.uSize.value = refs.size.value }, NOW)
-watch(refs.normalThreshold, () => { u.uNormalThreshold.value = refs.normalThreshold.value }, NOW)
-watch(refs.alpha, () => { setAlpha(mat, refs.alpha.value) }, NOW)
-watch([refs.noiseScale, refs.lifetimeS], () => {
+watch(aspect, 
+  () => { setPixelRatio(mat, aspect.value) }, 
+  NOW)
+
+watch(refs.size, 
+  () => { u.uSize.value = refs.size.value }, 
+  NOW)
+
+watch(refs.normalThreshold, 
+  () => { u.uNormalThreshold.value = refs.normalThreshold.value }, 
+  NOW)
+
+watch(refs.alpha, 
+  () => { setAlpha(mat, refs.alpha.value) }, 
+  NOW)
+
+watch([refs.noiseScale, refs.lifetimeS], 
+  () => {
   // NOTE: Scale noise by lifetime so that scaling lifetime keeps same noise period
-  u.uNoiseScale.value = refs.noiseScale.value * refs.lifetimeS.value
-}, NOW)
-watch([refs.lifetimeS, refs.cooldownS], () => {
-  u.uCooldownRatio.value = refs.cooldownS.value / refs.lifetimeS.value
-}, NOW)
-watch(refs.offsetNoise, () => { setOffsetNoise(mat, refs.offsetNoise.value) }, NOW)
-watch(refs.mixNormalLifetimeColor, () => { u.uMixNormalLifetimeColor.value = refs.mixNormalLifetimeColor.value }, NOW)
-watch(refs.mixNormalLifetimeAlpha, () => { u.uMixNormalLifetimeAlpha.value = refs.mixNormalLifetimeAlpha.value }, NOW)
-watch(refs.mixNormalLifetimeOffset, () => { u.uMixNormalLifetimeOffset.value = refs.mixNormalLifetimeOffset.value }, NOW)
-watch(refs.mixNormalLifetimeSize, () => { u.uMixNormalLifetimeSize.value = refs.mixNormalLifetimeSize.value }, NOW)
-watch(refs.mixNormalLifetimeSurfaceDistance, () => { u.uMixNormalLifetimeSurfaceDistance.value = refs.mixNormalLifetimeSurfaceDistance.value }, NOW)
-watch(refs.mixNormalLifetimeNoise, () => { u.uMixNormalLifetimeNoise.value = refs.mixNormalLifetimeNoise.value }, NOW)
+    u.uNoiseScale.value = refs.noiseScale.value * refs.lifetimeS.value
+  }, 
+  NOW)
+
+watch([refs.lifetimeS, refs.cooldownS], 
+  () => {
+    u.uCooldownRatio.value = refs.cooldownS.value / refs.lifetimeS.value
+  }, 
+  NOW)
+
+watch(refs.offsetNoise, 
+  () => { setOffsetNoise(mat, refs.offsetNoise.value) }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeColor, 
+  () => { u.uMixNormalLifetimeColor.value = refs.mixNormalLifetimeColor.value }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeAlpha, 
+  () => { u.uMixNormalLifetimeAlpha.value = refs.mixNormalLifetimeAlpha.value }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeOffset, 
+  () => { u.uMixNormalLifetimeOffset.value = refs.mixNormalLifetimeOffset.value }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeSize, 
+  () => { u.uMixNormalLifetimeSize.value = refs.mixNormalLifetimeSize.value }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeSurfaceDistance, 
+  () => { u.uMixNormalLifetimeSurfaceDistance.value = refs.mixNormalLifetimeSurfaceDistance.value }, 
+  NOW)
+
+watch(refs.mixNormalLifetimeNoise, 
+  () => { u.uMixNormalLifetimeNoise.value = refs.mixNormalLifetimeNoise.value },
+  NOW)
+
 // NOTE: equivalient to:
 // watch(texture, () => { u.uInfo.value = texture.value })
 materialWatcher(mat)
