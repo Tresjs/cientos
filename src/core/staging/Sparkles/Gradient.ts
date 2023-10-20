@@ -46,7 +46,7 @@ export function normalizeFlexibleVector3Gradient(
       && t.length > 0
       && Array.isArray(t[0])
       && t[0].length === 2
-      && isVectorFlexibleParams(t[0][0]),
+      && isVectorFlexibleParams(t[0][1]),
     isEmpty: (t: typeof gradient) => Array.isArray(t) && t.length === 0,
   })
 }

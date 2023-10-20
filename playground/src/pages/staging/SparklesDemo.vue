@@ -1,54 +1,38 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls, Sparkles, TorusKnot, Icosahedron, StatsGl, Levioso } from '@tresjs/cientos'
-import { SRGBColorSpace, NoToneMapping } from 'three'
-import { useMouse, useWindowSize } from '@vueuse/core'
+import { Sparkles, Sphere } from '@tresjs/cientos'
+import { shallowRef } from 'vue'
+import { Color } from 'three'
+import { useControls, TresLeches } from '@tresjs/leches'
+import '@tresjs/leches/styles'
 
-const gl = {
-  clearColor: '#333',
-  alpha: true,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
-}
+const lightRef = shallowRef()
+const { value: mix } = useControls({ mix: { value: 0, min: 0, max: 1 } })
+const { value: threshold } = useControls({ threshold: { value: 0.5, min: 0, max: 1 } })
 
-const directionalLightRef = shallowRef()
-
-const { height, width } = useWindowSize()
-const { x: mouseX, y: mouseY } = useMouse()
-const x = computed(() => -0.5 + mouseX.value / width.value)
-const y = computed(() => 0.5 + -mouseY.value / height.value)
-
-let cooldown = 1
-useRenderLoop().onLoop(({ elapsed, delta }) => {
-  cooldown -= delta
+useRenderLoop().onLoop(({ elapsed }) => {
+  if (lightRef.value) {
+    lightRef.value.position.x = Math.cos(elapsed) * 2.5
+    lightRef.value.position.y = Math.sin(elapsed) * 2.5
+    lightRef.value.position.z = Math.sin(lightRef.value.position.y * Math.PI * 0.25) * 2
+  }
 })
 </script>
 
 <template>
-  <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[0, 0, 5]" />
-    <Levioso>
-      <TorusKnot :args="[1, 0.25, 256, 32]">
-        <TresMeshPhongMaterial
-          :shininess="1000"
-          color="#222"
-        />
-        <Sparkles :directional-light="directionalLightRef" />
-      </TorusKnot>
-    </Levioso>
-    <TresDirectionalLight
-      ref="directionalLightRef"
-      :intensity="2"
-      :position="[6 * x, 6 * y, 1]"
-    >
-      <StatsGl />
-      <Icosahedron
-        :args="[1, 10]"
-        :scale="0.1"
-      >
-        <TresMeshBasicMaterial color="white" />
-      </Icosahedron>
+  <TresLeches class="top-0 important-left-4" />
+  <TresCanvas clear-color="#333">
+    <TresPerspectiveCamera />
+    <TresDirectionalLight ref="lightRef">
+      <Sphere color="white" :scale="0.1" />
     </TresDirectionalLight>
-    <OrbitControls />
+    <Sphere :args="[0.5, 64, 64]">
+      <TresMeshStandardMaterial :color="new Color('#222')" />
+      <Sparkles :directional-light="lightRef" :mix-alpha="mix" :mix-color="mix"
+        :mix-offset="mix" :mix-size="mix" :mix-surface-distance="mix"
+        :normal-threshold="threshold" :noise-scale="100" :sequence-surface-distance="[0.1, 1.0]"
+        :sequence-alpha="[[0.0, 0.1], [0.2, 1.0], [0.9, 1.0]]" :sequence-offset="[[0.5, [0, 0, 0]], [0.6, [0, -1, 0]]]"
+        :alpha="1.0" />
+    </Sphere>
   </TresCanvas>
 </template>
