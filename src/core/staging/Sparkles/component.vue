@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import type { Texture, ShaderMaterialParameters, Blending, BufferGeometry, IUniform } from 'three'
-import { REVISION, Points, ShaderMaterial, Uniform, AdditiveBlending, Vector3, 
-  IcosahedronGeometry, Quaternion, Object3D } from 'three'
+import {
+  REVISION, Points, ShaderMaterial, Uniform, AdditiveBlending, Vector3,
+  IcosahedronGeometry, Quaternion, Object3D,
+} from 'three'
 import type { TresColor } from '@tresjs/core'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
-import { onUnmounted, shallowRef, watch, onMounted, toRefs, Ref } from 'vue'
+import type { Ref } from 'vue'
+import { onUnmounted, shallowRef, watch, onMounted, toRefs } from 'vue'
+import type { VectorFlexibleParams } from '@tresjs/core/dist/utils/normalize'
 import type { Gradient } from './Gradient'
 import ShaderDataBuilder from './ShaderDataBuilder'
 import useEmptyDataTexture from './useEmptyDataTexture'
-import { VectorFlexibleParams } from '@tresjs/core/dist/utils/normalize'
 
 interface SparkleProps {
   /** 
@@ -144,7 +147,7 @@ interface SparkleProps {
 
 const props = withDefaults(defineProps<SparkleProps>(), {
   map: 'https://raw.githubusercontent.com/Tresjs/assets/'
-  +'e41a93c56ec7cb5ac2d241f309e23582a5fe1fc6/textures/sparkles/particle.png',
+    + 'e41a93c56ec7cb5ac2d241f309e23582a5fe1fc6/textures/sparkles/particle.png',
   geometry: undefined,
   directionalLight: undefined,
 
@@ -186,7 +189,7 @@ const version = parseInt(REVISION.replace(/\D+/g, ''))
 
 const refs = toRefs(props)
 const map: Texture = typeof props.map === 'string' ? useEmptyDataTexture() : props.map
-const { texture:infoTexture, yFor } = new ShaderDataBuilder(256)
+const { texture: infoTexture, yFor } = new ShaderDataBuilder(256)
   .add.GradientTresColor(refs.sequenceColor).id('sequenceColor')
   .add.Gradient01(refs.sequenceAlpha).id('sequenceAlpha')
   .add.Gradient01(refs.sequenceSurfaceDistance).id('sequenceSurfaceDistance')
@@ -304,9 +307,9 @@ const sparkles = new Points(undefined, mat)
 const u = mat.uniforms
 const NOW = { immediate: true }
 
-const uniformsRefs:[IUniform, Ref][] = [
+const uniformsRefs: [IUniform, Ref][] = [
   [u.uPixelRatio, useTresContext().sizes.aspectRatio],
-  [u.uSize, refs.size], 
+  [u.uSize, refs.size],
   [u.uNormalThreshold, refs.normalThreshold],
   [u.uAlpha, refs.alpha],
   [u.uOffset, refs.offset],
@@ -317,10 +320,16 @@ const uniformsRefs:[IUniform, Ref][] = [
   [u.uMixSize, refs.mixSize],
   [u.uMixSurfaceDistance, refs.mixSurfaceDistance],
   [u.uMixNoise, refs.mixNoise],
-  [u.uInfoTexture, infoTexture]
+  [u.uInfoTexture, infoTexture],
 ]
 
-uniformsRefs.forEach(([uniform, ref]) => watch(ref, () => {uniform.value = ref.value}, NOW ))
+uniformsRefs.forEach(
+  ([uniform, ref]) => watch(
+    ref,
+    () => { uniform.value = ref.value },
+    NOW,
+  ),
+)
 
 watch([refs.noiseScale, refs.lifetimeSec],
   () => {
