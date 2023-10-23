@@ -9,7 +9,7 @@ import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { Ref } from 'vue'
 import { onUnmounted, shallowRef, watch, onMounted, toRefs } from 'vue'
 import type { VectorFlexibleParams } from '@tresjs/core/dist/utils/normalize'
-import type { Gradient } from './Gradient'
+import type { Gradient } from '../../../utils/Gradient'
 import ShaderDataBuilder from './ShaderDataBuilder'
 import useEmptyDataTexture from './useEmptyDataTexture'
 
