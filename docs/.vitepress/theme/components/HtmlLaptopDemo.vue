@@ -2,7 +2,7 @@
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
-import { OrbitControls, Html, useGLTF, Levioso, ContactShadows } from '@tresjs/cientos'
+import { OrbitControls, Html, useGLTF, ContactShadows } from '@tresjs/cientos'
 
 const gl = {
   clearColor: '#241a1a',
