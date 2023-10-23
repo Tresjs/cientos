@@ -59,45 +59,45 @@ All props beginning with `:mix-` allow you to specify how a particle "progresses
 
 ## Props
 
-<table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td><strong><nobr>map</nobr></strong></td><td>Type: <code>Texture | string</code><br>Default: <code><span>'https://raw.githubusercontent.com/Tresjs/asset...</span></code><br><br>Texture or image path for individual sparkles<br>
-</td></tr><tr><td><strong><nobr>geometry</nobr></strong></td><td>Type: <code>Object3D | BufferGeometry</code><br>Default: <code>undefined</code><br><br>Vertices of the geometry will be used to emit sparkles. Geometry normals are used for sparkles' traveling direction and for responding to the directional light prop.<br>
+<table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td><strong>map</strong></td><td>Type: <code>Texture | string</code><br>Default: <code><span>'https://raw.githubusercontent.com/Tresjs/asset...</span></code><br><br>Texture or image path for individual sparkles<br>
+</td></tr><tr><td><strong>geometry</strong></td><td>Type: <code>Object3D | BufferGeometry</code><br>Default: <code>undefined</code><br><br>Vertices of the geometry will be used to emit sparkles. Geometry normals are used for sparkles' traveling direction and for responding to the directional light prop.<br>
 <ul>
 <li>If provided, the component will use the passed geometry.</li>
 <li>If no geometry is provided, the component will try to make a copy of the parent object's geometry.</li>
 <li>If no parent geometry exists, the component will create and use an IcosphereGeometry.</li>
 </ul>
-</td></tr><tr><td><strong><nobr>directionalLight</nobr></strong></td><td>Type: <code>Object3D</code><br>Default: <code>undefined</code><br><br>Particles "light up" when their normal "faces" the light. If no <code>directionalLight</code> is provided, the default "up" vector will be used.<br>
-</td></tr><tr><td><strong><nobr>lifetimeSec</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.4</code><br><br>Particle lifetime in seconds<br>
-</td></tr><tr><td><strong><nobr>cooldownSec</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>2.0</code><br><br>Particle cooldown in seconds – time between lifetime end and respawn<br>
-</td></tr><tr><td><strong><nobr>normalThreshold</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.7</code><br><br>Number from 0-1 indicating how closely the particle needs to be faced towards the light to "light up". (Lower == more flexible)<br>
-</td></tr><tr><td><strong><nobr>noiseScale</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>3.0</code><br><br>Scale of the noise period (lower == more slowly cycling noise)<br>
-</td></tr><tr><td><strong><nobr>scaleNoise</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Noise coefficient applied to particle scale<br>
-</td></tr><tr><td><strong><nobr>offsetNoise</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.1</code><br><br>Noise coefficient applied to particle offset<br>
-</td></tr><tr><td><strong><nobr>lifetimeNoise</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.0</code><br><br>Noise coefficient applied to particle lifetime<br>
-</td></tr><tr><td><strong><nobr>size</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Particle scale multiplier<br>
-</td></tr><tr><td><strong><nobr>alpha</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Opacity multiplier<br>
-</td></tr><tr><td><strong><nobr>offset</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Offset multiplier<br>
-</td></tr><tr><td><strong><nobr>surfaceDistance</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Surface distance multiplier<br>
-</td></tr><tr><td><strong><nobr>sequenceColor</nobr></strong></td><td>Type: <code>Gradient&lt;TresColor&gt;</code><br>Default: <code>[[0.7, '#82dbc5'], [0.8, '#fbb03b']]</code><br><br>'<em>Sequence' props: specify how a particle changes as it "progresses". See also "mix</em>" props.<br>
+</td></tr><tr><td><strong>directionalLight</strong></td><td>Type: <code>Object3D</code><br>Default: <code>undefined</code><br><br>Particles "light up" when their normal "faces" the light. If no <code>directionalLight</code> is provided, the default "up" vector will be used.<br>
+</td></tr><tr><td><strong>lifetimeSec</strong></td><td>Type: <code>number</code><br>Default: <code>0.4</code><br><br>Particle lifetime in seconds<br>
+</td></tr><tr><td><strong>cooldownSec</strong></td><td>Type: <code>number</code><br>Default: <code>2.0</code><br><br>Particle cooldown in seconds – time between lifetime end and respawn<br>
+</td></tr><tr><td><strong>normalThreshold</strong></td><td>Type: <code>number</code><br>Default: <code>0.7</code><br><br>Number from 0-1 indicating how closely the particle needs to be faced towards the light to "light up". (Lower == more flexible)<br>
+</td></tr><tr><td><strong>noiseScale</strong></td><td>Type: <code>number</code><br>Default: <code>3.0</code><br><br>Scale of the noise period (lower == more slowly cycling noise)<br>
+</td></tr><tr><td><strong>scaleNoise</strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Noise coefficient applied to particle scale<br>
+</td></tr><tr><td><strong>offsetNoise</strong></td><td>Type: <code>number</code><br>Default: <code>0.1</code><br><br>Noise coefficient applied to particle offset<br>
+</td></tr><tr><td><strong>lifetimeNoise</strong></td><td>Type: <code>number</code><br>Default: <code>0.0</code><br><br>Noise coefficient applied to particle lifetime<br>
+</td></tr><tr><td><strong>size</strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Particle scale multiplier<br>
+</td></tr><tr><td><strong>alpha</strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Opacity multiplier<br>
+</td></tr><tr><td><strong>offset</strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Offset multiplier<br>
+</td></tr><tr><td><strong>surfaceDistance</strong></td><td>Type: <code>number</code><br>Default: <code>1.0</code><br><br>Surface distance multiplier<br>
+</td></tr><tr><td><strong>sequenceColor</strong></td><td>Type: <code>Gradient&lt;TresColor&gt;</code><br>Default: <code>[[0.7, '#82dbc5'], [0.8, '#fbb03b']]</code><br><br>'<em>Sequence' props: specify how a particle changes as it "progresses". See also "mix</em>" props.<br>
 Color sequence as particles progress<br>
-</td></tr><tr><td><strong><nobr>sequenceAlpha</nobr></strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[[0.0, 0.0], [0.10, 1.0], [0.5, 1.0], [0.9, 0.0]]</code><br><br>Opacity sequence as particles progress<br>
-</td></tr><tr><td><strong><nobr>sequenceOffset</nobr></strong></td><td>Type: <code>Gradient&lt;[number, number, number]&gt;</code><br>Default: <code>[0.0, 0.0, 0.0]</code><br><br>Distance sequence as particles progress<br>
-</td></tr><tr><td><strong><nobr>sequenceNoise</nobr></strong></td><td>Type: <code>Gradient&lt;[number, number, number]&gt;</code><br>Default: <code>[0.1, 0.1, 0.1]</code><br><br>Noise sequence as particles progress<br>
-</td></tr><tr><td><strong><nobr>sequenceSize</nobr></strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[0.0, 1.0]</code><br><br>Size sequence as particles progress<br>
-</td></tr><tr><td><strong><nobr>sequenceSurfaceDistance</nobr></strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[0.05, 0.08, 0.1]</code><br><br>Distance from surface (along normal) as particles progress<br>
-</td></tr><tr><td><strong><nobr>mixColor</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.5</code><br><br>'mix*' props: A particle "progresses" with a mix of two factors:<br>
+</td></tr><tr><td><strong>sequenceAlpha</strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[[0.0, 0.0], [0.10, 1.0], [0.5, 1.0], [0.9, 0.0]]</code><br><br>Opacity sequence as particles progress<br>
+</td></tr><tr><td><strong>sequenceOffset</strong></td><td>Type: <code>Gradient&lt;[number, number, number]&gt;</code><br>Default: <code>[0.0, 0.0, 0.0]</code><br><br>Distance sequence as particles progress<br>
+</td></tr><tr><td><strong>sequenceNoise</strong></td><td>Type: <code>Gradient&lt;[number, number, number]&gt;</code><br>Default: <code>[0.1, 0.1, 0.1]</code><br><br>Noise sequence as particles progress<br>
+</td></tr><tr><td><strong>sequenceSize</strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[0.0, 1.0]</code><br><br>Size sequence as particles progress<br>
+</td></tr><tr><td><strong>sequenceSurfaceDistance</strong></td><td>Type: <code>Gradient&lt;number&gt;</code><br>Default: <code>[0.05, 0.08, 0.1]</code><br><br>Distance from surface (along normal) as particles progress<br>
+</td></tr><tr><td><strong>mixColor</strong></td><td>Type: <code>number</code><br>Default: <code>0.5</code><br><br>'mix*' props: A particle "progresses" with a mix of two factors:<br>
 <ul>
 <li>its normal "facing" the directionalLight</li>
 <li>its lifetime</li>
 </ul>
 'mix*' props specify the relationship between the two factors.<br>
 How is a particle's progress for color calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>mixAlpha</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for alpha calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>mixOffset</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for offset calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>mixSize</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>0.</code><br><br>How is a particle's progress for size calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>mixSurfaceDistance</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for surface distance calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>mixNoise</nobr></strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for lifetime calculated? (0: normal, 1: particle lifetime)<br>
-</td></tr><tr><td><strong><nobr>blending</nobr></strong></td><td>Type: <code>Blending</code><br>Default: <code>AdditiveBlending</code><br><br>Material blending<br>
-</td></tr><tr><td><strong><nobr>transparent</nobr></strong></td><td>Type: <code>boolean</code><br>Default: <code>true</code><br><br>Material transparency<br>
-</td></tr><tr><td><strong><nobr>depthWrite</nobr></strong></td><td>Type: <code>boolean</code><br>Default: <code>false</code><br><br>Material depth write<br>
+</td></tr><tr><td><strong>mixAlpha</strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for alpha calculated? (0: normal, 1: particle lifetime)<br>
+</td></tr><tr><td><strong>mixOffset</strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for offset calculated? (0: normal, 1: particle lifetime)<br>
+</td></tr><tr><td><strong>mixSize</strong></td><td>Type: <code>number</code><br>Default: <code>0.</code><br><br>How is a particle's progress for size calculated? (0: normal, 1: particle lifetime)<br>
+</td></tr><tr><td><strong>mixSurfaceDistance</strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for surface distance calculated? (0: normal, 1: particle lifetime)<br>
+</td></tr><tr><td><strong>mixNoise</strong></td><td>Type: <code>number</code><br>Default: <code>1.</code><br><br>How is a particle's progress for lifetime calculated? (0: normal, 1: particle lifetime)<br>
+</td></tr><tr><td><strong>blending</strong></td><td>Type: <code>Blending</code><br>Default: <code>AdditiveBlending</code><br><br>Material blending<br>
+</td></tr><tr><td><strong>transparent</strong></td><td>Type: <code>boolean</code><br>Default: <code>true</code><br><br>Material transparency<br>
+</td></tr><tr><td><strong>depthWrite</strong></td><td>Type: <code>boolean</code><br>Default: <code>false</code><br><br>Material depth write<br>
 </td></tr></tbody></table>
