@@ -2,8 +2,6 @@
 import { shallowRef } from 'vue'
 import { useTresContext } from '@tresjs/core'
 
-/* import { CustomShaderMaterialImpl as CustomShaderMaterial } from './material'
- */
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import type { Material } from 'three'
 
