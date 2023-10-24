@@ -2,16 +2,34 @@
 import { shallowRef } from 'vue'
 import { useTresContext } from '@tresjs/core'
 
-import { CustomShaderMaterialImpl as CustomShaderMaterial } from './material'
+/* import { CustomShaderMaterialImpl as CustomShaderMaterial } from './material'
+ */
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
+import type { Material } from 'three'
 
-const CustomShaderMaterialClass = shallowRef(null)
+interface CustomShaderMaterialProps {
+  baseMaterial: Material
+  vertexShader?: string
+  fragmentShader?: string
+  silent?: boolean
+  uniforms?: { [uniform: string]: any }
+  flatShading?: boolean
+  color?: string | number
+}
+
+const props = defineProps<CustomShaderMaterialProps>()
+
+const customShaderMaterialClass = shallowRef(null)
 
 const { extend } = useTresContext()
 extend({ CustomShaderMaterial })
 
-defineExpose({ value: CustomShaderMaterialClass })
+defineExpose({ value: customShaderMaterialClass })
 </script>
 
 <template>
-  <TresCustomShaderMaterial ref="CustomShaderMaterialClass" />
+  <TresCustomShaderMaterial
+    ref="customShaderMaterialClass"
+    :args="[props]"
+  />
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
+
 import { CustomShaderMaterial, StatsGl } from '@tresjs/cientos'
 
 import { MeshBasicMaterial } from 'three'
@@ -23,10 +24,10 @@ onMounted(async () => {
   await nextTick()
 
   onLoop(({ elapsed }) => {
-    console.log(
+    /* console.log(
       materialRef.value.value.userData.tres__name,
       materialRef.value.value.color,
-    )
+    ) */
 
     meshRef.value.rotation.x = elapsed / 7
     meshRef.value.rotation.y = elapsed / 2
@@ -48,7 +49,9 @@ onMounted(async () => {
         v-bind="materialProps"
       />
     </TresMesh>
-
-    <StatsGl />
+    <TresDirectionalLight :position="[0, 1, 0]" />
+    <Suspense>
+      <StatsGl />
+    </Suspense>
   </TresCanvas>
 </template>
