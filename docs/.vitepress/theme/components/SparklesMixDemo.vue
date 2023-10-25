@@ -29,7 +29,7 @@ useRenderLoop().onLoop(({ elapsed }) => {
       />
     </TresDirectionalLight>
     <Sphere :args="[1, 16, 16]">
-      <TresMeshNormalMaterial />
+      <TresMeshBasicMaterial color="#222" />
       <Sparkles
         :directional-light="lightRef"
         :mix-alpha="mix"

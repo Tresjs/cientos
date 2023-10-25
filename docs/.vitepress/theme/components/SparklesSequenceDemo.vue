@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Color } from 'three'
 import { TresCanvas } from '@tresjs/core'
 import { Sparkles, OrbitControls, Sphere } from '@tresjs/cientos'
 </script>
@@ -8,7 +7,7 @@ import { Sparkles, OrbitControls, Sphere } from '@tresjs/cientos'
   <TresCanvas clear-color="#333">
     <TresPerspectiveCamera :position="[0, 0, 8]" />
     <Sphere>
-      <TresMeshNormalMaterial />
+      <TresMeshBasicMaterial color="#222" />
       <Sparkles 
         :sequence-alpha="[[0., 0.], [0.6, 1.0], [0.7, 0.0], [1.0, 1.0]]"
         :sequence-color="['yellow', 'white', 'orange', 'red', 'black']" 

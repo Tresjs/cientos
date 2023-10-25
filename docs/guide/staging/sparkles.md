@@ -40,7 +40,7 @@ For example, all of these are acceptable values for `Gradient<TresColor>`:
   <SparklesSequenceDemo />
 </DocsDemo>
 
-<<< @/.vitepress/theme/components/SparklesSequenceDemo.vue{13-17}
+<<< @/.vitepress/theme/components/SparklesSequenceDemo.vue{12-16}
 
 ### Mixes
 

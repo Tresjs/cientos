@@ -23,7 +23,7 @@ useRenderLoop().onLoop(({ elapsed }) => {
       />
     </TresDirectionalLight>
     <Torus :args="[1, 0.25, 16, 48]">
-      <TresMeshNormalMaterial />
+      <TresMeshBasicMaterial color="#222" />
       <Sparkles :directional-light="lightRef" />
     </Torus>
     <OrbitControls />

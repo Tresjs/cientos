@@ -7,7 +7,7 @@ import { Sparkles, OrbitControls, TorusKnot } from '@tresjs/cientos'
   <TresCanvas clear-color="#333">
     <TresPerspectiveCamera :position="[0, 0, 5]" />
     <TorusKnot :args="[1, 0.25, 128, 16]">
-      <TresMeshNormalMaterial />
+      <TresMeshBasicMaterial color="#222" />
       <Sparkles />
     </TorusKnot>
     <OrbitControls />
