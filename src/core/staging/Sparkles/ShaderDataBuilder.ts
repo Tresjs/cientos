@@ -3,7 +3,7 @@ import type {
   GradientTresColor,
   GradientScalar,
   GradientVectorFlexibleParams,
-} from './Gradient'
+} from './../../../utils/Gradient'
 import type {
   ShaderDataEntry,
   CanvasGradientRenderer } from './ShaderData'
