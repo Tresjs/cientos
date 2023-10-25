@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-
-import { CustomShaderMaterial, StatsGl } from '@tresjs/cientos'
+import { CustomShaderMaterial, StatsGl, useTweakPane } from '@tresjs/cientos'
 
 import { MeshBasicMaterial } from 'three'
 import { shallowRef, onMounted, nextTick } from 'vue'
@@ -21,19 +20,21 @@ const materialProps = {
   varying float vWobble;
 
     void main() {
-      csm_FragColor = mix(vec4(1.0, 1.0, 0.0, 1.0), vec4(1.0, 0.0, 1.0, 1.0), vWobble);
+      float wobble = vWobble * 0.5 + 0.5;
+      csm_FragColor = mix(vec4(1.0, 1.0, 0.0, 1.0), vec4(1.0, 0.0, 1.0, 1.0), wobble);
     }
   `,
   vertexShader: `
     uniform float u_Time;
     uniform float u_WobbleSpeed;
     uniform float u_WobbleAmplitude;
+    uniform float u_WobbleFrequency;
 
     varying float vWobble;
 
     void main() {
-      float wobble = (sin(csm_Position.z * 7.0 + u_Time * u_WobbleSpeed) * 0.5 + 0.5);
-      csm_Position *= 1.0 + wobble * u_WobbleAmplitude;
+      float wobble = sin(csm_Position.z * u_WobbleFrequency + u_Time * u_WobbleSpeed);
+      csm_Position += normal * wobble * u_WobbleAmplitude;
 
       vWobble = wobble;
     }
@@ -41,17 +42,47 @@ const materialProps = {
   uniforms: {
     u_Time: { value: 0 },
     u_WobbleSpeed: { value: 3 },
-    u_WobbleAmplitude: { value: 0.3 },
+    u_WobbleAmplitude: { value: 0.07 },
+    u_WobbleFrequency: { value: 7 },
   },
 }
 
 onMounted(async () => {
   await nextTick()
 
-  onLoop(({ elapsed }) => {
-    materialProps.uniforms.u_Time.value = elapsed
+  createDebugPanel()
+
+  onLoop(() => {
+    materialProps.uniforms.u_Time.value
+			+= 0.01 * materialProps.uniforms.u_WobbleSpeed.value
   })
 })
+
+function createDebugPanel() {
+  const { pane } = useTweakPane()
+
+  const folder = pane.addFolder({
+    title: 'Settings',
+  })
+
+  folder.addInput(materialProps.uniforms.u_WobbleSpeed, 'value', {
+    label: 'Wobble Speed',
+    min: 0,
+    max: 10,
+  })
+
+  folder.addInput(materialProps.uniforms.u_WobbleAmplitude, 'value', {
+    label: 'Wobble Amplitude',
+    min: 0,
+    max: 0.2,
+  })
+
+  folder.addInput(materialProps.uniforms.u_WobbleFrequency, 'value', {
+    label: 'Wobble Frequency',
+    min: 1,
+    max: 30,
+  })
+}
 </script>
 
 <template>
@@ -62,7 +93,7 @@ onMounted(async () => {
     />
 
     <TresMesh ref="meshRef">
-      <TresTorusKnotGeometry :args="[0.6, 0.2, 256, 20]" />
+      <TresTorusKnotGeometry :args="[1, 0.3, 256, 20]" />
       <CustomShaderMaterial
         ref="materialRef"
         v-bind="materialProps"
