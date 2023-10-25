@@ -2,7 +2,6 @@
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import { Sparkles, OrbitControls, Torus, Sphere } from '@tresjs/cientos'
 import { shallowRef } from 'vue'
-import { Color } from 'three'
 
 const lightRef = shallowRef()
 
@@ -23,8 +22,8 @@ useRenderLoop().onLoop(({ elapsed }) => {
         :scale="0.1"
       />
     </TresDirectionalLight>
-    <Torus :args="[1, 0.3, 16]">
-      <TresMeshBasicMaterial :color="new Color('#222')" />
+    <Torus :args="[1, 0.25, 16, 48]">
+      <TresMeshNormalMaterial />
       <Sparkles :directional-light="lightRef" />
     </Torus>
     <OrbitControls />

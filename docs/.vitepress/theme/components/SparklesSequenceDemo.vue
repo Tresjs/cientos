@@ -8,7 +8,7 @@ import { Sparkles, OrbitControls, Sphere } from '@tresjs/cientos'
   <TresCanvas clear-color="#333">
     <TresPerspectiveCamera :position="[0, 0, 8]" />
     <Sphere>
-      <TresMeshBasicMaterial :color="new Color('#222')" />
+      <TresMeshNormalMaterial />
       <Sparkles 
         :sequence-alpha="[[0., 0.], [0.6, 1.0], [0.7, 0.0], [1.0, 1.0]]"
         :sequence-color="['yellow', 'white', 'orange', 'red', 'black']" 

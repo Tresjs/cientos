@@ -2,7 +2,6 @@
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import { Sparkles, Sphere } from '@tresjs/cientos'
 import { shallowRef } from 'vue'
-import { Color } from 'three'
 import { useControls, TresLeches } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
@@ -30,7 +29,7 @@ useRenderLoop().onLoop(({ elapsed }) => {
       />
     </TresDirectionalLight>
     <Sphere :args="[1, 16, 16]">
-      <TresMeshBasicMaterial :color="new Color('#222')" />
+      <TresMeshNormalMaterial />
       <Sparkles
         :directional-light="lightRef"
         :mix-alpha="mix"

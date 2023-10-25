@@ -10,7 +10,7 @@
 
 ### Basic
 
-<<< @/.vitepress/theme/components/SparklesDemo.vue{4,12}
+<<< @/.vitepress/theme/components/SparklesDemo.vue{3,11}
 
 ### With TresDirectionalLight
 
@@ -20,7 +20,7 @@ By default, sparkles appear on the up-facing vertices. However, you can pass a d
   <SparklesDirectionalLightDemo />
 </DocsDemo>
 
-<<< @/.vitepress/theme/components/SparklesDirectionalLightDemo.vue{7,20-25,28}
+<<< @/.vitepress/theme/components/SparklesDirectionalLightDemo.vue{6,19-24,27}
 
 ### Sequences
 
@@ -55,7 +55,7 @@ All props beginning with `:mix-` allow you to specify how a particle "progresses
   <SparklesMixDemo />
 </DocsDemo>
 
-<<< @/.vitepress/theme/components/SparklesMixDemo.vue{10-12,36-40}
+<<< @/.vitepress/theme/components/SparklesMixDemo.vue{9-11,35-39}
 
 ## Props
 
@@ -100,4 +100,4 @@ How is a particle's progress for color calculated? (0: normal, 1: particle lifet
 </td></tr><tr><td><strong>blending</strong></td><td>Type: <code>Blending</code><br>Default: <code>AdditiveBlending</code><br><br>Material blending<br>
 </td></tr><tr><td><strong>transparent</strong></td><td>Type: <code>boolean</code><br>Default: <code>true</code><br><br>Material transparency<br>
 </td></tr><tr><td><strong>depthWrite</strong></td><td>Type: <code>boolean</code><br>Default: <code>false</code><br><br>Material depth write<br>
-</td></tr></tbody></table>
+</td></tr></tbody></table>5-39
