@@ -3,16 +3,13 @@ import { shallowRef } from 'vue'
 import { useTresContext } from '@tresjs/core'
 
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
-import type { Material } from 'three'
 
 interface CustomShaderMaterialProps {
-  baseMaterial: Material
+  baseMaterial: Function
   vertexShader?: string
   fragmentShader?: string
   silent?: boolean
   uniforms?: { [uniform: string]: any }
-  flatShading?: boolean
-  color?: string | number
 }
 
 const props = defineProps<CustomShaderMaterialProps>()

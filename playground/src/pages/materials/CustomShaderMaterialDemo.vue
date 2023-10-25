@@ -17,20 +17,39 @@ const gl = {
 
 const materialProps = {
   baseMaterial: MeshBasicMaterial,
-  color: '#ffff00',
+  fragmentShader: `
+  varying float vWobble;
+
+    void main() {
+      csm_FragColor = mix(vec4(1.0, 1.0, 0.0, 1.0), vec4(1.0, 0.0, 1.0, 1.0), vWobble);
+    }
+  `,
+  vertexShader: `
+    uniform float u_Time;
+    uniform float u_WobbleSpeed;
+    uniform float u_WobbleAmplitude;
+
+    varying float vWobble;
+
+    void main() {
+      float wobble = (sin(csm_Position.z * 7.0 + u_Time * u_WobbleSpeed) * 0.5 + 0.5);
+      csm_Position *= 1.0 + wobble * u_WobbleAmplitude;
+
+      vWobble = wobble;
+    }
+  `,
+  uniforms: {
+    u_Time: { value: 0 },
+    u_WobbleSpeed: { value: 3 },
+    u_WobbleAmplitude: { value: 0.3 },
+  },
 }
 
 onMounted(async () => {
   await nextTick()
 
   onLoop(({ elapsed }) => {
-    /* console.log(
-      materialRef.value.value.userData.tres__name,
-      materialRef.value.value.color,
-    ) */
-
-    meshRef.value.rotation.x = elapsed / 7
-    meshRef.value.rotation.y = elapsed / 2
+    materialProps.uniforms.u_Time.value = elapsed
   })
 })
 </script>
@@ -49,7 +68,7 @@ onMounted(async () => {
         v-bind="materialProps"
       />
     </TresMesh>
-    <TresDirectionalLight :position="[0, 1, 0]" />
+
     <Suspense>
       <StatsGl />
     </Suspense>
