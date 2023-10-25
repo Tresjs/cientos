@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop, useTexture } from '@tresjs/core'
 import {
-	CustomShaderMaterial,
-	StatsGl,
-	useTweakPane,
-	OrbitControls,
+  CustomShaderMaterial,
+  StatsGl,
+  useTweakPane,
+  OrbitControls,
 } from '@tresjs/cientos'
 
 import { MeshMatcapMaterial } from 'three'
@@ -16,17 +16,17 @@ const meshRef = shallowRef()
 const materialRef = shallowRef()
 
 const gl = {
-	clearColor: '#82DBC5',
+  clearColor: '#82DBC5',
 }
 
 const texture01 = await useTexture({
-	matcap: '/matcap_01.png',
+  matcap: '/matcap_01.png',
 })
 
 const materialProps = {
-	baseMaterial: MeshMatcapMaterial,
-	matcap: texture01.matcap,
-	fragmentShader: `
+  baseMaterial: MeshMatcapMaterial,
+  matcap: texture01.matcap,
+  fragmentShader: `
     varying float vWobble;
 
     uniform float u_Time;
@@ -37,7 +37,7 @@ const materialProps = {
       csm_DiffuseColor = mix(csm_DiffuseColor, csm_DiffuseColor2, wobble);
     }
   `,
-	vertexShader: `
+  vertexShader: `
     uniform float u_Time;
     uniform float u_WobbleSpeed;
     uniform float u_WobbleAmplitude;
@@ -52,65 +52,71 @@ const materialProps = {
       vWobble = wobble;
     }
   `,
-	uniforms: {
-		u_Time: { value: 0 },
-		u_WobbleSpeed: { value: 3 },
-		u_WobbleAmplitude: { value: 0.07 },
-		u_WobbleFrequency: { value: 3 },
-	},
+  uniforms: {
+    u_Time: { value: 0 },
+    u_WobbleSpeed: { value: 3 },
+    u_WobbleAmplitude: { value: 0.07 },
+    u_WobbleFrequency: { value: 3 },
+  },
 }
 
 onMounted(async () => {
-	await nextTick()
+  await nextTick()
 
-	createDebugPanel()
+  createDebugPanel()
 
-	onLoop(() => {
-		materialProps.uniforms.u_Time.value +=
-			0.01 * materialProps.uniforms.u_WobbleSpeed.value
-	})
+  onLoop(() => {
+    materialProps.uniforms.u_Time.value
+			+= 0.01 * materialProps.uniforms.u_WobbleSpeed.value
+  })
 })
 
 function createDebugPanel() {
-	const { pane } = useTweakPane()
+  const { pane } = useTweakPane()
 
-	const folder = pane.addFolder({
-		title: 'Settings',
-	})
+  const folder = pane.addFolder({
+    title: 'Settings',
+  })
 
-	folder.addInput(materialProps.uniforms.u_WobbleSpeed, 'value', {
-		label: 'Wobble Speed',
-		min: 0,
-		max: 10,
-	})
+  folder.addInput(materialProps.uniforms.u_WobbleSpeed, 'value', {
+    label: 'Wobble Speed',
+    min: 0,
+    max: 10,
+  })
 
-	folder.addInput(materialProps.uniforms.u_WobbleAmplitude, 'value', {
-		label: 'Wobble Amplitude',
-		min: 0,
-		max: 0.2,
-	})
+  folder.addInput(materialProps.uniforms.u_WobbleAmplitude, 'value', {
+    label: 'Wobble Amplitude',
+    min: 0,
+    max: 0.2,
+  })
 
-	folder.addInput(materialProps.uniforms.u_WobbleFrequency, 'value', {
-		label: 'Wobble Frequency',
-		min: 1,
-		max: 30,
-	})
+  folder.addInput(materialProps.uniforms.u_WobbleFrequency, 'value', {
+    label: 'Wobble Frequency',
+    min: 1,
+    max: 30,
+  })
 }
 </script>
 
 <template>
-	<TresCanvas v-bind="gl">
-		<TresPerspectiveCamera :position="[0, 2, 4]" :look-at="[0, 0, 0]" />
+  <TresCanvas v-bind="gl">
+    <TresPerspectiveCamera
+      :position="[0, 2, 4]"
+      :look-at="[0, 0, 0]"
+    />
 
-		<OrbitControls />
+    <OrbitControls />
 
-		<TresMesh ref="meshRef">
-			<TresTorusKnotGeometry :args="[1, 0.3, 512, 32]" />
-			<CustomShaderMaterial ref="materialRef" v-bind="materialProps" />
-		</TresMesh>
+    <TresMesh ref="meshRef">
+      <TresTorusKnotGeometry :args="[1, 0.3, 512, 32]" />
+      <CustomShaderMaterial
+        ref="materialRef"
+        v-bind="materialProps"
+      />
+    </TresMesh>
 
-		<Suspense>
-			<StatsGl />
-		</Suspense>
-	</TresCanvas>
+    <Suspense>
+      <StatsGl />
+    </Suspense>
+  </TresCanvas>
 </template>
