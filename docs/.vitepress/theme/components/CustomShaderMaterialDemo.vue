@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { TresCanvas, useRenderLoop, useTexture } from '@tresjs/core'
+import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import {
   CustomShaderMaterial,
-  StatsGl,
   useTweakPane,
   OrbitControls,
 } from '@tresjs/cientos'
 
-import { MeshMatcapMaterial } from 'three'
+import { MeshBasicMaterial } from 'three'
 import { onMounted, nextTick } from 'vue'
 
 const { onLoop } = useRenderLoop()
@@ -16,13 +15,8 @@ const gl = {
   clearColor: '#82DBC5',
 }
 
-const texture01 = await useTexture({
-  matcap: '/matcap_01.png',
-})
-
 const materialProps = {
-  baseMaterial: MeshMatcapMaterial,
-  matcap: texture01.matcap,
+  baseMaterial: MeshBasicMaterial,
   fragmentShader: `
     varying float vWobble;
 
@@ -30,8 +24,7 @@ const materialProps = {
 
     void main() {
       float wobble = vWobble * 0.5 + 0.5;
-      vec4 csm_DiffuseColor2 = mix(vec4(0.0, 0.0, 0.0, 1.0), vec4(1.0, 0.0, 2.0, 1.0), wobble);
-      csm_DiffuseColor = mix(csm_DiffuseColor, csm_DiffuseColor2, wobble);
+      csm_FragColor = mix(vec4(0.0, 0.4, 1.5, 1.0), vec4(1.2, 0.6, 0.8, 1.0), wobble);
     }
   `,
   vertexShader: `
@@ -69,7 +62,7 @@ onMounted(async () => {
 })
 
 function createDebugPanel() {
-  const { pane } = useTweakPane()
+  const { pane } = useTweakPane('.debug-container')
 
   const folder = pane.addFolder({
     title: 'Settings',
@@ -108,9 +101,15 @@ function createDebugPanel() {
       <TresTorusKnotGeometry :args="[1, 0.3, 512, 32]" />
       <CustomShaderMaterial v-bind="materialProps" />
     </TresMesh>
-
-    <Suspense>
-      <StatsGl />
-    </Suspense>
   </TresCanvas>
+
+  <div class="debug-container" />
 </template>
+
+<style scoped>
+.debug-container {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+</style>
