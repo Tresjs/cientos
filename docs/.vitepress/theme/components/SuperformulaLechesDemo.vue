@@ -11,7 +11,7 @@ const { numArmsA, numArmsB, expA1 } = useControls({
   expA1: { value: 8, min: 4, max: 40, step: 0.01 },
 })
 
-const material = new MeshPhongMaterial({color:'#fbb03b', shininess:1000})
+const material = new MeshPhongMaterial({ color: '#fbb03b', shininess: 1000 })
 const directionalLight = new DirectionalLight('white', 4)
 directionalLight.position.set(1, 1, 1)
 const ambientLight = new AmbientLight('pink', 1)
@@ -36,7 +36,7 @@ const ambientLight = new AmbientLight('pink', 1)
       :exp-b3="2"
       color="orange"
     >
-    <primitive :object="material" />
+      <primitive :object="material" />
     </Superformula>
   </TresCanvas>
 </template>
