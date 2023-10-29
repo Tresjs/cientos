@@ -155,7 +155,6 @@ watch(() => [
   props.widthSegments, props.heightSegments,
 ), { immediate: true })
 
-
 const superformulaRef = shallowRef()
 
 defineExpose({
