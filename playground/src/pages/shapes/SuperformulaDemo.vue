@@ -12,8 +12,6 @@ const expB1 = shallowRef(1)
 const expB2 = shallowRef(1)
 const expB3 = shallowRef(1)
 
-const color = shallowRef('blue')
-
 const { sin, cos } = Math
 
 useRenderLoop().onLoop(({ elapsed }) => {
@@ -26,9 +24,6 @@ useRenderLoop().onLoop(({ elapsed }) => {
   expB1.value = (cos(e * Math.PI) + 2) * 30
   expB2.value = (cos(e * Math.E) + 2) * 30
   expB3.value = (cos(e * Math.SQRT2) + 2) * 30
-
-  color.value = sin(elapsed) > 0 ? 'blue' : 'red'
-
 })
 </script>
 
