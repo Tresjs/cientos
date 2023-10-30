@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { BufferAttribute, BufferGeometry } from 'three'
-import { shallowRef, watch } from 'vue'
+import { shallowRef, watch, onUnmounted } from 'vue'
 import type { TresColor } from '@tresjs/core'
-import { onUnmounted } from 'vue'
 
 export interface SuperFormulaProps {
   /**
