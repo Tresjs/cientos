@@ -7,8 +7,7 @@ import { Superformula, OrbitControls } from '@tresjs/cientos'
   <TresCanvas clear-color="#777">
     <Superformula
       :num-arms-b="24"
-      :exp-b2="30"
-      :exp-b3="20"
+      :exp-b="[40, 30, 20]"
     >
       <TresMeshNormalMaterial />
     </Superformula>

@@ -42,13 +42,9 @@ useRenderLoop().onLoop(({ elapsed }) => {
       :width-segments="256"
       :height-segments="256" 
       :num-arms-a="numArmsA"
-      :exp-a1="expA1"
-      :exp-a2="expA2"
-      :exp-a3="expA3"
+      :exp-a="[expA1, expA2, expA3]"
       :num-arms-b="numArmsB"
-      :exp-b1="expB1"
-      :exp-b2="expB2"
-      :exp-b3="expB3"
+      :exp-b="[expB1, expB2, expB3]"
     >
       <TresMeshNormalMaterial />
     </Superformula> 

@@ -28,12 +28,8 @@ const ambientLight = new AmbientLight('pink', 1)
       :height-segments="128"
       :num-arms-a="numArmsA.value"
       :num-arms-b="numArmsB.value"
-      :exp-a1="expA1.value"
-      :exp-a2="8"
-      :exp-a3="0"
-      :exp-b1="2"
-      :exp-b2="1"
-      :exp-b3="2"
+      :exp-a="[expA1.value, 8, 0]"
+      :exp-b="[2, 1, 2]"
       color="orange"
     >
       <primitive :object="material" />

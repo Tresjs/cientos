@@ -3,6 +3,8 @@ import { BufferAttribute, BufferGeometry } from 'three'
 import { shallowRef, watch, onUnmounted } from 'vue'
 import type { TresColor } from '@tresjs/core'
 
+export type Float3 = [number, number, number]
+
 export interface SuperFormulaProps {
   /**
      * Number of horizontal mesh segments
@@ -18,33 +20,17 @@ export interface SuperFormulaProps {
      */
   numArmsA?: number
   /**
-     * A's first exponent
+     * A's 3 exponents
      */
-  expA1?: number
-  /**
-     * A's second exponent
-     */
-  expA2?: number
-  /**
-     * A's third exponent
-     */
-  expA3?: number
+  expA?: Float3
   /**
      * For B, number of radial arms/ripples
      */
   numArmsB?: number
   /**
-     * B's first exponent
+     * B's 3 exponents
      */
-  expB1?: number
-  /**
-     * B's second exponent
-     */
-  expB2?: number
-  /**
-     * B's third exponent
-     */
-  expB3?: number
+  expB?: Float3
   /**
      * If no material is provided, a color for the default material
      */
@@ -55,13 +41,9 @@ const props = withDefaults(defineProps<SuperFormulaProps>(), {
   widthSegments: 32,
   heightSegments: 32,
   numArmsA: 4,
-  expA1: 40,
-  expA2: 1.3,
-  expA3: 0.9,
+  expA: () => [40, 1.3, 0.9],
   numArmsB: 4,
-  expB1: 40,
-  expB2: 1.3,
-  expB3: 0.9,
+  expB: () => [40, 1.3, 0.9],
   color: 'white',
 })
 
@@ -150,11 +132,12 @@ watch(() => [props.widthSegments, props.heightSegments], () => {
 }, { immediate: true })
 
 watch(() => [
-  props.numArmsA, props.expA1, props.expA2, props.expA3, props.numArmsB, props.expB1, props.expB2, props.expB3,
+  props.numArmsA, props.expA[0], props.expA[1], props.expA[2], 
+  props.numArmsB, props.expB[0], props.expB[1], props.expB[2],
 ], 
 () => updateGeometry(geometry.value,
-  props.numArmsA, props.expA1, props.expA2, props.expA3,
-  props.numArmsB, props.expB1, props.expB2, props.expB3,
+  props.numArmsA, props.expA[0], props.expA[1], props.expA[2],
+  props.numArmsB, props.expB[0], props.expB[1], props.expB[2],
   props.widthSegments, props.heightSegments,
 ), { immediate: true })
 
