@@ -1,30 +1,37 @@
 <script setup lang="ts">
-import type { VNode, Ref } from 'vue'
-import { computed, createVNode, toRefs, render, watchEffect, ref, watch, useAttrs, isRef, onUnmounted } from 'vue'
+import type { TresCamera, TresObject3D } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import type {
+  OrthographicCamera,
   WebGLRenderer,
-  OrthographicCamera } from 'three'
+} from 'three'
 import {
   DoubleSide,
   PlaneGeometry,
   ShaderMaterial,
-  Vector3 } from 'three'
-import type { TresCamera, TresObject3D } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-
-import type { Mutable } from '@vueuse/core'
-import vertexShader from './shaders/vertex.glsl'
-import fragmentShader from './shaders/fragment.glsl'
+  Vector3,
+} from 'three'
+import type { Ref } from 'vue'
 import { 
+  defineComponent,
+  createApp, createVNode,
+  computed, watch, watchEffect, ref, shallowRef, isRef, toRefs, useAttrs, onUnmounted 
+} from 'vue'
+
+import { type Mutable } from '@vueuse/core'
+import fragmentShader from './shaders/fragment.glsl'
+import vertexShader from './shaders/vertex.glsl'
+import {
   calculatePosition,
+  epsilon,
+  getCameraCSSMatrix,
+  getObjectCSSMatrix,
   isObjectBehindCamera,
   isObjectVisible,
+  objectScale,
   objectZIndex,
-  getCameraCSSMatrix,
-  epsilon,
-  getObjectCSSMatrix,
-  objectScale, 
 } from './utils'
+import { toValue } from 'vue'
 
 export interface HTMLProps {
   geometry?: any
@@ -103,7 +110,6 @@ const el = computed(() => document.createElement(as.value))
 
 const previousPosition = ref([0, 0])
 const previousZoom = ref(0)
-const vnode = ref<VNode>()
 
 const styles = computed(() => {
   if (transform.value) {
@@ -154,7 +160,7 @@ const isRayCastOcclusion = computed(
 watch(
   () => occlude,
   (value) => {
-    if (value && value === 'blending') {
+    if (value && toValue(value) === 'blending') {
       el.value.style.zIndex = `${Math.floor(zIndexRange.value[0] / 2)}`
       el.value.style.position = 'absolute'
       el.value.style.pointerEvents = 'none'
@@ -167,8 +173,37 @@ watch(
   },
 )
 
+const outerRef = ref<HTMLDivElement>()
+const innerRef = ref<HTMLElement>()
+
+const RootComponent = defineComponent( { name: 'WrapperComponent',
+  setup() {  
+    
+    if (transform.value) {
+      return () => createVNode('div', { ref: outerRef, style: styles.value }, [
+        createVNode('div', { ref: innerRef, style: transformInnerStyles.value }, [
+          createVNode('div', { 
+            key: meshRef.value?.uuid,
+            id: scene?.value.uuid,
+            class: attrs.class,
+            style: attrs.style, 
+          }, slots.default?.()),
+        ]),
+      ])
+    }
+    return () => createVNode('div', {
+      key: meshRef.value?.uuid,
+      id: scene?.value.uuid,
+      style: styles.value, 
+    },
+    slots.default?.())
+      
+  },
+})
+
+const app = shallowRef(createApp(RootComponent) ) 
 watch(
-  () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value, slots.default?.()],
+  () => [groupRef.value, renderer.value] as [TresObject3D, THREE.WebGLRenderer],
   ([group, _renderer]: [TresObject3D | null, WebGLRenderer]): void => {
     if (group && _renderer) {
       const target = portal?.value || _renderer.domElement
@@ -185,32 +220,10 @@ watch(
         el.value.style.cssText 
         = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;`
       }
-
       if (target) {
         target.parentNode?.appendChild(el.value)
+        !el.value.dataset['v-app'] && app.value.mount(el.value)
       }
-
-      if (transform.value) {
-        vnode.value = createVNode('div', { id: 'outer', style: styles.value }, [
-          createVNode('div', { id: 'inner', style: transformInnerStyles.value }, [
-            createVNode('div', { 
-              key: meshRef.value?.uuid,
-              id: scene?.value.uuid,
-              class: attrs.class,
-              style: attrs.style, 
-            }, slots.default?.()),
-          ]),
-        ])
-      }
-      else {
-        vnode.value = createVNode('div', {
-          key: meshRef.value?.uuid,
-          id: scene?.value.uuid,
-          style: styles.value, 
-        },
-        slots.default?.())
-      }
-      render(vnode.value, el.value)
     }
   },
 )
@@ -247,8 +260,8 @@ onLoop(() => {
       let raytraceTarget: null | undefined | boolean | TresObject3D[] = false
 
       if (isRayCastOcclusion.value) {
-        if (Array.isArray(occlude?.value)) {
-          raytraceTarget = occlude?.value
+        if (occlude?.value && Array.isArray(occlude.value)) {
+          raytraceTarget = occlude.value as unknown as TresObject3D[]
         }
         else if (occlude?.value !== 'blending') {
           raytraceTarget = [scene.value as unknown as TresObject3D]
@@ -304,12 +317,12 @@ onLoop(() => {
         el.value.style.width = `${sizes.width.value}px`
         el.value.style.height = `${sizes.height.value}px`
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
-
-        if (vnode.value?.el && vnode.value?.children) {
-          vnode.value.el.style.willChange = 'transform'
-          vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
-          vnode.value.children[0].willChange = 'transform'
-          vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
+        
+        if (outerRef.value && innerRef.value) {
+          outerRef.value.style.willChange = 'transform' 
+          outerRef.value.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
+          innerRef.value.style.willChange = 'transform'
+          innerRef.value.style.transform = getObjectCSSMatrix(
             matrix,
             1 / ((distanceFactor?.value || 10) / 400),
           )
@@ -330,8 +343,8 @@ onLoop(() => {
 
   if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
     if (transform.value) {
-      if (vnode.value?.el && vnode.value?.children) {
-        const el = vnode.value?.children[0]
+      if (app.value._container) {
+        const el = app.value._container.children[0]
 
         if (el?.clientWidth && el?.clientHeight) {
           const { isOrthographicCamera } = camera.value as OrthographicCamera

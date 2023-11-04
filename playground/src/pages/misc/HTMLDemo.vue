@@ -43,7 +43,7 @@ const isActive = ref(false)
         :occlude="[sphereRef]"
       >
         <h1
-          class="text-xs p-0.5 rounded"
+          class="text-xs p-0.5 rounded transition-colors"
           :class="isActive ? 'bg-dark' : 'bg-white'"
         >
           Box
