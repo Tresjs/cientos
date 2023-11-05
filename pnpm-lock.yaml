@@ -1,16 +1,12 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
     dependencies:
       '@tresjs/core':
-        specifier: 3.3.0
-        version: 3.3.0(three@0.157.0)(vue@3.3.4)
+        specifier: 3.5.0
+        version: 3.5.0(three@0.157.0)(vue@3.3.4)
       '@vueuse/core':
         specifier: ^10.5.0
         version: 10.5.0(vue@3.3.4)
@@ -134,8 +130,8 @@ importers:
   playground:
     dependencies:
       '@tresjs/core':
-        specifier: 3.3.0
-        version: 3.3.0(three@0.157.0)(vue@3.3.4)
+        specifier: 3.5.0
+        version: 3.5.0(three@0.157.0)(vue@3.3.4)
       vue-router:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
@@ -1029,8 +1025,8 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@tresjs/core@3.3.0(three@0.157.0)(vue@3.3.4):
-    resolution: {integrity: sha512-kG+tBCRUvBBtaSWQkTkEQkYOhgvMoOwperT2ZmeIIK0tGXITNq+GY7ys6v5d8eFcAh+npY9us461j66VDU7Y0w==}
+  /@tresjs/core@3.5.0(three@0.157.0)(vue@3.3.4):
+    resolution: {integrity: sha512-kh9QoLMWfkO2V4lytdJTARhfpC+Hf8JH/aTLsqYOirhHla4tTahQn5lHVrFwgkYjES/Qwr+UX84U2J6CQHBT3g==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.3'
@@ -6847,3 +6843,7 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
