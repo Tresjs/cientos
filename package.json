@@ -2,7 +2,7 @@
   "name": "@tresjs/cientos",
   "type": "module",
   "version": "3.5.1",
-  "packageManager": "pnpm@8.4.0",
+  "packageManager": "pnpm@8.10.2",
   "description": "Collection of useful helpers and fully functional, ready-made abstractions for Tres",
   "author": "Alvaro Saburido <hola@alvarosaburido.dev> (https://github.com/alvarosabu/)",
   "license": "MIT",
@@ -41,6 +41,7 @@
     "access": "public"
   },
   "scripts": {
+    "dev": "cd playground && pnpm dev",
     "playground": "cd playground && pnpm dev",
     "build": "vite build",
     "release": "release-it",
