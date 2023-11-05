@@ -91,6 +91,6 @@
     "vite-plugin-dts": "3.6.0",
     "vite-plugin-glsl": "^1.1.2",
     "vite-svg-loader": "^4.0.0",
-    "vitepress": "1.0.0-rc.22"
+    "vitepress": "1.0.0-rc.25"
   }
 }
