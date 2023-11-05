@@ -7,6 +7,7 @@ import glsl from 'vite-plugin-glsl'
 import UnoCSS from 'unocss/vite'
 import { templateCompilerOptions } from '@tresjs/core'
 import { qrcode } from 'vite-plugin-qrcode'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
