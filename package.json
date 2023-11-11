@@ -66,7 +66,7 @@
     "three-stdlib": "^2.27.3"
   },
   "devDependencies": {
-    "@release-it/conventional-changelog": "^7.0.2",
+    "@release-it/conventional-changelog": "^8.0.0",
     "@tresjs/core": "^3.2.1",
     "@tresjs/eslint-config-vue": "^0.2.1",
     "@tweakpane/core": "^1.1.9",
