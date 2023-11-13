@@ -38,6 +38,9 @@ export default defineConfig({
           { text: 'MouseParallax', link: '/guide/abstractions/mouse-parallax' },
           { text: 'Lensflare', link: '/guide/abstractions/lensflare' },
           { text: 'Reflector', link: '/guide/abstractions/reflector' },
+          { text: 'GlobalAudio', link: '/guide/abstractions/global-audio' },
+          { text: 'Fbo', link: '/guide/abstractions/fbo' },
+          { text: 'useFBO', link: '/guide/abstractions/use-fbo' },
         ],
       },
       {
@@ -70,6 +73,7 @@ export default defineConfig({
         items: [
           { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
+          { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
         ],
       },
       {
@@ -77,14 +81,17 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Box', link: '/guide/shapes/box' },
+          { text: 'CatmullRomCurve3', link: '/guide/shapes/catmullromcurve3' },
           { text: 'Circle', link: '/guide/shapes/circle' },
           { text: 'Cone', link: '/guide/shapes/cone' },
           { text: 'Dodecahedron', link: '/guide/shapes/dodecahedron' },
           { text: 'Icosahedron', link: '/guide/shapes/icosahedron' },
+          { text: 'Line2', link: '/guide/shapes/line2' },
           { text: 'Octahedron', link: '/guide/shapes/octahedron' },
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
+          { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
           { text: 'Torus', link: '/guide/shapes/torus' },
           { text: 'TorusKnot', link: '/guide/shapes/torus-knot' },
@@ -101,7 +108,8 @@ export default defineConfig({
           { text: 'Stars', link: '/guide/staging/stars' },
           { text: 'Smoke', link: '/guide/staging/smoke' },
           { text: 'Contact Shadows', link: '/guide/staging/contact-shadows' },
-          { text: 'Precipitation', link: '/guide/staging/precipitation' }],
+          { text: 'Precipitation', link: '/guide/staging/precipitation' },
+          { text: 'Sparkles', link: '/guide/staging/sparkles' }],
       },
       {
         text: 'Misc',
@@ -120,6 +128,7 @@ export default defineConfig({
           { text: 'v-log', link: '/guide/directives/v-log' },
           { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
           { text: 'v-always-look-at', link: '/guide/directives/v-always-look-at' },
+          { text: 'v-distance-to', link: '/guide/directives/v-distance-to' },
         ],
       },
     ],

@@ -24,4 +24,19 @@ export const abstractionsRoutes = [
     name: 'ReflectorMeshDemo',
     component: () => import('../../pages/abstractions/ReflectorMeshDemo.vue'),
   },
+  {
+    path: '/abstractions/global-audio',
+    name: 'GlobalAudio',
+    component: () => import('../../pages/abstractions/GlobalAudioDemo.vue'),
+  },
+  {
+    path: '/abstractions/fbo',
+    name: 'Fbo',
+    component: () => import('../../pages/abstractions/FBODemo.vue'),
+  },
+  {
+    path: '/abstractions/use-fbo',
+    name: 'useFbo',
+    component: () => import('../../pages/abstractions/useFBODemo.vue'),
+  },
 ]

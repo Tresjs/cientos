@@ -6,6 +6,7 @@ import { resolve } from 'pathe'
 import glsl from 'vite-plugin-glsl'
 import UnoCSS from 'unocss/vite'
 import { templateCompilerOptions } from '@tresjs/core'
+import { qrcode } from 'vite-plugin-qrcode'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,8 +24,14 @@ export default defineConfig({
       /* options */
     }),
     UnoCSS({
-      /* options */
+      theme: {
+        colors: {
+          'cientos-blue': '#82dbc5',
+          'cientos-orange': '#fbb03b',
+        },
+      },
     }),
+    qrcode(),
   ],
   resolve: {
     alias: {

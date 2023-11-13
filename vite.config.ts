@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
 import banner from 'vite-plugin-banner'
 import dts from 'vite-plugin-dts'
 import analyze from 'rollup-plugin-analyzer'
-import { visualizer } from 'rollup-plugin-visualizer'
+
+/* import { visualizer } from 'rollup-plugin-visualizer' */
 import { templateCompilerOptions } from '@tresjs/core'
 
 import { resolve } from 'pathe'
@@ -39,7 +40,6 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'trescientos',
       fileName: 'trescientos',
-      formats: ['es'],
     },
     copyPublicDir: false,
     watch: {
@@ -47,8 +47,8 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [
-        /*  analyze(),
-        visualizer({
+        analyze(),
+        /* visualizer({
           gzipSize: true,
           brotliSize: true,
           open: true,
