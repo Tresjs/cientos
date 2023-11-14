@@ -1,14 +1,15 @@
 # Reflector
 
+<DocsDemo>
+  <ReflectorDemo />
+</DocsDemo>
+
 The `cientos` package provides an abstraction of the [Reflector class](https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js), which creates a Mesh showing a real-time reflection of your scene.  This Mesh extends from `Mesh` so all the default props can be passed as well:
 
 ## Usage
 
-```vue{2}
-<Reflector :rotation="[-Math.PI * 0.5, 0, 0]" :position-y="-2" color="#F7F7F7">
-  <TresCircleGeometry :args="[10, 10]" />
-</Reflector>
-```
+<<< @/.vitepress/theme/components/ReflectorDemo.vue{6,26-32}
+
 ## Props
 
 | Prop              | Description                                          | Default                   |
