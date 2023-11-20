@@ -91,7 +91,7 @@
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-dts": "3.6.3",
     "vite-plugin-glsl": "^1.1.2",
-    "vite-svg-loader": "^4.0.0",
+    "vite-svg-loader": "^5.0.0",
     "vitepress": "1.0.0-rc.25"
   }
 }
