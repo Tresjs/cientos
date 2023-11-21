@@ -82,7 +82,6 @@ const { height, width } = useWindowSize()
 let initCameraPos = 0
 const initialized = ref(false)
 
-const progress = ref(0)
 const progressScroll = ref(0)
 const scrollNodeY = ref(0)
 const direction = props.horizontal ? 'x' : 'y'
@@ -112,21 +111,21 @@ watch(
   },
 )
 
+function updateScroll(value: number) {
+  progressScroll.value = (value / height.value / (scrollNodeY.value / height.value - 1))
+  emit('update:modelValue', progressScroll.value)
+}
+
 watch(windowY, (value) => {
   if (!isScrolling.value && !props.htmlScroll) return
-  progressScroll.value = (value / height.value / (scrollNodeY.value / height.value - 1))
-  progress.value = -1 * progressScroll.value
-  emit('update:modelValue', progressScroll.value)
+  updateScroll(value)
 })
 watch(containerY, (value) => {
-  progressScroll.value = (value / height.value / (scrollNodeY.value / height.value))
-  progress.value = -1 * progressScroll.value
-  emit('update:modelValue', progressScroll.value)
+  updateScroll(value)
+
 })
 watch(containerX, (value) => {
-  progressScroll.value = (value / width.value / (scrollNodeY.value / width.value - 1))
-  progress.value = +progressScroll.value
-  emit('update:modelValue', progressScroll.value)
+  updateScroll(value)
 })
 
 watch(
@@ -143,6 +142,8 @@ watch(
         canvas.style.left = '0'
       }
       scrollNodeY.value = document.body.scrollHeight
+      // Init scroll value
+      updateScroll(windowY.value)
     }
     else {
       const fixed = document.createElement('div')
@@ -174,9 +175,13 @@ watch(
         canvas.style.width = '100%'
       }
       scrollContainer.appendChild(fill)
-      value.domElement.parentNode.style.position = 'relative'
-      value?.domElement?.parentNode?.appendChild(scrollContainer)
+      if (value?.domElement?.parentNode) {
+        value.domElement.parentNode.style.position = 'relative'
+        value.domElement.parentNode.appendChild(scrollContainer)
+      }
       scrollNodeY.value = props.horizontal ? width.value * props.pages : height.value * props.pages
+      // Init scroll value
+      updateScroll(props.horizontal ? containerX.value : containerY.value)
     }
   },
   {
@@ -189,7 +194,7 @@ const { onLoop } = useRenderLoop()
 onLoop(() => {
   if (camera.value?.position) {
     const delta
-      = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
+      = (-progressScroll.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
 
     camera.value.position[direction] += delta
     if (wrapperRef.value.children.length > 0) {
