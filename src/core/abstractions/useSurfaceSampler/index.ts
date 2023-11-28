@@ -1,4 +1,4 @@
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import {
   Vector3,
   Color,
@@ -6,9 +6,9 @@ import {
   InterleavedBuffer,
 } from 'three'
 import type { Mesh, InstancedMesh } from 'three'
-import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
+import { MeshSurfaceSampler } from 'three-stdlib'
 
-export interface useSamplerProps {
+export interface useSurfaceSamplerProps {
   /*
    * A function that can be .
    *
@@ -78,15 +78,16 @@ type TransformPayload = SamplePayload & {
 
 export type TransformFn = (payload: TransformPayload, i: number) => void
 
-export const useSampler = (
+export const useSurfaceSampler = (
   mesh: Mesh,
   count: number = 16,
   instanceMesh?: InstancedMesh | null,
   weight?: string,
   transform?: TransformFn,
 ) => {
-  const buffer = ref(new InterleavedBuffer(new Float32Array(count * 16), 16))
-  
+  const arr = new Float32Array(count * 16)
+  const buffer = ref(new InterleavedBuffer(arr, 16))
+
   const updateBuffer = () => {
     if (!mesh) return
 

@@ -2,10 +2,10 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { InstancedMesh, Mesh } from 'three'
-import type { useSamplerProps } from '.'
-import { useSampler } from '.'
+import type { useSurfaceSamplerProps } from '.'
+import { useSurfaceSampler } from '.'
 
-const props = defineProps<useSamplerProps>()
+const props = defineProps<useSurfaceSamplerProps>()
 
 const samplerRef = ref()
 const instancedRef = ref()
@@ -16,7 +16,7 @@ watchEffect(() => {
 
   meshToSampleRef.value = props.mesh ?? (samplerRef.value?.children.find((c: any) => c.type === 'Mesh') as Mesh)
 
-  useSampler(meshToSampleRef.value, props.count, instancedRef.value, props.weight, props.transform)
+  useSurfaceSampler(meshToSampleRef.value, props.count, instancedRef.value, props.weight, props.transform)
 })
 
 defineExpose({

@@ -6,10 +6,10 @@ import MouseParallax from './MouseParallax.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
 import Fbo from './useFBO/component.vue'
-import Sampler from './useSampler/component.vue'
+import Sampler from './useSurfaceSampler/component.vue'
 
 export * from './useFBO/'
-export * from './useSampler/'
+export * from './useSurfaceSampler'
 export * from '../staging/useEnvironment'
 export {
   Text3D,

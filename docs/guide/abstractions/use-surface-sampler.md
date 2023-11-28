@@ -1,14 +1,14 @@
-# useSampler <Badge type="warning" text="^3.7.0" />
+# useSurfaceSampler <Badge type="warning" text="^3.7.0" />
 
 A hook to obtain the result of the <Sampler /> as a buffer. Useful for driving anything other than InstancedMesh via the Sampler.
 
 <DocsDemo>
-  <UseSamplerDemo />
+  <UseSurfaceSamplerDemo />
 </DocsDemo>
 
 ## Usage
 
-<<< @/.vitepress/theme/components/UseSamplerDemo.vue{4,10,19-29}
+<<< @/.vitepress/theme/components/UseSurfaceSamplerDemo.vue{4,10,19-29}
 
 ## Props
 

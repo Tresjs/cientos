@@ -40,9 +40,9 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/useFBODemo.vue'),
   },
   {
-    path: '/abstractions/use-sampler',
+    path: '/abstractions/use-surface-sampler',
     name: 'useSampler',
-    component: () => import('../../pages/abstractions/useSampler.vue'),
+    component: () => import('../../pages/abstractions/useSurfaceSampler.vue'),
   },
   {
     path: '/abstractions/sampler',
