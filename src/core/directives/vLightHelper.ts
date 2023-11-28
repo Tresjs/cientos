@@ -1,6 +1,6 @@
 import { useLogger } from '@tresjs/core'
 import { DirectionalLightHelper, PointLightHelper, SpotLightHelper, HemisphereLightHelper } from 'three'
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js'
+import { RectAreaLightHelper } from 'three-stdlib'
 
 const { logWarning } = useLogger()
 
