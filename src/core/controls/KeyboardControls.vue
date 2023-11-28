@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { ref, shallowRef, toRefs } from 'vue'
+import { ref, shallowRef, toRefs, watch } from 'vue'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { PointerLockControls } from 'three-stdlib'
-import { onKeyStroke } from '@vueuse/core'
+import { onKeyStroke, onKeyDown, onKeyUp, useMagicKeys } from '@vueuse/core'
+
+export interface HeadBobbingOptions {
+  speed?: number
+  amplitude?: number
+}
+export interface Actions {
+  keys?: string[] | string
+  action?: Function
+}
 
 export interface KeyboardControlsProps {
   /**
@@ -38,6 +47,38 @@ export interface KeyboardControlsProps {
    **/
   right?: string[] | string
   /**
+   * Key to go up (only without PointerLockControls).
+   * @type {string}
+   * @default 'Shift+w'
+   * @memberof KeyboardControlsProps
+   *
+   **/
+  up?: string
+  /**
+   * Key to go down (only without PointerLockControls).
+   * @type {string}
+   * @default 'Shift+s'
+   * @memberof KeyboardControlsProps
+   *
+   **/
+  down?: string
+  /**
+   * Simple callback for an optional primary action.
+   * @type {Actions}
+   * @default '{ keys: [e, E], action: () => {}}'
+   * @memberof KeyboardControlsProps
+   *
+   **/
+  primaryAction?: Actions
+  /**
+   * Simple callback for an optional secondary action.
+   * @type {Actions}
+   * @default '{keys: [f, F], action: () => {}}'
+   * @memberof KeyboardControlsProps
+   *
+   **/
+  secondaryAction?: Actions
+  /**
    * Key to jump (only with PointerLockControls).
    * @type {string[]}
    * @default 'space'
@@ -46,7 +87,7 @@ export interface KeyboardControlsProps {
    **/
   jump?: string[] | string
   /**
-   * Default gravity number for jump.
+   * Gravity value for the jump.
    * @type {number}
    * @default 9.8
    * @memberof KeyboardControlsProps
@@ -76,110 +117,182 @@ export interface KeyboardControlsProps {
    * @memberof KeyboardControlsProps
    *
    **/
-  is2D?: boolean
+  headBobbingOptions?: HeadBobbingOptions
 }
-// TODO: remove disable once eslint is updated to support vue 3.3
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const props = withDefaults(defineProps<KeyboardControlsProps>(), {
   forward: () => ['w', 'W'],
   back: () => ['s', 'S'],
   left: () => ['a', 'A'],
   right: () => ['d', 'D'],
-  jump: () => [' '],
-  gravity: 9.8,
+  up: () => 'Shift+w',
+  down: () => 'Shift+s',
+  primaryAction: () => ({ keys: ['e', 'E'], action: () => {} }),
+  secondaryAction: () => ({ keys: ['f', 'F'], action: () => {} }),
   moveSpeed: 0.1,
+  jump: ' ',
+  gravity: 9.8,
   headBobbing: false,
-  is2D: false,
+  headBobbingOptions: () => ({
+    speed: 5,
+    amplitude: 0.3,
+  }),
 })
 
-const { forward, back, left, right, jump, gravity, moveSpeed, headBobbing, is2D } = toRefs(props)
+const emit = defineEmits(['change'])
+
+const {
+  forward,
+  back,
+  left,
+  right,
+  up,
+  down,
+  jump,
+  primaryAction,
+  secondaryAction,
+  gravity,
+  moveSpeed,
+  headBobbing,
+  headBobbingOptions,
+} = toRefs(props)
 
 const { camera: activeCamera, controls } = useTresContext()
 
+// General options
 const xMove = ref(0)
 const zMove = ref(0)
-const isHeadBobbing = ref(false)
-const isJumping = ref(false)
-const HBSpeed = 5
-const jumpSpeed = 6
-const HBAmplitude = 0.3
-const initJumpTime = ref(0)
+const yMove = ref(0)
 const wrapperRef = shallowRef()
-const _forward = is2D.value ? 'y' : 'z'
-const initCameraPos = activeCamera.value.position?.y || 0
+const initCameraPos = activeCamera?.value?.position?.y ?? 0
+const isMoving = ref(false)
 
-// FORWARD DIRECTION MOVEMENTS
-onKeyStroke(
-  forward.value,
-  () => {
-    isHeadBobbing.value = true
-    zMove.value = moveSpeed.value
-  },
-  { eventName: 'keydown' },
+onKeyDown(
+  primaryAction.value.keys,
+  () => primaryAction.value.action(),
 )
-onKeyStroke(
-  back.value,
-  () => {
-    isHeadBobbing.value = true
-    zMove.value = -moveSpeed.value
-  },
-  { eventName: 'keydown' },
+onKeyDown(
+  secondaryAction.value.keys,
+  () => primaryAction.value.action(),
 )
-onKeyStroke(
-  [...forward.value, ...back.value],
-  () => {
-    isHeadBobbing.value = false
-    zMove.value = 0
-  },
-  { eventName: 'keyup' },
-)
-// X DIRECTION MOVEMENTS
-onKeyStroke(
-  left.value,
-  () => {
-    isHeadBobbing.value = true
-    xMove.value = -moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  right.value,
-  () => {
-    isHeadBobbing.value = true
-    xMove.value = moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  [...left.value, ...right.value],
-  () => {
-    isHeadBobbing.value = false
-    xMove.value = 0
-  },
-  { eventName: 'keyup' },
-)
-//JUMP BUTTON
-onKeyStroke(jump.value, () => {
-  if (!isJumping.value) initJumpTime.value = Date.now()
-  isJumping.value = true
-})
-
-// HEAD BOBBING
-const headBobbingMov = (elapsedTime: number) => isHeadBobbing.value
-  ? Math.sin(elapsedTime * HBSpeed) * HBAmplitude + initCameraPos
+// HeadBobbing options
+const headBobbingSpeed = headBobbingOptions.value.speed ?? 5
+const headBobbingSpeedAmplitude = headBobbingOptions.value.amplitude ?? 0.3
+const headBobbingMov = (elapsedTime: number) => isMoving.value
+  ? Math.sin(elapsedTime * headBobbingSpeed) * headBobbingSpeedAmplitude + initCameraPos
   : initCameraPos
 
-// JUMP
-const getJumpTime = () => ((Date.now() - initJumpTime.value) / 1000) * 3
-const getJumpDistance = (jumpTime: number) => initCameraPos + jumpSpeed * jumpTime - 0.5 * gravity.value * jumpTime ** 2
+// Jump options
+const isJumping = ref(false)
+const jumpDistance = ref(0)
+const jumpGravity = gravity.value ?? 9.8
+const initJumpTime = ref(0)
 
+const getJumpTime = () => ((Date.now() - initJumpTime.value) / 1000) * 3
+const getJumpDistance = (jumpTime: number) => initCameraPos + 6 * jumpTime - 0.5 * jumpGravity * jumpTime ** 2
 const getJump = () => {
   if (isJumping.value) {
-    const jumpDistance = getJumpDistance(getJumpTime())
-    if (jumpDistance <= initCameraPos) isJumping.value = false
-    return jumpDistance
+    jumpDistance.value = getJumpDistance(getJumpTime())
+    if (jumpDistance.value <= initCameraPos) {
+      stopMovement()
+      isJumping.value = false
+    }
+    return jumpDistance.value
   }
   return 0
+}
+//JUMP BUTTON
+onKeyStroke(jump.value, () => {
+  if (controls.value instanceof PointerLockControls) {
+    if (!isJumping.value) initJumpTime.value = Date.now()
+    startMovement()
+    isJumping.value = true
+  }
+})
+
+// UP/DOWN DIRECTION MOVEMENTS
+const keys = useMagicKeys()
+const combinationUp = keys[up.value]
+const combinationDown = keys[down.value]
+
+watch(combinationUp, (v) => {
+  if (v) {
+    startMovement()
+    yMove.value = moveSpeed.value
+  }
+  else {
+    yMove.value = 0
+    stopMovement()
+  }
+})
+watch(combinationDown, (v) => {
+  if (v) {
+    startMovement()
+    yMove.value = -moveSpeed.value
+  }
+  else {
+    yMove.value = 0
+    stopMovement()
+  }
+})
+
+// FORWARD DIRECTION MOVEMENTS
+onKeyDown(
+  forward.value,
+  () => {
+    if (yMove.value) return
+    startMovement()
+    zMove.value = moveSpeed.value
+  },
+)
+onKeyDown(
+  back.value,
+  () => {
+    if (yMove.value) return
+    startMovement()
+    zMove.value = -moveSpeed.value
+  },
+)
+onKeyUp(
+  [...forward.value, ...back.value],
+  () => {
+    zMove.value = 0
+    stopMovement()
+  },
+)
+// X DIRECTION MOVEMENTS
+onKeyDown(
+  left.value,
+  () => {
+    startMovement()
+    xMove.value = -moveSpeed.value
+  },
+)
+onKeyDown(
+  right.value,
+  () => {
+    startMovement()
+    xMove.value = moveSpeed.value
+  },
+)
+onKeyUp(
+  [...left.value, ...right.value],
+  () => {
+    xMove.value = 0
+    stopMovement()
+  },
+)
+
+const startMovement = () => {
+  isMoving.value = true
+  emit('change', true)
+}
+
+const stopMovement = () => {
+  if (zMove.value === 0 && xMove.value === 0) {
+    isMoving.value = false
+    emit('change', false)
+  }
 }
 
 const { onLoop } = useRenderLoop()
@@ -189,14 +302,15 @@ onLoop(({ elapsed }) => {
   if (controls.value instanceof PointerLockControls && controls.value?.isLocked) {
     controls.value.moveForward(zMove.value)
     controls.value.moveRight(xMove.value)
-    if (activeCamera.value.position) {
+    if (activeCamera?.value?.position) {
       activeCamera.value.position.y = headBobbing.value ? headBobbingMov(elapsed) : initCameraPos
       activeCamera.value.position.y += getJump()
     }
   }
-  else if (wrapperRef.value.children.length > 0 && !(controls.value instanceof PointerLockControls)) {
+  else if (wrapperRef.value.children.length > 0) {
     wrapperRef.value.position.x += xMove.value
-    wrapperRef.value.position[_forward] += is2D.value ? zMove.value : -zMove.value
+    wrapperRef.value.position.y += yMove.value
+    wrapperRef.value.position.z += -zMove.value
   }
 })
 </script>

@@ -7,6 +7,7 @@ export const Stats = defineComponent({
   props: {
     showPanel: {
       type: Number,
+      required: false,
       default: 0,
     },
   },
@@ -18,7 +19,7 @@ export const Stats = defineComponent({
     expose({ stats })
 
     const node = document.body
-    stats.showPanel(props.showPanel || 0)
+    stats.showPanel(props.showPanel)
     node?.appendChild(stats.dom)
 
     const { onBeforeLoop, onAfterLoop, resume } = useRenderLoop()
