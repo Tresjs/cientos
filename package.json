@@ -57,7 +57,7 @@
     "vue": ">=3.3"
   },
   "dependencies": {
-    "@tresjs/core": "3.5.0",
+    "@tresjs/core": "3.6.0",
     "@vueuse/core": "^10.6.1",
     "camera-controls": "^2.7.2",
     "stats-gl": "^2.0.1",
