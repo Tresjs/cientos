@@ -117,9 +117,6 @@ importers:
       '@tresjs/cientos':
         specifier: workspace:^3.4.0
         version: link:..
-      '@tweakpane/plugin-essentials':
-        specifier: ^0.2.0
-        version: 0.2.0(tweakpane@4.0.1)
     devDependencies:
       '@tresjs/leches':
         specifier: ^0.13.0
@@ -1165,14 +1162,6 @@ packages:
   /@tweakpane/core@1.1.9:
     resolution: {integrity: sha512-9tq+KAhaqPiOgsFyLPAz1IMXkVfhRqxGzAgy1ps3As6o3W7XjnU7sev6OlD/Z+Pzw8uZVMukkSHf2e0uCU6u0A==}
     dev: true
-
-  /@tweakpane/plugin-essentials@0.2.0(tweakpane@4.0.1):
-    resolution: {integrity: sha512-/kO90nfm0y0CYJPUvoNrjXhjNoqr+RaoySIdJmy++pb5vrSHi/DXdxG/sPszUPZggDY9M31RTacnxXi6Dv7r8Q==}
-    peerDependencies:
-      tweakpane: ^4.0.0-beta.2
-    dependencies:
-      tweakpane: 4.0.1
-    dev: false
 
   /@types/argparse@1.0.38:
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
@@ -6472,10 +6461,6 @@ packages:
   /tweakpane@3.1.10:
     resolution: {integrity: sha512-rqwnl/pUa7+inhI2E9ayGTqqP0EPOOn/wVvSWjZsRbZUItzNShny7pzwL3hVlaN4m9t/aZhsP0aFQ9U5VVR2VQ==}
     dev: true
-
-  /tweakpane@4.0.1:
-    resolution: {integrity: sha512-1JmmGbF4h2zuFbpN1XfIWcV0kLbBUgSXpR1QtW19vJFx44asnCrufRSvd69OItOFMEWgbVtoiWM2uDPUEUKcMQ==}
-    dev: false
 
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
