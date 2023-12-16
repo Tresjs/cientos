@@ -63,8 +63,6 @@ export default defineConfig({
           { text: 'GlobalAudio', link: '/guide/abstractions/global-audio' },
           { text: 'Fbo', link: '/guide/abstractions/fbo' },
           { text: 'useFBO', link: '/guide/abstractions/use-fbo' },
-          { text: 'useSurfaceSampler', link: '/guide/abstractions/use-surface-sampler' },
-          { text: 'Sampler', link: '/guide/abstractions/sampler' },
         ],
       },
       {
@@ -139,6 +137,7 @@ export default defineConfig({
         text: 'Misc',
         collapsed: true,
         items: [
+          { text: 'useTweakpane', link: '/guide/misc/use-tweakpane' },
           { text: 'Stats', link: '/guide/misc/stats' },
           { text: 'Html', link: '/guide/misc/html-component' },
           { text: 'StatsGl', link: '/guide/misc/stats-gl' },
