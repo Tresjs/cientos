@@ -57,15 +57,16 @@ const rocks = new Array(ROCK_COUNT).fill(0).map((_, i) => ({
 
 const rockMaterial = new MeshPhongMaterial({ color: 0x123141, specular: 0xffffff, shininess: 1000 })
 
-const [seedRef, scaleRef] = useControls(
+const { seed: seedRef, scale: scaleRef } = useControls(
   {
     seed: { value: 847, min: 0, max: 2 ** 31, step: 1 },
     scale: { value: 1, min: 0, max: 2, step: 0.01 },
   })
 
 {
-  const [oversizeSize, oversizeSizeRand, oversizeNumElements,
-    oversizeNumElementsRand, oversizeColorA, oversizeColorB, oversizeColorC, oversizeSeed] = useControls(
+  const { OversizeSize0: oversizeSize, OversizeSizeRand0: oversizeSizeRand, OversizeCount0: oversizeNumElements,
+    OversizeCountRand0: oversizeNumElementsRand, OversizeColorA0: oversizeColorA, 
+    OversizeColorB0: oversizeColorB, OversizeColorC0: oversizeColorC, OversizeSeed0: oversizeSeed } = useControls(
     'Oversize',
     {
       size0: { value: 768, min: 0, max: 1024, step: 1 },
@@ -78,8 +79,9 @@ const [seedRef, scaleRef] = useControls(
       seed0: { value: 930104199, min: 0, max: 2 ** 31, step: 1 },
     })
 
-  const [raysSize, raysSizeRand, raysNumElements, raysNumElementsRand,
-    raysColorA, raysColorB, raysColorC, raysSeed] = useControls(
+  const { RaysSize1: raysSize, RaysSizeRand1: raysSizeRand, RaysCount1: raysNumElements, 
+    RaysCountRand1: raysNumElementsRand, RaysColorA1: raysColorA, RaysColorB1: raysColorB, 
+    RaysColorC1: raysColorC, RaysSeed1: raysSeed } = useControls(
     'Rays',
     {
       size1: { value: 180, min: 0, max: 512, step: 1 },
@@ -92,8 +94,9 @@ const [seedRef, scaleRef] = useControls(
       seed1: { value: 1021142105, min: 0, max: 2 ** 31, step: 1 },
     })
 
-  const [bodySize, bodySizeRand, bodyNumElements, bodyNumElementsRand,
-    bodyColorA, bodyColorB, bodyColorC, bodySeed] = useControls(
+  const { BodySize2: bodySize, BodySizeRand2: bodySizeRand, BodyCount2: bodyNumElements, 
+    BodyCountRand2: bodyNumElementsRand, BodyColorA2: bodyColorA, BodyColorB2: bodyColorB, 
+    BodyColorC2: bodyColorC, BodySeed2: bodySeed } = useControls(
     'Body',
     {
       size2: { value: 180, min: 0, max: 512, step: 1 },
@@ -106,8 +109,10 @@ const [seedRef, scaleRef] = useControls(
       seed2: { value: 1248736959, min: 0, max: 2 ** 31, step: 1 },
     })
 
-  const [frontSize, frontSizeRand, frontOffset, frontSpread, frontNumElements, frontNumElementsRand,
-    frontColorA, frontColorB, frontColorC, frontSeed] = useControls(
+  const { FrontSize3: frontSize, FrontSizeRand3: frontSizeRand, FrontOffset3: frontOffset, 
+    FrontSpread3: frontSpread, FrontCount3: frontNumElements, FrontCountRand3: frontNumElementsRand,
+    FrontColorA3: frontColorA, FrontColorB3: frontColorB, FrontColorC3: frontColorC, 
+    FrontSeed3: frontSeed } = useControls(
     'Front',
     {
       size3: { value: 20, min: 0, max: 512, step: 1 },
@@ -123,8 +128,9 @@ const [seedRef, scaleRef] = useControls(
     },
   )
 
-  const [backSize, backSizeRand, backOffset, backSpread, backNumElements, backNumElementsRand,
-    backColorA, backColorB, backColorC, backSeed] = useControls(
+  const { BackSize4: backSize, BackSizeRand4: backSizeRand, BackOffset4: backOffset, BackSpread4: backSpread, 
+    BackCount4: backNumElements, BackCountRand4: backNumElementsRand, BackColorA4: backColorA, 
+    BackColorB4: backColorB, BackColorC4: backColorC, BackSeed4: backSeed } = useControls(
     'Back',
     {
       size4: { value: 180, min: 0, max: 512, step: 1 },
@@ -291,8 +297,8 @@ const [seedRef, scaleRef] = useControls(
       :position="[10, 5, 0]"
     >
       <Lensflare
-        :scale="scaleRef.value.value"
-        :seed="seedRef.value.value"
+        :scale="scaleRef.value"
+        :seed="seedRef.value"
         :seed-props="seedPropsRef"
       />
     </TresPointLight>
