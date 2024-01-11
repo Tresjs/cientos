@@ -5,7 +5,7 @@ import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 import { shallowReactive } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
-import { TexturePackerFrameDataArray } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import type { TexturePackerFrameDataArray } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -18,19 +18,19 @@ const gl = {
 
 const animationState = shallowReactive({
   fps: 10,
-  animation: "yes",
+  animation: 'yes',
   flipX: false,
   asSprite: false,
   loop: true,
   reversed: false,
   resetOnEnd: false,
   anchorX: 0.5,
-  anchorY: 0.5
+  anchorY: 0.5,
 })
 
 const { fps, animation, flipX, asSprite, loop, reversed, resetOnEnd, anchorX, anchorY } = useControls({
   fps: { value: animationState.fps, min: 0, max: 120, step: 1 },
-  animation: { label: "Suzanne animation", value: animationState.animation, options: ["yes", "no"] },
+  animation: { label: 'Suzanne animation', value: animationState.animation, options: ['yes', 'no'] },
   flipX: animationState.flipX,
   asSprite: animationState.asSprite,
   loop: animationState.loop,
@@ -43,7 +43,7 @@ const { fps, animation, flipX, asSprite, loop, reversed, resetOnEnd, anchorX, an
 const anchorDemoAtlas: TexturePackerFrameDataArray = { frames: [] }
 const anchorDemoImgData = (() => {
   const NUM_ROWS_COLS = 32
-  const rects: { x: number, y: number, w: number, h: number }[] = []
+  const rects: { x: number; y: number; w: number; h: number }[] = []
   let h = 1
   for (let r = 0; r < NUM_ROWS_COLS; r += h) {
     let w = 1
@@ -77,18 +77,22 @@ const anchorDemoImgData = (() => {
   rects.forEach((rect, i) => {
     const frame = { x: rect.x * COL_SIZE, y: rect.y * ROW_SIZE, w: rect.w * COL_SIZE, h: rect.h * ROW_SIZE }
     const { x, y, w, h } = frame
-    anchorDemoAtlas.frames.push({ filename: 'rect_' + i.toString().padStart(4, '0'), frame })
+    anchorDemoAtlas.frames.push({ filename: `rect_${i.toString().padStart(4, '0')}`, frame })
     ctx.fillStyle = `hsl(${360 * i / rects.length}, 100%, 50%)`
     ctx.fillRect(x, y, w, h)
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-    ctx.fillRect(x + w * 0.5 - CENTER_ANCHOR_SIZE * 0.5, y + h * 0.5 - CENTER_ANCHOR_SIZE * 0.5, CENTER_ANCHOR_SIZE, CENTER_ANCHOR_SIZE)
+    ctx.fillRect(
+      x + w * 0.5 - CENTER_ANCHOR_SIZE * 0.5, 
+      y + h * 0.5 - CENTER_ANCHOR_SIZE * 0.5, 
+      CENTER_ANCHOR_SIZE, 
+      CENTER_ANCHOR_SIZE)
 
     ctx.fillStyle = '#FFF'
     ctx.textAlign = 'center'
     ctx.font = '12px monospace'
     ctx.textBaseline = 'middle'
-    ctx.fillText('Frame ' + i, x + w * 0.5, y + h * 0.5)
+    ctx.fillText(`Frame ${i}`, x + w * 0.5, y + h * 0.5)
 
     ctx.fillStyle = '#FFF'
     ctx.fillRect(x, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
@@ -115,15 +119,24 @@ const anchorDemoImgData = (() => {
     <TresPerspectiveCamera :position="[11, 11, 11]" />
     <OrbitControls />
     <Suspense>
-      <AnimatedSprite :image="anchorDemoImgData" :atlas="anchorDemoAtlas" animation="rect" :flip-x="flipX.value"
-        :fps="fps.value" :loop="loop.value" :reset-on-end="resetOnEnd.value" :anchor="[anchorX.value, anchorY.value]"
-        :as-sprite="asSprite.value" :reversed="reversed.value" />
+      <AnimatedSprite
+        :image="anchorDemoImgData"
+        :atlas="anchorDemoAtlas"
+        animation="rect"
+        :flip-x="flipX.value"
+        :fps="fps.value"
+        :loop="loop.value"
+        :reset-on-end="resetOnEnd.value"
+        :anchor="[anchorX.value, anchorY.value]"
+        :as-sprite="asSprite.value"
+        :reversed="reversed.value"
+      />
     </Suspense>
     <Suspense>
       <AnimatedSprite 
         :position="[4, 0, 0]" 
-        image="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsTexture.png"
-        atlas="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsAtlas.json"
+        image="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/namedAnimationsTexture.png"
+        atlas="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/namedAnimationsAtlas.json"
         :animation="animation.value" 
         :flip-x="flipX.value" 
         :fps="fps.value" 
@@ -132,13 +145,14 @@ const anchorDemoImgData = (() => {
         :anchor="[anchorX.value, anchorY.value]" 
         :as-sprite="asSprite.value"
         :reversed="reversed.value"
-        />
+      />
     </Suspense>
     <Suspense>
       <AnimatedSprite 
         :position="[-4, 0, 0]" 
-        image="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/textureWithoutAtlas.png"
-        :atlas="((): string[] => new Array(16).fill('heart'))()"
+        image="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/textureWithoutAtlas.png"
+        :atlas="16"
+        :animation="[0, 15]"
         :flip-x="flipX.value" 
         :fps="fps.value" 
         :loop="loop.value" 
@@ -146,8 +160,7 @@ const anchorDemoImgData = (() => {
         :anchor="[anchorX.value, anchorY.value]" 
         :as-sprite="asSprite.value"
         :reversed="reversed.value"
-        animation="heart"
-        />
+      />
     </Suspense>
     <TresGridHelper :args="[10, 10]" />
   </TresCanvas>

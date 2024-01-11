@@ -32,13 +32,13 @@ export interface AnimatedSpriteProps {
   /** If a string, the name of the animation to play. If `[number, number]`, the start and end frames of the animation. If `number` the frame number to display. */
   animation?: string | [number, number] | number
   /** Event callback when the assets – atlas and image – are loaded. */
-  onLoad?: (frameName:string) => void
+  onLoad?: (frameName: string) => void
   /** Event callback when the animation ends. */
-  onEnd?: (frameName:string) => void
+  onEnd?: (frameName: string) => void
   /** Event callback when the animation loops. */
-  onLoopEnd?: (frameName:string) => void
+  onLoopEnd?: (frameName: string) => void
   /** Event callback when each frame changes. Note: called *at most* once per tick. */
-  onFrame?: (frameName:string) => void
+  onFrame?: (frameName: string) => void
   /** Whether the animation is paused. */
   paused?: boolean
   /** Whether to play the animation in reverse. */
@@ -68,16 +68,20 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   anchor: () => [0.5, 0.5],
 })
 
-const page:AtlasPage = await getAtlasPageAsync(props.atlas, props.image, props.definitions)
-
 const animatedSpriteGroupRef = ref<InstanceType<typeof Group> | null>()
 const animatedSpriteSpriteRef = ref<InstanceType<typeof Mesh> | InstanceType<typeof Sprite> | null>()
-const animatedSpriteMaterialRef = ref<InstanceType<typeof SpriteMaterial> | InstanceType<typeof MeshBasicMaterial> | null>()
+const animatedSpriteMaterialRef = ref<InstanceType<typeof SpriteMaterial | typeof MeshBasicMaterial> | null>()
 const scaleX = ref(0)
 const scaleY = ref(0)
 const positionX = ref(0)
 const positionY = ref(0)
 const NOMINAL_PX_TO_WORLD_UNITS = 0.01
+
+defineExpose({
+  value: animatedSpriteGroupRef,
+})
+
+const page: AtlasPage = await getAtlasPageAsync(props.atlas, props.image, props.definitions)
 
 let frame: AtlasFrame | null = null
 let frameNum = 0
@@ -109,10 +113,12 @@ useRenderLoop().onLoop(({ delta }) => {
         while (frameNum < 0) {
           frameNum += animation.length
         }
-      } else {
+      }
+      else {
         frameNum = Math.max(0, frameNum)
       }
-    } else {
+    }
+    else {
       frameNum++
       if (props.onLoopEnd && props.loop && frameNum >= animation.length) props.onLoopEnd(frame!.name)
       if (!props.loop && frameNum >= animation.length) {
@@ -122,7 +128,8 @@ useRenderLoop().onLoop(({ delta }) => {
       }
       if (props.loop) {
         frameNum %= animation.length
-      } else {
+      }
+      else {
         frameNum = Math.min(animation.length - 1, frameNum)
       }
     }
@@ -186,7 +193,8 @@ watch(() => [props.resetOnEnd, props.reversed], () => {
   if (frameHeldOnLoopEnd) {
     if (props.reversed) {
       frameNum = props.resetOnEnd ? animation.length - 1 : 0
-    } else {
+    }
+    else {
       frameNum = props.resetOnEnd ? 0 : animation.length - 1
     }
     updateFrame(animation[frameNum])
@@ -194,26 +202,44 @@ watch(() => [props.resetOnEnd, props.reversed], () => {
 })
 
 watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
-
-defineExpose({
-  value: animatedSpriteGroupRef
-})
 </script>
 
 <template>
-  <TresGroup ref="animatedSpriteGroupRef" v-model="props">
+  <TresGroup
+    ref="animatedSpriteGroupRef"
+    v-bind="props"
+  >
     <Suspense :fallback="null">
       <template v-if="props.asSprite">
-        <TresSprite ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresSpriteMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :map="page.texture" :transparent="true"
-            :alphaTest="props.alphaTest" />
+        <TresSprite
+          ref="animatedSpriteSpriteRef"
+          :scale="[scaleX, scaleY, 1]"
+          :position="[positionX, positionY, 0]"
+        >
+          <TresSpriteMaterial
+            ref="animatedSpriteMaterialRef"
+            :toneMapped="false"
+            :map="page.texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+          />
         </TresSprite>
       </template>
       <template v-else>
-        <TresMesh ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
+        <TresMesh
+          ref="animatedSpriteSpriteRef"
+          :scale="[scaleX, scaleY, 1]"
+          :position="[positionX, positionY, 0]"
+        >
           <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :side="DoubleSide" :map="page.texture"
-            :transparent="true" :alphaTest="props.alphaTest" />
+          <TresMeshBasicMaterial
+            ref="animatedSpriteMaterialRef"
+            :toneMapped="false"
+            :side="DoubleSide"
+            :map="page.texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+          />
         </TresMesh>
       </template>
     </Suspense>
