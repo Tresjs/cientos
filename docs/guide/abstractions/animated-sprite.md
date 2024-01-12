@@ -79,7 +79,7 @@ To display a single animation frame, a `number` can be supplied as the `animatio
 
 ## `anchor`
 
-The `anchor` allow you to control how differently sized source images "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the anchor. `[0, 0]` places the anchor at the top left corner of the `<AnimatedSprite />`. `[1,1]` places the anchor at the bottom right corner. By default, the anchor is placed at `[0.5, 0.5]` i.e., the center.
+The `anchor` controls how differently sized source images "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the anchor. `[0, 0]` places the anchor at the top left corner of the `<AnimatedSprite />`. `[1,1]` places the anchor at the bottom right corner. By default, the anchor is placed at `[0.5, 0.5]` i.e., the center.
 
 Below is a simple animation containing differently sized source images. The anchor is visible at world position `0, 0, 0`.
 <DocsDemo>
