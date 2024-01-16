@@ -28,7 +28,7 @@ Compiling source images into a texture atlas is usually handled by third-party s
 
 ## Without an atlas
 
-There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. This is possible if you compile your source images in a single row of equally sized columns *and* set the `atlas` prop to the number of columns.
+There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. This is possible if you compile your source images into equally sized columns and rows *and* set the `atlas` prop to number of columns, number of rows as `[number, number]`.
 
 ### Example
 

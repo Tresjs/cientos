@@ -9,7 +9,7 @@ import { AnimatedSprite } from '@tresjs/cientos'
     <Suspense>
       <AnimatedSprite 
         image="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/textureWithoutAtlas.png"
-        :atlas="16" 
+        :atlas="[16, 1]" 
         :animation="[0, 15]"
         :fps="10"
       />
