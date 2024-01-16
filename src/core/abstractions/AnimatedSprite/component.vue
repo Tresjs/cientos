@@ -13,7 +13,7 @@ export interface AnimatedSpriteProps {
    * If `number`, the number of columns in the texture. 
    * If `[number, number]`, the number of columns/rows in the texture. 
    * If `string[]`, the animation names for each column in the texture. 
-   * If TexturePackerFrameDataArray or TexturePackerFrameDataObject, the atlas as a JS object.
+   * If `TexturePackerFrameDataArray` or `TexturePackerFrameDataObject`, the atlas as a JS object.
    **/
   atlas: string | number | [number, number] | string[] | TexturePackerFrameDataArray | TexturePackerFrameDataObject
   /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
