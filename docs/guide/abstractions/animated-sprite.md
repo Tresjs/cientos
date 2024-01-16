@@ -17,6 +17,30 @@
 `<AnimatedSprite />` loads resources asynchronously, so it must be wrapped in a `<Suspense />`.
 :::
 
+## Compiling an atlas
+
+In typical usage, `<AnimatedSprite/>` requires both the URL to a texture of compiled sprite images and a JSON atlas containing information about the sprites in the texture.
+
+* [example compiled texture](https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsTexture.png)
+* [example JSON atlas](https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsAtlas.json)
+
+Compiling source images into a texture atlas is usually handled by third-party software. You may find [TexturePacker](https://www.codeandweb.com/texturepacker) useful.
+
+## Without an atlas
+
+There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. This is possible if you compile your source images in a single row of equally sized columns *and* set the `atlas` prop to the number of columns.
+
+### Example
+
+This image is comprised of 16 source images, compiled into a single image, in a single row:
+
+<img src="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/textureWithoutAtlas.png" />
+
+<DocsDemo>
+  <AnimatedSpriteNoAtlasDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/AnimatedSpriteNoAtlasDemo.vue{12,13}
 ## Props
 
 <CientosPropsTable 
@@ -37,7 +61,7 @@ component-path="src/core/abstractions/AnimatedSprite/component.vue"
 
 The `animation` prop holds either the name of the currently playing animation or a range of frames to play, or a frame number to display.
 
-### Named animations
+### Using named animations as `animation`
 
 Frames are automatically grouped into named animations, if you use either of the following naming conventions for your source images:
 
@@ -69,11 +93,11 @@ animation="heroRun"
 />
 ```
 
-### Ranges
+### Using a range as `animation`
 
 A `[number, number]` range can be supplied as the `animation` prop. The numbers correspond to the position of the frame in the `atlas` `frames` array, starting with `0`. The first `number` in the range represents the start frame of the animation. The last `number` represents the end frame.
 
-### Single frame
+### Using a single frame as `animation`
 
 To display a single animation frame, a `number` can be supplied as the `animation` prop. The `number` corresponds to the position of the frame in the `atlas` `frames` array, starting with `0`. 
 
@@ -104,28 +128,3 @@ atlas="..." image="..."
 }"
 />
 ```
-
-## Compiling an atlas
-
-In typical usage, `<AnimatedSprite/>` requires both the URL to a texture of compiled sprite images and a JSON atlas containing information about the sprites in the texture.
-
-* [example compiled texture](https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsTexture.png)
-* [example JSON atlas](https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/namedAnimationsAtlas.json)
-
-Compiling source images into a texture atlas is usually handled by third-party software. You may find [TexturePacker](https://www.codeandweb.com/texturepacker) useful.
-
-## Without an atlas
-
-There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. This is possible if you compile your source images in a single row of equally sized columns *and* set the `atlas` prop to the number of columns.
-
-### Example
-
-This image is comprised of 16 source images, compiled into a single image, in a single row:
-
-<img src="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/textureWithoutAtlas.png" />
-
-<DocsDemo>
-  <AnimatedSpriteNoAtlasDemo />
-</DocsDemo>
-
-<<< @/.vitepress/theme/components/AnimatedSpriteNoAtlasDemo.vue{12,13}
