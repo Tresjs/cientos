@@ -87,7 +87,7 @@ const page: AtlasPage = await getAtlasPageAsync(props.atlas, props.image, props.
 let frame: AtlasFrame | null = null
 let frameNum = 0
 let cooldown = 1
-let animation: AtlasFrame[] = getFrames(page, props.animation)
+let animation: AtlasFrame[] = getFrames(page, props.animation, props.reversed)
 let frameHeldOnLoopEnd = false
 
 updateFrame(animation[frameNum])
@@ -101,38 +101,18 @@ useRenderLoop().onLoop(({ delta }) => {
   }
   while (cooldown <= 0) {
     cooldown++
-
-    if (props.reversed) {
-      frameNum--
-      if (props.onLoopEnd && props.loop && frameNum <= 0) props.onLoopEnd(frame!.name)
-      if (!props.loop && frameNum < 0) {
-        frameHeldOnLoopEnd = true
-        frameNum = props.resetOnEnd ? animation.length - 1 : 0
-        if (props.onEnd) props.onEnd(frame!.name)
-      }
-      if (props.loop) {
-        while (frameNum < 0) {
-          frameNum += animation.length
-        }
-      }
-      else {
-        frameNum = Math.max(0, frameNum)
-      }
+    frameNum++
+    if (props.onLoopEnd && props.loop && frameNum >= animation.length) props.onLoopEnd(frame!.name)
+    if (!props.loop && frameNum >= animation.length) {
+      frameHeldOnLoopEnd = true
+      frameNum = props.resetOnEnd ? 0 : animation.length - 1
+      if (props.onEnd) props.onEnd(frame!.name)
+    }
+    if (props.loop) {
+      frameNum %= animation.length
     }
     else {
-      frameNum++
-      if (props.onLoopEnd && props.loop && frameNum >= animation.length) props.onLoopEnd(frame!.name)
-      if (!props.loop && frameNum >= animation.length) {
-        frameHeldOnLoopEnd = true
-        frameNum = props.resetOnEnd ? 0 : animation.length - 1
-        if (props.onEnd) props.onEnd(frame!.name)
-      }
-      if (props.loop) {
-        frameNum %= animation.length
-      }
-      else {
-        frameNum = Math.min(animation.length - 1, frameNum)
-      }
+      frameNum = Math.min(animation.length - 1, frameNum)
     }
   }
 
@@ -171,7 +151,7 @@ watch(() => props.animation, (newValue, oldValue) => {
   if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
     return
   }
-  animation = getFrames(page, props.animation)
+  animation = getFrames(page, props.animation, props.reversed)
   frameNum = 0
   cooldown = 1
   updateFrame(animation[frameNum])
@@ -186,18 +166,18 @@ watch(() => props.loop, () => {
   if (frameHeldOnLoopEnd && props.loop) frameHeldOnLoopEnd = false
 })
 
-/*
- * NOTE: If the frame is being held because the animation ran to the end and does not loop,
- * allow resetOnEnd to modify the displayed frame.
- */
-watch(() => [props.resetOnEnd, props.reversed], () => {
+watch(() => props.resetOnEnd, () => {
   if (frameHeldOnLoopEnd) {
-    if (props.reversed) {
-      frameNum = props.resetOnEnd ? animation.length - 1 : 0
-    }
-    else {
-      frameNum = props.resetOnEnd ? 0 : animation.length - 1
-    }
+    frameNum = props.resetOnEnd ? 0 : animation.length - 1
+    updateFrame(animation[frameNum])
+  }
+})
+
+watch(() => props.reversed, () => {
+  frameNum = (animation.length - frameNum - 1) % animation.length
+  animation = getFrames(page, props.animation, props.reversed)
+  if (frameHeldOnLoopEnd) {
+    frameNum = props.resetOnEnd ? 0 : animation.length - 1
     updateFrame(animation[frameNum])
   }
 })
@@ -206,41 +186,19 @@ watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
 </script>
 
 <template>
-  <TresGroup
-    ref="animatedSpriteGroupRef"
-    v-bind="props"
-  >
+  <TresGroup ref="animatedSpriteGroupRef" v-bind="props">
     <Suspense :fallback="null">
       <template v-if="props.asSprite">
-        <TresSprite
-          ref="animatedSpriteSpriteRef"
-          :scale="[scaleX, scaleY, 1]"
-          :position="[positionX, positionY, 0]"
-        >
-          <TresSpriteMaterial
-            ref="animatedSpriteMaterialRef"
-            :toneMapped="false"
-            :map="page.texture"
-            :transparent="true"
-            :alphaTest="props.alphaTest"
-          />
+        <TresSprite ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
+          <TresSpriteMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :map="page.texture" :transparent="true"
+            :alphaTest="props.alphaTest" />
         </TresSprite>
       </template>
       <template v-else>
-        <TresMesh
-          ref="animatedSpriteSpriteRef"
-          :scale="[scaleX, scaleY, 1]"
-          :position="[positionX, positionY, 0]"
-        >
+        <TresMesh ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
           <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial
-            ref="animatedSpriteMaterialRef"
-            :toneMapped="false"
-            :side="DoubleSide"
-            :map="page.texture"
-            :transparent="true"
-            :alphaTest="props.alphaTest"
-          />
+          <TresMeshBasicMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :side="DoubleSide"
+            :map="page.texture" :transparent="true" :alphaTest="props.alphaTest" />
         </TresMesh>
       </template>
     </Suspense>

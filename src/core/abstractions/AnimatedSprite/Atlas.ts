@@ -193,7 +193,7 @@ function framesFromAnimationNamesWidthHeight(
 
 function setDefinitions(page: AtlasPage, definitions: Record<string, string>) {
   for (const [animationName, definitionStr] of Object.entries(definitions)) {
-    const frames: AtlasFrame[] = getFrames(page, animationName)
+    const frames: AtlasFrame[] = getFrames(page, animationName, false)
     const expanded = expand(definitionStr)
     for (const i of expanded) {
       if (i < 0 || frames.length <= i) {
@@ -209,22 +209,25 @@ function setDefinitions(page: AtlasPage, definitions: Record<string, string>) {
 export function getFrames(
   page: AtlasPage,
   animationNameOrFrameNumber: string | number | [number, number],
+  reversed: boolean
 ): AtlasFrame[] {
+  let frames: AtlasFrame[];
   if (typeof animationNameOrFrameNumber === 'string')
-    return getFramesByName(page, animationNameOrFrameNumber)
+    frames = getFramesByName(page, animationNameOrFrameNumber)
   else if (typeof animationNameOrFrameNumber === 'number')
-    return getFramesByIndices(
+    frames = getFramesByIndices(
       page,
       animationNameOrFrameNumber,
       animationNameOrFrameNumber,
     )
   else {
-    return getFramesByIndices(
+    frames = getFramesByIndices(
       page,
       animationNameOrFrameNumber[0],
       animationNameOrFrameNumber[1],
     )
   }
+  return reversed ? frames.toReversed() : frames
 }
 
 function getFramesByName(page: AtlasPage, name: string): AtlasFrame[] {
