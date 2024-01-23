@@ -13,23 +13,23 @@ import { useLogger } from '@tresjs/core'
 export function expand(definitionStr: string): number[] {
   const parsed = parse(definitionStr)
   const expanded: number[] = []
-  for (const info of parsed) {
-    if (info.duration <= 0) {
+  for (const {startFrame, endFrame, duration} of parsed) {
+    if (duration <= 0) {
     }
-    else if (info.endFrame < 0 || info.startFrame === info.endFrame) {
-      for (let _ = 0; _ < info.duration; _++) {
-        expanded.push(info.startFrame)
+    else if (endFrame < 0 || startFrame === endFrame) {
+      for (let _ = 0; _ < duration; _++) {
+        expanded.push(startFrame)
       }
       continue
     }
     else {
-      const sign = Math.sign(info.endFrame - info.startFrame)
+      const sign = Math.sign(endFrame - startFrame)
       for (
-        let frame = info.startFrame;
-        frame !== info.endFrame + sign;
+        let frame = startFrame;
+        frame !== endFrame + sign;
         frame += sign
       ) {
-        for (let _ = 0; _ < info.duration; _++) {
+        for (let _ = 0; _ < duration; _++) {
           expanded.push(frame)
         }
       }
