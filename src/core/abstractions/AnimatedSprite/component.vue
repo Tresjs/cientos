@@ -186,19 +186,41 @@ watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
 </script>
 
 <template>
-  <TresGroup ref="animatedSpriteGroupRef" v-bind="props">
+  <TresGroup
+    ref="animatedSpriteGroupRef"
+    v-bind="props"
+  >
     <Suspense :fallback="null">
       <template v-if="props.asSprite">
-        <TresSprite ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresSpriteMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :map="page.texture" :transparent="true"
-            :alphaTest="props.alphaTest" />
+        <TresSprite
+          ref="animatedSpriteSpriteRef"
+          :scale="[scaleX, scaleY, 1]"
+          :position="[positionX, positionY, 0]"
+        >
+          <TresSpriteMaterial
+            ref="animatedSpriteMaterialRef"
+            :toneMapped="false"
+            :map="page.texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+          />
         </TresSprite>
       </template>
       <template v-else>
-        <TresMesh ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
+        <TresMesh
+          ref="animatedSpriteSpriteRef"
+          :scale="[scaleX, scaleY, 1]"
+          :position="[positionX, positionY, 0]"
+        >
           <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :side="DoubleSide"
-            :map="page.texture" :transparent="true" :alphaTest="props.alphaTest" />
+          <TresMeshBasicMaterial
+            ref="animatedSpriteMaterialRef"
+            :toneMapped="false"
+            :side="DoubleSide"
+            :map="page.texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+          />
         </TresMesh>
       </template>
     </Suspense>

@@ -209,9 +209,9 @@ function setDefinitions(page: AtlasPage, definitions: Record<string, string>) {
 export function getFrames(
   page: AtlasPage,
   animationNameOrFrameNumber: string | number | [number, number],
-  reversed: boolean
+  reversed: boolean,
 ): AtlasFrame[] {
-  let frames: AtlasFrame[];
+  let frames: AtlasFrame[]
   if (typeof animationNameOrFrameNumber === 'string')
     frames = getFramesByName(page, animationNameOrFrameNumber)
   else if (typeof animationNameOrFrameNumber === 'number')
