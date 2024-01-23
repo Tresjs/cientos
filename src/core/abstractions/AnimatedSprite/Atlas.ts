@@ -52,10 +52,10 @@ export async function getAtlasPageAsync(
             && atlas.length === 2
             && typeof atlas[0] === 'number')
         ) {
-          return framesFromNumColsNumRowsWidthHeight
+          return getFramesFromNumColsNumRowsWidthHeight
         }
         else {
-          return framesFromAnimationNamesWidthHeight
+          return getFramesFromAnimationNamesWidthHeight
         }
       })()
       const frames = processingFn(
@@ -177,13 +177,13 @@ function getFramesFromNumColsNumRowsWidthHeight(
   return result
 }
 
-function framesFromAnimationNamesWidthHeight(
+function getFramesFromAnimationNamesWidthHeight(
   animationNames: string[],
   width: number,
   height: number,
 ): AtlasFrame[] {
   const numCols = animationNames.length
-  const frames = framesFromNumColsNumRowsWidthHeight(numCols, width, height)
+  const frames = getFramesFromNumColsNumRowsWidthHeight(numCols, width, height)
   const padAmount = numCols.toString().length
   animationNames.forEach((name, i) => {
     frames[i].name = `${name}_${String(i).padStart(padAmount, '0')}`
@@ -209,9 +209,9 @@ function setDefinitions(page: AtlasPage, definitions: Record<string, string>) {
 export function getFrames(
   page: AtlasPage,
   animationNameOrFrameNumber: string | number | [number, number],
-  reversed: boolean,
+  reversed: boolean
 ): AtlasFrame[] {
-  let frames: AtlasFrame[]
+  let frames: AtlasFrame[];
   if (typeof animationNameOrFrameNumber === 'string')
     frames = getFramesByName(page, animationNameOrFrameNumber)
   else if (typeof animationNameOrFrameNumber === 'number')
