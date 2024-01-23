@@ -47,11 +47,11 @@ interface AnimationDefinition {
 /**
  * Parse an animation defintion string into an array of AnimationDefinition.
  * @param definitionStr - A comma-separated string of frame numbers with optional parentheses-surrounded durations.
- * @example - parse("0,2") === [{startFrame:0, endFrame:0, delay:1}, {startFrame:2, endFrame:2, delay:1}]
- * @example - parse("2(10)") === [{startFrame:2, endFrame:2, delay:10}]
- * @example - parse("1-4") === [{startFrame:1, endFrame:4, delay:1}]
- * @example - parse("10-5(2)") === [{startFrame:10, endFrame:5, delay:2}]
- * @example - parse("1-4(3),10(2)") === [{startFrame:1, endFrame:4, delay:3}, {startFrame:10, endFrame:10, delay:2}]
+ * @example - parse("0,2") === [{startFrame:0, endFrame:0, duration:1}, {startFrame:2, endFrame:2, duration:1}]
+ * @example - parse("2(10)") === [{startFrame:2, endFrame:2, duration:10}]
+ * @example - parse("1-4") === [{startFrame:1, endFrame:4, duration:1}]
+ * @example - parse("10-5(2)") === [{startFrame:10, endFrame:5, duration:2}]
+ * @example - parse("1-4(3),10(2)") === [{startFrame:1, endFrame:4, duration:3}, {startFrame:10, endFrame:10, duration:2}]
  */
 
 export function parse(definitionStr: string): AnimationDefinition[] {
