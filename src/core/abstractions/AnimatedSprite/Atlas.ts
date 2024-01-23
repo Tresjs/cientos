@@ -44,7 +44,7 @@ export async function getAtlasPageAsync(
       const texture: Texture = response[1]
       const processingFn = (() => {
         if (typeof atlas === 'string' || atlas.hasOwnProperty('frames')) {
-          return framesFromTexturePackerData
+          return getFramesFromTexturePackerData
         }
         else if (
           typeof atlas === 'number'
@@ -89,25 +89,25 @@ export interface TexturePackerFrameDataObject {
   frames: Record<string, TexturePackerFrameData>
 }
 
-function framesFromTexturePackerData(
+function getFramesFromTexturePackerData(
   data: TexturePackerFrameDataArray | TexturePackerFrameDataObject,
   width: number,
   height: number,
 ) {
   return Array.isArray(data.frames)
-    ? framesFromTexturePackerDataArray(
+    ? getFramesFromTexturePackerDataArray(
       data as TexturePackerFrameDataArray,
       width,
       height,
     )
-    : framesFromTexturePackerDataObject(
+    : getFramesFromTexturePackerDataObject(
       data as TexturePackerFrameDataObject,
       width,
       height,
     )
 }
 
-function framesFromTexturePackerDataArray(
+function getFramesFromTexturePackerDataArray(
   data: TexturePackerFrameDataArray,
   width: number,
   height: number,
@@ -125,7 +125,7 @@ function framesFromTexturePackerDataArray(
   }))
 }
 
-function framesFromTexturePackerDataObject(
+function getFramesFromTexturePackerDataObject(
   data: TexturePackerFrameDataObject,
   width: number,
   height: number,
@@ -143,7 +143,7 @@ function framesFromTexturePackerDataObject(
   }))
 }
 
-function framesFromNumColsNumRowsWidthHeight(
+function getFramesFromNumColsNumRowsWidthHeight(
   numColsOrNumColsNumRows: number | [number, number],
   width: number,
   height: number,
