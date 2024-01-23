@@ -54,7 +54,7 @@ interface AnimationDefinition {
  * @example - parse("1-4(3),10(2)") === [{startFrame:1, endFrame:4, duration:3}, {startFrame:10, endFrame:10, duration:2}]
  */
 
-export function parse(definitionStr: string): AnimationDefinition[] {
+function parse(definitionStr: string): AnimationDefinition[] {
   let transition: Transition = 'START_FRAME_IN'
   const parsed: AnimationDefinition[] = []
   for (const token of tokenize(definitionStr)) {
