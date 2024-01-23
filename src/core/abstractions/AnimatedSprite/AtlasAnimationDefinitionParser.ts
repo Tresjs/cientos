@@ -12,13 +12,13 @@ import { useLogger } from '@tresjs/core'
 
 export function expand(definitionStr: string): number[] {
   const parsed = parse(definitionStr)
-  const expanded: number[] = []
-  for (const {startFrame, endFrame, duration} of parsed) {
+  const result: number[] = []
+  for (const { startFrame, endFrame, duration } of parsed) {
     if (duration <= 0) {
     }
     else if (endFrame < 0 || startFrame === endFrame) {
       for (let _ = 0; _ < duration; _++) {
-        expanded.push(startFrame)
+        result.push(startFrame)
       }
       continue
     }
@@ -30,12 +30,12 @@ export function expand(definitionStr: string): number[] {
         frame += sign
       ) {
         for (let _ = 0; _ < duration; _++) {
-          expanded.push(frame)
+          result.push(frame)
         }
       }
     }
   }
-  return expanded
+  return result
 }
 
 interface AnimationDefinition {
@@ -56,11 +56,11 @@ interface AnimationDefinition {
 
 function parse(definitionStr: string): AnimationDefinition[] {
   let transition: Transition = 'START_FRAME_IN'
-  const parsed: AnimationDefinition[] = []
-  for (const {name, value, startI} of tokenize(definitionStr)) {
+  const result: AnimationDefinition[] = []
+  for (const { name, value, startI } of tokenize(definitionStr)) {
     if (transition === 'START_FRAME_IN') {
       if (name === 'NUMBER') {
-        parsed.push({
+        result.push({
           startFrame: value,
           endFrame: value,
           duration: 1,
@@ -97,7 +97,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
     }
     else if (transition === 'END_FRAME_IN') {
       if (name === 'NUMBER') {
-        parsed[parsed.length - 1].endFrame = value
+        result[result.length - 1].endFrame = value
         transition = 'END_FRAME_OUT'
       }
       else {
@@ -127,7 +127,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
     }
     else if (transition === 'DURATION_IN') {
       if (name === 'NUMBER') {
-        parsed[parsed.length - 1].duration = value
+        result[result.length - 1].duration = value
         transition = 'DURATION_OUT'
       }
       else {
@@ -157,7 +157,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
     }
   }
 
-  return parsed
+  return result
 }
 
 type Transition =
@@ -177,35 +177,35 @@ interface Token {
 }
 
 function tokenize(definition: string): Token[] {
-  const tokenized: Token[] = []
+  const result: Token[] = []
   let ii = 0
   while (ii < definition.length) {
     const c = definition[ii]
     if ('0123456789'.indexOf(c) > -1) {
       if (
-        tokenized.length
-        && tokenized[tokenized.length - 1].name === 'NUMBER'
+        result.length
+        && result[result.length - 1].name === 'NUMBER'
       ) {
-        tokenized[tokenized.length - 1].value *= 10
-        tokenized[tokenized.length - 1].value += parseInt(c)
+        result[result.length - 1].value *= 10
+        result[result.length - 1].value += parseInt(c)
       }
       else {
-        tokenized.push({ name: 'NUMBER', value: parseInt(c), startI: ii })
+        result.push({ name: 'NUMBER', value: parseInt(c), startI: ii })
       }
     }
     else if (c === ' ') {
     }
     else if (c === ',') {
-      tokenized.push({ name: 'COMMA', value: -1, startI: ii })
+      result.push({ name: 'COMMA', value: -1, startI: ii })
     }
     else if (c === '(') {
-      tokenized.push({ name: 'OPEN_PAREN', value: -1, startI: ii })
+      result.push({ name: 'OPEN_PAREN', value: -1, startI: ii })
     }
     else if (c === ')') {
-      tokenized.push({ name: 'CLOSE_PAREN', value: -1, startI: ii })
+      result.push({ name: 'CLOSE_PAREN', value: -1, startI: ii })
     }
     else if (c === '-') {
-      tokenized.push({ name: 'HYPHEN', value: -1, startI: ii })
+      result.push({ name: 'HYPHEN', value: -1, startI: ii })
     }
     else {
       warnDefinitionBadCharacter('0123456789,-()', c, definition, ii)
@@ -213,7 +213,7 @@ function tokenize(definition: string): Token[] {
     ii++
   }
 
-  return tokenized
+  return result
 }
 
 function warnDefinitionBadCharacter(
