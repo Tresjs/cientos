@@ -68,7 +68,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'START_FRAME_OUT'
       }
       else {
-        warnDefinitionSyntaxError(
+        logDefinitionSyntaxError(
           'number',
           name,
           definitionStr,
@@ -87,7 +87,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'DURATION_IN'
       }
       else {
-        warnDefinitionSyntaxError(
+        logDefinitionSyntaxError(
           '",", "-", "("',
           name,
           definitionStr,
@@ -101,7 +101,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'END_FRAME_OUT'
       }
       else {
-        warnDefinitionSyntaxError(
+        logDefinitionSyntaxError(
           'number',
           name,
           definitionStr,
@@ -117,7 +117,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'DURATION_IN'
       }
       else {
-        warnDefinitionSyntaxError(
+        logDefinitionSyntaxError(
           '\',\' or \'(\'',
           name,
           definitionStr,
@@ -131,7 +131,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'DURATION_OUT'
       }
       else {
-        warnDefinitionSyntaxError(
+        logDefinitionSyntaxError(
           'number',
           name,
           definitionStr,
@@ -144,7 +144,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'NEXT_OR_DONE'
       }
       else {
-        warnDefinitionSyntaxError('"("', name, definitionStr, startI)
+        logDefinitionSyntaxError('"("', name, definitionStr, startI)
       }
     }
     else if (transition === 'NEXT_OR_DONE') {
@@ -152,7 +152,7 @@ function parse(definitionStr: string): AnimationDefinition[] {
         transition = 'START_FRAME_IN'
       }
       else {
-        warnDefinitionSyntaxError('","', name, definitionStr, startI)
+        logDefinitionSyntaxError('","', name, definitionStr, startI)
       }
     }
   }
@@ -208,7 +208,7 @@ function tokenize(definition: string): Token[] {
       result.push({ name: 'HYPHEN', value: -1, startI: ii })
     }
     else {
-      warnDefinitionBadCharacter('0123456789,-()', c, definition, ii)
+      logDefinitionBadCharacter('0123456789,-()', c, definition, ii)
     }
     ii++
   }
@@ -216,7 +216,7 @@ function tokenize(definition: string): Token[] {
   return result
 }
 
-function warnDefinitionBadCharacter(
+function logDefinitionBadCharacter(
   expected: string,
   found: string,
   definition: string,
@@ -230,7 +230,7 @@ ${Array(index + 1).join(' ')}^`,
   )
 }
 
-function warnDefinitionSyntaxError(
+function logDefinitionSyntaxError(
   expected: string,
   found: string,
   definition: string,
