@@ -57,12 +57,12 @@ interface AnimationDefinition {
 function parse(definitionStr: string): AnimationDefinition[] {
   let transition: Transition = 'START_FRAME_IN'
   const parsed: AnimationDefinition[] = []
-  for (const token of tokenize(definitionStr)) {
+  for (const {name, value, startI} of tokenize(definitionStr)) {
     if (transition === 'START_FRAME_IN') {
-      if (token.name === 'NUMBER') {
+      if (name === 'NUMBER') {
         parsed.push({
-          startFrame: token.value,
-          endFrame: token.value,
+          startFrame: value,
+          endFrame: value,
           duration: 1,
         })
         transition = 'START_FRAME_OUT'
@@ -70,89 +70,89 @@ function parse(definitionStr: string): AnimationDefinition[] {
       else {
         warnDefinitionSyntaxError(
           'number',
-          token.name,
+          name,
           definitionStr,
-          token.startI,
+          startI,
         )
       }
     }
     else if (transition === 'START_FRAME_OUT') {
-      if (token.name === 'COMMA') {
+      if (name === 'COMMA') {
         transition = 'START_FRAME_IN'
       }
-      else if (token.name === 'HYPHEN') {
+      else if (name === 'HYPHEN') {
         transition = 'END_FRAME_IN'
       }
-      else if (token.name === 'OPEN_PAREN') {
+      else if (name === 'OPEN_PAREN') {
         transition = 'DURATION_IN'
       }
       else {
         warnDefinitionSyntaxError(
           '",", "-", "("',
-          token.name,
+          name,
           definitionStr,
-          token.startI,
+          startI,
         )
       }
     }
     else if (transition === 'END_FRAME_IN') {
-      if (token.name === 'NUMBER') {
-        parsed[parsed.length - 1].endFrame = token.value
+      if (name === 'NUMBER') {
+        parsed[parsed.length - 1].endFrame = value
         transition = 'END_FRAME_OUT'
       }
       else {
         warnDefinitionSyntaxError(
           'number',
-          token.name,
+          name,
           definitionStr,
-          token.startI,
+          startI,
         )
       }
     }
     else if (transition === 'END_FRAME_OUT') {
-      if (token.name === 'COMMA') {
+      if (name === 'COMMA') {
         transition = 'START_FRAME_IN'
       }
-      else if (token.name === 'OPEN_PAREN') {
+      else if (name === 'OPEN_PAREN') {
         transition = 'DURATION_IN'
       }
       else {
         warnDefinitionSyntaxError(
           '\',\' or \'(\'',
-          token.name,
+          name,
           definitionStr,
-          token.startI,
+          startI,
         )
       }
     }
     else if (transition === 'DURATION_IN') {
-      if (token.name === 'NUMBER') {
-        parsed[parsed.length - 1].duration = token.value
+      if (name === 'NUMBER') {
+        parsed[parsed.length - 1].duration = value
         transition = 'DURATION_OUT'
       }
       else {
         warnDefinitionSyntaxError(
           'number',
-          token.name,
+          name,
           definitionStr,
-          token.startI,
+          startI,
         )
       }
     }
     else if (transition === 'DURATION_OUT') {
-      if (token.name === 'CLOSE_PAREN') {
+      if (name === 'CLOSE_PAREN') {
         transition = 'NEXT_OR_DONE'
       }
       else {
-        warnDefinitionSyntaxError('"("', token.name, definitionStr, token.startI)
+        warnDefinitionSyntaxError('"("', name, definitionStr, startI)
       }
     }
     else if (transition === 'NEXT_OR_DONE') {
-      if (token.name === 'COMMA') {
+      if (name === 'COMMA') {
         transition = 'START_FRAME_IN'
       }
       else {
-        warnDefinitionSyntaxError('","', token.name, definitionStr, token.startI)
+        warnDefinitionSyntaxError('","', name, definitionStr, startI)
       }
     }
   }
