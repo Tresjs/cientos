@@ -4,7 +4,7 @@ import { useRenderLoop } from '@tresjs/core'
 import type { Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three'
 import { DoubleSide } from 'three'
 import type { AtlasFrame, AtlasPage, AtlasData } from './Atlas'
-import { getAtlasPageAsync, getFrames } from './Atlas'
+import { getAtlasPageAsync, getFrames, getNullFrame } from './Atlas'
 
 export interface AnimatedSpriteProps {
   /** The URL of the image texture or an image dataURL. */
@@ -35,12 +35,6 @@ export interface AnimatedSpriteProps {
   /** Event callback when the assets – atlas and image – are loaded. */
   onLoad?: (frameName: string) => void
   /** Event callback when the animation ends. */
-  onEnd?: (frameName: string) => void
-  /** Event callback when the animation loops. */
-  onLoopEnd?: (frameName: string) => void
-  /** Event callback when each frame changes. Note: called *at most* once per tick. */
-  onFrame?: (frameName: string) => void
-  /** Whether the animation is paused. */
   paused?: boolean
   /** Whether to play the animation in reverse. */
   reversed?: boolean
@@ -69,6 +63,12 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   anchor: () => [0.5, 0.5],
 })
 
+const emit = defineEmits<{
+  (e: 'frame', frameName: string): void
+  (e: 'end', frameName: string): void
+  (e: 'loop', frameName: string): void
+}>()
+
 const animatedSpriteGroupRef = ref<InstanceType<typeof Group> | null>()
 const animatedSpriteSpriteRef = ref<InstanceType<typeof Mesh> | InstanceType<typeof Sprite> | null>()
 const animatedSpriteMaterialRef = ref<InstanceType<typeof SpriteMaterial | typeof MeshBasicMaterial> | null>()
@@ -78,13 +78,9 @@ const positionX = ref(0)
 const positionY = ref(0)
 const NOMINAL_PX_TO_WORLD_UNITS = 0.01
 
-defineExpose({
-  value: animatedSpriteGroupRef,
-})
-
 const page: AtlasPage = await getAtlasPageAsync(props.atlas, props.image, props.definitions)
 
-let frame: AtlasFrame | null = null
+let frame: AtlasFrame = getNullFrame()
 let frameNum = 0
 let cooldown = 1
 let animation: AtlasFrame[] = getFrames(page, props.animation, props.reversed)
@@ -92,7 +88,7 @@ let frameHeldOnLoopEnd = false
 
 updateFrame(animation[frameNum])
 
-if (props.onLoad) props.onLoad(frame!.name)
+if (props.onLoad) props.onLoad(frame.name)
 
 useRenderLoop().onLoop(({ delta }) => {
   if (!animatedSpriteSpriteRef.value) return
@@ -102,11 +98,11 @@ useRenderLoop().onLoop(({ delta }) => {
   while (cooldown <= 0) {
     cooldown++
     frameNum++
-    if (props.onLoopEnd && props.loop && frameNum >= animation.length) props.onLoopEnd(frame!.name)
+    if (props.loop && frameNum >= animation.length) emit('loop', frame.name)
     if (!props.loop && frameNum >= animation.length) {
       frameHeldOnLoopEnd = true
       frameNum = props.resetOnEnd ? 0 : animation.length - 1
-      if (props.onEnd) props.onEnd(frame!.name)
+      emit('end', frame.name)
     }
     if (props.loop) {
       frameNum %= animation.length
@@ -122,14 +118,13 @@ useRenderLoop().onLoop(({ delta }) => {
 function updateFrame(newFrame: AtlasFrame) {
   if (newFrame !== frame) {
     frame = newFrame
-    if (props.onFrame) props.onFrame(frame.name)
+    emit('frame', frame.name)
     render()
   }
 }
 
 function render() {
-  if (!animatedSpriteMaterialRef.value || !frame) {
-    frame = null
+  if (!animatedSpriteMaterialRef.value) {
     return
   }
 
@@ -188,7 +183,7 @@ watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
 <template>
   <TresGroup
     ref="animatedSpriteGroupRef"
-    v-bind="props"
+    v-bind="$attrs"
   >
     <Suspense :fallback="null">
       <template v-if="props.asSprite">
