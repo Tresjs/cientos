@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { useRenderLoop } from '@tresjs/core'
 import type { Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three'
 import { DoubleSide } from 'three'
-import type { AtlasFrame, AtlasPage, TexturePackerFrameDataArray, TexturePackerFrameDataObject } from './Atlas'
+import type { AtlasFrame, AtlasPage, AtlasData } from './Atlas'
 import { getAtlasPageAsync, getFrames } from './Atlas'
 
 export interface AnimatedSpriteProps {
@@ -13,9 +13,9 @@ export interface AnimatedSpriteProps {
    * If `number`, the number of columns in the texture. 
    * If `[number, number]`, the number of columns/rows in the texture. 
    * If `string[]`, the animation names for each column in the texture. 
-   * If `TexturePackerFrameDataArray` or `TexturePackerFrameDataObject`, the atlas as a JS object.
+   * If `AtlasData` the atlas as a JS object.
    **/
-  atlas: string | number | [number, number] | string[] | TexturePackerFrameDataArray | TexturePackerFrameDataObject
+  atlas: string | number | [number, number] | string[] | AtlasData 
   /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
   * A "animation definition" comma-separated string of frame numbers with optional parentheses-surrounded durations.
   * Here is how various definition strings convert to arrays of frames for playback:

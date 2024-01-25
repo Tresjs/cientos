@@ -76,16 +76,18 @@ export async function getAtlasPageAsync(
   return pagePromise
 }
 
-export interface TexturePackerFrameData {
+export type AtlasData = TexturePackerFrameDataArray | TexturePackerFrameData
+
+interface TexturePackerFrameData {
   filename: string
   frame: { x: number; y: number; w: number; h: number }
 }
 
-export interface TexturePackerFrameDataArray {
+interface TexturePackerFrameDataArray {
   frames: TexturePackerFrameData[]
 }
 
-export interface TexturePackerFrameDataObject {
+interface TexturePackerFrameDataObject {
   frames: Record<string, TexturePackerFrameData>
 }
 
