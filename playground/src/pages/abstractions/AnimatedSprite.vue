@@ -5,7 +5,7 @@ import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 import { shallowReactive } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
-import type { TexturePackerFrameDataArray } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -18,7 +18,7 @@ const gl = {
 
 const animationState = shallowReactive({
   fps: 10,
-  animation: 'yes',
+  animation: 'cientosIdle',
   flipX: false,
   asSprite: false,
   loop: true,
@@ -28,19 +28,20 @@ const animationState = shallowReactive({
   anchorY: 0.5,
 })
 
-const { fps, animation, flipX, asSprite, loop, reversed, resetOnEnd, anchorX, anchorY } = useControls({
+const { fps, animation, flipX, asSprite, loop, paused, reversed, resetOnEnd, anchorX, anchorY } = useControls({
   fps: { value: animationState.fps, min: 0, max: 120, step: 1 },
-  animation: { label: 'Suzanne animation', value: animationState.animation, options: ['yes', 'no'] },
+  animation: { label: 'Animation', value: animationState.animation, options: ['cientosIdle', 'cientosWalk'] },
   flipX: animationState.flipX,
   asSprite: animationState.asSprite,
   loop: animationState.loop,
+  paused: false,
   reversed: animationState.reversed,
   resetOnEnd: animationState.resetOnEnd,
   anchorX: { value: animationState.anchorX, min: 0, max: 1, step: 0.01 },
   anchorY: { value: animationState.anchorY, min: 0, max: 1, step: 0.01 },
 })
 
-const anchorDemoAtlas: TexturePackerFrameDataArray = { frames: [] }
+const anchorDemoAtlas: Atlasish = { frames: [] }
 const anchorDemoImgData = (() => {
   const NUM_ROWS_COLS = 32
   const rects: { x: number; y: number; w: number; h: number }[] = []
@@ -137,7 +138,7 @@ const anchorDemoImgData = (() => {
         :position="[4, 0, 0]" 
         image="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/namedAnimationsTexture.png"
         atlas="https://raw.githubusercontent.com/Tresjs/assets/main/textures/animated-sprite/namedAnimationsAtlas.json"
-        :animation="animation.value" 
+        animation="yes" 
         :flip-x="flipX.value" 
         :fps="fps.value" 
         :loop="loop.value" 
@@ -160,6 +161,25 @@ const anchorDemoImgData = (() => {
         :anchor="[anchorX.value, anchorY.value]" 
         :as-sprite="asSprite.value"
         :reversed="reversed.value"
+      />
+    </Suspense>
+    <Suspense>
+      <AnimatedSprite
+        image="https://raw.githubusercontent.com/Tresjs/assets/49fe36d7971fe2ab91beca02515f5407670b51d0/textures/animated-sprite/cientosTexture.png"
+        atlas="https://raw.githubusercontent.com/Tresjs/assets/49fe36d7971fe2ab91beca02515f5407670b51d0/textures/animated-sprite/cientosAtlas.json"
+        :animation="animation.value" 
+        :fps="fps.value"
+        :loop="loop.value"
+        :position-z="1"
+        :definitions="{
+          cientosIdle: '0-5',
+          cientosWalk: '0-7',
+        }"
+        :reversed="reversed.value"
+        :paused="paused.value"
+        :reset-on-end="resetOnEnd.value"
+        @end="(frameName) => console.log('end', frameName)"
+        @loop="(frameName) => console.log('loop', frameName)"
       />
     </Suspense>
     <TresGridHelper :args="[10, 10]" />

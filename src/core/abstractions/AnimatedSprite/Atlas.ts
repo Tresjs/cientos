@@ -75,6 +75,7 @@ export async function getAtlasPageAsync(
 }
 
 export type AtlasData = TexturePackerFrameDataArray | TexturePackerFrameData;
+export type Atlasish = AtlasData | string | [number, number] | number;
 
 interface TexturePackerFrameData {
   filename: string;
