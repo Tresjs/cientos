@@ -26,8 +26,29 @@ import { OrbitControls, Sphere, vLightHelper } from '@tresjs/cientos'
   </TresCanvas>
 </template>
 ```
+### shadowCamera
+
+Using the `shadowCamera` argument you can also instantiate the helper for the current `shadow-camera` this only works in lights that generate shadows.
+
+```vue{2,8,11}
+<script setup lang="ts">
+import { OrbitControls, Sphere, vLightHelper } from '@tresjs/cientos'
+</script>
+<template>
+    <TresCanvas >
+      <TresPerspectiveCamera :position="[0, 2, 5]" />
+      <TresDirectionalLight
+        v-light-helper:shadowCamera
+      />
+      <TresHemisphereLight
+        v-light-helper:shadowCamera // This won't work, hemisphereLight doesn't generate shadows
+      />
+  </TresCanvas>
+</template>
+```
+
 
 ::: warning
-This directive just work with the following lights:DirectionalLight,PointLight, SpotLight, HemisphereLight.
-By this way you can't tweaks the props for the helper if you need to do that, please use the normal helper instance
+This directive just work with the following lights:DirectionalLight,PointLight, SpotLight, HemisphereLight and RectAreaLight.
+By this way you can't tweaks the props of the helper, if you need to do that, please use the normal helper instance
 :::

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { reactive, shallowRef } from 'vue'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls, Sphere, vLightHelper, vAlwaysLookAt } from '@tresjs/cientos'
+import { CameraControls, Sphere, vLightHelper, vAlwaysLookAt } from '@tresjs/cientos'
 import { SRGBColorSpace, NoToneMapping } from 'three'
+import { TresLeches, useControls } from '@tresjs/leches'
 
 const gl = {
-  clearColor: '#333',
+  clearColor: '#111',
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
@@ -27,9 +28,20 @@ onLoop(({ elapsed }) => {
     pointLightRef.value.position.z = Math.sin(lightAngle) * 4
   }
 })
+
+const { spotLight, dirLight, pointLight, hemiLight, rectAreaLight } = useControls({
+  spotLight: false,
+  dirLight: true,
+  pointLight: false,
+  hemiLight: true,
+  rectAreaLight: false,
+})
 </script>
 
 <template>
+  <TresLeches
+    class="top-0 important-left-4"
+  />
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 2, 5]" />
     <Sphere
@@ -40,40 +52,45 @@ onLoop(({ elapsed }) => {
     </Sphere>
     <TresAmbientLight :color="0xffffff" />
     <TresDirectionalLight
+      v-if="dirLight.value"
       ref="directionalLightRef"
-      v-light-helper
+      v-light-helper:shadowCamera
       :color="0xffffff"
       :intensity="5"
       :position="[0, 2, 4]"
     />
     <TresPointLight
+      v-if="pointLight.value"
       ref="pointLightRef"
-      v-light-helper
+      v-light-helper:shadowCamera
       :color="0xff0000"
       :intensity="100"
       :position="[0, 1, 1]"
     />
     <TresSpotLight
+      v-if="spotLight.value"
       ref="spotLightRef"
-      v-light-helper
+      v-light-helper:shadowCamera
       :color="0x00ff00"
       :intensity="10"
       :position="[0, 1, 1]"
     />
 
     <TresHemisphereLight
-      v-light-helper
-      :color="0x0000ff"
+      v-if="hemiLight.value"
+      v-light-helper:shadowCamera
+      :color="0xaaaaff"
       :ground-color="0x00ffff"
       :intensity="50"
     /> 
     <TresRectAreaLight
+      v-if="rectAreaLight.value"
       v-light-helper
       v-always-look-at="[0, 0, 0]"
       :args="[0xffff00, 100, 1, 1]"
       :position="[2.5, 0, 2.5]"
     />
     <TresGridHelper :args="[10, 10]" />
-    <OrbitControls />
+    <CameraControls />
   </TresCanvas>
 </template>
