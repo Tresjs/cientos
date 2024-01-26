@@ -32,8 +32,6 @@ export interface AnimatedSpriteProps {
   loop?: boolean
   /** If a string, the name of the animation to play. If `[number, number]`, the start and end frames of the animation. If `number` the frame number to display. */
   animation?: string | [number, number] | number
-  /** Event callback when the assets – atlas and image – are loaded. */
-  onLoad?: (frameName: string) => void
   /** Event callback when the animation ends. */
   paused?: boolean
   /** Whether to play the animation in reverse. */
@@ -87,8 +85,6 @@ let animation: AtlasFrame[] = getFrames(page, props.animation, props.reversed)
 let frameHeldOnLoopEnd = false
 
 updateFrame(animation[frameNum])
-
-if (props.onLoad) props.onLoad(frame.name)
 
 useRenderLoop().onLoop(({ delta }) => {
   if (!animatedSpriteSpriteRef.value || props.paused || frameHeldOnLoopEnd) return
