@@ -250,6 +250,7 @@ function getFramesByName(page: AtlasPage, name: string): AtlasFrame[] {
       `Cientos Atlas: getFramesByName
 The name "${name}" does not exist in this page. 
 Available names: ${Object.keys( page.namedFrames,).join(', ')}`)
+      return [getNullFrame()]
   }
   return page.namedFrames[name]
 }
@@ -268,6 +269,7 @@ function getFramesByIndices(
     useLogger().logError(
       `Cientos Atlas: getFramesByIndex – [${startI}, ${endI}] is out of bounds.`,
     )
+    return [getNullFrame()]
   }
   const result = []
   const sign = Math.sign(endI - startI)
