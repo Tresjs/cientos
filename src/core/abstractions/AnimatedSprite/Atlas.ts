@@ -247,10 +247,9 @@ export function getNullFrame(): AtlasFrame {
 function getFramesByName(page: AtlasPage, name: string): AtlasFrame[] {
   if (!(name in page.namedFrames)) {
     useLogger().logError(
-      `Cientos Atlas: getFramesByName – name ${name} does not exist in page. Available names: ${Object.keys(
-        page,
-      )}`,
-    )
+      `Cientos Atlas: getFramesByName
+The name "${name}" does not exist in this page. 
+Available names: ${Object.keys( page.namedFrames,).join(', ')}`)
   }
   return page.namedFrames[name]
 }
