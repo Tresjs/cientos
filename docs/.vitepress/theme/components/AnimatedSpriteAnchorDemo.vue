@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, Line2, AnimatedSprite } from '@tresjs/cientos'
+import { OrbitControls, Box, AnimatedSprite } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
-import type { TexturePackerFrameDataArray } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import type { AtlasData } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
 const { anchorX, anchorY, fps } = useControls({
   anchorX: { value: 0.5, min: 0, max: 1, step: 0.1 },
@@ -11,7 +11,7 @@ const { anchorX, anchorY, fps } = useControls({
   fps: { value: 5, min: 0, max: 30, step: 1 },
 })
 
-const anchorDemoAtlas: TexturePackerFrameDataArray = { frames: [] }
+const anchorDemoAtlas: AtlasData = { frames: [] }
 const anchorDemoImgData = (() => {
   const NUM_ROWS_COLS = 64
   const rects: { x: number; y: number; w: number; h: number }[] = []
@@ -80,21 +80,20 @@ const anchorDemoImgData = (() => {
     />
     <OrbitControls />
     <TresGroup :position-x="2">
-      <Line2
-        :points="[[-0.25, 0, 0], [0.25, 0, 0]]"
-        :line-width="1"
-        color="#FF0000"
-      />
-      <Line2
-        :points="[[0, -0.25, 0], [0, 0.25, 0]]"
-        :line-width="1"
-        color="#00FF00"
-      />
-      <Line2
-        :points="[[0, 0, -0.25], [0, 0, 0.25]]"
-        :line-width="1"
-        color="#0000FF"
-      />
+      <TresGroup :scale="0.5">
+        <Box
+          :scale="[1, 0.06, 0.06]"
+          color="red"
+        />
+        <Box
+          :scale="[0.06, 1, 0.06]"
+          color="blue"
+        />
+        <Box
+          :scale="[0.06, 0.06, 1]"
+          color="green"
+        />
+      </TresGroup>
       <Suspense>
         <AnimatedSprite
           :image="anchorDemoImgData"

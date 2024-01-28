@@ -7,14 +7,18 @@ const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/
 </script>
 
 <template>
-  <TresCanvas clear-color="#FBB03B">
+  <TresCanvas clear-color="#666">
     <TresPerspectiveCamera :position="[0, 0, 15]" />
     <Suspense>
       <AnimatedSprite
         :image="ASSETS_URL + 'cientosTexture.png'"
         :atlas="ASSETS_URL + 'cientosAtlas.json'"
-        animation="idle"
-        :fps="15"
+        animation="walk"
+        :definitions="{
+          idle:'0(10),1-2,3(10),4-5,0-5(2)',
+          walk:'0(1)',
+          }"
+        :fps="15" 
         :loop="true"
       />
     </Suspense>

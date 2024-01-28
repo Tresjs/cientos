@@ -7,11 +7,11 @@
 `<AnimatedSprite />` allows you to use 2D animations defined in a [texture atlas](https://en.wikipedia.org/wiki/Texture_atlas). A typical `<AnimatedSprite />` will use:
 
 * an image containing multiple sprites
-* a JSON atlas containing the coordinates of the image
+* a JSON atlas containing the individual sprite coordinates in the image
 
 ## Usage
 
-<<< @/.vitepress/theme/components/AnimatedSpriteDemo.vue{3,11-19}
+<<< @/.vitepress/theme/components/AnimatedSpriteDemo.vue{3,12-20}
 
 ::: warning Suspense
 `<AnimatedSprite />` loads resources asynchronously, so it must be wrapped in a `<Suspense />`.
@@ -28,19 +28,27 @@ Compiling source images into a texture atlas is usually handled by third-party s
 
 ## Without an atlas
 
-There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. This is possible if you compile your source images into equally sized columns and rows *and* set the `atlas` prop to number of columns, number of rows as `[number, number]`.
+There may be cases where you don't want to supply a generated JSON atlas as an `atlas` prop. To do so:
 
-### Example
+* Compile your source images into a single image texture
+* Space each sprite into equally sized columns and rows in the compiled image texture 
+* Ensure no extra padding in the compiled image texture
+* Set the `atlas` prop to number of columns, number of rows as `[number, number]`
 
-This image is comprised of 16 source images, compiled into a single image, in a single row:
+## Spritesheets in the wild
 
-<img src="https://raw.githubusercontent.com/Tresjs/assets/6c0b087768a0a2b76148c99fc87d7e6ddc3c6d66/textures/animated-sprite/textureWithoutAtlas.png" />
+::: warning 
+Spritesheets found online are often distributed without atlases. In most cases, you'll want to recompile the spritesheet (and atlas) to get them to work with `<AnimatedSprite />`.
+:::
 
-<DocsDemo>
-  <AnimatedSpriteNoAtlasDemo />
-</DocsDemo>
+### Recompiling a spritesheet
 
-<<< @/.vitepress/theme/components/AnimatedSpriteNoAtlasDemo.vue{12,13}
+* Cut individual sprites from the spritesheet and paste them into separate layers in an image editing software, e.g., GIMP.
+* Align the layers for animation. Toggling layer visibility on/off will show you how the animation will display, frame to frame.
+* Export layers as individual images.
+* Name the individual images according to the following pattern: <br>`[animation name][frame number].[extension]` E.g., walk000.png, walk001.png, idle000.png, idle001.png
+* Compile individual images into an image texture and atlas using a texture packing application, like TexturePacker.
+
 ## Props
 
 <CientosPropsTable 
@@ -48,64 +56,76 @@ component-path="src/core/abstractions/AnimatedSprite/component.vue"
 :fields="['name', 'description', 'default', 'required']"
 :on-format-value="({valueFormatted, propName, fieldName, getFieldFormatted})=> {
   if (fieldName === 'description') {
-    let type = getFieldFormatted('type')
-    if (type.indexOf('TSFunctionType') !== -1 && propName.startsWith('on')) {
-      type = '<code>(frameName:string) => void</code>'
-    }
+    const type = getFieldFormatted('type')
     return type + ' – ' + valueFormatted
   }
 }"
  />
 
+## Events
+
+| Event | Description | Argument |
+| - | - | - |
+| `frame` | Emitted when the displayed animation frame changes – at most once per tick | `string` – Name of the next frame to be displayed | 
+| `end` | Emitted when the animation ends – `props.loop` must be set to `false` | `string` – Name of the ending frame |
+| `loop` | Emitted when the animation loops – `props.loop` must be set to `true` | `string` – Name of the frame at the end of the loop |
+
+
 ## `animation`
 
-The `animation` prop holds either the name of the currently playing animation or a range of frames to play, or a frame number to display.
+The `:animation` prop holds either the name of the currently playing animation or a range of frames to play, or a frame number to display.
 
 ### Using named animations as `animation`
 
-Frames are automatically grouped into named animations, if you use either of the following naming conventions for your source images:
+When individual files are converted to a spritesheet/atlas, typically the original images' filenames will be included in the atlas. 
 
-* `[key][frame number].[file_extension]`
-* `[key]_[frame number].[file_extension]`
+`<AnimatedSprite />` uses those filenames to automatically group images into animations.
 
-The `<AnimatedSprite />` will automatically make all [key] available for playback as named animations.
+Use either of the following naming conventions for your source images ...
+
+* `[animation name][frame number].[file_extension]`
+* `[animation name]_[frame number].[file_extension]`
+
+... then `<AnimatedSprite />` will automatically make all `[animation name]` available for playback. Just pass `[animation name]` to the component's `:animation` prop.
 
 #### Example
 
-Here are some example source image names, to be compiled into an image texture and atlas.
+For our Cientos heart cartoon character animation, here's how it works.
 
-* heroIdle00.png
-* heroIdle01.png
-* heroIdle02.png
-* heroRun00.png
-* heroRun01.png
-* heroRun02.png
-* heroRun03.png
-* heroHeal00.png
-* heroHeal01.png
+| Filenames | Animation name |
+| - | - |
+| blink0000.png, blink0001.png, ... | blink |
+| idle0000.png, idle0001.png, ... | idle |
+| walk0000.png, walk0001.png, ... | walk |
 
-When the resulting image texture and atlas are provided to `<AnimatedSprite />`, "heroIdle", "heroRun", and "heroHeal" will be available as named animations. Animation names can be used as follows:
+Try it out by clicking a few times below:
 
-```vue{3}
-<AnimatedSprite 
-atlas="..." image="..." 
-animation="heroRun" 
-/>
-```
+<DocsDemo>
+  <AnimatedSpriteNamedAnimationDemo />
+</DocsDemo>
 
-### Using a range as `animation`
+<<< @/.vitepress/theme/components/AnimatedSpriteNamedAnimationDemo.vue
 
-A `[number, number]` range can be supplied as the `animation` prop. The numbers correspond to the position of the frame in the `atlas` `frames` array, starting with `0`. The first `number` in the range represents the start frame of the animation. The last `number` represents the end frame.
+## `definitions`
 
-### Using a single frame as `animation`
+You can supply and object to the `:definitions` prop. Any [named animation](#animation), can be a key. The value is a string that specifies frame order and repeated frames (delays).
 
-To display a single animation frame, a `number` can be supplied as the `animation` prop. The `number` corresponds to the position of the frame in the `atlas` `frames` array, starting with `0`. 
+Here, a delay of ten frames as been added to the bottom of the bounce (`0(10)`) and the top of the bounce (`3(10)`). After that, all five frames of the animation play again with a delay of three frames each (`0-5(3)`).
+
+<DocsDemo>
+  <AnimatedSpriteDefinitionsDemo />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/AnimatedSpriteDefinitionsDemo.vue{17}
 
 ## `anchor`
 
-The `anchor` controls how differently sized source images "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the anchor. `[0, 0]` places the anchor at the top left corner of the `<AnimatedSprite />`. `[1,1]` places the anchor at the bottom right corner. By default, the anchor is placed at `[0.5, 0.5]` i.e., the center.
+The `:anchor` prop controls how differently sized source images will "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the anchor. 
+
+`[0, 0]` places the anchor at the top left corner of the `<AnimatedSprite />`. `[1,1]` places the anchor at the bottom right corner. By default, the anchor is placed at `[0.5, 0.5]` i.e., the center.
 
 Below is a simple animation containing differently sized source images. The anchor is visible at world position `0, 0, 0`.
+
 <DocsDemo>
   <AnimatedSpriteAnchorDemo />
 </DocsDemo>
@@ -113,18 +133,3 @@ Below is a simple animation containing differently sized source images. The anch
 ::: warning
 Changing the anchor from the default can have unpredictable results if `asSprite` is `true`.
 :::
-
-## `definitions`
-
-For each [named animation](#named-animations), you can supply a "definition" that specifies frame order and repeated frames (delays). For the [named animation example above](#named-animations), the `definitions` prop might look like this:
-
-```vue
-<AnimatedSprite 
-atlas="..." image="..."
-:definitions="{
-  'heroIdle':'0(5),1-2', // repeat frame 0 five times, then play frames 1-2
-  'heroRun':'0-3,2-1', // play frames 0-3, then 2-1
-  // no "heroHeal" definition; the default frame order will be used: 0-1
-}"
-/>
-```
