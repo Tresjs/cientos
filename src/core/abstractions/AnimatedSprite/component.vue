@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRenderLoop } from '@tresjs/core'
-import type { Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three'
-import { DoubleSide } from 'three'
+import { ref, watch, defineEmits } from 'vue'
+import { TresVector2, normalizeVectorFlexibleParam, useRenderLoop } from '@tresjs/core'
+import { DoubleSide, Vector2 } from 'three'
 import type { AtlasFrame, AtlasPage, Atlasish } from './Atlas'
 import { getAtlasPageAsync, getFrames, getNullFrame } from './Atlas'
 
 export interface AnimatedSpriteProps {
-  /** The URL of the image texture or an image dataURL. */
+  /** URL of the image texture or an image dataURL. */
   image: string
-  /** If `string`, the URL of the JSON atlas or a JSON atlas (first character must be a '{' or '['). 
-   * If `number`, the number of columns in the texture. 
-   * If `[number, number]`, the number of columns/rows in the texture. 
-   * If `string[]`, the animation names for each column in the texture. 
-   * If `AtlasData` the atlas as a JS object.
+  /** If `string`, URL of the JSON atlas or a JSON atlas (first character must be a '{' or '['). 
+   * If `number`, number of columns in the texture. 
+   * If `[number, number]`, number of columns/rows in the texture. 
+   * If `string[]`, animation names for each column in the texture. 
+   * If `AtlasData`, atlas as a JS object.
    **/
   atlas: Atlasish
   /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
@@ -26,11 +25,11 @@ export interface AnimatedSpriteProps {
   * * "1-4(3),10(2)" - [1,1,1,2,2,2,3,3,3,4,4,4,10,10]
    */
   definitions?: Record<string, string>
-  /** The desired frames per second of the animation. */
+  /** Desired frames per second of the animation. */
   fps?: number
   /** Whether or not the animation should loop. */
   loop?: boolean
-  /** If a string, the name of the animation to play. If `[number, number]`, the start and end frames of the animation. If `number` the frame number to display. */
+  /** If `string`, name of the animation to play. If `[number, number]`, start and end frames of the animation. If `number`, frame number to display. */
   animation?: string | [number, number] | number
   /** Event callback when the animation ends. */
   paused?: boolean
@@ -42,10 +41,8 @@ export interface AnimatedSpriteProps {
   resetOnEnd?: boolean
   /** Alpha test value for the material. [See THREE.Material.alphaTest](https://threejs.org/docs/#api/en/materials/Material.alphaTest) */
   alphaTest?: number
-  /** Whether to display the object as a THREE.Sprite. [See THREE.Sprite](https://threejs.org/docs/?q=sprite#api/en/objects/Sprite) */
-  asSprite?: boolean
-  /** The origin of the object. [0, 0] is left, top. [1, 1] is right, bottom. */
-  anchor?: [number, number]
+  /** Origin of the object. [0, 0] is left, top. [1, 1] is right, bottom. */
+  center?: TresVector2
 }
 
 const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
@@ -58,18 +55,16 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   alphaTest: 0.0,
   resetOnEnd: false,
   asSprite: false,
-  anchor: () => [0.5, 0.5],
+  center: () => new Vector2(0.5, 0.5),
 })
 
 const emit = defineEmits<{
   (e: 'frame', frameName: string): void
   (e: 'end', frameName: string): void
   (e: 'loop', frameName: string): void
+  (e: 'click', value: Object3D): void
 }>()
 
-const animatedSpriteGroupRef = ref<InstanceType<typeof Group> | null>()
-const animatedSpriteSpriteRef = ref<InstanceType<typeof Mesh> | InstanceType<typeof Sprite> | null>()
-const animatedSpriteMaterialRef = ref<InstanceType<typeof SpriteMaterial | typeof MeshBasicMaterial> | null>()
 const scaleX = ref(0)
 const scaleY = ref(0)
 const positionX = ref(0)
@@ -83,12 +78,13 @@ let frameNum = 0
 let cooldown = 1
 let animation: AtlasFrame[] = getFrames(page, props.animation, props.reversed)
 let frameHeldOnLoopEnd = false
+let center:number[] = normalizeVectorFlexibleParam(props.center)
 
 updateFrame(animation[frameNum])
 
 useRenderLoop().onLoop(({ delta }) => {
-  if (!animatedSpriteSpriteRef.value || props.paused || frameHeldOnLoopEnd) return
-  
+  if (props.paused || frameHeldOnLoopEnd) return
+
   cooldown -= delta * props.fps
 
   while (cooldown <= 0) {
@@ -120,7 +116,7 @@ function updateFrame(newFrame: AtlasFrame) {
 }
 
 function render() {
-  if (!animatedSpriteMaterialRef.value) {
+  if (!page.texture) {
     return
   }
 
@@ -134,8 +130,8 @@ function render() {
   scaleX.value = frame.width * NOMINAL_PX_TO_WORLD_UNITS
   scaleY.value = frame.height * NOMINAL_PX_TO_WORLD_UNITS
 
-  positionX.value = -(props.anchor[0] - 0.5) * frame.width * NOMINAL_PX_TO_WORLD_UNITS
-  positionY.value = (props.anchor[1] - 0.5) * frame.height * NOMINAL_PX_TO_WORLD_UNITS
+    positionX.value = -(center[0] - 0.5) * frame.width * NOMINAL_PX_TO_WORLD_UNITS
+    positionY.value = -(center[1] - 0.5) * frame.height * NOMINAL_PX_TO_WORLD_UNITS
 };
 
 watch(() => props.animation, (newValue, oldValue) => {
@@ -173,26 +169,21 @@ watch(() => props.reversed, () => {
   }
 })
 
-watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
+watch(() => [props.flipX, props.asSprite], render)
+
+watch(() => [props.center], () => {
+  center = normalizeVectorFlexibleParam(props.center)
+  render()
+})
+
 </script>
 
 <template>
-  <TresGroup ref="animatedSpriteGroupRef" v-bind="$attrs">
-    <Suspense :fallback="null">
-      <template v-if="props.asSprite">
-        <TresSprite ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresSpriteMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :map="page.texture" :transparent="true"
-            :alphaTest="props.alphaTest" />
-        </TresSprite>
-      </template>
-      <template v-else>
-        <TresMesh ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :side="DoubleSide"
-            :map="page.texture" :transparent="true" :alphaTest="props.alphaTest" />
-        </TresMesh>
-      </template>
-    </Suspense>
-    {children}
+  <TresGroup>
+    <TresMesh :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]" @click="e => emit('click', e)">
+      <TresPlaneGeometry :args="[1, 1]" />
+      <TresMeshBasicMaterial :toneMapped="false" :side="DoubleSide" :map="page.texture" :transparent="true"
+        :alphaTest="props.alphaTest" />
+    </TresMesh>
   </TresGroup>
 </template>
