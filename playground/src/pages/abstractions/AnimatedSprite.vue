@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, AnimatedSprite } from '@tresjs/cientos'
+import { OrbitControls, AnimatedSprite, Box } from '@tresjs/cientos'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 import { shallowReactive } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
@@ -24,11 +24,11 @@ const animationState = shallowReactive({
   loop: true,
   reversed: false,
   resetOnEnd: false,
-  anchorX: 0.5,
-  anchorY: 0.5,
+  centerX: 0.5,
+  centerY: 0.5,
 })
 
-const { fps, animation, flipX, asSprite, loop, paused, reversed, resetOnEnd, anchorX, anchorY } = useControls({
+const { fps, animation, flipX, asSprite, loop, paused, reversed, resetOnEnd, centerX, centerY } = useControls({
   fps: { value: animationState.fps, min: 0, max: 120, step: 1 },
   animation: { label: 'Animation', value: animationState.animation, options: ['cientosIdle', 'cientosWalk'] },
   flipX: animationState.flipX,
@@ -37,12 +37,12 @@ const { fps, animation, flipX, asSprite, loop, paused, reversed, resetOnEnd, anc
   paused: false,
   reversed: animationState.reversed,
   resetOnEnd: animationState.resetOnEnd,
-  anchorX: { value: animationState.anchorX, min: 0, max: 1, step: 0.01 },
-  anchorY: { value: animationState.anchorY, min: 0, max: 1, step: 0.01 },
+  centerX: { value: animationState.centerX, min: 0, max: 1, step: 0.01 },
+  centerY: { value: animationState.centerY, min: 0, max: 1, step: 0.01 },
 })
 
-const anchorDemoAtlas: Atlasish = { frames: [] }
-const anchorDemoImgData = (() => {
+const centerDemoAtlas: Atlasish = { frames: [] }
+const centerDemoImgData = (() => {
   const NUM_ROWS_COLS = 32
   const rects: { x: number; y: number; w: number; h: number }[] = []
   let h = 1
@@ -73,21 +73,21 @@ const anchorDemoImgData = (() => {
   canvas.height = IMG_SIZE
   document.body.append(canvas)
   const ctx = canvas.getContext('2d')!
-  const EDGE_ANCHOR_SIZE = 6
-  const CENTER_ANCHOR_SIZE = COL_SIZE
+  const EDGE_center_SIZE = 6
+  const CENTER_center_SIZE = COL_SIZE
   rects.forEach((rect, i) => {
     const frame = { x: rect.x * COL_SIZE, y: rect.y * ROW_SIZE, w: rect.w * COL_SIZE, h: rect.h * ROW_SIZE }
     const { x, y, w, h } = frame
-    anchorDemoAtlas.frames.push({ filename: `rect_${i.toString().padStart(4, '0')}`, frame })
+    centerDemoAtlas.frames.push({ filename: `rect_${i.toString().padStart(4, '0')}`, frame })
     ctx.fillStyle = `hsl(${360 * i / rects.length}, 100%, 50%)`
     ctx.fillRect(x, y, w, h)
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
     ctx.fillRect(
-      x + w * 0.5 - CENTER_ANCHOR_SIZE * 0.5, 
-      y + h * 0.5 - CENTER_ANCHOR_SIZE * 0.5, 
-      CENTER_ANCHOR_SIZE, 
-      CENTER_ANCHOR_SIZE)
+      x + w * 0.5 - CENTER_center_SIZE * 0.5, 
+      y + h * 0.5 - CENTER_center_SIZE * 0.5, 
+      CENTER_center_SIZE, 
+      CENTER_center_SIZE)
 
     ctx.fillStyle = '#FFF'
     ctx.textAlign = 'center'
@@ -96,16 +96,16 @@ const anchorDemoImgData = (() => {
     ctx.fillText(`Frame ${i}`, x + w * 0.5, y + h * 0.5)
 
     ctx.fillStyle = '#FFF'
-    ctx.fillRect(x, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w * 0.5 - EDGE_ANCHOR_SIZE * 0.5, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y, EDGE_center_SIZE, EDGE_center_SIZE)
 
-    ctx.fillRect(x, y + h * 0.5 - EDGE_ANCHOR_SIZE * 0.5, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y + h * 0.5 - EDGE_ANCHOR_SIZE * 0.5, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y + h * 0.5 - EDGE_center_SIZE * 0.5, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y + h * 0.5 - EDGE_center_SIZE * 0.5, EDGE_center_SIZE, EDGE_center_SIZE)
 
-    ctx.fillRect(x, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w * 0.5 - EDGE_ANCHOR_SIZE * 0.5, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
 
   })
   const imgData = canvas.toDataURL()
@@ -121,15 +121,14 @@ const anchorDemoImgData = (() => {
     <OrbitControls />
     <Suspense>
       <AnimatedSprite
-        :image="anchorDemoImgData"
-        :atlas="anchorDemoAtlas"
+        :image="centerDemoImgData"
+        :atlas="centerDemoAtlas"
         animation="rect"
         :flip-x="flipX.value"
         :fps="fps.value"
         :loop="loop.value"
         :reset-on-end="resetOnEnd.value"
-        :anchor="[anchorX.value, anchorY.value]"
-        :as-sprite="asSprite.value"
+        :center="[centerX.value, centerY.value]"
         :reversed="reversed.value"
       />
     </Suspense>
@@ -143,8 +142,7 @@ const anchorDemoImgData = (() => {
         :fps="fps.value" 
         :loop="loop.value" 
         :reset-on-end="resetOnEnd.value"
-        :anchor="[anchorX.value, anchorY.value]" 
-        :as-sprite="asSprite.value"
+        :center="[centerX.value, centerY.value]" 
         :reversed="reversed.value"
       />
     </Suspense>
@@ -158,8 +156,7 @@ const anchorDemoImgData = (() => {
         :fps="fps.value" 
         :loop="loop.value" 
         :reset-on-end="resetOnEnd.value"
-        :anchor="[anchorX.value, anchorY.value]" 
-        :as-sprite="asSprite.value"
+        :center="[centerX.value, centerY.value]" 
         :reversed="reversed.value"
       />
     </Suspense>
@@ -167,20 +164,22 @@ const anchorDemoImgData = (() => {
       <AnimatedSprite
         image="https://raw.githubusercontent.com/Tresjs/assets/49fe36d7971fe2ab91beca02515f5407670b51d0/textures/animated-sprite/cientosTexture.png"
         atlas="https://raw.githubusercontent.com/Tresjs/assets/49fe36d7971fe2ab91beca02515f5407670b51d0/textures/animated-sprite/cientosAtlas.json"
+        :scale="4"
+        :center="[centerX.value, centerY.value]" 
         :animation="animation.value" 
         :fps="fps.value"
         :loop="loop.value"
         :position-z="1"
         :definitions="{
-          cientosIdle: '0-5',
           cientosWalk: '0-7',
         }"
         :reversed="reversed.value"
         :paused="paused.value"
         :reset-on-end="resetOnEnd.value"
+        @click="(pointerEvent:PointerEvent) => console.log('ok', pointerEvent)"
         @end="(frameName) => console.log('end', frameName)"
-        @loop="(frameName) => console.log('loop', frameName)"
-      />
+      ><Box></Box>
+      </AnimatedSprite>
     </Suspense>
     <TresGridHelper :args="[10, 10]" />
   </TresCanvas>
