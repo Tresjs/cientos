@@ -45,7 +45,7 @@ export interface AnimatedSpriteProps {
   /** Whether to display the object as a THREE.Sprite. [See THREE.Sprite](https://threejs.org/docs/?q=sprite#api/en/objects/Sprite) */
   asSprite?: boolean
   /** The origin of the object. [0, 0] is left, top. [1, 1] is right, bottom. */
-  anchor?: [number, number]
+  center?: [number, number]
 }
 
 const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
@@ -58,7 +58,7 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   alphaTest: 0.0,
   resetOnEnd: false,
   asSprite: false,
-  anchor: () => [0.5, 0.5],
+  center: () => [0.5, 0.5],
 })
 
 const emit = defineEmits<{
@@ -134,8 +134,8 @@ function render() {
   scaleX.value = frame.width * NOMINAL_PX_TO_WORLD_UNITS
   scaleY.value = frame.height * NOMINAL_PX_TO_WORLD_UNITS
 
-  positionX.value = -(props.anchor[0] - 0.5) * frame.width * NOMINAL_PX_TO_WORLD_UNITS
-  positionY.value = (props.anchor[1] - 0.5) * frame.height * NOMINAL_PX_TO_WORLD_UNITS
+  positionX.value = (0.5-props.center[0]) * frame.width * NOMINAL_PX_TO_WORLD_UNITS
+  positionY.value = (0.5-props.center[1]) * frame.height * NOMINAL_PX_TO_WORLD_UNITS
 };
 
 watch(() => props.animation, (newValue, oldValue) => {
@@ -173,7 +173,7 @@ watch(() => props.reversed, () => {
   }
 })
 
-watch(() => [props.flipX, props.anchor, animatedSpriteSpriteRef], render)
+watch(() => [props.flipX, props.center, animatedSpriteSpriteRef], render)
 </script>
 
 <template>

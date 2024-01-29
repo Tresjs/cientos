@@ -118,16 +118,14 @@ Here, a delay of ten frames as been added to the bottom of the bounce (`0(10)`) 
 
 <<< @/.vitepress/theme/components/AnimatedSpriteDefinitionsDemo.vue{17}
 
-## `anchor`
+## `center`
 
-The `:anchor` prop controls how differently sized source images will "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the anchor. 
-
-`[0, 0]` places the anchor at the top left corner of the `<AnimatedSprite />`. `[1,1]` places the anchor at the bottom right corner. By default, the anchor is placed at `[0.5, 0.5]` i.e., the center.
+In addition to being the sprite's anchor point, the `:center` prop also controls how differently sized source images will "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the center.
 
 Below is a simple animation containing differently sized source images. The anchor is visible at world position `0, 0, 0`.
 
 <DocsDemo>
-  <AnimatedSpriteAnchorDemo />
+  <AnimatedSpriteCenterDemo />
 </DocsDemo>
 
 ::: warning
