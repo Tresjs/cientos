@@ -50,7 +50,7 @@ export interface AnimatedSpriteProps {
 }
 
 const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
-  fps: 60,
+  fps: 30,
   loop: true,
   animation: 0,
   paused: false,
