@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRenderLoop } from '@tresjs/core'
-import type { Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three'
+import { useRenderLoop, TresVector2, normalizeVectorFlexibleParam } from '@tresjs/core'
+import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
-import type { AtlasFrame, AtlasPage, Atlasish } from './Atlas'
-import { getAtlasPageAsync, getFrames, getNullFrame } from './Atlas'
+import type { Atlasish } from './Atlas'
+import { getTextureAndAtlasAsync, getAtlasFrames, getNullAtlasFrame } from './Atlas'
 
 export interface AnimatedSpriteProps {
-  /** The URL of the image texture or an image dataURL. */
+  /** URL of the image texture or an image dataURL. */
   image: string
-  /** If `string`, the URL of the JSON atlas or a JSON atlas (first character must be a '{' or '['). 
+  /** If `string`, the URL of the JSON atlas. 
    * If `number`, the number of columns in the texture. 
    * If `[number, number]`, the number of columns/rows in the texture. 
-   * If `string[]`, the animation names for each column in the texture. 
-   * If `AtlasData` the atlas as a JS object.
+   * If `AtlasData`, the atlas as a JS object.
    **/
-  atlas: Atlasish
+  atlas: string | Atlasish
   /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
   * A "animation definition" comma-separated string of frame numbers with optional parentheses-surrounded durations.
   * Here is how various definition strings convert to arrays of frames for playback:
@@ -26,7 +25,7 @@ export interface AnimatedSpriteProps {
   * * "1-4(3),10(2)" - [1,1,1,2,2,2,3,3,3,4,4,4,10,10]
    */
   definitions?: Record<string, string>
-  /** The desired frames per second of the animation. */
+  /** Desired frames per second of the animation. */
   fps?: number
   /** Whether or not the animation should loop. */
   loop?: boolean
@@ -40,12 +39,14 @@ export interface AnimatedSpriteProps {
   flipX?: boolean
   /** For a non-looping animation, when the animation ends, whether to display the zeroth frame. */
   resetOnEnd?: boolean
+  /** Anchor point of the object. A value of [0.5, 0.5] corresponds to the center. [0, 0] is left, bottom. */
+  center?: TresVector2
   /** Alpha test value for the material. [See THREE.Material.alphaTest](https://threejs.org/docs/#api/en/materials/Material.alphaTest) */
   alphaTest?: number
-  /** Whether to display the object as a THREE.Sprite. [See THREE.Sprite](https://threejs.org/docs/?q=sprite#api/en/objects/Sprite) */
-  asSprite?: boolean
-  /** The origin of the object. [0, 0] is left, top. [1, 1] is right, bottom. */
-  center?: [number, number]
+  /** Depth test value for the material. [See THREE.Material.depthTest](https://threejs.org/docs/#api/en/materials/Material.depthTest) */
+  depthTest?: boolean
+  /** Depth write value for the material. [See THREE.Material.depthWrite](https://threejs.org/docs/#api/en/materials/Material.depthWrite) */
+  depthWrite?: boolean
 }
 
 const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
@@ -55,41 +56,43 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   paused: false,
   reversed: false,
   flipX: false,
-  alphaTest: 0.0,
   resetOnEnd: false,
-  asSprite: false,
   center: () => [0.5, 0.5],
+  alphaTest: 0.0,
+  depthTest: true,
+  depthWrite: true,
 })
 
 const emit = defineEmits<{
   (e: 'frame', frameName: string): void
   (e: 'end', frameName: string): void
   (e: 'loop', frameName: string): void
+  (e: 'click', event: Intersection): void
 }>()
 
-const animatedSpriteGroupRef = ref<InstanceType<typeof Group> | null>()
-const animatedSpriteSpriteRef = ref<InstanceType<typeof Mesh> | InstanceType<typeof Sprite> | null>()
-const animatedSpriteMaterialRef = ref<InstanceType<typeof SpriteMaterial | typeof MeshBasicMaterial> | null>()
-const scaleX = ref(0)
-const scaleY = ref(0)
 const positionX = ref(0)
 const positionY = ref(0)
-const NOMINAL_PX_TO_WORLD_UNITS = 0.01
+const scaleX = ref(0)
+const scaleY = ref(0)
 
-const page: AtlasPage = await getAtlasPageAsync(props.atlas, props.image, props.definitions)
+const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas, props.definitions)
+texture.matrixAutoUpdate = false;
 
-let frame: AtlasFrame = getNullFrame()
-let frameNum = 0
+let animation = getAtlasFrames(atlas, props.animation, props.reversed)
+let centerX = 0.5
+let centerY = 0.5
 let cooldown = 1
-let animation: AtlasFrame[] = getFrames(page, props.animation, props.reversed)
+let frame = getNullAtlasFrame()
+let frameNameToEmit: string | null = null
+let frameNum = 0
 let frameHeldOnLoopEnd = false
-
-updateFrame(animation[frameNum])
+let dirtyFlag = true
+const TEXTURE_PX_TO_WORLD_UNITS = 0.01
 
 useRenderLoop().onLoop(({ delta }) => {
-  if (!animatedSpriteSpriteRef.value || props.paused || frameHeldOnLoopEnd) return
-  
-  cooldown -= delta * props.fps
+  if (!props.paused && !frameHeldOnLoopEnd) {
+    cooldown -= delta * props.fps
+  }
 
   while (cooldown <= 0) {
     cooldown++
@@ -108,46 +111,58 @@ useRenderLoop().onLoop(({ delta }) => {
     }
   }
 
-  updateFrame(animation[frameNum])
-})
-
-function updateFrame(newFrame: AtlasFrame) {
-  if (newFrame !== frame) {
-    frame = newFrame
-    emit('frame', frame.name)
+  if (animation[frameNum] !== frame) {
+    frame = animation[frameNum]
+    frameNameToEmit = frame.name
     render()
   }
-}
 
-function render() {
-  if (!animatedSpriteMaterialRef.value) {
-    return
+  if (dirtyFlag) {
+    dirtyFlag = false
+
+    texture.offset.x = frame.offsetX + (props.flipX ? frame.repeatX : 0)
+    texture.offset.y = frame.offsetY
+    texture.repeat.x = frame.repeatX * (props.flipX ? -1 : 1)
+    texture.repeat.y = frame.repeatY
+    texture.updateMatrix()
+
+    scaleX.value = frame.width * TEXTURE_PX_TO_WORLD_UNITS
+    scaleY.value = frame.height * TEXTURE_PX_TO_WORLD_UNITS
+
+    positionX.value = (0.5 - centerX) * frame.width * TEXTURE_PX_TO_WORLD_UNITS
+    positionY.value = (0.5 - centerY) * frame.height * TEXTURE_PX_TO_WORLD_UNITS
   }
 
-  page.texture.offset.x = frame.offsetX + (props.flipX ? frame.repeatX : 0)
-  page.texture.offset.y = frame.offsetY
-  page.texture.repeat.x = frame.repeatX * (props.flipX ? -1 : 1)
-  page.texture.repeat.y = frame.repeatY
+  if (frameNameToEmit) {
+    emit('frame', frameNameToEmit)
+    frameNameToEmit = null
+  }
 
-  page.texture.updateMatrix()
+})
 
-  scaleX.value = frame.width * NOMINAL_PX_TO_WORLD_UNITS
-  scaleY.value = frame.height * NOMINAL_PX_TO_WORLD_UNITS
-
-  positionX.value = (0.5-props.center[0]) * frame.width * NOMINAL_PX_TO_WORLD_UNITS
-  positionY.value = (0.5-props.center[1]) * frame.height * NOMINAL_PX_TO_WORLD_UNITS
-};
+function render() {
+  dirtyFlag = true
+}
 
 watch(() => props.animation, (newValue, oldValue) => {
   if (JSON.stringify(newValue) === JSON.stringify(oldValue)) {
     return
   }
-  animation = getFrames(page, props.animation, props.reversed)
+  animation = getAtlasFrames(atlas, props.animation, props.reversed)
   frameNum = 0
   cooldown = 1
-  updateFrame(animation[frameNum])
   frameHeldOnLoopEnd = false
+  render()
 }, { immediate: true })
+
+watch(() => props.reversed, () => {
+  frameNum = (animation.length - frameNum - 1) % animation.length
+  animation = getAtlasFrames(atlas, props.animation, props.reversed)
+  if (frameHeldOnLoopEnd) {
+    frameNum = props.resetOnEnd ? 0 : animation.length - 1
+  }
+  render()
+})
 
 watch(() => props.paused, () => {
   frameHeldOnLoopEnd = false
@@ -160,39 +175,28 @@ watch(() => props.loop, () => {
 watch(() => props.resetOnEnd, () => {
   if (frameHeldOnLoopEnd) {
     frameNum = props.resetOnEnd ? 0 : animation.length - 1
-    updateFrame(animation[frameNum])
+    render()
   }
 })
 
-watch(() => props.reversed, () => {
-  frameNum = (animation.length - frameNum - 1) % animation.length
-  animation = getFrames(page, props.animation, props.reversed)
-  if (frameHeldOnLoopEnd) {
-    frameNum = props.resetOnEnd ? 0 : animation.length - 1
-    updateFrame(animation[frameNum])
-  }
-})
+watch(() => props.flipX, render)
 
-watch(() => [props.flipX, props.center, animatedSpriteSpriteRef], render)
+watch(() => [props.center], () => {
+  [centerX, centerY] = normalizeVectorFlexibleParam(props.center)
+  render()
+}, { immediate: true })
 </script>
 
 <template>
-  <TresGroup ref="animatedSpriteGroupRef" v-bind="$attrs">
+  <TresGroup v-bind="$attrs">
     <Suspense :fallback="null">
-      <template v-if="props.asSprite">
-        <TresSprite ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresSpriteMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :map="page.texture" :transparent="true"
-            :alphaTest="props.alphaTest" />
-        </TresSprite>
-      </template>
-      <template v-else>
-        <TresMesh ref="animatedSpriteSpriteRef" :scale="[scaleX, scaleY, 1]" :position="[positionX, positionY, 0]">
-          <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial ref="animatedSpriteMaterialRef" :toneMapped="false" :side="DoubleSide"
-            :map="page.texture" :transparent="true" :alphaTest="props.alphaTest" />
-        </TresMesh>
-      </template>
+      <TresMesh @click="(intr: Intersection) => emit('click', intr)" :scale="[scaleX, scaleY, 1]"
+        :position="[positionX, positionY, 0]">
+        <TresPlaneGeometry :args="[1, 1]" />
+        <TresMeshBasicMaterial :toneMapped="false" :side="DoubleSide" :map="texture" :transparent="true"
+          :alphaTest="props.alphaTest" :depthWrite="props.depthWrite" :depthTest="props.depthTest" />
+      </TresMesh>
     </Suspense>
-    {children}
+    <slot></slot>
   </TresGroup>
 </template>
