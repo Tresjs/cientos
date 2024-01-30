@@ -38,7 +38,7 @@ There may be cases where you don't want to supply an atlas to the `atlas` prop. 
 ## Spritesheets in the wild
 
 ::: warning 
-Online, spritesheets are often distributed without atlases and the images are often compiled by hand. It can be difficult or impossible to use these resources directly with `<AnimatedSprite />`. In many cases, it's advisable to recompile the spritesheet.
+In the wild, spritesheets are often distributed without atlases and the images are often compiled by hand. It can be difficult or impossible to use these resources directly with `<AnimatedSprite />`. In many cases, it's advisable to recompile the spritesheet.
 :::
 
 ### How to recompile an existing spritesheet image
