@@ -1,28 +1,27 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { AnimatedSprite } from '@tresjs/cientos'
-import { shallowRef } from 'vue'
+import { ref } from 'vue'
 
-const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/' +
-  '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
+const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
+  + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
 
-const animationNames = ['idle', 'blink', 'walk']
-const animation = shallowRef(animationNames[0])
+const animations = ref(['idle', 'blink', 'walk'])
 </script>
 
 <template>
-  <TresCanvas clear-color="#82DBC5" 
-  @click="() => {
-    animation = animationNames.shift() || 'walk'; 
-    animationNames.push(animation)
-  }"
+  <TresCanvas
+    clear-color="#82DBC5" 
+    @click="() => {
+      animations.push(animations.shift() as string)
+    }"
   >
     <TresPerspectiveCamera :position="[0, 0, 15]" />
     <Suspense>
       <AnimatedSprite
-        :image="ASSETS_URL + 'cientosTexture.png'"
-        :atlas="ASSETS_URL + 'cientosAtlas.json'"
-        :animation="animation"
+        :image="`${ASSETS_URL}cientosTexture.png`"
+        :atlas="`${ASSETS_URL}cientosAtlas.json`"
+        :animation="animations[0]"
         :fps="15" 
         :loop="true"
       />

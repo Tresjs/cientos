@@ -5,14 +5,14 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import type { AtlasData } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
-const { anchorX, anchorY, fps } = useControls({
-  anchorX: { value: 0.5, min: 0, max: 1, step: 0.1 },
-  anchorY: { value: 0.5, min: 0, max: 1, step: 0.1 },
+const { centerX, centerY, fps } = useControls({
+  centerX: { value: 0.5, min: 0, max: 1, step: 0.1 },
+  centerY: { value: 0.5, min: 0, max: 1, step: 0.1 },
   fps: { value: 5, min: 0, max: 30, step: 1 },
 })
 
-const anchorDemoAtlas: AtlasData = { frames: [] }
-const anchorDemoImgData = (() => {
+const centerDemoAtlas: AtlasData = { frames: [] }
+const centerDemoImgData = (() => {
   const NUM_ROWS_COLS = 64
   const rects: { x: number; y: number; w: number; h: number }[] = []
   let h = 0
@@ -39,31 +39,31 @@ const anchorDemoImgData = (() => {
   canvas.height = IMG_SIZE
   document.body.append(canvas)
   const ctx = canvas.getContext('2d')!
-  const EDGE_ANCHOR_SIZE = 6
+  const EDGE_center_SIZE = 6
   rects.forEach((rect, i) => {
     const frame = { x: rect.x * COL_SIZE, y: rect.y * ROW_SIZE, w: rect.w * COL_SIZE, h: rect.h * ROW_SIZE }
     const { x, y, w, h } = frame
-    anchorDemoAtlas.frames.push({ filename: `rect_${i.toString().padStart(4, '0')}`, frame })
+    centerDemoAtlas.frames.push({ filename: `rect_${i.toString().padStart(4, '0')}`, frame })
     ctx.fillStyle = '#222'
     ctx.fillRect(x, y, w, h)
 
     ctx.fillStyle = '#999'
     ctx.fillRect(
-      x + w * 0.5 - EDGE_ANCHOR_SIZE * 0.5, 
-      y + h * 0.5 - EDGE_ANCHOR_SIZE * 0.5, 
-      EDGE_ANCHOR_SIZE, 
-      EDGE_ANCHOR_SIZE)
+      x + w * 0.5 - EDGE_center_SIZE * 0.5, 
+      y + h * 0.5 - EDGE_center_SIZE * 0.5, 
+      EDGE_center_SIZE, 
+      EDGE_center_SIZE)
 
-    ctx.fillRect(x, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w * 0.5 - EDGE_ANCHOR_SIZE * 0.5, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y, EDGE_center_SIZE, EDGE_center_SIZE)
 
-    ctx.fillRect(x, y + h * 0.5 - EDGE_ANCHOR_SIZE * 0.5, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y + h * 0.5 - EDGE_ANCHOR_SIZE * 0.5, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y + h * 0.5 - EDGE_center_SIZE * 0.5, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y + h * 0.5 - EDGE_center_SIZE * 0.5, EDGE_center_SIZE, EDGE_center_SIZE)
 
-    ctx.fillRect(x, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w * 0.5 - EDGE_ANCHOR_SIZE * 0.5, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
-    ctx.fillRect(x + w - EDGE_ANCHOR_SIZE, y + h - EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE, EDGE_ANCHOR_SIZE)
+    ctx.fillRect(x, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
+    ctx.fillRect(x + w - EDGE_center_SIZE, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
   })
   const imgData = canvas.toDataURL()
   canvas.parentElement?.removeChild(canvas)
@@ -80,28 +80,29 @@ const anchorDemoImgData = (() => {
     />
     <OrbitControls />
     <TresGroup :position-x="2">
-      <TresGroup :scale="0.5">
-        <Box
-          :scale="[1, 0.06, 0.06]"
-          color="red"
-        />
-        <Box
-          :scale="[0.06, 1, 0.06]"
-          color="blue"
-        />
-        <Box
-          :scale="[0.06, 0.06, 1]"
-          color="green"
-        />
-      </TresGroup>
       <Suspense>
         <AnimatedSprite
-          :image="anchorDemoImgData"
-          :atlas="anchorDemoAtlas"
+          :image="centerDemoImgData"
+          :atlas="centerDemoAtlas"
           animation="rect"
-          :anchor="[anchorX.value, anchorY.value]"
+          :center="[centerX.value, centerY.value]"
           :fps="fps.value"
-        />
+        >
+          <TresGroup :scale="0.5">
+            <Box
+              :scale="[1, 0.06, 0.06]"
+              color="red"
+            />
+            <Box
+              :scale="[0.06, 1, 0.06]"
+              color="blue"
+            />
+            <Box
+              :scale="[0.06, 0.06, 1]"
+              color="green"
+            />
+          </TresGroup>
+        </AnimatedSprite>
       </Suspense>
       <TresGridHelper :args="[10, 10]" />
     </TresGroup>
