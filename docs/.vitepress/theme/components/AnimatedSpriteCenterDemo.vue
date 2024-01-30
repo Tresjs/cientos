@@ -88,21 +88,21 @@ const centerDemoImgData = (() => {
           :center="[centerX.value, centerY.value]"
           :fps="fps.value"
         >
-      <TresGroup :scale="0.5">
-        <Box
-          :scale="[1, 0.06, 0.06]"
-          color="red"
-        />
-        <Box
-          :scale="[0.06, 1, 0.06]"
-          color="blue"
-        />
-        <Box
-          :scale="[0.06, 0.06, 1]"
-          color="green"
-        />
-      </TresGroup>
-      </AnimatedSprite>
+          <TresGroup :scale="0.5">
+            <Box
+              :scale="[1, 0.06, 0.06]"
+              color="red"
+            />
+            <Box
+              :scale="[0.06, 1, 0.06]"
+              color="blue"
+            />
+            <Box
+              :scale="[0.06, 0.06, 1]"
+              color="green"
+            />
+          </TresGroup>
+        </AnimatedSprite>
       </Suspense>
       <TresGridHelper :args="[10, 10]" />
     </TresGroup>

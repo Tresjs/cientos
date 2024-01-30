@@ -7,8 +7,8 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
-const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/' +
-  '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
+const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
+  + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -19,10 +19,11 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const { fps, animation, definitions, flipX, loop, paused, reversed, resetOnEnd, centerX, centerY, scale, rotation, position } = useControls({
+const { fps, animation, definitions, flipX, loop, paused, 
+  reversed, resetOnEnd, centerX, centerY, scale, rotation, position } = useControls({
   fps: { value: 10, min: 0, max: 120, step: 1 },
   animation: { label: 'Animation', value: 'idle', options: ['idle', 'walk', 'blink'] },
-  definitions: { label: 'Definitions', value: '{}', options:['{}', '{"idle":"0(10),1-5"}']},
+  definitions: { label: 'Definitions', value: '{}', options: ['{}', '{"idle":"0(10),1-5"}'] },
   flipX: false,
   loop: true,
   paused: false,
@@ -129,50 +130,99 @@ const centerDemoImgData = (() => {
     <OrbitControls />
     <TresGroup :position="[0, 0, -4]">
       <Suspense>
-        <AnimatedSprite :image="centerDemoImgData" :atlas="centerDemoAtlas" animation="rect" :flip-x="flipX.value"
-          :fps="fps.value" :loop="loop.value" :reset-on-end="resetOnEnd.value" :center="[centerX.value, centerY.value]"
-          :reversed="reversed.value" :scale="scale.value" :paused="paused.value"
+        <AnimatedSprite
+          :image="centerDemoImgData"
+          :atlas="centerDemoAtlas"
+          animation="rect"
+          :flip-x="flipX.value"
+          :fps="fps.value"
+          :loop="loop.value"
+          :reset-on-end="resetOnEnd.value"
+          :center="[centerX.value, centerY.value]"
+          :reversed="reversed.value"
+          :scale="scale.value"
+          :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]">
+          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+        >
           <TresGroup :scale="0.5">
-            <Box :scale="[1, 0.06, 0.06]" color="red" />
-            <Box :scale="[0.06, 1, 0.06]" color="blue" />
-            <Box :scale="[0.06, 0.06, 1]" color="green" />
+            <Box
+              :scale="[1, 0.06, 0.06]"
+              color="red"
+            />
+            <Box
+              :scale="[0.06, 1, 0.06]"
+              color="blue"
+            />
+            <Box
+              :scale="[0.06, 0.06, 1]"
+              color="green"
+            />
           </TresGroup>
         </AnimatedSprite>
       </Suspense>
     </TresGroup>
     <TresGroup :position="[4, 0, 0]">
       <Suspense>
-        <AnimatedSprite :image="ASSETS_URL + 'namedAnimationsTexture.png'"
-          :atlas="ASSETS_URL + 'namedAnimationsAtlas.json'" animation="yes" :flip-x="flipX.value" :fps="fps.value"
-          :loop="loop.value" :reset-on-end="resetOnEnd.value" :center="[centerX.value, centerY.value]"
-          :reversed="reversed.value" :scale="scale.value" :paused="paused.value"
+        <AnimatedSprite
+          :image="`${ASSETS_URL}namedAnimationsTexture.png`"
+          :atlas="`${ASSETS_URL}namedAnimationsAtlas.json`"
+          animation="yes"
+          :flip-x="flipX.value"
+          :fps="fps.value"
+          :loop="loop.value"
+          :reset-on-end="resetOnEnd.value"
+          :center="[centerX.value, centerY.value]"
+          :reversed="reversed.value"
+          :scale="scale.value"
+          :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]" />
+          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+        />
       </Suspense>
     </TresGroup>
     <TresGroup :position="[-4, 0, 0]">
       <Suspense>
-        <AnimatedSprite :image="ASSETS_URL + 'textureWithoutAtlas.png'" :atlas="16" :animation="[0, 15]"
-          :flip-x="flipX.value" :fps="fps.value" :loop="loop.value" :reset-on-end="resetOnEnd.value"
-          :center="[centerX.value, centerY.value]" :reversed="reversed.value" :scale="scale.value" :paused="paused.value"
+        <AnimatedSprite
+          :image="`${ASSETS_URL}textureWithoutAtlas.png`"
+          :atlas="16"
+          :animation="[0, 15]"
+          :flip-x="flipX.value"
+          :fps="fps.value"
+          :loop="loop.value"
+          :reset-on-end="resetOnEnd.value"
+          :center="[centerX.value, centerY.value]"
+          :reversed="reversed.value"
+          :scale="scale.value"
+          :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]" />
+          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+        />
       </Suspense>
     </TresGroup>
     <TresGroup :position="[0, 0, 0]">
       <Suspense>
-        <AnimatedSprite :image="ASSETS_URL + 'cientosTexture.png'" :atlas="ASSETS_URL + 'cientosAtlas.json'"
-        :definitions="defsParsed"
-          :flip-x="flipX.value" :center="[centerX.value, centerY.value]" :animation="animation.value" :fps="fps.value"
+        <AnimatedSprite
+          :image="`${ASSETS_URL}cientosTexture.png`"
+          :atlas="`${ASSETS_URL}cientosAtlas.json`"
+          :definitions="defsParsed"
+          :flip-x="flipX.value"
+          :center="[centerX.value, centerY.value]"
+          :animation="animation.value"
+          :fps="fps.value"
           :loop="loop.value" 
-          :reversed="reversed.value" :reset-on-end="resetOnEnd.value" :scale="scale.value" :paused="paused.value"
+          :reversed="reversed.value"
+          :reset-on-end="resetOnEnd.value"
+          :scale="scale.value"
+          :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]" @end="(frameName) => lastEnd = frameName"
-          :depthWrite="false" :depthTest="false"
-          @frame="(frameName) => lastFrame = frameName" @loop="(frameName) => lastLoop = frameName">
-        </AnimatedSprite>
+          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+          :depth-write="false"
+          :depth-test="false"
+          @end="(frameName) => lastEnd = frameName"
+          @frame="(frameName) => lastFrame = frameName"
+          @loop="(frameName) => lastLoop = frameName"
+        />
       </Suspense>
     </TresGroup>
     <TresGridHelper :args="[10, 10]" />

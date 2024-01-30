@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRenderLoop, TresVector2, normalizeVectorFlexibleParam } from '@tresjs/core'
+import type { TresVector2 } from '@tresjs/core'
+import { useRenderLoop, normalizeVectorFlexibleParam } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlasish } from './Atlas'
@@ -77,7 +78,7 @@ const scaleX = ref(0)
 const scaleY = ref(0)
 
 const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas)
-texture.matrixAutoUpdate = false;
+texture.matrixAutoUpdate = false
 
 let animation = getAtlasFrames(atlas, props.animation, props.reversed)
 let centerX = 0.5
@@ -100,14 +101,14 @@ useRenderLoop().onLoop(({ delta }) => {
     frameNum++
 
     if (props.loop) {
-      if (frameNum >= animation.length) emit('loop', animation[animation.length-1].name)
+      if (frameNum >= animation.length) emit('loop', animation[animation.length - 1].name)
       frameNum %= animation.length
     }
     else {
       if (frameNum >= animation.length) {
         frameHeldOnLoopEnd = true
         frameNum = props.resetOnEnd ? 0 : animation.length - 1
-        emit('end', animation[animation.length-1].name)
+        emit('end', animation[animation.length - 1].name)
       }
     }
   }
@@ -200,13 +201,23 @@ watch(() => [props.definitions], () => {
 <template>
   <TresGroup v-bind="$attrs">
     <Suspense :fallback="null">
-      <TresMesh @click="(intr: Intersection) => emit('click', intr)" :scale="[scaleX, scaleY, 1]"
-        :position="[positionX, positionY, 0]">
+      <TresMesh
+        :scale="[scaleX, scaleY, 1]"
+        :position="[positionX, positionY, 0]"
+        @click="(intr: Intersection) => emit('click', intr)"
+      >
         <TresPlaneGeometry :args="[1, 1]" />
-        <TresMeshBasicMaterial :toneMapped="false" :side="DoubleSide" :map="texture" :transparent="true"
-          :alphaTest="props.alphaTest" :depthWrite="props.depthWrite" :depthTest="props.depthTest" />
+        <TresMeshBasicMaterial
+          :toneMapped="false"
+          :side="DoubleSide"
+          :map="texture"
+          :transparent="true"
+          :alphaTest="props.alphaTest"
+          :depthWrite="props.depthWrite"
+          :depthTest="props.depthTest"
+        />
       </TresMesh>
     </Suspense>
-    <slot></slot>
+    <slot />
   </TresGroup>
 </template>
