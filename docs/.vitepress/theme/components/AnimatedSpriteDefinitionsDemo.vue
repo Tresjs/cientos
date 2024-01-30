@@ -15,9 +15,9 @@ const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/
         :atlas="ASSETS_URL + 'cientosAtlas.json'"
         animation="idle"
         :definitions="{
-          idle:'0(10),1-2,3(10),4-5,0-5(2)',
+          idle:'0-5, 0(10), 1-2, 3(20), 4-5, 0-5(3)',
         }"
-        :fps="13" 
+        :fps="15" 
         :loop="true"
       />
     </Suspense>

@@ -19,29 +19,18 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const animationState = shallowReactive({
-  fps: 10,
-  animation: 'idle',
+const { fps, animation, definitions, flipX, loop, paused, reversed, resetOnEnd, centerX, centerY, scale, rotation, position } = useControls({
+  fps: { value: 10, min: 0, max: 120, step: 1 },
+  animation: { label: 'Animation', value: 'idle', options: ['idle', 'walk', 'blink'] },
+  definitions: { label: 'Definitions', value: '{}', options:['{}', '{"idle":"0(10),1-5"}']},
   flipX: false,
   loop: true,
+  paused: false,
   reversed: false,
   resetOnEnd: false,
-  centerX: 0.5,
-  centerY: 0.5,
-  scale: 1,
-})
-
-const { fps, animation, flipX, loop, paused, reversed, resetOnEnd, centerX, centerY, scale, rotation, position } = useControls({
-  fps: { value: animationState.fps, min: 0, max: 120, step: 1 },
-  animation: { label: 'Animation', value: animationState.animation, options: ['idle', 'walk', 'blink'] },
-  flipX: animationState.flipX,
-  loop: animationState.loop,
-  paused: false,
-  reversed: animationState.reversed,
-  resetOnEnd: animationState.resetOnEnd,
-  centerX: { value: animationState.centerX, min: 0, max: 1, step: 0.01 },
-  centerY: { value: animationState.centerY, min: 0, max: 1, step: 0.01 },
-  scale: { value: animationState.scale, min: 0.1, max: 4, step: 0.01 },
+  centerX: { value: 0.5, min: 0, max: 1, step: 0.01 },
+  centerY: { value: 0.5, min: 0, max: 1, step: 0.01 },
+  scale: { value: 1, min: 0.1, max: 4, step: 0.01 },
   rotation: { value: [0, 0, 0] },
   position: { value: [0, 0, 0] },
 })
@@ -49,6 +38,11 @@ const { fps, animation, flipX, loop, paused, reversed, resetOnEnd, centerX, cent
 const lastFrame = ref('-')
 const lastEnd = ref('-')
 const lastLoop = ref('-')
+const defsParsed = ref(JSON.parse(definitions.value.value))
+
+watch(() => definitions.value.value, () => {
+  defsParsed.value = JSON.parse(definitions.value.value)
+})
 
 const centerDemoAtlas: Atlasish = { frames: [] }
 const centerDemoImgData = (() => {
@@ -170,10 +164,10 @@ const centerDemoImgData = (() => {
     <TresGroup :position="[0, 0, 0]">
       <Suspense>
         <AnimatedSprite :image="ASSETS_URL + 'cientosTexture.png'" :atlas="ASSETS_URL + 'cientosAtlas.json'"
+        :definitions="defsParsed"
           :flip-x="flipX.value" :center="[centerX.value, centerY.value]" :animation="animation.value" :fps="fps.value"
-          :loop="loop.value" :definitions="{
-            idle: '0(3),1-5',
-          }" :reversed="reversed.value" :reset-on-end="resetOnEnd.value" :scale="scale.value" :paused="paused.value"
+          :loop="loop.value" 
+          :reversed="reversed.value" :reset-on-end="resetOnEnd.value" :scale="scale.value" :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
           :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]" @end="(frameName) => lastEnd = frameName"
           :depthWrite="false" :depthTest="false"
