@@ -211,9 +211,10 @@ function getAtlasFramesFromNumColsNumRows(
   return result;
 }
 
-function setDefinitions(page: Atlas, definitions: Record<string, string>) {
+export function setAtlasDefinitions(atlas: Atlas, definitions: Record<string, string> = {}) {
+  const animations = groupAtlasFramesByKey(atlas.frames)
   for (const [animationName, definitionStr] of Object.entries(definitions)) {
-    const frames: AtlasFrame[] = getAtlasFrames(page, animationName, false);
+    const frames: AtlasFrame[] = getAtlasFrames(atlas, animationName, false);
     const expanded = expand(definitionStr);
     for (const i of expanded) {
       if (i < 0 || frames.length <= i) {
@@ -222,38 +223,39 @@ function setDefinitions(page: Atlas, definitions: Record<string, string>) {
         );
       }
     }
-    page.namedFrames[animationName] = expanded.map((i) => frames[i]);
+    animations[animationName] = expanded.map((i) => frames[i]);
   }
+  atlas.animations = animations
 }
 
 function getAtlasFramesByAnimationName(
-  page: Atlas,
+  atlas: Atlas,
   name: string
 ): AtlasFrame[] {
-  if (!(name in page.namedFrames)) {
+  if (!(name in atlas.animations)) {
     useLogger().logError(
-      `Cientos Atlas: getFramesByName
-The animation name "${name}" does not exist in this page. 
+      `Cientos Atlas: getFramesByAnimationName
+The animation name "${name}" does not exist in this atlas. 
 Available names: 
-${Object.keys(page.namedFrames)
+${Object.keys(atlas.animations)
   .map((n) => "* " + n + "\n")
   .join("")}`
     );
     return [getNullAtlasFrame()];
   }
-  return page.namedFrames[name];
+  return atlas.animations[name];
 }
 
 function getAtlasFramesByIndices(
-  page: Atlas,
+  atlas: Atlas,
   startI: number,
   endI: number
 ): AtlasFrame[] {
   if (
     startI < 0 ||
-    page.frames.length <= startI ||
+    atlas.frames.length <= startI ||
     endI < 0 ||
-    page.frames.length <= endI
+    atlas.frames.length <= endI
   ) {
     useLogger().logError(
       `Cientos Atlas: getFramesByIndex – [${startI}, ${endI}] is out of bounds.`
@@ -262,9 +264,9 @@ function getAtlasFramesByIndices(
   }
   const result = [];
   const sign = Math.sign(endI - startI);
-  if (sign === 0) return [page.frames[startI]];
+  if (sign === 0) return [atlas.frames[startI]];
   for (let i = startI; i !== endI + sign; i += sign) {
-    result.push(page.frames[i]);
+    result.push(atlas.frames[i]);
   }
   return result;
 }
