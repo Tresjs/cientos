@@ -7,12 +7,13 @@ import type { Atlasish } from './Atlas'
 import { getTextureAndAtlasAsync, getAtlasFrames, getNullAtlasFrame, setAtlasDefinitions } from './Atlas'
 
 export interface AnimatedSpriteProps {
-  /** URL of the image texture or an image dataURL. */
+  /** URL of the image texture or an image dataURL. This prop is not reactive. */
   image: string
   /** If `string`, the URL of the JSON atlas. 
    * If `number`, the number of columns in the texture. 
    * If `[number, number]`, the number of columns/rows in the texture. 
    * If `AtlasData`, the atlas as a JS object.
+   * This prop is not reactive.
    **/
   atlas: string | Atlasish
   /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
