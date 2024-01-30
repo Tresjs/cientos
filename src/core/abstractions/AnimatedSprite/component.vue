@@ -100,14 +100,14 @@ useRenderLoop().onLoop(({ delta }) => {
     frameNum++
 
     if (props.loop) {
-      if (frameNum >= animation.length) emit('loop', frame.name)
+      if (frameNum >= animation.length) emit('loop', animation[animation.length-1].name)
       frameNum %= animation.length
     }
     else {
       if (frameNum >= animation.length) {
         frameHeldOnLoopEnd = true
         frameNum = props.resetOnEnd ? 0 : animation.length - 1
-        emit('end', frame.name)
+        emit('end', animation[animation.length-1].name)
       }
     }
   }
