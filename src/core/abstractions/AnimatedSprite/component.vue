@@ -4,7 +4,7 @@ import { useRenderLoop, TresVector2, normalizeVectorFlexibleParam } from '@tresj
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlasish } from './Atlas'
-import { getTextureAndAtlasAsync, getAtlasFrames, getNullAtlasFrame } from './Atlas'
+import { getTextureAndAtlasAsync, getAtlasFrames, getNullAtlasFrame, setAtlasDefinitions } from './Atlas'
 
 export interface AnimatedSpriteProps {
   /** URL of the image texture or an image dataURL. */
@@ -75,7 +75,7 @@ const positionY = ref(0)
 const scaleX = ref(0)
 const scaleY = ref(0)
 
-const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas, props.definitions)
+const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas)
 texture.matrixAutoUpdate = false;
 
 let animation = getAtlasFrames(atlas, props.animation, props.reversed)
@@ -183,6 +183,15 @@ watch(() => props.flipX, render)
 
 watch(() => [props.center], () => {
   [centerX, centerY] = normalizeVectorFlexibleParam(props.center)
+  render()
+}, { immediate: true })
+
+watch(() => [props.definitions], () => {
+  setAtlasDefinitions(atlas, props.definitions)
+  // NOTE: Must reset animation, as running animation might have changed.
+  animation = getAtlasFrames(atlas, props.animation, props.reversed)
+  cooldown = 1
+  frameNum = 0
   render()
 }, { immediate: true })
 </script>

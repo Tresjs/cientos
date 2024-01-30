@@ -6,7 +6,6 @@ import { expand } from "./AtlasAnimationDefinitionParser";
 export async function getTextureAndAtlasAsync(
   imagePathOrImageData: string,
   atlasPathOrAtlasish: string | Atlasish,
-  definitions?: Record<string, string>
 ): Promise<[Texture, Atlas]> {
   const texturePromise: Promise<Texture> = useLoader(
     TextureLoader,
@@ -23,8 +22,7 @@ export async function getTextureAndAtlasAsync(
       const atlas = getAtlas(
         atlasish,
         texture.image.width,
-        texture.image.height,
-        definitions
+        texture.image.height
       );
       return [texture, atlas];
     }
@@ -43,14 +41,13 @@ export interface AtlasFrame {
 
 export interface Atlas {
   frames: AtlasFrame[];
-  namedFrames: Record<string, AtlasFrame[]>;
+  animations: Record<string, AtlasFrame[]>;
 }
 
 export function getAtlas(
   atlasish: Atlasish,
   textureWidth: number,
-  textureHeight: number,
-  definitions?: Record<string, string>
+  textureHeight: number
 ): Atlas {
   const frames =
     typeof atlasish === "number" || Array.isArray(atlasish)
@@ -61,12 +58,7 @@ export function getAtlas(
           textureHeight
         );
 
-  const namedFrames = groupAtlasFramesByKey(frames);
-  const atlas: Atlas = { frames, namedFrames };
-  if (definitions) {
-    setDefinitions(atlas, definitions);
-  }
-  return atlas;
+  return { frames, animations: groupAtlasFramesByKey(frames)};
 }
 
 export function getAtlasFrames(
@@ -234,7 +226,7 @@ function getAtlasFramesByAnimationName(
 ): AtlasFrame[] {
   if (!(name in atlas.animations)) {
     useLogger().logError(
-      `Cientos Atlas: getFramesByAnimationName
+      `Cientos Atlas: getAtlasFramesByAnimationName
 The animation name "${name}" does not exist in this atlas. 
 Available names: 
 ${Object.keys(atlas.animations)
