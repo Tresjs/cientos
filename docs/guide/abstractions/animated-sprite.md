@@ -127,7 +127,3 @@ Below is a simple animation containing differently sized source images. The anch
 <DocsDemo>
   <AnimatedSpriteCenterDemo />
 </DocsDemo>
-
-::: warning
-Changing the anchor from the default can have unpredictable results if `asSprite` is `true`.
-:::

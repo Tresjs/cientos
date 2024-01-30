@@ -80,6 +80,14 @@ const centerDemoImgData = (() => {
     />
     <OrbitControls />
     <TresGroup :position-x="2">
+      <Suspense>
+        <AnimatedSprite
+          :image="centerDemoImgData"
+          :atlas="centerDemoAtlas"
+          animation="rect"
+          :center="[centerX.value, centerY.value]"
+          :fps="fps.value"
+        >
       <TresGroup :scale="0.5">
         <Box
           :scale="[1, 0.06, 0.06]"
@@ -94,14 +102,7 @@ const centerDemoImgData = (() => {
           color="green"
         />
       </TresGroup>
-      <Suspense>
-        <AnimatedSprite
-          :image="centerDemoImgData"
-          :atlas="centerDemoAtlas"
-          animation="rect"
-          :center="[centerX.value, centerY.value]"
-          :fps="fps.value"
-        />
+      </AnimatedSprite>
       </Suspense>
       <TresGridHelper :args="[10, 10]" />
     </TresGroup>

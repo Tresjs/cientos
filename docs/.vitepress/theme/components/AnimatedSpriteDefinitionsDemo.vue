@@ -13,12 +13,11 @@ const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/
       <AnimatedSprite
         :image="ASSETS_URL + 'cientosTexture.png'"
         :atlas="ASSETS_URL + 'cientosAtlas.json'"
-        animation="walk"
+        animation="idle"
         :definitions="{
           idle:'0(10),1-2,3(10),4-5,0-5(2)',
-          walk:'0(1)',
-          }"
-        :fps="15" 
+        }"
+        :fps="13" 
         :loop="true"
       />
     </Suspense>

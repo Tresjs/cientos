@@ -16,7 +16,8 @@ const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/
         animation="idle"
         :fps="15"
         :loop="true"
-      />
+      >
+      </AnimatedSprite>
     </Suspense>
   </TresCanvas>
 </template>
