@@ -5,8 +5,8 @@ import { BasicShadowMap, SRGBColorSpace, NoToneMapping, Intersection } from 'thr
 import { watch, ref } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
-import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 import { degToRad } from 'three/src/math/MathUtils.js'
+import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
   + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
@@ -33,9 +33,9 @@ const { fps, animation, definitions, flipX, loop, paused,
   centerX: { value: 0.5, min: 0, max: 1, step: 0.01 },
   centerY: { value: 0.5, min: 0, max: 1, step: 0.01 },
   scale: { value: 1, min: 0.1, max: 4, step: 0.01 },
-  rotationX: { value: 0, step:1, min: -360, max: 360 },
-  rotationY: { value: 0, step:1, min: -360, max: 360 },
-  rotationZ: { value: 0, step:1, min: -360, max: 360 },
+  rotationX: { value: 0, step: 1, min: -360, max: 360 },
+  rotationY: { value: 0, step: 1, min: -360, max: 360 },
+  rotationZ: { value: 0, step: 1, min: -360, max: 360 },
   position: { value: [0, 0, 0] },
 })
 

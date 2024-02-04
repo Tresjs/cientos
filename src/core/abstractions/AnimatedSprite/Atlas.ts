@@ -211,7 +211,8 @@ export function setAtlasDefinitions(atlas: Atlas, definitions: Record<string, st
     for (const frameIndex of expandedFrameIndices) {
       if (frameIndex < 0 || frames.length <= frameIndex) {
         useLogger().logError(
-          `Cientos Atlas: Attempting to access frame index ${frameIndex} in animation ${animationName}, but it does not exist.`,
+          'Cientos Atlas: Attempting to access frame index '
+          + `${frameIndex} in animation ${animationName}, but it does not exist.`,
         )
       }
     }
