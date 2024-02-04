@@ -207,15 +207,15 @@ export function setAtlasDefinitions(atlas: Atlas, definitions: Record<string, st
   const animations = groupAtlasFramesByKey(atlas.frames)
   for (const [animationName, definitionStr] of Object.entries(definitions)) {
     const frames: AtlasFrame[] = getAtlasFrames(atlas, animationName, false)
-    const expanded = expand(definitionStr)
-    for (const i of expanded) {
-      if (i < 0 || frames.length <= i) {
+    const expandedFrameIndices = expand(definitionStr)
+    for (const frameIndex of expandedFrameIndices) {
+      if (frameIndex < 0 || frames.length <= frameIndex) {
         useLogger().logError(
-          `Cientos Atlas: Attempting to access frame index ${i} in animation ${animationName}, but it does not exist.`,
+          `Cientos Atlas: Attempting to access frame index ${frameIndex} in animation ${animationName}, but it does not exist.`,
         )
       }
     }
-    animations[animationName] = expanded.map(i => frames[i])
+    animations[animationName] = expandedFrameIndices.map(frameIndex => frames[frameIndex])
   }
   atlas.animations = animations
 }
