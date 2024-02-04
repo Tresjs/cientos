@@ -2,10 +2,11 @@
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, AnimatedSprite, Box } from '@tresjs/cientos'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping, Intersection } from 'three'
-import { shallowReactive } from 'vue'
+import { watch, ref } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import { degToRad } from 'three/src/math/MathUtils.js'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
   + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
@@ -20,7 +21,7 @@ const gl = {
 }
 
 const { fps, animation, definitions, flipX, loop, paused, 
-  reversed, resetOnEnd, centerX, centerY, scale, rotation, position } = useControls({
+  reversed, resetOnEnd, centerX, centerY, scale, rotationX, rotationY, rotationZ, position } = useControls({
   fps: { value: 10, min: 0, max: 120, step: 1 },
   animation: { label: 'Animation', value: 'idle', options: ['idle', 'walk', 'blink'] },
   definitions: { label: 'Definitions', value: '{}', options: ['{}', '{"idle":"0(10),1-5"}'] },
@@ -32,7 +33,9 @@ const { fps, animation, definitions, flipX, loop, paused,
   centerX: { value: 0.5, min: 0, max: 1, step: 0.01 },
   centerY: { value: 0.5, min: 0, max: 1, step: 0.01 },
   scale: { value: 1, min: 0.1, max: 4, step: 0.01 },
-  rotation: { value: [0, 0, 0] },
+  rotationX: { value: 0, step:1, min: -360, max: 360 },
+  rotationY: { value: 0, step:1, min: -360, max: 360 },
+  rotationZ: { value: 0, step:1, min: -360, max: 360 },
   position: { value: [0, 0, 0] },
 })
 
@@ -143,7 +146,7 @@ const centerDemoImgData = (() => {
           :scale="scale.value"
           :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+          :rotation="[degToRad(rotationX.value), degToRad(rotationY.value), degToRad(rotationZ.value)]"
         >
           <TresGroup :scale="0.5">
             <Box
@@ -177,7 +180,7 @@ const centerDemoImgData = (() => {
           :scale="scale.value"
           :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+          :rotation="[degToRad(rotationX.value), degToRad(rotationY.value), degToRad(rotationZ.value)]"
         />
       </Suspense>
     </TresGroup>
@@ -196,7 +199,7 @@ const centerDemoImgData = (() => {
           :scale="scale.value"
           :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+          :rotation="[degToRad(rotationX.value), degToRad(rotationY.value), degToRad(rotationZ.value)]"
         />
       </Suspense>
     </TresGroup>
@@ -216,7 +219,7 @@ const centerDemoImgData = (() => {
           :scale="scale.value"
           :paused="paused.value"
           :position="[position.value[0], position.value[1], position.value[2]]"
-          :rotation="[rotation.value[0], rotation.value[1], rotation.value[2]]"
+          :rotation="[degToRad(rotationX.value), degToRad(rotationY.value), degToRad(rotationZ.value)]"
           :depth-write="false"
           :depth-test="false"
           @end="(frameName) => lastEnd = frameName"
