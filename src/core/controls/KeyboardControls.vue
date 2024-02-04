@@ -66,14 +66,14 @@ const { camera: activeCamera, controls, renderer } = useTresContext()
 const sidewardMove = ref(0)
 const forwardMove = ref(0)
 
-const { w, s, a, d } = useMagicKeys()
+const { w, s, a, d, Up, Down, Left, Right } = useMagicKeys()
 
 watchEffect(() => {
-  if (a.value) sidewardMove.value = -moveSpeed.value
-  else if (d.value) sidewardMove.value = moveSpeed.value
+  if (a.value || Left.value) sidewardMove.value = -moveSpeed.value
+  else if (d.value || Down.value) sidewardMove.value = moveSpeed.value
   else sidewardMove.value = 0
-  if (w.value) forwardMove.value = moveSpeed.value
-  else if (s.value) forwardMove.value = -moveSpeed.value
+  if (w.value || Up.value) forwardMove.value = moveSpeed.value
+  else if (s.value || Right.value) forwardMove.value = -moveSpeed.value
   else forwardMove.value = 0
 })
 
