@@ -40,8 +40,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1(@typescript-eslint/eslint-plugin@6.21.0)(eslint@8.56.0)(typescript@5.3.3)
       '@tweakpane/core':
-        specifier: ^1.1.9
-        version: 1.1.9
+        specifier: ^2.0.0
+        version: 2.0.3
       '@types/node':
         specifier: ^20.11.16
         version: 20.11.16
@@ -1536,8 +1536,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@tweakpane/core@1.1.9:
-    resolution: {integrity: sha512-9tq+KAhaqPiOgsFyLPAz1IMXkVfhRqxGzAgy1ps3As6o3W7XjnU7sev6OlD/Z+Pzw8uZVMukkSHf2e0uCU6u0A==}
+  /@tweakpane/core@2.0.3:
+    resolution: {integrity: sha512-qHci4XA1Wngpwy8IzsLh5JEdscz8aDti/9YhyOaq01si+cgNDaZfwzTtXdn1+xTxSnCM+pW4Zb2/4eqn+K1ATw==}
     dev: true
 
   /@types/argparse@1.0.38:
