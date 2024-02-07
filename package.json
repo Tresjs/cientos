@@ -84,7 +84,7 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "three": "^0.161.0",
-    "tweakpane": "^3.1.10",
+    "tweakpane": "^4.0.0",
     "typescript": "^5.3.3",
     "unocss": "^0.58.5",
     "vite": "^5.0.12",
