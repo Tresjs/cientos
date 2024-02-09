@@ -90,7 +90,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
       mode: props.mode,
     })
 
-    expose({ statsGl })
+    expose({ root: statsGl })
 
     const node = document.body
     const statContainer = statsGl.dom || statsGl.container

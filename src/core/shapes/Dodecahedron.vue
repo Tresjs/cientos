@@ -27,9 +27,7 @@ const { args, color } = toRefs(props)
 
 const dodecahedronRef = shallowRef()
 
-defineExpose({
-  value: dodecahedronRef,
-})
+defineExpose({ root: dodecahedronRef })
 </script>
 
 <template>

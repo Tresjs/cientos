@@ -28,9 +28,7 @@ const { args, color } = toRefs(props)
 
 const ringRef = shallowRef()
 
-defineExpose({
-  value: ringRef,
-})
+defineExpose({ root: ringRef })
 </script>
 
 <template>

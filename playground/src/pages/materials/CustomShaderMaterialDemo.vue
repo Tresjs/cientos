@@ -87,9 +87,9 @@ const { speed, amplitude, frequency } = useControls({
 })
 
 watch([speed.value, amplitude.value, frequency.value], () => {
-  materialProps.uniforms.u_WobbleSpeed.value = speed.value.value
-  materialProps.uniforms.u_WobbleAmplitude.value = amplitude.value.value
-  materialProps.uniforms.u_WobbleFrequency.value = frequency.value.value
+  materialProps.uniforms.u_WobbleSpeed.value = speed.value.root
+  materialProps.uniforms.u_WobbleAmplitude.value = amplitude.value.root
+  materialProps.uniforms.u_WobbleFrequency.value = frequency.value.root
 })
 </script>
 

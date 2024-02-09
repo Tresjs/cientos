@@ -3,7 +3,7 @@
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 import { OrbitControls } from '@tresjs/cientos'
-import { reactive } from 'vue'
+import { reactive, watch, shallowRef } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
@@ -15,6 +15,12 @@ const gl = {
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
+
+const controlsRef = shallowRef()
+
+watch(controlsRef, () => {
+  console.log('watch ~ controlsRef:', controlsRef.value.root)
+})
 
 const controlsState = reactive({
   enableDamping: true,
@@ -62,11 +68,11 @@ const {
 })
 
 watch([enableDamping.value, dampingFactor.value, enableZoom.value, enablePan.value, keyPanSpeed.value], () => {
-  controlsState.enableDamping = enableDamping.value.value
-  controlsState.dampingFactor = dampingFactor.value.value
-  controlsState.enableZoom = enableZoom.value.value
-  controlsState.enablePan = enablePan.value.value
-  controlsState.keyPanSpeed = keyPanSpeed.value.value
+  controlsState.enableDamping = enableDamping.value.root
+  controlsState.dampingFactor = dampingFactor.value.root
+  controlsState.enableZoom = enableZoom.value.root
+  controlsState.enablePan = enablePan.value.root
+  controlsState.keyPanSpeed = keyPanSpeed.value.root
 })
 
 const {
@@ -105,10 +111,10 @@ watch([
   AnglesMinAzimuthAngle.value,
   keyPanSpeed.value,
 ], () => {
-  controlsState.maxPolarAngle = AnglesMaxPolarAngle.value.value
-  controlsState.minPolarAngle = AnglesMinPolarAngle.value.value
-  controlsState.maxAzimuthAngle = AnglesMaxAzimuthAngle.value.value
-  controlsState.minAzimuthAngle = AnglesMinAzimuthAngle.value.value
+  controlsState.maxPolarAngle = AnglesMaxPolarAngle.value.root
+  controlsState.minPolarAngle = AnglesMinPolarAngle.value.root
+  controlsState.maxAzimuthAngle = AnglesMaxAzimuthAngle.value.root
+  controlsState.minAzimuthAngle = AnglesMinAzimuthAngle.value.root
 })
 
 const { DistancesMaxDistance, DistancesMinDistance } = useControls('Distances', {
@@ -126,8 +132,8 @@ const { DistancesMaxDistance, DistancesMinDistance } = useControls('Distances', 
 })
 
 watch([DistancesMaxDistance.value, DistancesMinDistance.value], () => {
-  controlsState.maxDistance = DistancesMaxDistance.value.value
-  controlsState.minDistance = DistancesMinDistance.value.value
+  controlsState.maxDistance = DistancesMaxDistance.value.root
+  controlsState.minDistance = DistancesMinDistance.value.root
 })
 
 const { ZoomEnableZoom, ZoomMinZoom, ZoomMaxZoom, ZoomZoomSpeed } = useControls('Zoom', {
@@ -153,10 +159,10 @@ const { ZoomEnableZoom, ZoomMinZoom, ZoomMaxZoom, ZoomZoomSpeed } = useControls(
 })
 
 watch([ZoomEnableZoom.value, ZoomMinZoom.value, ZoomMaxZoom.value, ZoomZoomSpeed.value], () => {
-  controlsState.enableZoom = ZoomEnableZoom.value.value
-  controlsState.minZoom = ZoomMinZoom.value.value
-  controlsState.maxZoom = ZoomMaxZoom.value.value
-  controlsState.zoomSpeed = ZoomZoomSpeed.value.value
+  controlsState.enableZoom = ZoomEnableZoom.value.root
+  controlsState.minZoom = ZoomMinZoom.value.root
+  controlsState.maxZoom = ZoomMaxZoom.value.root
+  controlsState.zoomSpeed = ZoomZoomSpeed.value.root
 })
 
 function onChange() {
@@ -178,6 +184,7 @@ function onEnd() {
     <TresPerspectiveCamera :position="[3, 3, 3]" />
     <OrbitControls
       v-bind="controlsState"
+      ref="controlsRef"
       @change="onChange"
       @start="onStart"
       @end="onEnd"

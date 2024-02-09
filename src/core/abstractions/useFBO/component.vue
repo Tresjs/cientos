@@ -9,7 +9,5 @@ const props = withDefaults(defineProps<FboOptions>(), {
 
 const target = useFBO(props)
 
-defineExpose({
-  value: target,
-})
+defineExpose({ root: target })
 </script>

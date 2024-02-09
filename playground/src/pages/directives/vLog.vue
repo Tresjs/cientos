@@ -23,7 +23,7 @@ const { onLoop } = useRenderLoop()
 
 onLoop(({ elapsed }) => {
   if (sphereRef.value) {
-    sphereRef.value.value.position.y = Math.sin(elapsed) * 0.5
+    sphereRef.value.root.position.y = Math.sin(elapsed) * 0.5
   }
 })
 </script>

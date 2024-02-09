@@ -26,9 +26,7 @@ const props = withDefaults(defineProps<OctahedronProps>(), { args: () => [1, 0],
 const { args, color } = toRefs(props)
 const octahedronRef = shallowRef()
 
-defineExpose({
-  value: octahedronRef,
-})
+defineExpose({ root: octahedronRef })
 </script>
 
 <template>

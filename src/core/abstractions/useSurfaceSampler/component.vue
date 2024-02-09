@@ -19,9 +19,7 @@ watchEffect(() => {
   useSurfaceSampler(meshToSampleRef.value, props.count, instancedRef.value, props.weight, props.transform)
 })
 
-defineExpose({
-  samplerRef,
-})
+defineExpose({ root: samplerRef })
 </script>
 
 <template>

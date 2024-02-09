@@ -19,7 +19,7 @@ const customShaderMaterialClass = shallowRef(null)
 const { extend } = useTresContext()
 extend({ CustomShaderMaterial })
 
-defineExpose({ value: customShaderMaterialClass })
+defineExpose({ root: customShaderMaterialClass })
 </script>
 
 <template>

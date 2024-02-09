@@ -38,9 +38,7 @@ const { args, color } = toRefs(props)
 
 const tubeRef = shallowRef()
 
-defineExpose({
-  value: tubeRef,
-})
+defineExpose({ root: tubeRef })
 </script>
 
 <template>

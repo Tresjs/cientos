@@ -27,9 +27,7 @@ const props = withDefaults(defineProps<PlaneProps>(), { args: () => [1, 1], colo
 const { args, color } = toRefs(props)
 const planeRef = shallowRef()
 
-defineExpose({
-  value: planeRef,
-})
+defineExpose({ root: planeRef })
 </script>
 
 <template>

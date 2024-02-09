@@ -67,14 +67,14 @@ const { mode, enabled, space, axis, size, showX, showY, showZ } = useControls({
 })
 
 watch([mode.value, enabled.value, space.value, axis.value, size.value, showX.value, showY.value, showZ.value], () => {
-  controlsState.mode = mode.value.value
-  controlsState.enabled = enabled.value.value
-  controlsState.space = space.value.value
-  controlsState.axis = axis.value.value
-  controlsState.size = size.value.value
-  controlsState.showX = showX.value.value
-  controlsState.showY = showY.value.value
-  controlsState.showZ = showZ.value.value
+  controlsState.mode = mode.value.root
+  controlsState.enabled = enabled.value.root
+  controlsState.space = space.value.root
+  controlsState.axis = axis.value.root
+  controlsState.size = size.value.root
+  controlsState.showX = showX.value.root
+  controlsState.showY = showY.value.root
+  controlsState.showZ = showZ.value.root
 })
 </script>
 

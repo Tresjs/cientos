@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { MapControls, Sphere } from '@tresjs/cientos'
 import { SRGBColorSpace, NoToneMapping } from 'three'
@@ -9,12 +10,18 @@ const gl = {
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
+
+const controlsRef = shallowRef()
+
+watch(controlsRef, () => {
+  console.log('watch ~ controlsRef:', controlsRef.value.root)
+})
 </script>
 
 <template>
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[3, 3, 3]" />
-    <MapControls />
+    <MapControls ref="controlsRef" />
     <Sphere :scale="0.5">
       <TresMeshNormalMaterial />
     </Sphere>

@@ -2,7 +2,7 @@
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import { OrbitControls, ContactShadows, Box, Plane, Icosahedron } from '@tresjs/cientos'
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
-import { reactive, shallowRef } from 'vue'
+import { reactive, shallowRef, watch } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
@@ -14,6 +14,13 @@ const gl = {
   outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
+
+const shadowRef = shallowRef()
+
+watch(shadowRef, () => {
+  console.log('jaime ~ watch ~ shadowRef:', shadowRef.value.root)
+  
+})
 
 const state = reactive({
   blur: 3.5,
@@ -50,11 +57,11 @@ const { blur, opacity, resolution, color, helper } = useControls({
 })
 
 watch([blur.value, opacity.value, resolution.value, color.value, helper.value ], () => {
-  state.blur = blur.value.value
-  state.opacity = opacity.value.value
-  state.resolution = resolution.value.value
-  state.color = color.value.value
-  state.helper = helper.value.value
+  state.blur = blur.value.root
+  state.opacity = opacity.value.root
+  state.resolution = resolution.value.root
+  state.color = color.value.root
+  state.helper = helper.value.root
 })
 
 const boxRef = shallowRef()
@@ -64,12 +71,12 @@ const { onLoop } = useRenderLoop()
 
 onLoop(() => {
   if (boxRef.value) {
-    boxRef.value.value.rotation.y += 0.02
-    boxRef.value.value.rotation.x += 0.01
+    boxRef.value.root.rotation.y += 0.02
+    boxRef.value.root.rotation.x += 0.01
   }
   if (icoRef.value) {
-    icoRef.value.value.rotation.y += 0.02
-    icoRef.value.value.rotation.x += 0.01
+    icoRef.value.root.rotation.y += 0.02
+    icoRef.value.root.rotation.x += 0.01
   }
 })
 </script>
@@ -95,6 +102,7 @@ onLoop(() => {
       <TresMeshNormalMaterial />
     </Icosahedron>
     <ContactShadows
+      ref="shadowRef"
       :blur="state.blur"
       :resolution="state.resolution"
       :opacity="state.opacity"

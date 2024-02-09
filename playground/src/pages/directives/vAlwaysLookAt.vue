@@ -17,10 +17,10 @@ const { onLoop } = useRenderLoop()
 
 onLoop(({ elapsed }) => {
   if (sphereRef.value && box1Ref.value && box2Ref.value) {
-    sphereRef.value.value.position.y = Math.sin(elapsed) * 1.5
-    box2Ref.value.value.position.y = Math.sin(elapsed * 1.2) * 1.5 + 2
+    sphereRef.value.root.position.y = Math.sin(elapsed) * 1.5
+    box2Ref.value.root.position.y = Math.sin(elapsed * 1.2) * 1.5 + 2
     const boxAngle = elapsed * 0.75
-    box1Ref.value.value.position.x = Math.cos(boxAngle) * 5
+    box1Ref.value.root.position.x = Math.cos(boxAngle) * 5
   }
 })
 </script>

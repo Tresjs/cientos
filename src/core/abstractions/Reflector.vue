@@ -79,9 +79,7 @@ extend({ Reflector })
 const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
 
-defineExpose({
-  reflectorRef,
-})
+defineExpose({ reflectorRef })
 </script>
 
 <template>
