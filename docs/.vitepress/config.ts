@@ -147,16 +147,6 @@ export default defineConfig({
           { text: 'BakeShadows', link: '/guide/misc/bake-shadows' },
         ],
       },
-      {
-        text: 'Directives',
-        collapsed: true,
-        items: [
-          { text: 'v-log', link: '/guide/directives/v-log' },
-          { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
-          { text: 'v-always-look-at', link: '/guide/directives/v-always-look-at' },
-          { text: 'v-distance-to', link: '/guide/directives/v-distance-to' },
-        ],
-      },
     ],
 
     socialLinks: [
