@@ -125,13 +125,13 @@ watch(() => [
   props.dashSize,
   props.dashOffset,
 ], () => updateLineMaterial(lineMaterial, props))
-watch(() => props.vertexColors, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch(() => props.points, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
+watch(() => props.vertexColors, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors), { deep: true })
+watch(() => props.points, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors), { deep: true })
 watch([sizes.height, sizes.width], () => lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value))
 
-onUnmounted(() => { 
-  lineGeometry.dispose() 
-  lineMaterial.dispose() 
+onUnmounted(() => {
+  lineGeometry.dispose()
+  lineMaterial.dispose()
 })
 </script>
 
