@@ -7,6 +7,13 @@ import { Vector3, Quaternion } from 'three'
 import type { Camera } from 'three'
 import { PointerLockControls } from './index'
 
+const props = withDefaults(defineProps<KeyboardControlsProps>(), {
+  moveSpeed: 0.2,
+  makeDefault: true,
+})
+
+const emit = defineEmits(['isLock', 'change'])
+
 export interface KeyboardControlsProps {
   /**
    * Whether to make this the default controls.
@@ -37,7 +44,7 @@ export interface KeyboardControlsProps {
   /**
    * Indicates the movement speed.
    * @type {number}
-   * @default 0.25
+   * @default 0.2
    * @memberof KeyboardControlsProps
    *
    **/
@@ -52,13 +59,6 @@ export interface KeyboardControlsProps {
   selector?: string
 }
 
-const props = withDefaults(defineProps<KeyboardControlsProps>(), {
-  moveSpeed: 0.25,
-  makeDefault: true,
-})
-
-const emit = defineEmits(['isLock', 'change'])
-
 const { moveSpeed } = toRefs(props)
 
 const { camera: activeCamera, controls, renderer } = useTresContext()
@@ -70,10 +70,10 @@ const { w, s, a, d, Up, Down, Left, Right } = useMagicKeys()
 
 watchEffect(() => {
   if (a.value || Left.value) sidewardMove.value = -moveSpeed.value
-  else if (d.value || Down.value) sidewardMove.value = moveSpeed.value
+  else if (d.value || Right.value) sidewardMove.value = moveSpeed.value
   else sidewardMove.value = 0
   if (w.value || Up.value) forwardMove.value = moveSpeed.value
-  else if (s.value || Right.value) forwardMove.value = -moveSpeed.value
+  else if (s.value || Down.value) forwardMove.value = -moveSpeed.value
   else forwardMove.value = 0
 })
 
@@ -85,8 +85,8 @@ const isActive = (isLock: boolean) => emit('isLock', isLock)
 
 const hasChange = (state: any) => emit('change', state)
 
-const moveVector = new Vector3(0, 0, 0)
-const rotationVector = new Vector3(0, 0, 0)
+const moveVector = new Vector3()
+const rotationVector = new Vector3()
 const tmpQuaternion = new Quaternion()
 
 const moveForward = (delta: number, movementSpeed: number) => {

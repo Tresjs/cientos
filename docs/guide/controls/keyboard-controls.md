@@ -47,7 +47,7 @@ Is really important that the Perspective camera is set first in the canvas. Othe
 ## Events
 
 ```vue
-<PointerLockControls @change="onChange" @is-lock="(state) => isActive(state)" />
+<KeyboardControls @change="onChange" @is-lock="(state) => isActive(state)" />
 ```
 
 | Event      | Description                                                      |

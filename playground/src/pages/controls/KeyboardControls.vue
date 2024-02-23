@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping, Vector3 } from 'three'
-import { PointerLockControls, KeyboardControls, StatsGl, Sky, Box } from '@tresjs/cientos'
+import { KeyboardControls, StatsGl, Sky, Box } from '@tresjs/cientos'
 
 const gl = {
   clearColor: '#82DBC5',
