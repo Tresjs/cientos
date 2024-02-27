@@ -7,13 +7,6 @@ import { Vector3, Quaternion } from 'three'
 import type { Camera } from 'three'
 import { PointerLockControls } from './index'
 
-const props = withDefaults(defineProps<KeyboardControlsProps>(), {
-  moveSpeed: 0.2,
-  makeDefault: true,
-})
-
-const emit = defineEmits(['isLock', 'change'])
-
 export interface KeyboardControlsProps {
   /**
    * Whether to make this the default controls.
@@ -58,6 +51,13 @@ export interface KeyboardControlsProps {
    */
   selector?: string
 }
+
+const props = withDefaults(defineProps<KeyboardControlsProps>(), {
+  moveSpeed: 0.2,
+  makeDefault: true,
+})
+
+const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
