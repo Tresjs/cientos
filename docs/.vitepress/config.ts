@@ -43,7 +43,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Guide', link: '/guide/' },
-      { text: 'Examples', link: 'https://playground.tresjs.org/' },
+      { text: 'Examples', link: 'https://lab.tresjs.org/' },
     ],
 
     sidebar: [
@@ -114,6 +114,7 @@ export default defineConfig({
           { text: 'Octahedron', link: '/guide/shapes/octahedron' },
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
+          { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
           { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
@@ -143,6 +144,8 @@ export default defineConfig({
           { text: 'Stats', link: '/guide/misc/stats' },
           { text: 'Html', link: '/guide/misc/html-component' },
           { text: 'StatsGl', link: '/guide/misc/stats-gl' },
+          { text: 'useGLTFExporter', link: '/guide/misc/use-gltf-exporter' },
+          { text: 'BakeShadows', link: '/guide/misc/bake-shadows' },
         ],
       },
       {
