@@ -51,7 +51,7 @@ const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
 
 watch(debug, () => {
-    console.log('debug', debug.value)
+    // console.log('debug', debug.value)
 })
 
 const onExportDecal = () => {
