@@ -3,6 +3,7 @@ import { useAnimations } from './useAnimations'
 import Levioso from './Levioso.vue'
 import Reflector from './Reflector.vue'
 import MouseParallax from './MouseParallax.vue'
+import Decal from './Decal.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
 import Fbo from './useFBO/component.vue'
@@ -21,4 +22,5 @@ export {
   GlobalAudio,
   Fbo,
   Sampler,
+  Decal
 }
