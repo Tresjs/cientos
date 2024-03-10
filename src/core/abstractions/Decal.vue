@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { withDefaults, onMounted, onUnmounted, getCurrentInstance, defineProps, nextTick, unref, ref, shallowRef, watchEffect, watch, computed, toRaw, toRefs, reactive, shallowReactive, type ShallowRef, toValue } from 'vue';
+import { withDefaults, onMounted, onUnmounted, getCurrentInstance, defineProps, ref, shallowRef, watchEffect, watch, computed, toRaw, toRefs, reactive, shallowReactive, type ShallowRef } from 'vue';
 import { Vector3, Euler, Texture, Mesh, Intersection, MathUtils } from 'three';
 import { DecalGeometry } from 'three-stdlib'
 import { useTresContext, useRenderLoop } from '@tresjs/core'
-import { Box } from '../index'
+import { Box } from '../../index'
 import { useControls } from '@tresjs/leches'
-
-const instance = getCurrentInstance()
-const uid = instance?.uid
 
 export interface DecalProps {
     debug?: boolean;
@@ -54,6 +51,9 @@ const meshLineRef = shallowRef<Mesh | null>(null);
 const boxHelperRef = shallowRef<Mesh | null>(null);
 const currentIntersect = shallowReactive<Intersection | {}>({});
 const decalIntersect = shallowReactive<Intersection | {}>({});
+
+const instanceVue = getCurrentInstance()
+const uidVue = instanceVue?.uid
 
 const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).length === 0);
 const decalIntersectIsEmpty = computed(() => Object.keys(decalIntersect).length === 0);
@@ -276,7 +276,7 @@ onUnmounted(() => {
     controls?.value?.removeEventListener('end', onEndOrbitControls);
     controls?.value?.removeEventListener('change', onChangeOrbitControls);
 
-    meshRef?.value?.geometry?.dispose()
+    map?.value?.dispose()
 });
 
 defineExpose({
@@ -290,12 +290,12 @@ defineExpose({
         <slot />
     </TresMesh>
 
-    <TresLine v-if="debug" :visible="!!(!currentIntersectIsEmpty)" ref="meshLineRef">
+    <TresLine v-if="debug" ref="meshLineRef" :visible="!!(!currentIntersectIsEmpty)">
         <TresBufferGeometry />
         <TresLineBasicMaterial color="#0000ff" />
     </TresLine>
 
-    <Box v-if="debug" :visible="false" ref="boxHelperRef" :args="[.1, .1, 1]">
+    <Box v-if="debug" ref="boxHelperRef" :visible="false" :args="[.1, .1, 1]">
         <TresMeshNormalMaterial />
     </Box>
 </template>
