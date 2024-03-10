@@ -1,46 +1,57 @@
 <script setup lang="ts">
-import { withDefaults, onMounted, onUnmounted, defineProps, nextTick, ref, shallowRef, watchEffect, watch, computed, toRefs, reactive, shallowReactive, type ShallowRef } from 'vue';
-import { Vector3, Euler, Texture, Mesh, Group, Object3D, Vector2, Intersection, MathUtils } from 'three';
+import { withDefaults, onMounted, onUnmounted, getCurrentInstance, defineProps, nextTick, unref, ref, shallowRef, watchEffect, watch, computed, toRaw, toRefs, reactive, shallowReactive, type ShallowRef, toValue } from 'vue';
+import { Vector3, Euler, Texture, Mesh, Intersection, MathUtils } from 'three';
 import { DecalGeometry } from 'three-stdlib'
 import { useTresContext, useRenderLoop } from '@tresjs/core'
-import { Box, TransformControls } from '../index'
+import { Box } from '../index'
 import { useControls } from '@tresjs/leches'
+
+const instance = getCurrentInstance()
+const uid = instance?.uid
 
 export interface DecalProps {
     debug?: boolean;
     depthTest?: boolean;
     polygonOffsetFactor?: number;
-    map?: Texture | undefined;
+    map?: Texture | null;
     mesh?: ShallowRef<Mesh | null>;
-    position?: [number, number, number];
-    rotation?: Euler;
-    scale?: [number, number, number];
+    position?: number[];
+    orientation?: number[];
+    size?: number[];
+    normal?: number[];
+    order?: number;
 }
 
 const props = withDefaults(defineProps<DecalProps>(), {
     debug: false,
     depthTest: false,
     polygonOffsetFactor: -10,
-    map: undefined,
+    map: null,
     mesh: () => shallowRef(null),
     position: () => [0, 0, 0],
-    rotation: () => new Euler(),
-    scale: () => [1, 1, 1],
+    orientation: () => [0, 0, 0],
+    size: () => [1, 1, 1],
+    normal: () => [0, 0, 0],
+    order: () => Math.round(Math.random() * 100),
 });
 
-const { debug, depthTest, polygonOffsetFactor, map, mesh, position, rotation, scale } = toRefs(props);
+const { debug, depthTest, polygonOffsetFactor, mesh, map, position, orientation, size, normal, order } = toRefs(props);
 
 const orbitControlsStarted = ref<boolean>(false);
 const onDraggingOrbitControls = ref<boolean>(false);
+const sizeControls = ref<Object>({});
+const orientationControls = ref<Object>({});
 
 const decalPosition = shallowReactive<Vector3>(new Vector3(...position.value));
-const decalOrientation = shallowReactive<Euler>(rotation.value);
-const decalScale = shallowReactive<Vector3>(new Vector3(...scale.value));
+const decalOrientation = shallowReactive<Euler>(new Euler(...orientation.value));
+const decalSize = shallowReactive<Vector3>(new Vector3(...size.value));
+const decalNormal = shallowReactive<Vector3>(new Vector3(...normal.value));
+
 const mouseHelperOrientation = shallowReactive<Euler>(new Euler());
 
-const mainRef = shallowRef<Mesh | null>(null);
-const lineHelperRef = shallowRef<Mesh | null>(null);
-const mouseHelperRef = shallowRef<Mesh | null>(null);
+const meshRef = shallowRef<Mesh | null>(null);
+const meshLineRef = shallowRef<Mesh | null>(null);
+const boxHelperRef = shallowRef<Mesh | null>(null);
 const currentIntersect = shallowReactive<Intersection | {}>({});
 const decalIntersect = shallowReactive<Intersection | {}>({});
 
@@ -57,67 +68,86 @@ watch(debug, () => {
 const onExportDecal = () => {
     if (decalIntersectIsEmpty.value) return
 
-    console.log('decalPosition', decalPosition)
-    console.log('decalOrientation', decalOrientation)
-    console.log('decalScale', decalScale)
-    console.log('normal', decalIntersect.face.normal)
+    const datas = {
+        position: [...toRaw(decalPosition)],
+        orientation: [...toRaw(decalOrientation)].slice(0, -1), // delete the EulerOrder
+        size: [...toRaw(decalSize)],
+        normal: [...decalIntersect.face.normal]
+    }
+
+    console.log('↓ —— OBJECT TO COPY —— ↓', datas, '↑ —— OBJECT TO COPY —— ↑')
 }
 
-const { scaleControls, orientationControls, exportBtn } = useControls({
-    scaleControls: {
-        label: 'Scale',
-        visible: false,
-        value: decalScale,
-        step: 0.1,
-    },
-    orientationControls: {
-        label: 'Orientation',
-        visible: false,
-        value: 0,
-        min: -360, // in degrees
-        max: 360, // in degrees
-        step: 1
-    },
-    exportBtn: {
-        label: 'Export Decal',
-        type: 'button',
-        onClick: onExportDecal,
-        size: 'sm',
-    },
-})
+if (debug.value) {
+    const { size, orientation } = useControls({
+        size: {
+            label: 'Size',
+            value: decalSize,
+            visible: false,
+            step: 0.1,
+        },
+        orientation: {
+            label: 'Orientation',
+            visible: false,
+            value: 0,
+            min: -360, // in degrees
+            max: 360, // in degrees
+            step: 1
+        },
+        btn: {
+            label: 'Export Decal',
+            type: 'button',
+            onClick: onExportDecal,
+            size: 'sm',
+        },
+    })
 
-watch([scaleControls.value, orientationControls.value], () => {
+    sizeControls.value = size.value
+    orientationControls.value = orientation.value
+}
+
+
+watch([sizeControls.value, orientationControls.value], () => {
     makeGeometryDebugMode()
 })
 
 watch(controls, () => {
+    if (!controls.value || !debug.value) return
+
     controls.value.addEventListener('start', onStartOrbitControls);
     controls.value.addEventListener('end', onEndOrbitControls);
     controls.value.addEventListener('change', onChangeOrbitControls);
 
-    controls.value.enableDamping = false; // Very import in debug mode
+    controls.value.enableDamping = !debug.value; // Very import in debug mode
 })
 
-watch(lineHelperRef, () => {
-    lineHelperRef.value.geometry.setFromPoints([new Vector3(), new Vector3()]);
-})
+watch(meshLineRef, () => {
+    if (!meshLineRef.value) return
 
-watch(mainRef, async () => {
-    console.log('mainRef', mainRef)
-
-    if (!debug.value) {
-        await nextTick()
-
-        setTimeout(() => {
-            makeGeometry()
-        }, 2000);
-    }
+    meshLineRef.value.geometry.setFromPoints([new Vector3(), new Vector3()]);
 })
 
 watch(decalIntersectIsEmpty, () => {
-    scaleControls.value.visible = !decalIntersectIsEmpty.value
+    sizeControls.value.visible = !decalIntersectIsEmpty.value
     orientationControls.value.visible = !decalIntersectIsEmpty.value
-    exportBtn.value.visible = !decalIntersectIsEmpty.value
+})
+
+watchEffect(() => {
+    if (!meshRef?.value) return
+
+    const parent = mesh?.value || meshRef.value.parent
+
+    if (!(parent instanceof Mesh)) {
+        throw new Error('Decal must have a Mesh as parent or specify its "mesh" prop')
+    }
+
+    if (map.value) {
+        meshRef.value.material.map = map.value
+    }
+
+    if (decalIntersectIsEmpty.value) {
+        makeGeometry()
+    }
 })
 
 const onStartOrbitControls = () => {
@@ -127,11 +157,11 @@ const onStartOrbitControls = () => {
 }
 
 const onEndOrbitControls = () => {
-    if (!debug.value) return
+    if (!debug.value || !boxHelperRef.value?.value) return
 
     if (!onDraggingOrbitControls.value && !currentIntersectIsEmpty.value) {
         Object.assign(decalIntersect, currentIntersect);
-        mouseHelperOrientation.copy(mouseHelperRef.value.value.rotation.clone())
+        mouseHelperOrientation.copy(boxHelperRef.value.value.rotation.clone())
 
         makeGeometryDebugMode()
     }
@@ -147,9 +177,9 @@ const onChangeOrbitControls = () => {
 }
 
 onLoop(({ delta, elapsed, clock }) => {
-    if (!lineHelperRef.value || !mainRef.value || !mouseHelperRef.value.value || !debug.value || !controls.value) return;
+    if (!meshLineRef.value || !meshRef.value || !boxHelperRef?.value?.value || !debug.value || !controls.value) return;
 
-    const parent = mesh?.value || mainRef.value.parent
+    const parent = mesh?.value || meshRef.value.parent
 
     if (!parent) return;
 
@@ -162,12 +192,12 @@ onLoop(({ delta, elapsed, clock }) => {
 
         Object.assign(currentIntersect, intersects[0]);
 
-        const { depth } = mouseHelperRef.value.value.geometry.parameters
+        const { depth } = boxHelperRef.value.value.geometry.parameters
 
-        const parentMatrix = parent.matrixWorld.clone().invert()
-        const p = point.clone().applyMatrix4(parentMatrix)
+        const parentMatrixWorld = parent.matrixWorld.clone().invert()
+        const p = point.clone().applyMatrix4(parentMatrixWorld)
 
-        mouseHelperRef.value.value.position.copy(p);
+        boxHelperRef.value.value.position.copy(p);
 
         const nLookAt = face.normal.clone();
         nLookAt.transformDirection(parent.matrixWorld);
@@ -178,11 +208,11 @@ onLoop(({ delta, elapsed, clock }) => {
         nLineHelper.transformDirection(parent.matrixWorld);
         nLineHelper.multiplyScalar(depth * 4);
         nLineHelper.add(point);
-        nLineHelper.applyMatrix4(parentMatrix)
+        nLineHelper.applyMatrix4(parentMatrixWorld)
 
-        mouseHelperRef.value.value.lookAt(nLookAt);
+        boxHelperRef.value.value.lookAt(nLookAt);
 
-        const positions = lineHelperRef.value.geometry.attributes.position;
+        const positions = meshLineRef.value.geometry.attributes.position;
         positions.setXYZ(0, p.x, p.y, p.z);
         positions.setXYZ(1, nLineHelper.x, nLineHelper.y, nLineHelper.z);
         positions.needsUpdate = true;
@@ -196,88 +226,76 @@ onLoop(({ delta, elapsed, clock }) => {
 });
 
 const makeGeometryDebugMode = () => {
-    console.log('makeGeometryDebugMode')
-
-    const parent = mesh?.value || mainRef.value?.parent
-    const target = mainRef.value;
+    const parent = mesh?.value || meshRef.value?.parent
+    const target = meshRef.value;
 
     if (!parent || !target) return;
 
     target.geometry?.dispose();
 
-    const parentMatrix = parent.matrixWorld.clone().invert();
-    const normal = decalIntersect.face.normal.clone();
+    parent?.updateMatrixWorld()
 
+    const parentMatrixWorld = parent.matrixWorld.clone().invert();
+    const normal = decalIntersect.face.normal.clone();
     const position = decalIntersect.point.clone();
+    const size = sizeControls.value.value
     const orientation = mouseHelperOrientation.clone()
     orientation.z -= MathUtils.degToRad(orientationControls.value.value)
 
-    const scale = scaleControls.value.value
-
     decalPosition.copy(position);
     decalOrientation.copy(orientation);
-    decalScale.copy(scale);
+    decalSize.copy(size);
 
-    target.position.copy(normal).multiplyScalar(0.02);
+    target.position.copy(normal).multiplyScalar(0.01);
 
-    target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalScale);
-    target.geometry.applyMatrix4(parentMatrix);
+    target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize);
+    target.geometry.applyMatrix4(parentMatrixWorld);
 }
 
 const makeGeometry = () => {
-    const parent = mesh?.value || mainRef.value?.parent
-    const target = mainRef.value;
+    const parent = mesh?.value || meshRef.value?.parent
+    const target = meshRef.value;
 
-    if (!parent || !target) return;
+    if (!parent && !target) return;
 
     target.geometry?.dispose();
 
+    parent?.updateMatrixWorld()
+
     const parentMatrix = parent.matrixWorld.clone().invert();
 
-    target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalScale);
+    target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize);
     target.geometry.applyMatrix4(parentMatrix);
 
-    const normal = new Vector3(0.9148628154432836, 0.08766946862228234, 0.39413207582062515)
-
     target.position.copy(new Vector3());
-    target.position.add(normal.multiplyScalar(0.02));
+    target.position.add(decalNormal.multiplyScalar(0.01));
 }
-
-watchEffect(() => {
-    if (!mainRef?.value) return
-
-    const parent = mesh?.value || mainRef.value.parent
-
-    if (!(parent instanceof Mesh)) {
-        throw new Error('Decal must have a Mesh as parent or specify its "mesh" prop')
-    }
-})
 
 onUnmounted(() => {
     controls?.value?.removeEventListener('start', onStartOrbitControls);
     controls?.value?.removeEventListener('end', onEndOrbitControls);
     controls?.value?.removeEventListener('change', onChangeOrbitControls);
 
-    mainRef?.value?.geometry?.dispose()
+    meshRef?.value?.geometry?.dispose()
 });
 
 defineExpose({
-    value: mainRef,
+    value: meshRef,
 })
 </script>
 
 <template>
-    <TresMesh ref="mainRef" v-bind="$attrs" material-transparent :material-polygonOffset="true"
-        :material-polygonOffsetFactor="polygonOffsetFactor" :material-depthTest="depthTest" :material-map="map">
+    <TresMesh ref="meshRef" v-bind="$attrs" :render-order="order" material-transparent material-polygonOffset
+        :material-polygonOffsetFactor="polygonOffsetFactor" :material-depthTest="depthTest">
         <slot />
     </TresMesh>
 
-    <TresLine v-if="debug" :visible="!!(!currentIntersectIsEmpty)" ref="lineHelperRef">
+    <TresLine v-if="debug" :visible="!!(!currentIntersectIsEmpty)" ref="meshLineRef">
         <TresBufferGeometry />
         <TresLineBasicMaterial color="#0000ff" />
     </TresLine>
 
-    <Box v-if="debug" :visible="false" ref="mouseHelperRef" :args="[.1, .1, 1]">
+    <Box v-if="debug" :visible="false" ref="boxHelperRef" :args="[.1, .1, 1]">
         <TresMeshNormalMaterial />
     </Box>
 </template>
