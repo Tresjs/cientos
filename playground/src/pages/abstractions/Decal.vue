@@ -57,18 +57,21 @@ useControls({})
     <TresPerspectiveCamera :position="[10, 10, 40]" />
     <OrbitControls auto-rotate :enable-damping="true" make-default />
 
+    <!-- BASIC EXAMPLE -->
     <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
       <TresMeshPhysicalMaterial color="white" :roughness=".5" />
 
-      <Decal debug :map="nuxtLogo">
+      <Decal debug :map="nuxtLogo" :size="[5, 5, 5]">
         <TresMeshPhysicalMaterial :roughness=".2" />
       </Decal>
+
       <Decal v-for="(decal, index) in datas.sphere" v-bind="decal" :key="`sphere-decal-${index}`">
         <TresMeshPhysicalMaterial :roughness=".2" :map="getTexture(index)" />
       </Decal>
     </Sphere>
+    <!-- BASIC EXAMPLE -->
 
-    <!-- Example with a Model GLB -->
+    <!-- EXAMPLE WITH A MODEL GLB -->
     <!-- <Suspense>
       <TresMesh :position="[-20, 0, -0]" :scale="[6, 6, 6]" :geometry="modelRef.geometry">
         <TresMeshPhysicalMaterial :roughness=".5" />
@@ -78,10 +81,9 @@ useControls({})
         </Decal>
       </TresMesh>
     </Suspense> -->
-    <!-- Example with a Model GLB -->
+    <!-- EXAMPLE WITH A MODEL GLB -->
 
-
-    <!-- Example with the mesh prop -->
+    <!-- EXAMPLE WITH THE MESH PROP -->
     <!-- <TresMesh ref="boxRef" :scale="1">
       <TresMeshPhysicalMaterial :roughness=".5" />
       <TresBoxGeometry :args="[10, 10, 10]" />
@@ -90,7 +92,7 @@ useControls({})
     <Decal v-bind="datas.box" :mesh="boxRef">
       <TresMeshPhysicalMaterial :roughness=".2" :map="vueLogo" />
     </Decal> -->
-    <!-- Example with the mesh prop -->
+    <!-- EXAMPLE WITH THE MESH PROP -->
 
     <TresAmbientLight :intensity="1" />
     <TresDirectionalLight :intensity="2" :position="[1, 5, 1]" />

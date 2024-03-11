@@ -21,7 +21,7 @@ export interface DecalProps {
 
 const props = withDefaults(defineProps<DecalProps>(), {
     debug: false,
-    depthTest: false,
+    depthTest: true,
     polygonOffsetFactor: -10,
     map: null,
     mesh: () => shallowRef(null),
@@ -43,6 +43,7 @@ const decalPosition = reactive<Vector3>(new Vector3(...position.value));
 const decalOrientation = reactive<Euler>(new Euler(...orientation.value));
 const decalSize = reactive<Vector3>(new Vector3(...size.value));
 const decalNormal = reactive<Vector3>(new Vector3(...normal.value));
+const orientationSave = reactive<Euler>(new Euler());
 
 const meshRef = shallowRef<Mesh | null>(null);
 const meshLineRef = shallowRef<Mesh | null>(null);
@@ -55,24 +56,6 @@ const decalIntersectIsEmpty = computed(() => Object.keys(decalIntersect).length 
 
 const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
-
-watchEffect(() => {
-    if (!meshRef?.value) return
-
-    const parent = mesh?.value || meshRef.value.parent
-
-    if (!(parent instanceof Mesh)) {
-        throw new Error('A Mesh parent is required for the decal or the "mesh" prop must be set.')
-    }
-
-    if (map.value) {
-        meshRef.value.material.map = map.value
-    }
-
-    if (decalIntersectIsEmpty.value) {
-        makeGeometry()
-    }
-})
 
 const exportDecal = () => {
     if (decalIntersectIsEmpty.value) return
@@ -115,6 +98,23 @@ if (debug.value) {
     orientationControls.value = orientation.value
 }
 
+watchEffect(() => {
+    if (!meshRef?.value) return
+
+    const parent = mesh?.value || meshRef.value.parent
+
+    if (!(parent instanceof Mesh)) {
+        throw new Error('A Mesh parent is required for the decal or the "mesh" prop must be set.')
+    }
+
+    if (map.value) {
+        meshRef.value.material.map = map.value
+    }
+
+    if (decalIntersectIsEmpty.value) {
+        makeGeometry()
+    }
+})
 
 watch([sizeControls.value, orientationControls.value], () => {
     makeGeometryDebugMode()
@@ -137,35 +137,9 @@ watch(controls, () => {
     controls.value.addEventListener('start', onStartOrbitControls);
     controls.value.addEventListener('end', onEndOrbitControls);
     controls.value.addEventListener('change', onChangeOrbitControls);
-
     controls.value.enableDamping = !debug.value; // Very important in debug mode
     controls.value.autoRotate = !debug.value; // Very important in debug mode
 })
-
-const onStartOrbitControls = () => {
-    if (currentIntersectIsEmpty.value && !debug.value) return
-
-    orbitControlsStarted.value = true
-}
-
-const onEndOrbitControls = () => {
-    if (!debug.value || !boxHelperRef.value?.value) return
-
-    if (!onDraggingOrbitControls.value && !currentIntersectIsEmpty.value) {
-        Object.assign(decalIntersect, currentIntersect);
-
-        makeGeometryDebugMode()
-    }
-
-    orbitControlsStarted.value = false
-    onDraggingOrbitControls.value = false
-}
-
-const onChangeOrbitControls = () => {
-    if ((currentIntersectIsEmpty.value || !orbitControlsStarted.value) && !debug.value) return
-
-    onDraggingOrbitControls.value = true
-}
 
 onLoop(({ delta, elapsed, clock }) => {
     if (!meshLineRef.value || !meshRef.value || !boxHelperRef?.value?.value || !debug.value || !controls.value) return;
@@ -216,6 +190,32 @@ onLoop(({ delta, elapsed, clock }) => {
     }
 });
 
+const onStartOrbitControls = () => {
+    if (currentIntersectIsEmpty.value && !debug.value) return
+
+    orbitControlsStarted.value = true
+}
+
+const onEndOrbitControls = () => {
+    if (!debug.value || !boxHelperRef.value?.value) return
+
+    if (!onDraggingOrbitControls.value && !currentIntersectIsEmpty.value) {
+        Object.assign(decalIntersect, currentIntersect);
+        orientationSave.copy(boxHelperRef.value.value.rotation.clone())
+
+        makeGeometryDebugMode()
+    }
+
+    orbitControlsStarted.value = false
+    onDraggingOrbitControls.value = false
+}
+
+const onChangeOrbitControls = () => {
+    if ((currentIntersectIsEmpty.value || !orbitControlsStarted.value) && !debug.value) return
+
+    onDraggingOrbitControls.value = true
+}
+
 const makeGeometryDebugMode = () => {
     const parent = mesh?.value || meshRef.value?.parent
     const target = meshRef.value;
@@ -230,7 +230,7 @@ const makeGeometryDebugMode = () => {
     const normal = decalIntersect.face.normal.clone();
     const position = decalIntersect.point.clone();
     const size = sizeControls.value.value
-    const orientation = boxHelperRef.value.value.rotation.clone()
+    const orientation = orientationSave.clone()
     orientation.z -= MathUtils.degToRad(orientationControls.value.value)
 
     decalPosition.copy(position);
@@ -259,15 +259,6 @@ const makeGeometry = () => {
     target.geometry.applyMatrix4(parentMatrixWorld);
 }
 
-onUnmounted(() => {
-    controls?.value?.removeEventListener('start', onStartOrbitControls);
-    controls?.value?.removeEventListener('end', onEndOrbitControls);
-    controls?.value?.removeEventListener('change', onChangeOrbitControls);
-
-    map?.value?.dispose()
-    meshRef?.value?.geometry?.dispose();
-});
-
 defineExpose({
     value: meshRef,
 })
@@ -275,7 +266,8 @@ defineExpose({
 
 <template>
     <TresMesh ref="meshRef" v-bind="$attrs" :render-order="order" material-transparent material-polygonOffset
-        :material-polygonOffsetFactor="polygonOffsetFactor" :material-depthTest="depthTest">
+        :material-polygonOffsetFactor="polygonOffsetFactor" :material-depthTest="depthTest"
+        :material-depthWrite="false">
         <slot />
     </TresMesh>
 
