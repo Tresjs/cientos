@@ -54,10 +54,21 @@ useControls({})
   <TresLeches />
 
   <TresCanvas v-bind="gl">
-    <TresPerspectiveCamera :position="[10, 11, 50]" />
+    <TresPerspectiveCamera :position="[10, 10, 40]" />
     <OrbitControls auto-rotate :enable-damping="true" make-default />
 
-    <!-- With An External Geometry -->
+    <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
+      <TresMeshPhysicalMaterial color="white" :roughness=".5" />
+
+      <Decal debug :map="nuxtLogo">
+        <TresMeshPhysicalMaterial :roughness=".2" />
+      </Decal>
+      <Decal v-for="(decal, index) in datas.sphere" v-bind="decal" :key="`sphere-decal-${index}`">
+        <TresMeshPhysicalMaterial :roughness=".2" :map="getTexture(index)" />
+      </Decal>
+    </Sphere>
+
+    <!-- Example with a Model GLB -->
     <!-- <Suspense>
       <TresMesh :position="[-20, 0, -0]" :scale="[6, 6, 6]" :geometry="modelRef.geometry">
         <TresMeshPhysicalMaterial :roughness=".5" />
@@ -67,17 +78,10 @@ useControls({})
         </Decal>
       </TresMesh>
     </Suspense> -->
-    <!-- With External Model -->
+    <!-- Example with a Model GLB -->
 
-    <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
-      <TresMeshPhysicalMaterial color="white" :roughness=".5" />
 
-      <Decal v-for="(decal, index) in datas.sphere" v-bind="decal" :key="`sphere-decal-${index}`">
-        <TresMeshPhysicalMaterial :roughness=".2" :map="getTexture(index)" />
-      </Decal>
-    </Sphere>
-
-    <!-- Example with mesh binded into a ref -->
+    <!-- Example with the mesh prop -->
     <!-- <TresMesh ref="boxRef" :scale="1">
       <TresMeshPhysicalMaterial :roughness=".5" />
       <TresBoxGeometry :args="[10, 10, 10]" />
@@ -86,9 +90,9 @@ useControls({})
     <Decal v-bind="datas.box" :mesh="boxRef">
       <TresMeshPhysicalMaterial :roughness=".2" :map="vueLogo" />
     </Decal> -->
-    <!-- Example with mesh binded into a ref -->
+    <!-- Example with the mesh prop -->
 
     <TresAmbientLight :intensity="1" />
-    <TresDirectionalLight :intensity="2" :position="[1, 7.5, 1]" />
+    <TresDirectionalLight :intensity="2" :position="[1, 5, 1]" />
   </TresCanvas>
 </template>
