@@ -55,7 +55,7 @@ useControls({})
     <OrbitControls auto-rotate make-default />
 
     <!-- BASIC EXAMPLE -->
-    <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
+    <!-- <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
       <TresMeshPhysicalMaterial color="white" :roughness=".5" />
 
       <Decal debug :map="nuxtLogo" :size="[5, 5, 5]">
@@ -65,7 +65,7 @@ useControls({})
       <Decal v-for="(decal, index) in datas.sphere" v-bind="decal" :key="`sphere-decal-${index}`">
         <TresMeshPhysicalMaterial :roughness=".2" :map="getTexture(index)" />
       </Decal>
-    </Sphere>
+    </Sphere> -->
     <!-- BASIC EXAMPLE -->
 
     <!-- EXAMPLE WITH A MODEL GLB -->

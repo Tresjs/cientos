@@ -1,7 +1,7 @@
 # Decal
 
 <DocsDemo>
-  <DecalDemo />
+  <DecalDemoMaterial />
 </DocsDemo>
 
 The `cientos` package provides an abstraction of the [Decal Geometry](https://threejs.org/docs/#examples/en/geometries/DecalGeometry), `<Decal>` is versatile, such as enhancing models with unique details, dynamically altering visual environments, or seamlessly covering seams. This geometry generates a decal mesh that seamlessly integrates into your scene. 
@@ -34,7 +34,7 @@ The minimal version is very easy to set up: you just need to insert a `<Decal>` 
 
 <<< @/.vitepress/theme/components/DecalDemoBasic.vue{3-4,6-7,16-17}
 
-See [datas](#datas) part to see the contents of the Decal's datas object.
+See [decalsDatas](#decal-datas) part to see the contents of the Decal's datas object of the demo.
 
 ### Various materials
 If the [MeshBasicMaterial](https://threejs.org/docs/#api/en/materials/MeshBasicMaterial) doesn't suit you, you can assign the material you want to the `<Decal>`.  You can now make them react to light 💡, simply by choosing the material that allows it, in this case the [MeshPhysicalMaterial](https://threejs.org/docs/#api/en/materials/MeshPhysicalMaterial).
@@ -45,13 +45,13 @@ If the [MeshBasicMaterial](https://threejs.org/docs/#api/en/materials/MeshBasicM
 
 <<< @/.vitepress/theme/components/DecalDemoMaterial.vue{3-4,6-7,18-23}
 
-See [datas](#datas) part to see the contents of the Decal's datas object.
+See [decalsDatas](#decal-datas) part to see the contents of the Decal's datas object of the demo.
 
 ### Mesh Prop
 Define the surface to which the decal must attach using the mesh prop.
 
 ::: warning
-Shapes from [@tresjs/cientos](https://github.com/Tresjs/cientos) repository such as `<Sphere>`, `<Box>`, etc. do not work at the moment. You need to go through the method of using a `<TresMesh />` containing a `<TresGeometry />`.
+Shapes from [@tresjs/cientos](https://github.com/Tresjs/cientos) repository such as `<Sphere>`, `<Box>`, etc. do not work at the moment. You need to go through the method of using a `<TresMesh />` containing a `<TresGeometry />`. As in the example below ⬇️
 :::
 
 <DocsDemo>
@@ -60,32 +60,53 @@ Shapes from [@tresjs/cientos](https://github.com/Tresjs/cientos) repository such
 
 <<< @/.vitepress/theme/components/DecalDemoMeshProp.vue{2,4-5,7,9-10,18,22-23}
 
-See [datas](#datas) part to see the contents of the Decal's datas object.
+See [decalsDatas](#decal-datas) part to see the contents of the Decal's datas object of the demo.
 
-### With GLB Model
-Description
+### Model
+`<Decal>` can be applied to an imported model!
 
-Demo
+<DocsDemo>
+  <DecalDemoModel />
+</DocsDemo>
 
-Code
+<<< @/.vitepress/theme/components/DecalDemoModel.vue{2-5,7,9-10,12,20-28}
+
+See [modelDatas](#decal-datas) part to see the contents of the Decal datas object of the demo.
+
 ### Debug Mode
 Description
 
 ::: warning
-Debug mode work obligatory with Orbit Control (Si vous l'avez pas déjà ajouté, faite le)
+Debug mode requires the camera controller [OrbitControls](/guide/controls/orbit-controls.html). It must be present in the scope of `<TresCanvas>`, if not, add it temporarily for your tests.
+<br><br>
+When you use debug mode on one `<Decal>`, you cannot use it on another `<Decal>`.
+
+```vue
+// BAD ❌
+<Decal debug :map="texture1" />
+<Decal debug :map="texture2" />
+
+// GOOD ✅
+<Decal debug :map="texture1" />
+<Decal :map="texture2" />
+```
 :::
 
-::: warning
-Seulement un debug peut être ajouté par mesh (Voir example en dessous)
+::: info
+Debug mode automatically disables the `enableDamping` and `autoRotate` properties of [OrbitControls](/guide/controls/orbit-controls.html) for a better experience. When you remove debug mode, your settings will be restored.
 :::
 
-::: warning
-Partie ou on explique la structure d'un objet exporté par le debug mode
-:::
+Dans notre cas, nous avons repris les examples précédents pour la positions des Decals du logo de Vue.js et Three.js, mais un nouveau `<Decal>` à été ajouté en debug mode avec en texture le logo de Nuxt.js. La ligne bleue lorsque vous survollez votre élement vous permez de savoir ou le `<Decal>` va être projeté, il vous suffit de cliquer et la texture que vous avez renseigné en prop de `<Decal debug>` sera projecté sur l'élement (La sphère dans notre cas).
 
-Demo
 
-Code
+<DocsDemo>
+  <DecalDemoDebug />
+</DocsDemo>
+
+<<< @/.vitepress/theme/components/DecalDemoDebug.vue{2-6,8-10,12,16,22-26}
+
+See [decalsDatas](#decal-datas) part to see the contents of the Decal's datas object of the demo.
+
 ### V-For
 Description
 
@@ -99,17 +120,21 @@ Demo
 
 Code
 
-## Datas
+## Decal Datas
+
+Partie ou on explique la structure d'un objet exporté par le debug mode
 
 JSON object for examples : [Minimal](#minimal), [Various materials](#various-materials), [Mesh prop](#mesh-prop)
 :::details decalsDatas
 <<< @/.vitepress/theme/assets/decal/basicDatas.json
 :::
 
+JSON object for example : [Model](#model)
+:::details modelDatas
+<<< @/.vitepress/theme/assets/decal/modelDatas.json
+:::
+
 ## Props
-
-
-
 
 | Prop              | Description                                          | Default                   |
 | :---------------- | :--------------------------------------------------- | ------------------------- |
