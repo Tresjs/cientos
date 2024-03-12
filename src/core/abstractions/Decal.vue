@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { withDefaults, onMounted, onUnmounted, defineProps, ref, shallowRef, watchEffect, watch, computed, toRaw, toRefs, reactive, shallowReactive, type ShallowRef } from 'vue';
-import { Vector3, Euler, Texture, Mesh, Intersection, MathUtils } from 'three';
+import { withDefaults, onUnmounted, defineProps, ref, shallowRef, watchEffect, watch, computed, toRaw, toRefs, reactive, shallowReactive, type ShallowRef } from 'vue';
+import { Vector3, Euler, Texture, Mesh, Intersection, MathUtils, Color } from 'three';
 import { DecalGeometry } from 'three-stdlib'
 import { useTresContext, useRenderLoop } from '@tresjs/core'
 import { Box } from '../../index'
 import { useControls } from '@tresjs/leches'
 
+// TODO: meshLineRef prop Color 
+// TODO: Calculate the size of boxHelperRef, meshLineRef dynamically in relation to the size of the parent element of meshRef.
+
 export interface DecalProps {
     debug?: boolean;
+    debugLineColor?: string;
     depthTest?: boolean;
     depthWrite?: boolean;
     polygonOffsetFactor?: number;
@@ -22,6 +26,7 @@ export interface DecalProps {
 
 const props = withDefaults(defineProps<DecalProps>(), {
     debug: false,
+    debugLineColor: '#0000ff',
     depthTest: true,
     depthWrite: false,
     polygonOffsetFactor: -10,
@@ -34,7 +39,7 @@ const props = withDefaults(defineProps<DecalProps>(), {
     order: () => Math.round(Math.random() * 100),
 });
 
-const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, position, orientation, size, normal, order } = toRefs(props);
+const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, position, orientation, size, normal, order, debugLineColor } = toRefs(props);
 
 const orbitControlsStarted = ref<boolean>(false);
 const onDraggingOrbitControls = ref<boolean>(false);
@@ -55,6 +60,7 @@ const decalIntersect = shallowReactive<Intersection | {}>({});
 
 const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).length === 0);
 const decalIntersectIsEmpty = computed(() => Object.keys(decalIntersect).length === 0);
+const meshLineColor = computed(() => new Color(debugLineColor.value));
 
 const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
@@ -143,6 +149,17 @@ watch(controls, () => {
     controls.value.autoRotate = !debug.value; // Very important in debug mode
 })
 
+onUnmounted(() => {
+    controls?.value?.removeEventListener('start', onStartOrbitControls);
+    controls?.value?.removeEventListener('end', onEndOrbitControls);
+    controls?.value?.removeEventListener('change', onChangeOrbitControls);
+
+    meshRef?.value?.geometry?.dispose()
+    meshLineRef?.value?.geometry?.dispose()
+    boxHelperRef?.value?.value?.geometry?.dispose()
+    map?.value?.dispose()
+});
+
 onLoop(({ delta, elapsed, clock }) => {
     if (!meshLineRef.value || !meshRef.value || !boxHelperRef?.value?.value || !debug.value || !controls.value) return;
 
@@ -173,7 +190,7 @@ onLoop(({ delta, elapsed, clock }) => {
 
         const nLineHelper = face.normal.clone();
         nLineHelper.transformDirection(parent.matrixWorld);
-        nLineHelper.multiplyScalar(depth * 4);
+        nLineHelper.multiplyScalar(depth);
         nLineHelper.add(point);
         nLineHelper.applyMatrix4(parentMatrixWorld)
 
@@ -275,7 +292,7 @@ defineExpose({
 
     <TresLine v-if="debug" ref="meshLineRef" :visible="!!(!currentIntersectIsEmpty)">
         <TresBufferGeometry />
-        <TresLineBasicMaterial color="#0000ff" />
+        <TresLineBasicMaterial :color="meshLineColor" />
     </TresLine>
 
     <Box v-if="debug" ref="boxHelperRef" :visible="false" :args="[.1, .1, 1]">
