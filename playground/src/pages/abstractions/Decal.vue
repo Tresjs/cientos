@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useTexture } from '@tresjs/core'
 import { OrbitControls, Decal, Sphere, Box, useGLTF } from '@tresjs/cientos'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping, } from 'three'
 import { shallowRef } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
@@ -11,9 +10,6 @@ const gl = {
   clearColor: '#82DBC5',
   shadows: true,
   alpha: false,
-  shadowMapType: BasicShadowMap,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
 }
 
 const modelRef = shallowRef(null);
@@ -47,6 +43,7 @@ const getTexture = (index: number) => {
   }
 }
 
+
 useControls({})
 </script>
 
@@ -55,7 +52,7 @@ useControls({})
 
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[10, 10, 40]" />
-    <OrbitControls auto-rotate :enable-damping="true" make-default />
+    <OrbitControls auto-rotate make-default />
 
     <!-- BASIC EXAMPLE -->
     <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">

@@ -9,6 +9,7 @@ import { useControls } from '@tresjs/leches'
 export interface DecalProps {
     debug?: boolean;
     depthTest?: boolean;
+    depthWrite?: boolean;
     polygonOffsetFactor?: number;
     map?: Texture | null;
     mesh?: ShallowRef<Mesh | null>;
@@ -22,17 +23,18 @@ export interface DecalProps {
 const props = withDefaults(defineProps<DecalProps>(), {
     debug: false,
     depthTest: true,
+    depthWrite: false,
     polygonOffsetFactor: -10,
     map: null,
     mesh: () => shallowRef(null),
-    position: () => [0, 0, 0],
+    position: () => [-9999, -9999, -9999],
     orientation: () => [0, 0, 0],
     size: () => [1, 1, 1],
     normal: () => [0, 0, 0],
     order: () => Math.round(Math.random() * 100),
 });
 
-const { debug, depthTest, polygonOffsetFactor, mesh, map, position, orientation, size, normal, order } = toRefs(props);
+const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, position, orientation, size, normal, order } = toRefs(props);
 
 const orbitControlsStarted = ref<boolean>(false);
 const onDraggingOrbitControls = ref<boolean>(false);
@@ -267,7 +269,7 @@ defineExpose({
 <template>
     <TresMesh ref="meshRef" v-bind="$attrs" :render-order="order" material-transparent material-polygonOffset
         :material-polygonOffsetFactor="polygonOffsetFactor" :material-depthTest="depthTest"
-        :material-depthWrite="false">
+        :material-depthWrite="depthWrite">
         <slot />
     </TresMesh>
 
