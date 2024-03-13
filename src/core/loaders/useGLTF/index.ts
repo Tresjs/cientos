@@ -74,3 +74,9 @@ export async function useGLTF<T extends string | string[]>(
     setExtensions(options, extendLoader),
   )
 }
+
+export function useDracoLoaderDispose() {
+  dracoLoader?.dispose()
+  dracoLoader = null
+}
+
