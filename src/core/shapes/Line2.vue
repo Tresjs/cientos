@@ -66,7 +66,7 @@ function getInterpolatedVertexColors(vertexColors: VertexColors | null, numPoint
   return iColors
 }
 
-function updateLineGeometry(geometry: LineGeometry, points: Points, vertexColors: VertexColors | null) {
+function updateLineGeometry(geometry: LineGeometry & { _maxInstanceCount?: number }, points: Points, vertexColors: VertexColors | null) {
   const pValues = points.map((p) => {
     if (p instanceof Vector3) {
       return [p.x, p.y, p.z]
@@ -81,7 +81,9 @@ function updateLineGeometry(geometry: LineGeometry, points: Points, vertexColors
       return p
     }
   }).flat()
-  geometry.setPositions(pValues.flat())
+  const flatPositions = pValues.flat()
+  geometry.setPositions(flatPositions)
+  geometry._maxInstanceCount = flatPositions.length / 3
 
   const colors = getInterpolatedVertexColors(vertexColors, points.length).map(c => c.toArray()).flat()
   geometry.setColors(colors)
@@ -123,14 +125,13 @@ watch(() => [
   props.dashSize,
   props.dashOffset,
 ], () => updateLineMaterial(lineMaterial, props))
-watch([props.points, props.vertexColors], () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch(() => props.vertexColors, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch(() => props.points, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
+watch(() => props.vertexColors, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors), { deep: true })
+watch(() => props.points, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors), { deep: true })
 watch([sizes.height, sizes.width], () => lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value))
 
-onUnmounted(() => { 
-  lineGeometry.dispose() 
-  lineMaterial.dispose() 
+onUnmounted(() => {
+  lineGeometry.dispose()
+  lineMaterial.dispose()
 })
 </script>
 
