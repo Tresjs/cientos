@@ -26,9 +26,7 @@ const props = withDefaults(defineProps<TetrahedronProps>(), { args: () => [1, 0]
 const { args, color } = toRefs(props)
 const tetrahedronRef = shallowRef()
 
-defineExpose({
-  value: tetrahedronRef,
-})
+defineExpose({ root: tetrahedronRef })
 </script>
 
 <template>

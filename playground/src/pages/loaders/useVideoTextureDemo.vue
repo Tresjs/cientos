@@ -16,7 +16,7 @@ const exampleVideo = 'https://raw.githubusercontent.com/Tresjs/assets/main/textu
 
 const texture = ref()
 
-texture.value = await useVideoTexture(exampleVideo, { loop: false })
+texture.value = await useVideoTexture(exampleVideo, { loop: true })
 </script>
 
 <template>

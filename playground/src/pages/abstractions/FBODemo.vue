@@ -52,11 +52,11 @@ const { 'Depth Buffer': isUseDepthBuffer, 'MSAA Samples': numMsaaSamples } = use
 
 watch(
   isUseDepthBuffer.value,
-  () => { state.depth = isUseDepthBuffer.value.value },
+  () => { state.depth = isUseDepthBuffer.value.root },
 )
 watch(
   numMsaaSamples.value,
-  () => { state.settings.samples = numMsaaSamples.value.value },
+  () => { state.settings.samples = numMsaaSamples.value.root },
 )
 </script>
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping } from 'three'
 import { PointerLockControls, KeyboardControls, Stats, Sky } from '@tresjs/cientos'
@@ -13,6 +14,12 @@ const gl = {
 
 const isActive = (state: boolean) => console.log(state)
 const hasChange = (state: any) => console.log('change', state)
+
+const controlsRef = shallowRef()
+
+watch(controlsRef, () => {
+  console.log('watch ~ controlsRef:', controlsRef.value.root)
+})
 </script>
 
 <template>
@@ -21,6 +28,7 @@ const hasChange = (state: any) => console.log('change', state)
     <Stats />
     <Sky />
     <PointerLockControls
+      ref="controlsRef"
       make-default
       @is-lock="state => isActive(state)"
       @change="state => hasChange(state)"

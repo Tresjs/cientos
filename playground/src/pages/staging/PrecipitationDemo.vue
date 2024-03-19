@@ -70,13 +70,13 @@ const { speed, randomness, count, size, areaX, areaY, areaZ } = useControls({
 })
 
 watch([speed.value, randomness.value, count.value, size.value, areaX.value, areaY.value, areaZ.value], () => {
-  options.speed = speed.value.value
-  options.randomness = randomness.value.value
-  options.count = count.value.value
-  options.size = size.value.value
-  options.areaX = areaX.value.value
-  options.areaY = areaY.value.value
-  options.areaZ = areaZ.value.value
+  options.speed = speed.value.root
+  options.randomness = randomness.value.root
+  options.count = count.value.root
+  options.size = size.value.root
+  options.areaX = areaX.value.root
+  options.areaY = areaY.value.root
+  options.areaZ = areaZ.value.root
 })
 </script>
 

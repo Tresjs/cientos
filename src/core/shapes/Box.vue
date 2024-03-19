@@ -30,9 +30,7 @@ const { args, color } = toRefs(props)
 
 const boxRef = shallowRef()
 
-defineExpose({
-  value: boxRef,
-})
+defineExpose({ root: boxRef })
 </script>
 
 <template>

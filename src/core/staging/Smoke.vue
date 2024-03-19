@@ -87,9 +87,7 @@ const { width, depth, segments, texture, color, depthTest, opacity, speed } = to
 const smokeRef = shallowRef()
 const groupRef = shallowRef()
 
-defineExpose({
-  value: smokeRef,
-})
+defineExpose({ root: smokeRef })
 
 const smoke = [...new Array(segments)].map((_, index) => ({
   x: width.value / 2 - Math.random() * width.value,

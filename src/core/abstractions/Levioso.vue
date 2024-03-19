@@ -20,9 +20,7 @@ const props = withDefaults(
 
 const groupRef = shallowRef()
 
-defineExpose({
-  value: groupRef,
-})
+defineExpose({ root: groupRef })
 
 {
   const PERIOD_SCALE = 1 / 4

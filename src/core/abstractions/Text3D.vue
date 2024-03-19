@@ -167,9 +167,7 @@ const localText = computed(() => {
 
 const text3DRef = shallowRef()
 
-defineExpose({
-  value: text3DRef,
-})
+defineExpose({ root: text3DRef })
 
 const localFont = await new Promise((resolve, reject) => {
   try {

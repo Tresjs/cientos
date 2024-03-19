@@ -29,9 +29,9 @@ const { speed, rotationFactor, floatFactor } = useControls({
 })
 
 watch([speed.value, rotationFactor.value, floatFactor.value], () => {
-  leviosoState.speed = speed.value.value
-  leviosoState.rotationFactor = rotationFactor.value.value
-  leviosoState.floatFactor = floatFactor.value.value
+  leviosoState.speed = speed.value.root
+  leviosoState.rotationFactor = rotationFactor.value.root
+  leviosoState.floatFactor = floatFactor.value.root
 })
 const groupRef = shallowRef()
 </script>

@@ -26,9 +26,7 @@ const props = withDefaults(defineProps<IcosahedronProps>(), { args: () => [1, 0]
 const { args, color } = toRefs(props)
 const icosahedronRef = shallowRef()
 
-defineExpose({
-  value: icosahedronRef,
-})
+defineExpose({ root: icosahedronRef })
 </script>
 
 <template>

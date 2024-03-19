@@ -72,9 +72,7 @@ const props = withDefaults(
 )
 const modelRef = ref()
 
-defineExpose({
-  value: modelRef,
-})
+defineExpose({ root: modelRef })
 
 const { scene: model } = await useGLTF(props.path as string, {
   draco: props.draco,

@@ -406,9 +406,7 @@ onUnmounted(() => {
   }
 })
 
-defineExpose({
-  value: controlsRef,
-})
+defineExpose({ root: controlsRef })
 </script>
 
 <template>

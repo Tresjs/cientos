@@ -47,11 +47,11 @@ const { background, blur, preset } = useControls({
 const environmentRef = ref(null)
 
 watchEffect(() => {
-  console.log(background.value.value)
+  console.log('background', background.value)
 })
 
 watchEffect(() => {
-  console.log(environmentRef.value)
+  console.log('environmentRef', environmentRef.value?.root)
 })
 
 const { progress, hasFinishLoading } = await useProgress()
@@ -78,18 +78,19 @@ const { progress, hasFinishLoading } = await useProgress()
     <TresPerspectiveCamera :position="[10, 10, 10]" />
     <OrbitControls />
     <Suspense>
-      <!-- <Environment
+      <Environment
         ref="environmentRef"
         :background="background.value"
         :files="environmentFiles"
         :blur="blur.value"
         path="https://raw.githubusercontent.com/Tresjs/assets/main/textures/environmentMap"
-      /> -->
-      <Environment
+      />
+      <!-- <Environment
+        ref="environmentRef"
         :background="background.value"
         :blur="blur.value"
         :preset="preset.value"
-      />
+      /> -->
     </Suspense>
     <TorusKnot>
       <TresMeshStandardMaterial
