@@ -57,7 +57,6 @@
     "vue": ">=3.3"
   },
   "dependencies": {
-    "@tresjs/core": "3.7.0",
     "@vueuse/core": "^10.7.2",
     "camera-controls": "^2.7.4",
     "stats-gl": "^2.0.1",
@@ -67,7 +66,7 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
-    "@tresjs/core": "^3.2.1",
+    "@tresjs/core": "4.0.0-next.1",
     "@tresjs/eslint-config-vue": "^0.2.1",
     "@tweakpane/core": "^1.1.9",
     "@types/node": "^20.11.16",
