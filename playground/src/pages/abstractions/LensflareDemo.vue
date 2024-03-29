@@ -144,73 +144,73 @@ const [seedRef, scaleRef] = useControls(
     seedPropsRef.value = [
       {
         texture: [line, ring],
-        color: [oversizeColorA.value.value, oversizeColorB.value.value, oversizeColorC.value.value],
+        color: [oversizeColorA.value.root, oversizeColorB.value.root, oversizeColorC.value.root],
         distance: [0, 0],
         size: [
-          Math.max(0, Math.floor(oversizeSize.value.value - 0.5 * oversizeSizeRand.value.value)),
-          Math.max(0, Math.floor(oversizeSize.value.value + 0.5 * oversizeSizeRand.value.value)),
+          Math.max(0, Math.floor(oversizeSize.value.root - 0.5 * oversizeSizeRand.value.root)),
+          Math.max(0, Math.floor(oversizeSize.value.root + 0.5 * oversizeSizeRand.value.root)),
         ],
         length: [
-          Math.max(0, Math.floor(oversizeNumElements.value.value - 0.5 * oversizeNumElementsRand.value.value)),
-          Math.max(0, Math.floor(oversizeNumElements.value.value + 0.5 * oversizeNumElementsRand.value.value)),
+          Math.max(0, Math.floor(oversizeNumElements.value.root - 0.5 * oversizeNumElementsRand.value.root)),
+          Math.max(0, Math.floor(oversizeNumElements.value.root + 0.5 * oversizeNumElementsRand.value.root)),
         ],
-        seed: oversizeSeed.value.value,
+        seed: oversizeSeed.value.root,
       },
       {
         texture: [rays, rays6],
-        color: [raysColorA.value.value, raysColorB.value.value, raysColorC.value.value],
+        color: [raysColorA.value.root, raysColorB.value.root, raysColorC.value.root],
         distance: [0, 0],
         size: [
-          Math.max(0, Math.floor(raysSize.value.value - 0.5 * raysSizeRand.value.value)),
-          Math.max(0, Math.floor(raysSize.value.value + 0.5 * raysSizeRand.value.value)),
+          Math.max(0, Math.floor(raysSize.value.root - 0.5 * raysSizeRand.value.root)),
+          Math.max(0, Math.floor(raysSize.value.root + 0.5 * raysSizeRand.value.root)),
         ],
         length: [
-          Math.max(0, Math.floor(raysNumElements.value.value - 0.5 * raysNumElementsRand.value.value)),
-          Math.max(0, Math.floor(raysNumElements.value.value + 0.5 * raysNumElementsRand.value.value)),
+          Math.max(0, Math.floor(raysNumElements.value.root - 0.5 * raysNumElementsRand.value.root)),
+          Math.max(0, Math.floor(raysNumElements.value.root + 0.5 * raysNumElementsRand.value.root)),
         ],
-        seed: raysSeed.value.value,
+        seed: raysSeed.value.root,
       },
       {
         texture: [circleBlur, circleRainbow, circle],
-        color: [bodyColorA.value.value, bodyColorB.value.value, bodyColorC.value.value],
+        color: [bodyColorA.value.root, bodyColorB.value.root, bodyColorC.value.root],
         distance: [0, 0],
         size: [
-          Math.max(0, Math.floor(bodySize.value.value - 0.5 * bodySizeRand.value.value)),
-          Math.max(0, Math.floor(bodySize.value.value + 0.5 * bodySizeRand.value.value)),
+          Math.max(0, Math.floor(bodySize.value.root - 0.5 * bodySizeRand.value.root)),
+          Math.max(0, Math.floor(bodySize.value.root + 0.5 * bodySizeRand.value.root)),
         ],
         length: [
-          Math.max(0, Math.floor(bodyNumElements.value.value - 0.5 * bodyNumElementsRand.value.value)),
-          Math.max(0, Math.floor(bodyNumElements.value.value + 0.5 * bodyNumElementsRand.value.value)),
+          Math.max(0, Math.floor(bodyNumElements.value.root - 0.5 * bodyNumElementsRand.value.root)),
+          Math.max(0, Math.floor(bodyNumElements.value.root + 0.5 * bodyNumElementsRand.value.root)),
         ],
-        seed: bodySeed.value.value,
+        seed: bodySeed.value.root,
       },
       {
         texture: [circleBlur, ring, poly6, polyStroke6],
-        color: [frontColorA.value.value, frontColorB.value.value, frontColorC.value.value],
-        distance: [frontOffset.value.value, frontOffset.value.value + frontSpread.value.value],
+        color: [frontColorA.value.root, frontColorB.value.root, frontColorC.value.root],
+        distance: [frontOffset.value.root, frontOffset.value.root + frontSpread.value.root],
         size: [
-          Math.max(0, Math.floor(frontSize.value.value - 0.5 * frontSizeRand.value.value)),
-          Math.max(0, Math.floor(frontSize.value.value + 0.5 * frontSizeRand.value.value)),
+          Math.max(0, Math.floor(frontSize.value.root - 0.5 * frontSizeRand.value.root)),
+          Math.max(0, Math.floor(frontSize.value.root + 0.5 * frontSizeRand.value.root)),
         ],
         length: [
-          Math.max(0, Math.floor(frontNumElements.value.value - 0.5 * frontNumElementsRand.value.value)),
-          Math.max(0, Math.floor(frontNumElements.value.value + 0.5 * frontNumElementsRand.value.value)),
+          Math.max(0, Math.floor(frontNumElements.value.root - 0.5 * frontNumElementsRand.value.root)),
+          Math.max(0, Math.floor(frontNumElements.value.root + 0.5 * frontNumElementsRand.value.root)),
         ],
-        seed: frontSeed.value.value,
+        seed: frontSeed.value.root,
       },
       {
         texture: [circleBlur, ring, poly6, polyStroke6],
-        color: [backColorA.value.value, backColorB.value.value, backColorC.value.value],
-        distance: [-backOffset.value.value, -backOffset.value.value - backSpread.value.value],
+        color: [backColorA.value.root, backColorB.value.root, backColorC.value.root],
+        distance: [-backOffset.value.root, -backOffset.value.root - backSpread.value.root],
         size: [
-          Math.max(0, Math.floor(backSize.value.value - 0.5 * backSizeRand.value.value)),
-          Math.max(0, Math.floor(backSize.value.value + 0.5 * backSizeRand.value.value)),
+          Math.max(0, Math.floor(backSize.value.root - 0.5 * backSizeRand.value.root)),
+          Math.max(0, Math.floor(backSize.value.root + 0.5 * backSizeRand.value.root)),
         ],
         length: [
-          Math.max(0, Math.floor(backNumElements.value.value - 0.5 * backNumElementsRand.value.value)),
-          Math.max(0, Math.floor(backNumElements.value.value + 0.5 * backNumElementsRand.value.value)),
+          Math.max(0, Math.floor(backNumElements.value.root - 0.5 * backNumElementsRand.value.root)),
+          Math.max(0, Math.floor(backNumElements.value.root + 0.5 * backNumElementsRand.value.root)),
         ],
-        seed: backSeed.value.value,
+        seed: backSeed.value.root,
       },
     ]
   }
@@ -218,32 +218,32 @@ const [seedRef, scaleRef] = useControls(
   watch(() => [
     seedRef.value,
 
-    oversizeSize.value.value, oversizeSizeRand.value.value,
-    oversizeNumElements.value.value, oversizeNumElementsRand.value.value,
-    oversizeColorA.value.value, oversizeColorB.value.value, oversizeColorC.value.value,
-    oversizeSeed.value.value,
+    oversizeSize.value.root, oversizeSizeRand.value.root,
+    oversizeNumElements.value.root, oversizeNumElementsRand.value.root,
+    oversizeColorA.value.root, oversizeColorB.value.root, oversizeColorC.value.root,
+    oversizeSeed.value.root,
 
-    raysSize.value.value, raysSizeRand.value.value,
-    raysNumElements.value.value, raysNumElementsRand.value.value,
-    raysColorA.value.value, raysColorB.value.value, raysColorC.value.value,
-    raysSeed.value.value,
+    raysSize.value.root, raysSizeRand.value.root,
+    raysNumElements.value.root, raysNumElementsRand.value.root,
+    raysColorA.value.root, raysColorB.value.root, raysColorC.value.root,
+    raysSeed.value.root,
 
-    bodySize.value.value, bodySizeRand.value.value,
-    bodyNumElements.value.value, bodyNumElementsRand.value.value,
-    bodyColorA.value.value, bodyColorB.value.value, bodyColorC.value.value,
-    bodySeed.value.value,
+    bodySize.value.root, bodySizeRand.value.root,
+    bodyNumElements.value.root, bodyNumElementsRand.value.root,
+    bodyColorA.value.root, bodyColorB.value.root, bodyColorC.value.root,
+    bodySeed.value.root,
 
-    frontSize.value.value, frontSizeRand.value.value,
-    frontNumElements.value.value, frontNumElementsRand.value.value,
-    frontOffset.value.value, frontSpread.value.value,
-    frontColorA.value.value, frontColorB.value.value, frontColorC.value.value,
-    frontSeed.value.value,
+    frontSize.value.root, frontSizeRand.value.root,
+    frontNumElements.value.root, frontNumElementsRand.value.root,
+    frontOffset.value.root, frontSpread.value.root,
+    frontColorA.value.root, frontColorB.value.root, frontColorC.value.root,
+    frontSeed.value.root,
 
-    backSize.value.value, backSizeRand.value.value,
-    backNumElements.value.value, backNumElementsRand.value.value,
-    backOffset.value.value, backSpread.value.value,
-    backColorA.value.value, backColorB.value.value, backColorC.value.value,
-    backSeed.value.value,
+    backSize.value.root, backSizeRand.value.root,
+    backNumElements.value.root, backNumElementsRand.value.root,
+    backOffset.value.root, backSpread.value.root,
+    backColorA.value.root, backColorB.value.root, backColorC.value.root,
+    backSeed.value.root,
   ], updateSeedProps)
 
   updateSeedProps()
@@ -291,8 +291,8 @@ const [seedRef, scaleRef] = useControls(
       :position="[10, 5, 0]"
     >
       <Lensflare
-        :scale="scaleRef.value.value"
-        :seed="seedRef.value.value"
+        :scale="scaleRef.value.root"
+        :seed="seedRef.value.root"
         :seed-props="seedPropsRef"
       />
     </TresPointLight>

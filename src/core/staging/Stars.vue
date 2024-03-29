@@ -116,9 +116,7 @@ watchEffect(() => {
 
 const starsRef = shallowRef()
 
-defineExpose({
-  value: starsRef,
-})
+defineExpose({ root: starsRef })
 </script>
 
 <template>

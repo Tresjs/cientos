@@ -7,10 +7,10 @@ const exampleAudio
   = 'https://raw.githubusercontent.com/Tresjs/assets/main/music/sunny-afternoon.mp3'
 
 const isPlaying = shallowRef(false)
-const sound = shallowRef(false)
+const sound = shallowRef()
 
 watch(sound, (value) => {
-  console.log(value)
+  console.log(value.root)
 })
 </script>
 

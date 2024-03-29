@@ -153,7 +153,7 @@ const props = withDefaults(defineProps<ContactShadowsProps>(), {
 const groupRef = shallowRef()
 const shadowCamera = shallowRef<OrthographicCamera>()
 
-defineExpose(groupRef)
+defineExpose({ root: groupRef })
 
 let renderTarget: WebGLRenderTarget, renderTargetBlur: WebGLRenderTarget
 let planeGeometry: PlaneGeometry, blurPlane: Mesh

@@ -48,11 +48,11 @@ const { radius, depth, count, size, 'size attenuation': sizeAttenuation } = useC
 })
 
 watch([radius.value, depth.value, count.value, size.value, sizeAttenuation.value], () => {
-  options.radius = radius.value.value
-  options.depth = depth.value.value
-  options.count = count.value.value
-  options.size = size.value.value
-  options.sizeAttenuation = sizeAttenuation.value.value
+  options.radius = radius.value.root
+  options.depth = depth.value.root
+  options.count = count.value.root
+  options.size = size.value.root
+  options.sizeAttenuation = sizeAttenuation.value.root
 })
 
 const star = shallowRef<Stars>(null)

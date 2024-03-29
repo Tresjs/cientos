@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<EnvironmentOptions>(), {
 })
 
 const texture: Ref<Texture | CubeTexture | null> = ref(null)
-defineExpose(texture)
+defineExpose({ root: texture })
 
 texture.value = await useEnvironment(props).texture
 </script>

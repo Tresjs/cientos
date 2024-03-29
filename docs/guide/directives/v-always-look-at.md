@@ -43,7 +43,7 @@ const { onLoop } = useRenderLoop()
 // here we update the position of the sphere and the camera will always follow the object
 onLoop(({ elapsed }) => {
   if (sphereRef.value) {
-    sphereRef.value.value.position.y = Math.sin(elapsed) * 1.5
+    sphereRef.value.root.position.y = Math.sin(elapsed) * 1.5
   }
 })
 </script>

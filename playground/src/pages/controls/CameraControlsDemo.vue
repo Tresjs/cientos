@@ -1,6 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import { reactive, shallowRef } from 'vue'
+import { reactive, shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { CameraControls } from '@tresjs/cientos'
 import { MathUtils, BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
@@ -24,6 +24,10 @@ const controlsState = reactive({
 
 const controlsRef = shallowRef()
 const boxMeshRef = shallowRef()
+
+watch(controlsRef, () => {
+  console.log('watch ~ controlsRef:', controlsRef.value.root)
+})
 
 function onChange() {
   console.log('change')
@@ -59,9 +63,9 @@ const { distance, minDistance, maxDistance } = useControls({
 })
 
 watch([distance.value, minDistance.value, maxDistance.value], () => {
-  controlsState.distance = distance.value.value
-  controlsState.minDistance = minDistance.value.value
-  controlsState.maxDistance = maxDistance.value.value
+  controlsState.distance = distance.value.root
+  controlsState.minDistance = minDistance.value.root
+  controlsState.maxDistance = maxDistance.value.root
 })
 
 useControls(
