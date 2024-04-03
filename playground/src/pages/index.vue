@@ -5,7 +5,6 @@ import {
   stagingRoutes,
   loadersRoutes,
   materialsRoutes,
-  directivesRoutes,
   shapesRoutes,
   miscRoutes,
 } from '../router/routes'
@@ -16,7 +15,6 @@ const sections = [
   { icon: '🎭', title: 'Staging', routes: stagingRoutes },
   { icon: '⏳', title: 'Loaders', routes: loadersRoutes },
   { icon: '👔', title: 'Materials', routes: materialsRoutes },
-  { icon: '📢', title: 'Directives', routes: directivesRoutes },
   { icon: '🔷', title: 'Shapes', routes: shapesRoutes },
   { icon: '🛠️', title: 'Misc', routes: miscRoutes },
 ]
