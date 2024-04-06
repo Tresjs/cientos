@@ -1,6 +1,31 @@
-import type {
-  WebGLRenderer,
-} from 'three'
+/*
+Adapted from Drei BlurPass
+https://github.com/pmndrs/drei/blob/master/
+
+MIT License
+
+Copyright (c) 2020 react-spring
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+import type { Material } from 'three'
 import {
   Mesh,
   BufferGeometry,
@@ -13,16 +38,16 @@ import {
   HalfFloatType,
 } from 'three'
 
-import { ConvolutionMaterial } from './convolutionMaterial'
+import { ConvolutionMaterial } from './ConvolutionMaterial'
 
 export interface BlurPassProps {
   resolution: number
   width?: number
   height?: number
-  minDepthThreshold?: number
-  maxDepthThreshold?: number
+  depthEdge0?: number
+  depthEdge1?: number
   depthScale?: number
-  depthToBlurRatioBias?: number
+  depthBias?: number
 }
 
 export class BlurPass {
@@ -38,10 +63,10 @@ export class BlurPass {
     resolution,
     width = 500,
     height = 500,
-    minDepthThreshold = 0,
-    maxDepthThreshold = 1,
+    depthEdge0 = 0,
+    depthEdge1 = 1,
     depthScale = 0,
-    depthToBlurRatioBias = 0.25,
+    depthBias = 0.25,
   }: BlurPassProps) {
     this.renderTargetA = new WebGLRenderTarget(resolution, resolution, {
       minFilter: LinearFilter,
@@ -56,10 +81,10 @@ export class BlurPass {
     this.convolutionMaterial.setResolution(new Vector2(width, height))
     this.scene = new Scene()
     this.camera = new Camera()
-    this.convolutionMaterial.uniforms.minDepthThreshold.value = minDepthThreshold
-    this.convolutionMaterial.uniforms.maxDepthThreshold.value = maxDepthThreshold
+    this.convolutionMaterial.uniforms.depthEdge0.value = depthEdge0
+    this.convolutionMaterial.uniforms.depthEdge1.value = depthEdge1
     this.convolutionMaterial.uniforms.depthScale.value = depthScale
-    this.convolutionMaterial.uniforms.depthToBlurRatioBias.value = depthToBlurRatioBias
+    this.convolutionMaterial.uniforms.depthBias.value = depthBias
     this.convolutionMaterial.defines.USE_DEPTH = depthScale > 0
     const vertices = new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0])
     const uvs = new Float32Array([0, 0, 2, 0, 0, 2])
@@ -97,5 +122,13 @@ export class BlurPass {
     uniforms.inputBuffer.value = lastRT.texture
     renderer.setRenderTarget(this.renderToScreen ? null : outputBuffer)
     renderer.render(scene, camera)
+  }
+
+  dispose() {
+    (this.screen.material as Material).dispose()
+    this.screen.geometry.dispose()
+    this.renderTargetA.dispose()
+    this.renderTargetB.dispose()
+    this.convolutionMaterial.dispose()
   }
 }

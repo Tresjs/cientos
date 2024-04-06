@@ -1,5 +1,32 @@
+/*
+Adapted from Drei ConvolutionMaterial
+https://github.com/pmndrs/drei/blob/master/
+
+MIT License
+
+Copyright (c) 2020 react-spring
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 import { ShaderMaterial, Vector2, Uniform, NoBlending } from 'three'
-import { version } from '../../utils/constants'
+import { version } from '../../../utils/constants'
 
 export class ConvolutionMaterial extends ShaderMaterial {
   readonly kernel: Float32Array
@@ -15,10 +42,10 @@ export class ConvolutionMaterial extends ShaderMaterial {
         scale: new Uniform(1.0),
         cameraNear: new Uniform(0.0),
         cameraFar: new Uniform(1.0),
-        minDepthThreshold: new Uniform(0.0),
-        maxDepthThreshold: new Uniform(1.0),
+        depthEdge0: new Uniform(0.0),
+        depthEdge1: new Uniform(1.0),
         depthScale: new Uniform(0.0),
-        depthToBlurRatioBias: new Uniform(0.25),
+        depthBias: new Uniform(0.25),
       },
       fragmentShader: `#include <common>
         #include <dithering_pars_fragment>      
@@ -26,10 +53,10 @@ export class ConvolutionMaterial extends ShaderMaterial {
         uniform sampler2D depthBuffer;
         uniform float cameraNear;
         uniform float cameraFar;
-        uniform float minDepthThreshold;
-        uniform float maxDepthThreshold;
+        uniform float depthEdge0;
+        uniform float depthEdge1;
         uniform float depthScale;
-        uniform float depthToBlurRatioBias;
+        uniform float depthBias;
         varying vec2 vUv;
         varying vec2 vUv0;
         varying vec2 vUv1;
@@ -41,17 +68,20 @@ export class ConvolutionMaterial extends ShaderMaterial {
           
           #ifdef USE_DEPTH
             vec4 depth = texture2D(depthBuffer, vUv);
-            depthFactor = smoothstep(minDepthThreshold, maxDepthThreshold, 1.0-(depth.r * depth.a));
-            depthFactor *= depthScale;
-            depthFactor = max(0.0, min(1.0, depthFactor + 0.25));
+            depthFactor = smoothstep(
+              1.0 - depthEdge1, 1.0 - depthEdge0,
+              1.0 - (depth.r * depth.a) + depthBias
+            );
+            depthFactor = clamp(depthScale * depthFactor + 0.25, 0.0, 1.0);
           #endif
-          
-          vec4 sum = texture2D(inputBuffer, mix(vUv0, vUv, depthFactor));
-          sum += texture2D(inputBuffer, mix(vUv1, vUv, depthFactor));
-          sum += texture2D(inputBuffer, mix(vUv2, vUv, depthFactor));
-          sum += texture2D(inputBuffer, mix(vUv3, vUv, depthFactor));
-          gl_FragColor = sum * 0.25 ;
 
+          gl_FragColor = 0.25 * (
+            texture2D(inputBuffer, mix(vUv0, vUv, depthFactor))
+            + texture2D(inputBuffer, mix(vUv1, vUv, depthFactor))
+            + texture2D(inputBuffer, mix(vUv2, vUv, depthFactor))
+            + texture2D(inputBuffer, mix(vUv3, vUv, depthFactor))
+          );
+          
           #include <dithering_fragment>
           #include <tonemapping_fragment>
           #include <${version >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>

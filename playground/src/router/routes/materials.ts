@@ -17,6 +17,6 @@ export const materialsRoutes = [
   {
     path: '/materials/reflection-material',
     name: 'ReflectionMaterial',
-    component: () => import('../../pages/materials/ReflectionMaterial.vue'),
+    component: () => import('../../pages/materials/MeshReflectionMaterialDemo.vue'),
   },
 ]
