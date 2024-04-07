@@ -3,10 +3,12 @@ import { TresCanvas } from '@tresjs/core'
 import { AnimatedSprite } from '@tresjs/cientos'
 import { ref } from 'vue'
 
-const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
-  + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
+const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
++ 'assets/main/textures/animated-sprite/'
 
-const animations = ref(['idle', 'blink', 'walk'])
+const animations = ref(
+  ['cientosIdle', 'cientosIdleToWalkTransition', 'cientosWalk'],
+)
 </script>
 
 <template>

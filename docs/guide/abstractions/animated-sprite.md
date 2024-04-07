@@ -90,13 +90,13 @@ Use either of the following naming conventions for your source images ...
 
 #### Example
 
-For our Cientos heart cartoon character animation, here's how it works.
+For our Cientos heart cartoon character animation, here's how the filenames map to animation names.
 
 | Filenames | Animation name |
 | - | - |
-| blink0000.png, blink0001.png, ... | blink |
-| idle0000.png, idle0001.png, ... | idle |
-| walk0000.png, walk0001.png, ... | walk |
+| cientosIdle0000.png, cientosIdle0001.png, ... | cientosIdle |
+| cientosIdleToWalkTransition0000.png | cientosIdleToWalkTransition |
+| cientosWalk0000.png, cientosWalk0001.png, ... | cientosWalk |
 
 Try it out by clicking a few times below:
 
