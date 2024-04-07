@@ -5,10 +5,11 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import type { AtlasData } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
 
-const { centerX, centerY, fps } = useControls({
+const { centerX, centerY, fps, asSprite } = useControls({
   centerX: { value: 0.5, min: 0, max: 1, step: 0.1 },
   centerY: { value: 0.5, min: 0, max: 1, step: 0.1 },
   fps: { value: 5, min: 0, max: 30, step: 1 },
+  asSprite: true,
 })
 
 const centerDemoAtlas: AtlasData = { frames: [] }
@@ -87,6 +88,7 @@ const centerDemoImgData = (() => {
           animation="rect"
           :center="[centerX.value, centerY.value]"
           :fps="fps.value"
+          :as-sprite="asSprite.value"
         >
           <TresGroup :scale="0.5">
             <Box
