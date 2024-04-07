@@ -11,7 +11,7 @@
 
 ## Usage
 
-<<< @/.vitepress/theme/components/AnimatedSpriteDemo.vue{3,12-21}
+<<< @/.vitepress/theme/components/AnimatedSpriteDemo.vue{3,12-20}
 
 ::: warning Suspense
 `<AnimatedSprite />` loads resources asynchronously, so it must be wrapped in a `<Suspense />`.
