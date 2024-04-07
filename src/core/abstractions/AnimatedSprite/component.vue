@@ -41,6 +41,8 @@ export interface AnimatedSpriteProps {
   flipX?: boolean
   /** For a non-looping animation, when the animation ends, whether to display the zeroth frame. */
   resetOnEnd?: boolean
+  /** Whether to display the object as a THREE.Sprite. [See THREE.Sprite](https://threejs.org/docs/?q=sprite#api/en/objects/Sprite) */
+  asSprite?: boolean
   /** Anchor point of the object. A value of [0.5, 0.5] corresponds to the center. [0, 0] is left, bottom. */
   center?: TresVector2
   /** Alpha test value for the material. [See THREE.Material.alphaTest](https://threejs.org/docs/#api/en/materials/Material.alphaTest) */
@@ -59,6 +61,7 @@ const props = withDefaults(defineProps<AnimatedSpriteProps>(), {
   reversed: false,
   flipX: false,
   resetOnEnd: false,
+  asSprite: true,
   center: () => [0.5, 0.5],
   alphaTest: 0.0,
   depthTest: true,
@@ -201,22 +204,37 @@ watch(() => [props.definitions], () => {
 <template>
   <TresGroup v-bind="$attrs">
     <Suspense :fallback="null">
-      <TresMesh
-        :scale="[scaleX, scaleY, 1]"
-        :position="[positionX, positionY, 0]"
-        @click="(intr: Intersection) => emit('click', intr)"
-      >
-        <TresPlaneGeometry :args="[1, 1]" />
-        <TresMeshBasicMaterial
-          :toneMapped="false"
-          :side="DoubleSide"
-          :map="texture"
-          :transparent="true"
-          :alphaTest="props.alphaTest"
-          :depthWrite="props.depthWrite"
-          :depthTest="props.depthTest"
-        />
-      </TresMesh>
+      <template v-if="props.asSprite">
+        <TresSprite
+          :scale="[scaleX, scaleY, 1]" 
+          :position="[positionX, positionY, 0]"
+        >
+          <TresSpriteMaterial
+            :toneMapped="false"
+            :map="texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+          />
+        </TresSprite>
+      </template>
+      <template v-else>
+        <TresMesh
+          :scale="[scaleX, scaleY, 1]"
+          :position="[positionX, positionY, 0]"
+          @click="(intr: Intersection) => emit('click', intr)"
+        >
+          <TresPlaneGeometry :args="[1, 1]" />
+          <TresMeshBasicMaterial
+            :toneMapped="false"
+            :side="DoubleSide"
+            :map="texture"
+            :transparent="true"
+            :alphaTest="props.alphaTest"
+            :depthWrite="props.depthWrite"
+            :depthTest="props.depthTest"
+          />
+        </TresMesh>
+      </template>
     </Suspense>
     <slot />
   </TresGroup>

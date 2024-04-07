@@ -21,7 +21,7 @@ const gl = {
 }
 
 const { fps, animation, definitions, flipX, loop, paused, 
-  reversed, resetOnEnd, centerX, centerY, scale, rotationX, rotationY, rotationZ, position } = useControls({
+  reversed, resetOnEnd, asSprite, centerX, centerY, scale, rotationX, rotationY, rotationZ, position } = useControls({
   fps: { value: 10, min: 0, max: 120, step: 1 },
   animation: { label: 'Animation', value: 'idle', options: ['idle', 'walk', 'blink'] },
   definitions: { label: 'Definitions', value: '{}', options: ['{}', '{"idle":"0(10),1-5"}'] },
@@ -30,6 +30,7 @@ const { fps, animation, definitions, flipX, loop, paused,
   paused: false,
   reversed: false,
   resetOnEnd: false,
+  asSprite: false,
   centerX: { value: 0.5, min: 0, max: 1, step: 0.01 },
   centerY: { value: 0.5, min: 0, max: 1, step: 0.01 },
   scale: { value: 1, min: 0.1, max: 4, step: 0.01 },
@@ -141,6 +142,7 @@ const centerDemoImgData = (() => {
           :fps="fps.value"
           :loop="loop.value"
           :reset-on-end="resetOnEnd.value"
+          :as-sprite="asSprite.value"
           :center="[centerX.value, centerY.value]"
           :reversed="reversed.value"
           :scale="scale.value"
@@ -175,6 +177,7 @@ const centerDemoImgData = (() => {
           :fps="fps.value"
           :loop="loop.value"
           :reset-on-end="resetOnEnd.value"
+          :as-sprite="asSprite.value"
           :center="[centerX.value, centerY.value]"
           :reversed="reversed.value"
           :scale="scale.value"
@@ -194,6 +197,7 @@ const centerDemoImgData = (() => {
           :fps="fps.value"
           :loop="loop.value"
           :reset-on-end="resetOnEnd.value"
+          :as-sprite="asSprite.value"
           :center="[centerX.value, centerY.value]"
           :reversed="reversed.value"
           :scale="scale.value"
@@ -210,6 +214,7 @@ const centerDemoImgData = (() => {
           :atlas="`${ASSETS_URL}cientosAtlas.json`"
           :definitions="defsParsed"
           :flip-x="flipX.value"
+          :as-sprite="asSprite.value"
           :center="[centerX.value, centerY.value]"
           :animation="animation.value"
           :fps="fps.value"
