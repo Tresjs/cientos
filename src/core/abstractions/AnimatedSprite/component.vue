@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
 import { useRenderLoop, normalizeVectorFlexibleParam } from '@tresjs/core'
 import type { Intersection } from 'three'
@@ -199,6 +199,10 @@ watch(() => [props.definitions], () => {
   frameNum = 0
   render()
 }, { immediate: true })
+
+onUnmounted(() => {
+  texture.dispose()
+})
 </script>
 
 <template>
