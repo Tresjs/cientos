@@ -207,38 +207,36 @@ onUnmounted(() => {
 
 <template>
   <TresGroup v-bind="$attrs">
-    <Suspense :fallback="null">
-      <template v-if="props.asSprite">
-        <TresSprite
-          :scale="[scaleX, scaleY, 1]" 
-          :position="[positionX, positionY, 0]"
-        >
-          <TresSpriteMaterial
-            :toneMapped="false"
-            :map="texture"
-            :transparent="true"
-            :alphaTest="props.alphaTest"
-          />
-        </TresSprite>
-      </template>
-      <template v-else>
-        <TresMesh
-          :scale="[scaleX, scaleY, 1]"
-          :position="[positionX, positionY, 0]"
-        >
-          <TresPlaneGeometry :args="[1, 1]" />
-          <TresMeshBasicMaterial
-            :toneMapped="false"
-            :side="DoubleSide"
-            :map="texture"
-            :transparent="true"
-            :alphaTest="props.alphaTest"
-            :depthWrite="props.depthWrite"
-            :depthTest="props.depthTest"
-          />
-        </TresMesh>
-      </template>
-    </Suspense>
+    <template v-if="props.asSprite">
+      <TresSprite
+        :scale="[scaleX, scaleY, 1]" 
+        :position="[positionX, positionY, 0]"
+      >
+        <TresSpriteMaterial
+          :toneMapped="false"
+          :map="texture"
+          :transparent="true"
+          :alphaTest="props.alphaTest"
+        />
+      </TresSprite>
+    </template>
+    <template v-else>
+      <TresMesh
+        :scale="[scaleX, scaleY, 1]"
+        :position="[positionX, positionY, 0]"
+      >
+        <TresPlaneGeometry :args="[1, 1]" />
+        <TresMeshBasicMaterial
+          :toneMapped="false"
+          :side="DoubleSide"
+          :map="texture"
+          :transparent="true"
+          :alphaTest="props.alphaTest"
+          :depthWrite="props.depthWrite"
+          :depthTest="props.depthTest"
+        />
+      </TresMesh>
+    </template>
     <slot />
   </TresGroup>
 </template>
