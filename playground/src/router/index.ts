@@ -5,7 +5,6 @@ import {
   stagingRoutes,
   loadersRoutes,
   materialsRoutes,
-  directivesRoutes,
   shapesRoutes,
   miscRoutes,
 } from './routes'
@@ -22,7 +21,6 @@ const routes = [
   ...loadersRoutes,
   ...materialsRoutes,
   ...miscRoutes,
-  ...directivesRoutes,
   ...shapesRoutes,
   ...miscRoutes,
 ]

@@ -43,7 +43,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Guide', link: '/guide/' },
-      { text: 'Examples', link: 'https://playground.tresjs.org/' },
+      { text: 'Examples', link: 'https://lab.tresjs.org/' },
     ],
 
     sidebar: [
@@ -115,6 +115,7 @@ export default defineConfig({
           { text: 'Octahedron', link: '/guide/shapes/octahedron' },
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
+          { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
           { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
@@ -134,7 +135,9 @@ export default defineConfig({
           { text: 'Smoke', link: '/guide/staging/smoke' },
           { text: 'Contact Shadows', link: '/guide/staging/contact-shadows' },
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
-          { text: 'Sparkles', link: '/guide/staging/sparkles' }],
+          { text: 'Sparkles', link: '/guide/staging/sparkles' },
+          { text: 'Ocean', link: '/guide/staging/ocean' },
+        ],
       },
       {
         text: 'Misc',
@@ -144,16 +147,8 @@ export default defineConfig({
           { text: 'Stats', link: '/guide/misc/stats' },
           { text: 'Html', link: '/guide/misc/html-component' },
           { text: 'StatsGl', link: '/guide/misc/stats-gl' },
-        ],
-      },
-      {
-        text: 'Directives',
-        collapsed: true,
-        items: [
-          { text: 'v-log', link: '/guide/directives/v-log' },
-          { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
-          { text: 'v-always-look-at', link: '/guide/directives/v-always-look-at' },
-          { text: 'v-distance-to', link: '/guide/directives/v-distance-to' },
+          { text: 'useGLTFExporter', link: '/guide/misc/use-gltf-exporter' },
+          { text: 'BakeShadows', link: '/guide/misc/bake-shadows' },
         ],
       },
     ],

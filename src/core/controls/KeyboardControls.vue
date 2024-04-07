@@ -1,208 +1,122 @@
 <script setup lang="ts">
-import { ref, shallowRef, toRefs } from 'vue'
+import { ref, toRefs, watchEffect } from 'vue'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
-import { PointerLockControls } from 'three-stdlib'
-import { onKeyStroke } from '@vueuse/core'
+import { useMagicKeys } from '@vueuse/core'
+import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
+import { Vector3, Quaternion } from 'three'
+import type { Camera } from 'three'
+import { PointerLockControls } from './index'
 
 export interface KeyboardControlsProps {
   /**
-   * Keys to go forward.
-   * @type {string[]}
-   * @default '[w, W]'
-   * @memberof KeyboardControlsProps
+   * Whether to make this the default controls.
    *
-   **/
-  forward?: string[] | string
-  /**
-   * Keys to go back.
-   * @type {string[]}
-   * @default '[s, S]'
+   * @default true
+   * @type {boolean}
    * @memberof KeyboardControlsProps
-   *
-   **/
-  back?: string[] | string
+   * @see https://threejs.org/docs/index.html?q=pointe#examples/en/controls/PointerLockControls
+   */
+  makeDefault?: boolean
   /**
-   * Keys to go left.
-   * @type {string[]}
-   * @default '[a, A]'
+   * The camera to control.
+   *
+   * @default false
+   * @type {boolean}
    * @memberof KeyboardControlsProps
-   *
-   **/
-  left?: string[] | string
+   * @see https://threejs.org/docs/index.html?q=pointe#examples/en/controls/PointerLockControls
+   */
+  camera?: Camera
   /**
-   * Keys to go right.
-   * @type {string[]}
-   * @default '[d, D]'
+   * The dom element to listen to.
+   *
+   * @type {HTMLElement}
    * @memberof KeyboardControlsProps
-   *
-   **/
-  right?: string[] | string
+   * @see https://threejs.org/docs/index.html?q=pointe#examples/en/controls/PointerLockControls
+   */
+  domElement?: HTMLElement
   /**
-   * Key to jump (only with PointerLockControls).
-   * @type {string[]}
-   * @default 'space'
-   * @memberof KeyboardControlsProps
-   *
-   **/
-  jump?: string[] | string
-  /**
-   * Default gravity number for jump.
+   * Indicates the movement speed.
    * @type {number}
-   * @default 9.8
-   * @memberof KeyboardControlsProps
-   *
-   **/
-  gravity?: number
-  /**
-   * Speed movement.
-   * @type {number}
-   * @default 0.1
+   * @default 0.2
    * @memberof KeyboardControlsProps
    *
    **/
   moveSpeed?: number
   /**
-   * Activate/deactivate headBobbing effect (only with PointerLockControls).
-   * @type {boolean}
-   * @default false
-   * @memberof KeyboardControlsProps
+   * The trigger id.
    *
-   **/
-  headBobbing?: boolean
-  /**
-   * Indicates if the forward movement is in the Z axis or Y axis.
-   * @type {boolean}
-   * @default false
+   * @type {string}
    * @memberof KeyboardControlsProps
-   *
-   **/
-  is2D?: boolean
+   * @see https://threejs.org/docs/index.html?q=pointe#examples/en/controls/PointerLockControls
+   */
+  selector?: string
 }
-// TODO: remove disable once eslint is updated to support vue 3.3
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const props = withDefaults(defineProps<KeyboardControlsProps>(), {
-  forward: () => ['w', 'W'],
-  back: () => ['s', 'S'],
-  left: () => ['a', 'A'],
-  right: () => ['d', 'D'],
-  jump: () => [' '],
-  gravity: 9.8,
-  moveSpeed: 0.1,
-  headBobbing: false,
-  is2D: false,
+  moveSpeed: 0.2,
+  makeDefault: true,
 })
 
-const { forward, back, left, right, jump, gravity, moveSpeed, headBobbing, is2D } = toRefs(props)
+const emit = defineEmits(['isLock', 'change'])
 
-const { camera: activeCamera, controls } = useTresContext()
+const { moveSpeed } = toRefs(props)
 
-const xMove = ref(0)
-const zMove = ref(0)
-const isHeadBobbing = ref(false)
-const isJumping = ref(false)
-const HBSpeed = 5
-const jumpSpeed = 6
-const HBAmplitude = 0.3
-const initJumpTime = ref(0)
-const wrapperRef = shallowRef()
-const _forward = is2D.value ? 'y' : 'z'
-const initCameraPos = activeCamera.value.position?.y || 0
+const { camera: activeCamera, controls, renderer } = useTresContext()
 
-// FORWARD DIRECTION MOVEMENTS
-onKeyStroke(
-  forward.value,
-  () => {
-    isHeadBobbing.value = true
-    zMove.value = moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  back.value,
-  () => {
-    isHeadBobbing.value = true
-    zMove.value = -moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  [...forward.value, ...back.value],
-  () => {
-    isHeadBobbing.value = false
-    zMove.value = 0
-  },
-  { eventName: 'keyup' },
-)
-// X DIRECTION MOVEMENTS
-onKeyStroke(
-  left.value,
-  () => {
-    isHeadBobbing.value = true
-    xMove.value = -moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  right.value,
-  () => {
-    isHeadBobbing.value = true
-    xMove.value = moveSpeed.value
-  },
-  { eventName: 'keydown' },
-)
-onKeyStroke(
-  [...left.value, ...right.value],
-  () => {
-    isHeadBobbing.value = false
-    xMove.value = 0
-  },
-  { eventName: 'keyup' },
-)
-//JUMP BUTTON
-onKeyStroke(jump.value, () => {
-  if (!isJumping.value) initJumpTime.value = Date.now()
-  isJumping.value = true
+const sidewardMove = ref(0)
+const forwardMove = ref(0)
+
+const { w, s, a, d, Up, Down, Left, Right } = useMagicKeys()
+
+watchEffect(() => {
+  if (a.value || Left.value) sidewardMove.value = -moveSpeed.value
+  else if (d.value || Right.value) sidewardMove.value = moveSpeed.value
+  else sidewardMove.value = 0
+  if (w.value || Up.value) forwardMove.value = moveSpeed.value
+  else if (s.value || Down.value) forwardMove.value = -moveSpeed.value
+  else forwardMove.value = 0
 })
 
-// HEAD BOBBING
-const headBobbingMov = (elapsedTime: number) => isHeadBobbing.value
-  ? Math.sin(elapsedTime * HBSpeed) * HBAmplitude + initCameraPos
-  : initCameraPos
+defineExpose({
+  value: controls,
+})
 
-// JUMP
-const getJumpTime = () => ((Date.now() - initJumpTime.value) / 1000) * 3
-const getJumpDistance = (jumpTime: number) => initCameraPos + jumpSpeed * jumpTime - 0.5 * gravity.value * jumpTime ** 2
+const isActive = (isLock: boolean) => emit('isLock', isLock)
 
-const getJump = () => {
-  if (isJumping.value) {
-    const jumpDistance = getJumpDistance(getJumpTime())
-    if (jumpDistance <= initCameraPos) isJumping.value = false
-    return jumpDistance
-  }
-  return 0
+const hasChange = (state: any) => emit('change', state)
+
+const moveVector = new Vector3()
+const rotationVector = new Vector3()
+const tmpQuaternion = new Quaternion()
+
+const moveForward = (delta: number, movementSpeed: number) => {
+  if (!activeCamera.value?.position && !moveVector) return
+  const camera = activeCamera.value
+  const rotMult = delta * 0.001
+  camera?.translateZ(-movementSpeed)
+
+  tmpQuaternion.set(rotationVector.x * rotMult, rotationVector.y * rotMult, rotationVector.z * rotMult, 1).normalize()
+  camera?.quaternion.multiply(tmpQuaternion)
+  if (sidewardMove.value || forwardMove.value) emit('change', controls.value)
 }
 
 const { onLoop } = useRenderLoop()
 
-onLoop(({ elapsed }) => {
-  // has PointerLockControls?
-  if (controls.value instanceof PointerLockControls && controls.value?.isLocked) {
-    controls.value.moveForward(zMove.value)
-    controls.value.moveRight(xMove.value)
-    if (activeCamera.value.position) {
-      activeCamera.value.position.y = headBobbing.value ? headBobbingMov(elapsed) : initCameraPos
-      activeCamera.value.position.y += getJump()
-    }
-  }
-  else if (wrapperRef.value.children.length > 0 && !(controls.value instanceof PointerLockControls)) {
-    wrapperRef.value.position.x += xMove.value
-    wrapperRef.value.position[_forward] += is2D.value ? zMove.value : -zMove.value
+onLoop(({ delta }) => {
+  if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
+    moveForward(delta, forwardMove.value)
+    controls.value.moveRight(sidewardMove.value)
   }
 })
 </script>
 
 <template>
-  <TresGroup ref="wrapperRef">
-    <slot />
-  </TresGroup>
+  <PointerLockControls
+    :selector="selector"
+    :make-default="makeDefault"
+    :camera="camera || activeCamera"
+    :dom-element="domElement || renderer.domElement"
+    @is-lock="isActive"
+    @change="hasChange"
+  />
 </template>

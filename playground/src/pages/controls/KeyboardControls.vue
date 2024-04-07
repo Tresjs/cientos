@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { BasicShadowMap, NoToneMapping } from 'three'
-import { PointerLockControls, KeyboardControls, Stats, Sky } from '@tresjs/cientos'
+import { BasicShadowMap, NoToneMapping, Vector3 } from 'three'
+import { KeyboardControls, StatsGl, Sky, Box } from '@tresjs/cientos'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -18,15 +18,20 @@ const hasChange = (state: any) => console.log('change', state)
 <template>
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 3, 10]" />
-    <Stats />
+    <StatsGl />
     <Sky />
-    <PointerLockControls
-      make-default
-      @is-lock="state => isActive(state)"
+    <KeyboardControls
       @change="state => hasChange(state)"
+      @is-lock="state => isActive(state)"
     />
-    <KeyboardControls head-bobbing />
+    <Box />
+    <Box :position="[15, 0, 0]" />
+    <Box :position="[-15, 0, 0]" />
 
+    <TresAxesHelper
+      :args="[10]"
+      :position-y="5"
+    />
     <TresGridHelper :args="[100, 100]" />
     <TresAmbientLight :intensity="1" />
   </TresCanvas>

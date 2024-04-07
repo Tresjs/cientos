@@ -20,9 +20,14 @@ export const controlsRoutes = [
     component: () => import('../../pages/controls/TransformControlsDemo.vue'),
   },
   {
-    path: '/controls/first-person-controls',
-    name: 'FirstPersonControls',
-    component: () => import('../../pages/controls/FirstPersonControlsDemo.vue'),
+    path: '/controls/keyboard-controls',
+    name: 'KeyboardControls',
+    component: () => import('../../pages/controls/KeyboardControls.vue'),
+  },
+  {
+    path: '/controls/pointerlock-controls',
+    name: 'PointerLockControls',
+    component: () => import('../../pages/controls/PointerLockControls.vue'),
   },
   {
     path: '/controls/scroll-controls',
