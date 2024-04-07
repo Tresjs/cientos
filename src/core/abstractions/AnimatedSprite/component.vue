@@ -225,7 +225,6 @@ onUnmounted(() => {
         <TresMesh
           :scale="[scaleX, scaleY, 1]"
           :position="[positionX, positionY, 0]"
-          @click="(intr: Intersection) => emit('click', intr)"
         >
           <TresPlaneGeometry :args="[1, 1]" />
           <TresMeshBasicMaterial
