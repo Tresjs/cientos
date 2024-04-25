@@ -25,7 +25,7 @@ const gl = {
 
 useControls('fpsgraph')
 useControls({
-  progress: progress.value,
+  progress,
 })
 
 const { onLoop } = useRenderLoop()
