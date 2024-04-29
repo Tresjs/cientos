@@ -1,77 +1,64 @@
 <script setup lang="ts">
-import { computed, toRefs, watch, shallowRef, useSlots } from 'vue';
-import { LineSegments } from 'three';
-import { EdgesGeometry } from 'three';
-import { TresColor } from '@tresjs/core';
+import { computed, toRefs, watch, shallowRef, useSlots, ref } from 'vue'
+import type { LineSegments, BufferGeometry } from 'three'
+import { EdgesGeometry } from 'three'
+import type { TresColor } from '@tresjs/core'
 
 export interface EdgesProps {
-    /**
-     * Color of the edges.
-     *
-     * @type {TresColor}
-     * @default '#ff0000'
-     * @memberof EdgesProps
-     *
-     */
-    color?: TresColor
-    /**
-    * Show edges only when the angle between two faces surpasses this threshold.
-    *
-    * @type {number}
-    * @default 15
-    * @memberof EdgesProps
-    *
-    **/
-    threshold?: number
+  color?: TresColor
+  threshold?: number
 }
 
 const props = withDefaults(defineProps<EdgesProps>(), {
-    threshold: 15,
-    color: '#ff0000',
-});
+  threshold: 15,
+  color: '#ff0000',
+})
 
-const { color, threshold: thresholdAngle } = toRefs(props);
+const { color, threshold } = toRefs(props)
 
-const lineSegmentsRef = shallowRef<LineSegments>();
+const lineSegmentsRef = shallowRef<LineSegments>()
+const saveGeometry = ref<BufferGeometry | null>(null)
+const saveThreshold = ref<number>(1)
 
-const slots = useSlots();
+const slots = useSlots()
 
-const hasChildren = computed(() => !!slots.default);
+const hasChildren = computed(() => !!slots.default)
 
 // Watch for changes in lineSegments, thresholdAngle, and color.
 watch(
-    () => [lineSegmentsRef.value, thresholdAngle.value],
-    ([lineSegments, threshold]) => {
-        if (lineSegments) {
-            const parent = lineSegments.parent;
+  () => [lineSegmentsRef.value, threshold.value],
+  () => {    
+    if (lineSegmentsRef.value) {
+      const parent = lineSegmentsRef.value.parent
 
-            if (parent) {
-                const geom = parent.geometry;
+      if (parent) {
+        const geometry = parent.geometry
 
-                // Update geometry and color if necessary.
-                if (
-                    geom !== lineSegments.userData.currentGeom ||
-                    threshold !== lineSegments.userData.currentThreshold ||
-                    color.value !== lineSegments.userData.currentColor
-                ) {
-                    lineSegments.userData.currentColor = color.value;
-                    lineSegments.userData.currentGeom = geom;
-                    lineSegments.userData.currentThreshold = threshold;
-                    lineSegments.geometry = new EdgesGeometry(geom, threshold);
-                }
-            }
+        // Update geometry, threshold and color if necessary.
+        if (
+          geometry !== saveGeometry.value || threshold.value !== saveThreshold.value
+        ) {
+          saveGeometry.value = geometry
+          saveThreshold.value = threshold.value
+          
+          lineSegmentsRef.value.geometry = new EdgesGeometry(geometry, threshold.value)
         }
+      }
     }
-);
+  },
+)
 </script>
 
 <template>
-    <TresLineSegments ref="lineSegmentsRef" v-bind="$attrs">
-        <template v-if="hasChildren">
-            <slot />
-        </template>
-        <template v-else>
-            <TresLineBasicMaterial :color="color" />
-        </template>
-    </TresLineSegments>
+  <TresLineSegments
+    ref="lineSegmentsRef"
+    v-bind="$attrs"
+  >
+    <template v-if="hasChildren">
+      <slot />
+    </template>
+    <template v-else>
+      <TresLineBasicMaterial :color="color" />
+    </template>
+  </TresLineSegments>
 </template>
