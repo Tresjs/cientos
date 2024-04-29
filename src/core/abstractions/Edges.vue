@@ -10,8 +10,8 @@ export interface EdgesProps {
 }
 
 const props = withDefaults(defineProps<EdgesProps>(), {
-  threshold: 15,
   color: '#ff0000',
+  threshold: 15,
 })
 
 const { color, threshold } = toRefs(props)
@@ -38,7 +38,7 @@ watch(
       if (parent) {
         const geometry = parent.geometry
 
-        // Update geometry, threshold and color if necessary.
+        // Update geometry and threshold if necessary.
         if (
           geometry !== saveGeometry.value || threshold.value !== saveThreshold.value
         ) {

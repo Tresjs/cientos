@@ -92,7 +92,7 @@ function onPointerLeave(ev) {
 
     <ContactShadows
       :blur="2"
-      :resolution="512 "
+      :resolution="512"
       :opacity=".25"
       :position-y="-1"
     />
