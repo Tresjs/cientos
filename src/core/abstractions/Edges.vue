@@ -24,6 +24,10 @@ const slots = useSlots()
 
 const hasChildren = computed(() => !!slots.default)
 
+defineExpose({
+  root: lineSegmentsRef,
+})
+
 // Watch for changes in lineSegments, thresholdAngle, and color.
 watch(
   () => [lineSegmentsRef.value, threshold.value],

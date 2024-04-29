@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { TresCanvas, useTresContext } from '@tresjs/core'
-import { PCFSoftShadowMap, SRGBColorSpace, NoToneMapping, MathUtils, Vector3, Color } from 'three'
-import { Edges, OrbitControls, Levioso, ContactShadows, Box } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+import { Edges, OrbitControls, Box } from '@tresjs/cientos'
 import { useControls, TresLeches } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
@@ -31,8 +30,12 @@ const { edgeColor, edgeThreshold } = useControls({
   >
     <TresPerspectiveCamera
       :position="[0, 2, 5]"
-      :rotation-x="Math.PI * 2"
     />
+
+    <OrbitControls
+      make-default
+    />
+
     <TresGridHelper
       :args="[10, 10]"
       :position-y="-.5"
@@ -60,11 +63,5 @@ const { edgeColor, edgeThreshold } = useControls({
         color="#f6f6f6"
       />
     </Box>
-
-    <OrbitControls
-      make-default
-      enable-damping
-      :enable-pan="false"
-    />
   </TresCanvas>
 </template>
