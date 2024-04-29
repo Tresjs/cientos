@@ -49,7 +49,7 @@ export const abstractionsRoutes = [
     name: 'Sampler',
     component: () => import('../../pages/abstractions/Sampler.vue'),
   },
-    {
+  {
     path: '/abstractions/edges',
     name: 'Edges',
     component: () => import('../../pages/abstractions/EdgesDemo.vue'),

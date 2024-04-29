@@ -22,5 +22,5 @@ export {
   GlobalAudio,
   Fbo,
   Sampler,
-  Edges
+  Edges,
 }
