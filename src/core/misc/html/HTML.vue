@@ -405,6 +405,8 @@ onUnmounted(() => {
   }
   el.value.remove()
 })
+
+defineExpose({ instance: groupRef })
 </script>
 
 <template>

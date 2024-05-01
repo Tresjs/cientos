@@ -197,6 +197,10 @@ onLoop(() => {
     }
   }
 })
+
+defineExpose({
+  instance: wrapperRef,
+})
 </script>
 
 <template>

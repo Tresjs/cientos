@@ -360,6 +360,8 @@ onBeforeUnmount(() => {
 })
 
 useTresContext().extend({ MeshReflectionMaterial })
+
+defineExpose({ instance: materialRef })
 </script>
 
 <template>

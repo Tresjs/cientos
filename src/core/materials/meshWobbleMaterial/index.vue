@@ -27,6 +27,8 @@ onLoop(({ elapsed }) => {
     materialRef.value.time = elapsed * props?.speed
   }
 })
+
+defineExpose({ instance: materialRef })
 </script>
 
 <template>

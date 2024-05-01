@@ -22,7 +22,7 @@ const star = shallowRef()
 const { onBeforeLoop } = useRenderLoop()
 
 onBeforeLoop(() => {
-  (star.value.value as Points).rotation.y += 0.003
+  (star.value.instance as Points).rotation.y += 0.003
 })
 </script>
 

@@ -110,7 +110,7 @@ const svgRef = shallowRef()
 const layers = shallowRef([] as SVGLayer[])
 const paths = shallowRef([] as SVGResultPaths[])
 
-defineExpose({ value: svgRef })
+defineExpose({ instance: svgRef })
 
 watchEffect(async () => useSVG(src.value).then(SVGResult => paths.value = SVGResult.paths))
 watch([skipFills, skipStrokes, fillMaterial, strokeMaterial, paths], updateLayers)

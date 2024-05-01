@@ -88,7 +88,7 @@ const smokeRef = shallowRef()
 const groupRef = shallowRef()
 
 defineExpose({
-  value: smokeRef,
+  instance: smokeRef,
 })
 
 const smoke = [...new Array(segments)].map((_, index) => ({

@@ -21,7 +21,7 @@ const props = withDefaults(
 const groupRef = shallowRef()
 
 defineExpose({
-  value: groupRef,
+  instance: groupRef,
 })
 
 {

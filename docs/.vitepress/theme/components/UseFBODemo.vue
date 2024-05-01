@@ -21,11 +21,13 @@ onMounted(async () => {
   await nextTick()
 
   onLoop(({ elapsed }) => {
+    /*
     torusRef.value.rotation.x = elapsed * 0.745
     torusRef.value.rotation.y = elapsed * 0.361
 
     capsuleRef.value.rotation.x = elapsed * 0.471
     capsuleRef.value.rotation.z = elapsed * 0.632
+    */
   })
 })
 </script>

@@ -4,7 +4,7 @@ import { Vector2, Vector3 } from 'three'
 import { Line2 } from 'three/examples/jsm/lines/Line2'
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
-import { watch, onUnmounted, computed } from 'vue'
+import { watch, onUnmounted, computed, shallowRef } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import { normalizeColor, useTresContext } from '@tresjs/core'
 
@@ -132,8 +132,14 @@ onUnmounted(() => {
   lineGeometry.dispose() 
   lineMaterial.dispose() 
 })
+
+const lineRef = shallowRef()
+defineExpose({ instance: lineRef })
 </script>
 
 <template>
-  <primitive :object="line" />
+  <primitive 
+    :ref="shallowRef" 
+    :object="line" 
+  />
 </template>

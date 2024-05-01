@@ -59,7 +59,7 @@ function getSunPosition(azimuth: number, elevation: number) {
 }
 
 defineExpose({
-  root: skyRef,
+  instance: skyRef,
   sunPosition: sunPosition.value,
 })
 </script>
