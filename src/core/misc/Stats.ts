@@ -15,7 +15,7 @@ export const Stats = defineComponent({
 
     const stats = new StatsImpl()
 
-    expose({ stats })
+    expose({ instance: stats })
 
     const node = document.body
     stats.showPanel(props.showPanel || 0)

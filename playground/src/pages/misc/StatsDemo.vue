@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { CameraControls, Stars, Stats } from '@tresjs/cientos'
+import { reactive, shallowRef, watch } from 'vue'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
 import type { Points } from 'three'
 import { NoToneMapping, SRGBColorSpace } from 'three'
-import { reactive, shallowRef } from 'vue'
 
 const gl = {
   clearColor: '#000',
@@ -19,6 +19,11 @@ const options = reactive({
 })
 
 const star = shallowRef()
+const statsGLRef = shallowRef()
+
+watch(statsGLRef, (value) => {
+  console.log('jaime ~ watch ~ value:', value.instance)
+})
 const { onBeforeLoop } = useRenderLoop()
 
 onBeforeLoop(() => {
@@ -31,7 +36,7 @@ onBeforeLoop(() => {
     v-bind="gl"
   >
     <TresPerspectiveCamera :position="[0, 2, 5]" />
-    <Stats />
+    <Stats ref="statsGLRef" />
     <Stars
       ref="star"
       :radius="options.radius"
