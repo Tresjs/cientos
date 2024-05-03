@@ -23,7 +23,7 @@ const statsRef = shallowRef()
 const { onBeforeLoop } = useRenderLoop()
 
 watch(statsRef, (value) => {
-  console.log('jaime ~ watch ~ value:', value.instance);
+  console.log('jaime ~ watch ~ value:', value.instance)
 })
 
 onBeforeLoop(() => {
