@@ -78,7 +78,7 @@ watchEffect(() => {
 })
 
 defineExpose({
-  value: controls,
+  instance: controls,
 })
 
 const isActive = (isLock: boolean) => emit('isLock', isLock)

@@ -64,12 +64,12 @@ const { onLoop } = useRenderLoop()
 
 onLoop(() => {
   if (boxRef.value) {
-    boxRef.value.value.rotation.y += 0.02
-    boxRef.value.value.rotation.x += 0.01
+    boxRef.value.instance.rotation.y += 0.02
+    boxRef.value.instance.rotation.x += 0.01
   }
   if (icoRef.value) {
-    icoRef.value.value.rotation.y += 0.02
-    icoRef.value.value.rotation.x += 0.01
+    icoRef.value.instance.rotation.y += 0.02
+    icoRef.value.instance.rotation.x += 0.01
   }
 })
 </script>

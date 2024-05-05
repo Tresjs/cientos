@@ -86,7 +86,7 @@ onUnmounted(() => {
 })
 
 defineExpose({
-  value: controls,
+  instance: controls,
 })
 </script>
 

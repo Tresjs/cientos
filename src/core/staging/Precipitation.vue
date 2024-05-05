@@ -191,10 +191,13 @@ onLoop(() => {
     geometryRef.value.attributes.position.needsUpdate = true
   }
 })
+
+const pointsRef = shallowRef()
+defineExpose({ instance: pointsRef })
 </script>
 
 <template>
-  <TresPoints>
+  <TresPoints ref="pointsRef">
     <TresPointsMaterial
       :size="size"
       :color="color"

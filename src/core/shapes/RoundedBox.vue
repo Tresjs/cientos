@@ -36,7 +36,7 @@ extend({ RoundedBoxGeometry })
 
 const roundedBoxRef = shallowRef()
 
-defineExpose({ value: roundedBoxRef })
+defineExpose({ instance: roundedBoxRef })
 </script>
 
 <template>

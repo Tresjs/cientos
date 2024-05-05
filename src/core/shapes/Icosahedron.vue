@@ -27,7 +27,7 @@ const { args, color } = toRefs(props)
 const icosahedronRef = shallowRef()
 
 defineExpose({
-  value: icosahedronRef,
+  instance: icosahedronRef,
 })
 </script>
 

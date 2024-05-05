@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, ref, watch } from 'vue'
+import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
 import { useRenderLoop, normalizeVectorFlexibleParam } from '@tresjs/core'
 import type { Intersection } from 'three'
@@ -79,6 +79,9 @@ const positionX = ref(0)
 const positionY = ref(0)
 const scaleX = ref(0)
 const scaleY = ref(0)
+
+const groupRef = shallowRef()
+defineExpose({ instance: groupRef })
 
 const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas)
 texture.matrixAutoUpdate = false
@@ -206,7 +209,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TresGroup v-bind="$attrs">
+  <TresGroup 
+    ref="groupRef"
+    v-bind="$attrs"
+  >
     <template v-if="props.asSprite">
       <TresSprite
         :scale="[scaleX, scaleY, 1]" 

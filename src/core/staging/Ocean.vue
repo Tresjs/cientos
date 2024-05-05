@@ -141,7 +141,7 @@ const sunRef = shallowRef()
 const _fog = scene.value.fog !== undefined
 
 defineExpose({
-  root: waterRef,
+  instance: waterRef,
 })
 
 scene.value.traverse((child) => {

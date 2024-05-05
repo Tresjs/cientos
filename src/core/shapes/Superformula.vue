@@ -150,7 +150,7 @@ onUnmounted(() => {
 const superformulaRef = shallowRef()
 
 defineExpose({
-  value: superformulaRef,
+  instance: superformulaRef,
 })
 </script>
 

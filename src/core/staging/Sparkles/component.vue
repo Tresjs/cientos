@@ -397,6 +397,8 @@ onUnmounted(() => {
 })
 
 const sparkleRef = shallowRef()
+
+defineExpose({ instance: sparkleRef })
 </script>
 
 <template>
