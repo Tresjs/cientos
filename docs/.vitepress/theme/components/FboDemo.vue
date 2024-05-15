@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls, Fbo } from '@tresjs/cientos'
-import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
-import { ref, shallowRef, shallowReactive, onMounted, nextTick } from 'vue'
+import { Fbo, OrbitControls } from '@tresjs/cientos'
+import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
+import { nextTick, onMounted, ref, shallowReactive, shallowRef } from 'vue'
 
 const gl = {
   clearColor: '#82DBC5',

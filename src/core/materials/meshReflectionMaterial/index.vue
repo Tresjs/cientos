@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
 import { shallowRef, onBeforeUnmount, watch, computed } from 'vue'
 import { useLogger, useTresContext } from '@tresjs/core'
@@ -12,12 +13,12 @@ import type {
   BufferGeometry,
 } from 'three'
 import {
+  LinearFilter,
+  Matrix4,
+  PerspectiveCamera,
   Plane,
   Vector3,
   Vector4,
-  Matrix4,
-  PerspectiveCamera,
-  LinearFilter,
   WebGLRenderTarget,
   DepthTexture,
   DepthFormat,

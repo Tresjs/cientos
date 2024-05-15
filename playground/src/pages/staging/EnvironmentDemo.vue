@@ -1,12 +1,13 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
+import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
 
-import { OrbitControls, useProgress, Environment, TorusKnot } from '@tresjs/cientos'
+import { Environment, Lightformer, OrbitControls, TorusKnot, useProgress } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
-const environmentFiles = ['/px.jpg', '/nx.jpg', '/py.jpg', '/ny.jpg', '/pz.jpg', '/nz.jpg']
+/* const environmentFiles = ['/px.jpg', '/nx.jpg', '/py.jpg', '/ny.jpg', '/pz.jpg', '/nz.jpg'] */
 
 const gl = {
   clearColor: '#82DBC5',
@@ -17,7 +18,7 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const { background, blur, preset } = useControls({
+const { background, blur, preset, lightformers } = useControls({
   background: true,
   blur: {
     value: 0,
@@ -42,6 +43,7 @@ const { background, blur, preset } = useControls({
     ],
     value: 'sunset',
   },
+  lightformers: false,
 })
 
 const environmentRef = ref(null)
@@ -69,7 +71,7 @@ const { progress, hasFinishLoading } = await useProgress()
     >
       <div class="w-200px">
         Loading... {{ progress }} %
-        <i class="i-ic-twotone-catching-pokemon animate-rotate-in" />
+        <i class="i-ic-twotone-catching-pokemon animate-rotate-in"></i>
       </div>
     </div>
   </Transition>
@@ -89,7 +91,32 @@ const { progress, hasFinishLoading } = await useProgress()
         :background="background.value"
         :blur="blur.value"
         :preset="preset.value"
-      />
+      >
+        <TresGroup v-if="lightformers.value">
+          <Lightformer
+            :intensity="0.75"
+            :rotation-x="Math.PI / 2"
+            :position="[0, 5, -9]"
+            :scale="[10, 10, 1]"
+          />
+          <Lightformer
+            :intensity="4"
+            :rotation-y="Math.PI / 2"
+            :position="[-5, 1, -1]"
+            :scale="[20, 0.1, 1]"
+          />
+          <Lightformer
+            :rotation-y="Math.PI / 2"
+            :position="[-5, -1, -1]"
+            :scale="[20, 0.5, 1]"
+          />
+          <Lightformer
+            :rotation-y="-Math.PI / 2"
+            :position="[10, 1, 0]"
+            :scale="[20, 11, 1]"
+          />
+        </TresGroup>
+      </Environment>
     </Suspense>
     <TorusKnot>
       <TresMeshStandardMaterial

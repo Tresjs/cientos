@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping } from 'three'
@@ -30,4 +31,3 @@ const hasChange = (state: any) => console.log('change', state)
     <TresAmbientLight :intensity="1" />
   </TresCanvas>
 </template>
-

@@ -19,4 +19,9 @@ export const materialsRoutes = [
     name: 'ReflectionMaterial',
     component: () => import('../../pages/materials/MeshReflectionMaterialDemo.vue'),
   },
+  {
+    path: '/materials/holographic-material',
+    name: 'HolographicMaterial',
+    component: () => import('../../pages/materials/HolographicMaterialDemo.vue'),
+  },
 ]

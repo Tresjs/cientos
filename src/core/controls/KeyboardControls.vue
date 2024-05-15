@@ -40,7 +40,7 @@ export interface KeyboardControlsProps {
    * @default 0.2
    * @memberof KeyboardControlsProps
    *
-   **/
+   */
   moveSpeed?: number
   /**
    * The trigger id.

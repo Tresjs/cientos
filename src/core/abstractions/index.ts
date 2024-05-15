@@ -8,6 +8,7 @@ import Lensflare from './Lensflare/component.vue'
 import Fbo from './useFBO/component.vue'
 import Sampler from './useSurfaceSampler/component.vue'
 import AnimatedSprite from './AnimatedSprite/component.vue'
+import PositionalAudio from './PositionalAudio.vue'
 
 export * from './useFBO/'
 export * from './useSurfaceSampler'
@@ -23,4 +24,5 @@ export {
   Fbo,
   Sampler,
   AnimatedSprite,
+  PositionalAudio,
 }
