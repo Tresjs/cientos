@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { KeyboardControls, Box } from '@tresjs/cientos'
+import { Box, KeyboardControls } from '@tresjs/cientos'
 </script>
 
 <template>

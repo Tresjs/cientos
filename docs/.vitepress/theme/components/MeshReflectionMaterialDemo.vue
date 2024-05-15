@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { TresCanvas, useTexture } from '@tresjs/core'
-import { MeshReflectionMaterial, OrbitControls, SVG as MySVG } from '@tresjs/cientos'
+import { MeshReflectionMaterial, SVG as MySVG, OrbitControls } from '@tresjs/cientos'
 
-const normalMapSrc = 'https://raw.githubusercontent.com/' 
-+ 'Tresjs/assets/main/textures/rock/normal.jpg'
+const normalMapSrc = 'https://raw.githubusercontent.com/'
+  + 'Tresjs/assets/main/textures/rock/normal.jpg'
 const normalMap = await useTexture([normalMapSrc])
 const svgSrc = '/logo.svg'
 </script>
@@ -21,9 +21,9 @@ const svgSrc = '/logo.svg'
       <TresPerspectiveCamera :position="[0, 2, 20]" />
       <OrbitControls />
       <MySVG
-        :src="svgSrc" 
-        :position="[-8.0, 4, 0]" 
-        :scale="0.04" 
+        :src="svgSrc"
+        :position="[-8.0, 4, 0]"
+        :scale="0.04"
         :depth="1"
       />
     </TresCanvas>

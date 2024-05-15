@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { ShaderMaterial, Vector2, Uniform, NoBlending } from 'three'
+import { NoBlending, ShaderMaterial, Uniform, Vector2 } from 'three'
 import { version } from '../../../utils/constants'
 
 export class ConvolutionMaterial extends ShaderMaterial {

@@ -48,8 +48,8 @@ defineExpose({ instance: backdropRef })
 </script>
 
 <template>
-  <TresGroup 
-    ref="backdropRef" 
+  <TresGroup
+    ref="backdropRef"
     v-bind="$attrs"
   >
     <TresMesh

@@ -3,7 +3,7 @@ import { ref, toRefs, watchEffect } from 'vue'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
-import { Vector3, Quaternion } from 'three'
+import { Quaternion, Vector3 } from 'three'
 import type { Camera } from 'three'
 import { PointerLockControls } from './index'
 
@@ -69,12 +69,12 @@ const forwardMove = ref(0)
 const { w, s, a, d, Up, Down, Left, Right } = useMagicKeys()
 
 watchEffect(() => {
-  if (a.value || Left.value) sidewardMove.value = -moveSpeed.value
-  else if (d.value || Right.value) sidewardMove.value = moveSpeed.value
-  else sidewardMove.value = 0
-  if (w.value || Up.value) forwardMove.value = moveSpeed.value
-  else if (s.value || Down.value) forwardMove.value = -moveSpeed.value
-  else forwardMove.value = 0
+  if (a.value || Left.value) { sidewardMove.value = -moveSpeed.value }
+  else if (d.value || Right.value) { sidewardMove.value = moveSpeed.value }
+  else { sidewardMove.value = 0 }
+  if (w.value || Up.value) { forwardMove.value = moveSpeed.value }
+  else if (s.value || Down.value) { forwardMove.value = -moveSpeed.value }
+  else { forwardMove.value = 0 }
 })
 
 defineExpose({
@@ -90,14 +90,14 @@ const rotationVector = new Vector3()
 const tmpQuaternion = new Quaternion()
 
 const moveForward = (delta: number, movementSpeed: number) => {
-  if (!activeCamera.value?.position && !moveVector) return
+  if (!activeCamera.value?.position && !moveVector) { return }
   const camera = activeCamera.value
   const rotMult = delta * 0.001
   camera?.translateZ(-movementSpeed)
 
   tmpQuaternion.set(rotationVector.x * rotMult, rotationVector.y * rotMult, rotationVector.z * rotMult, 1).normalize()
   camera?.quaternion.multiply(tmpQuaternion)
-  if (sidewardMove.value || forwardMove.value) emit('change', controls.value)
+  if (sidewardMove.value || forwardMove.value) { emit('change', controls.value) }
 }
 
 const { onLoop } = useRenderLoop()

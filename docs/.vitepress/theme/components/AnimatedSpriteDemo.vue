@@ -3,7 +3,7 @@ import { TresCanvas } from '@tresjs/core'
 import { AnimatedSprite } from '@tresjs/cientos'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
-+ 'assets/main/textures/animated-sprite/'
+  + 'assets/main/textures/animated-sprite/'
 </script>
 
 <template>

@@ -181,16 +181,16 @@ function tokenize(definition: string): Token[] {
   let ii = 0
   while (ii < definition.length) {
     const c = definition[ii]
-    if ('0123456789'.indexOf(c) > -1) {
+    if ('0123456789'.includes(c)) {
       if (
         result.length
         && result[result.length - 1].name === 'NUMBER'
       ) {
         result[result.length - 1].value *= 10
-        result[result.length - 1].value += parseInt(c)
+        result[result.length - 1].value += Number.parseInt(c)
       }
       else {
-        result.push({ name: 'NUMBER', value: parseInt(c), startI: ii })
+        result.push({ name: 'NUMBER', value: Number.parseInt(c), startI: ii })
       }
     }
     else if (c === ' ') {
@@ -223,7 +223,7 @@ function logDefinitionBadCharacter(
   index: number,
 ) {
   useLogger().logError(
-    'Cientos AnimationDefinitionParser: ' 
+    'Cientos AnimationDefinitionParser: '
     + `Unexpected character while processing animation definition: expected ${expected}, got ${found}.
 ${definition}
 ${Array(index + 1).join(' ')}^`,

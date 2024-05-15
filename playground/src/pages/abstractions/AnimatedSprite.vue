@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, AnimatedSprite, Box } from '@tresjs/cientos'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping, Intersection } from 'three'
-import { watch, ref } from 'vue'
+import { AnimatedSprite, Box, OrbitControls } from '@tresjs/cientos'
+import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
+import { ref, watch } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import { degToRad } from 'three/src/math/MathUtils.js'
@@ -20,8 +20,7 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const { fps, animation, definitions, flipX, loop, paused, 
-  reversed, resetOnEnd, asSprite, centerX, centerY, scale, rotationX, rotationY, rotationZ, position } = useControls({
+const { fps, animation, definitions, flipX, loop, paused, reversed, resetOnEnd, asSprite, centerX, centerY, scale, rotationX, rotationY, rotationZ, position } = useControls({
   fps: { value: 10, min: 0, max: 120, step: 1 },
   animation: { label: 'Animation', value: 'idle', options: ['idle', 'walk', 'blink'] },
   definitions: { label: 'Definitions', value: '{}', options: ['{}', '{"idle":"0(10),1-5"}'] },
@@ -52,7 +51,7 @@ watch(() => definitions.value.value, () => {
 const centerDemoAtlas: Atlasish = { frames: [] }
 const centerDemoImgData = (() => {
   const NUM_ROWS_COLS = 32
-  const rects: { x: number; y: number; w: number; h: number }[] = []
+  const rects: { x: number, y: number, w: number, h: number }[] = []
   let h = 1
   for (let r = 0; r < NUM_ROWS_COLS; r += h) {
     let w = 1
@@ -95,7 +94,8 @@ const centerDemoImgData = (() => {
       x + w * 0.5 - CENTER_center_SIZE * 0.5,
       y + h * 0.5 - CENTER_center_SIZE * 0.5,
       CENTER_center_SIZE,
-      CENTER_center_SIZE)
+      CENTER_center_SIZE,
+    )
 
     ctx.fillStyle = '#FFF'
     ctx.textAlign = 'center'
@@ -114,7 +114,6 @@ const centerDemoImgData = (() => {
     ctx.fillRect(x, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
     ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
     ctx.fillRect(x + w - EDGE_center_SIZE, y + h - EDGE_center_SIZE, EDGE_center_SIZE, EDGE_center_SIZE)
-
   })
   const imgData = canvas.toDataURL()
   canvas.parentElement?.removeChild(canvas)
@@ -218,7 +217,7 @@ const centerDemoImgData = (() => {
           :center="[centerX.value, centerY.value]"
           :animation="animation.value"
           :fps="fps.value"
-          :loop="loop.value" 
+          :loop="loop.value"
           :reversed="reversed.value"
           :reset-on-end="resetOnEnd.value"
           :scale="scale.value"

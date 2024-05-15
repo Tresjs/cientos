@@ -54,7 +54,7 @@ onMounted(async () => {
       <TresBoxGeometry :args="[1, 1, 1]" />
 
       <TresMeshBasicMaterial
-        :color="0xffffff"
+        :color="0xFFFFFF"
         :map="fboRef?.instance.texture ?? null"
       />
     </TresMesh>

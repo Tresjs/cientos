@@ -1,18 +1,34 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import { TresCanvas, useRenderLoop, useTexture } from '@tresjs/core'
-import { OrbitControls, MeshReflectionMaterial } from '@tresjs/cientos'
-import { useControls, TresLeches } from '@tresjs/leches'
+import { MeshReflectionMaterial, OrbitControls } from '@tresjs/cientos'
+import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
 useControls('fpsgraph')
 const {
-  mix, 
-  sharpMix, sharpDepthScale, sharpDepthBias, sharpDepthEdgeMin, sharpDepthEdgeMax,
-  blurMixSmooth, blurMixRough, blurDepthScale, blurDepthBias, blurDepthEdgeMin, blurDepthEdgeMax, blurWidth, blurHeight,
-  distortion, reflectorOffset,
-  roughness, metalness,
-  useDiffuseMap, useRoughnessMap, useNormalMap, useDistortionMap,
+  mix,
+  sharpMix,
+  sharpDepthScale,
+  sharpDepthBias,
+  sharpDepthEdgeMin,
+  sharpDepthEdgeMax,
+  blurMixSmooth,
+  blurMixRough,
+  blurDepthScale,
+  blurDepthBias,
+  blurDepthEdgeMin,
+  blurDepthEdgeMax,
+  blurWidth,
+  blurHeight,
+  distortion,
+  reflectorOffset,
+  roughness,
+  metalness,
+  useDiffuseMap,
+  useRoughnessMap,
+  useNormalMap,
+  useDistortionMap,
 } = useControls({
   mix: { value: 1, min: 0, max: 1, step: 0.01 },
 
@@ -44,14 +60,13 @@ const {
 })
 
 const PATH = 'https://raw.githubusercontent.com/Tresjs/assets/d15ced5cf09eddb2dae680dbe993613daae9cea4/textures/rock/'
-const [roughnessMap, normalMap, distortionMap, diffuseMap ] 
+const [roughnessMap, normalMap, distortionMap, diffuseMap]
   = await useTexture(['roughness.jpg', 'normal.jpg', 'displacement.png', 'diffuse.jpg'].map(p => PATH + p))
 
 const lightX = shallowRef(0)
 const lightZ = shallowRef(0)
 const rotationY = shallowRef(0)
-useRenderLoop().onLoop(({ elapsed }) => {
-})
+
 </script>
 
 <template>

@@ -4,7 +4,7 @@ import { Vector2, Vector3 } from 'three'
 import { Line2 } from 'three/examples/jsm/lines/Line2'
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
-import { watch, onUnmounted, computed, shallowRef } from 'vue'
+import { computed, onUnmounted, shallowRef, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import { normalizeColor, useTresContext } from '@tresjs/core'
 
@@ -139,8 +139,8 @@ defineExpose({ instance: lineRef })
 </script>
 
 <template>
-  <primitive 
-    :ref="lineRef" 
-    :object="line" 
+  <primitive
+    :ref="lineRef"
+    :object="line"
   />
 </template>

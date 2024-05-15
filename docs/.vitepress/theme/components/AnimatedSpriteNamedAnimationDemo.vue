@@ -4,7 +4,7 @@ import { AnimatedSprite } from '@tresjs/cientos'
 import { ref } from 'vue'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
-+ 'assets/main/textures/animated-sprite/'
+  + 'assets/main/textures/animated-sprite/'
 
 const animations = ref(
   ['cientosIdle', 'cientosIdleToWalkTransition', 'cientosWalk'],
@@ -13,7 +13,7 @@ const animations = ref(
 
 <template>
   <TresCanvas
-    clear-color="#82DBC5" 
+    clear-color="#82DBC5"
     @click="() => {
       animations.push(animations.shift() as string)
     }"
@@ -24,7 +24,7 @@ const animations = ref(
         :image="`${ASSETS_URL}cientosTexture.png`"
         :atlas="`${ASSETS_URL}cientosAtlas.json`"
         :animation="animations[0]"
-        :fps="15" 
+        :fps="15"
         :loop="true"
       />
     </Suspense>

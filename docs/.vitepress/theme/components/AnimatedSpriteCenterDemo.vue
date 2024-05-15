@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, Box, AnimatedSprite } from '@tresjs/cientos'
+import { AnimatedSprite, Box, OrbitControls } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import type { AtlasData } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
@@ -15,7 +15,7 @@ const { centerX, centerY, fps, asSprite } = useControls({
 const centerDemoAtlas: AtlasData = { frames: [] }
 const centerDemoImgData = (() => {
   const NUM_ROWS_COLS = 64
-  const rects: { x: number; y: number; w: number; h: number }[] = []
+  const rects: { x: number, y: number, w: number, h: number }[] = []
   let h = 0
   for (let r = 0; r < NUM_ROWS_COLS; r += h) {
     let w = 0
@@ -50,10 +50,11 @@ const centerDemoImgData = (() => {
 
     ctx.fillStyle = '#999'
     ctx.fillRect(
-      x + w * 0.5 - EDGE_center_SIZE * 0.5, 
-      y + h * 0.5 - EDGE_center_SIZE * 0.5, 
-      EDGE_center_SIZE, 
-      EDGE_center_SIZE)
+      x + w * 0.5 - EDGE_center_SIZE * 0.5,
+      y + h * 0.5 - EDGE_center_SIZE * 0.5,
+      EDGE_center_SIZE,
+      EDGE_center_SIZE,
+    )
 
     ctx.fillRect(x, y, EDGE_center_SIZE, EDGE_center_SIZE)
     ctx.fillRect(x + w * 0.5 - EDGE_center_SIZE * 0.5, y, EDGE_center_SIZE, EDGE_center_SIZE)

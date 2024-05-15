@@ -77,7 +77,7 @@ watch(
       <TresBoxGeometry :args="[1, 1, 1]" />
       <TresMeshBasicMaterial
         ref="materialRef"
-        :color="0xff8833"
+        :color="0xFF8833"
         :map="fboRef?.instance.texture ?? null"
       />
     </TresMesh>

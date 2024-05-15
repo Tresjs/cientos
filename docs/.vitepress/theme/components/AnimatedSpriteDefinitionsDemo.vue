@@ -3,7 +3,7 @@ import { TresCanvas } from '@tresjs/core'
 import { AnimatedSprite } from '@tresjs/cientos'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
-+ 'assets/main/textures/animated-sprite/'
+  + 'assets/main/textures/animated-sprite/'
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
         :definitions="{
           cientosIdle: '0-5, 0(10), 1-2, 3(20), 4-5, 0-5(3)',
         }"
-        :fps="15" 
+        :fps="15"
         :loop="true"
       />
     </Suspense>

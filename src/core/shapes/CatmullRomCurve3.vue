@@ -54,7 +54,7 @@ defineExpose({ instance: lineRef })
 </script>
 
 <template>
-  <Line2 
+  <Line2
     :ref="lineRef"
     :points="segmentedPoints"
     :vertex-colors="props.vertexColors"

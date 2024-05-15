@@ -18,8 +18,8 @@ It extends `THREE.MeshStandardMaterial` and accepts all the same props.
 
 No props are required.
 
-<CientosPropsTable 
-:fields="['name', 'description', 'default']" 
+<CientosPropsTable
+:fields="['name', 'description', 'default']"
 :on-format-value="({value, fieldName, valueFormatted, getFieldFormatted}) => {
   if (fieldName === 'description') {
     const t = getFieldFormatted('type')

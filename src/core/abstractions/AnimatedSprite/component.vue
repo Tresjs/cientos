@@ -1,30 +1,32 @@
 <script setup lang="ts">
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
-import { useRenderLoop, normalizeVectorFlexibleParam } from '@tresjs/core'
+import { normalizeVectorFlexibleParam, useRenderLoop } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlasish } from './Atlas'
-import { getTextureAndAtlasAsync, getAtlasFrames, getNullAtlasFrame, setAtlasDefinitions } from './Atlas'
+import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas'
 
 export interface AnimatedSpriteProps {
   /** URL of the image texture or an image dataURL. This prop is not reactive. */
   image: string
-  /** If `string`, the URL of the JSON atlas. 
-   * If `number`, the number of columns in the texture. 
-   * If `[number, number]`, the number of columns/rows in the texture. 
+  /**
+   * If `string`, the URL of the JSON atlas.
+   * If `number`, the number of columns in the texture.
+   * If `[number, number]`, the number of columns/rows in the texture.
    * If `AtlasData`, the atlas as a JS object.
    * This prop is not reactive.
-   **/
+   */
   atlas: string | Atlasish
-  /** Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
+  /**
+  * Specify playback frame order and repeated frames (delays). `definitions` is a record where keys are atlas animation names and values are strings containing an animation definition.
   * A "animation definition" comma-separated string of frame numbers with optional parentheses-surrounded durations.
   * Here is how various definition strings convert to arrays of frames for playback:
-  * * "0,2,1" - [0,2,1], i.e., play frame 0, 2, then 1.
-  * * "2(10)" - [2,2,2,2,2,2,2,2,2,2], i.e., play from 2 10 times.
-  * * "1-4" - [1,2,3,4]
-  * * "10-5(2)" - [10,10,9,9,8,8,7,7,6,6,5,5]
-  * * "1-4(3),10(2)" - [1,1,1,2,2,2,3,3,3,4,4,4,10,10]
+  * "0,2,1" - [0,2,1], i.e., play frame 0, 2, then 1.
+  * "2(10)" - [2,2,2,2,2,2,2,2,2,2], i.e., play from 2 10 times.
+  * "1-4" - [1,2,3,4]
+  * "10-5(2)" - [10,10,9,9,8,8,7,7,6,6,5,5]
+  * "1-4(3),10(2)" - [1,1,1,2,2,2,3,3,3,4,4,4,10,10]
    */
   definitions?: Record<string, string>
   /** Desired frames per second of the animation. */
@@ -107,7 +109,7 @@ useRenderLoop().onLoop(({ delta }) => {
     frameNum++
 
     if (props.loop) {
-      if (frameNum >= animation.length) emit('loop', animation[animation.length - 1].name)
+      if (frameNum >= animation.length) { emit('loop', animation[animation.length - 1].name) }
       frameNum %= animation.length
     }
     else {
@@ -145,7 +147,6 @@ useRenderLoop().onLoop(({ delta }) => {
     emit('frame', frameNameToEmit)
     frameNameToEmit = null
   }
-
 })
 
 function render() {
@@ -177,7 +178,7 @@ watch(() => props.paused, () => {
 })
 
 watch(() => props.loop, () => {
-  if (frameHeldOnLoopEnd && props.loop) frameHeldOnLoopEnd = false
+  if (frameHeldOnLoopEnd && props.loop) { frameHeldOnLoopEnd = false }
 })
 
 watch(() => props.resetOnEnd, () => {
@@ -209,13 +210,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TresGroup 
+  <TresGroup
     ref="groupRef"
     v-bind="$attrs"
   >
     <template v-if="props.asSprite">
       <TresSprite
-        :scale="[scaleX, scaleY, 1]" 
+        :scale="[scaleX, scaleY, 1]"
         :position="[positionX, positionY, 0]"
       >
         <TresSpriteMaterial
@@ -243,6 +244,6 @@ onUnmounted(() => {
         />
       </TresMesh>
     </template>
-    <slot />
+    <slot></slot>
   </TresGroup>
 </template>

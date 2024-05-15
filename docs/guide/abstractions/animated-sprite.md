@@ -37,7 +37,7 @@ There may be cases where you don't want to supply an atlas to the `atlas` prop. 
 
 ## Spritesheets in the wild
 
-::: warning 
+::: warning
 In the wild, spritesheets are often distributed without atlases and the images are often compiled by hand. It can be difficult or impossible to use these resources directly with `<AnimatedSprite />`. In many cases, it's advisable to recompile the spritesheet.
 :::
 
@@ -51,8 +51,8 @@ In the wild, spritesheets are often distributed without atlases and the images a
 
 ## Props
 
-<CientosPropsTable 
-component-path="src/core/abstractions/AnimatedSprite/component.vue" 
+<CientosPropsTable
+component-path="src/core/abstractions/AnimatedSprite/component.vue"
 :fields="['name', 'description', 'default', 'required']"
 :on-format-value="({valueFormatted, propName, fieldName, getFieldFormatted})=> {
   if (fieldName === 'description') {
@@ -66,10 +66,9 @@ component-path="src/core/abstractions/AnimatedSprite/component.vue"
 
 | Event | Description | Argument |
 | - | - | - |
-| `frame` | Emitted when the displayed animation frame changes – at most once per tick, frames may be dropped | `string` – Name of the newly displayed frame | 
+| `frame` | Emitted when the displayed animation frame changes – at most once per tick, frames may be dropped | `string` – Name of the newly displayed frame |
 | `end` | Emitted when the animation ends – `props.loop` must be set to `false` | `string` – Name of the ending frame |
 | `loop` | Emitted when the animation loops – `props.loop` must be set to `true` | `string` – Name of the frame at the end of the loop |
-
 
 ## `animation`
 
@@ -77,7 +76,7 @@ The `:animation` prop holds either the name of the currently playing animation o
 
 ### Using named animations as `animation`
 
-When individual files are converted to a spritesheet/atlas, typically the original images' filenames will be included in the atlas. 
+When individual files are converted to a spritesheet/atlas, typically the original images' filenames will be included in the atlas.
 
 `<AnimatedSprite />` uses those filenames to automatically group images into animations.
 
@@ -122,8 +121,8 @@ But below, we've added a `:definitions` prop with this value for the `idle` key:
 
 So, instead of playing images 0-5 sequentially, this animation will play instead:
 
-* `0-5` – Play all six images (`0-5`) of the animation normally. 
-* `0(10), 1-2, 3(20), 4-5` – Play all six images again with a delay of ten frames at the bottom of the bounce (`0(10)`) and a delay of twenty frames at the top of the bounce (`3(20)`). 
+* `0-5` – Play all six images (`0-5`) of the animation normally.
+* `0(10), 1-2, 3(20), 4-5` – Play all six images again with a delay of ten frames at the bottom of the bounce (`0(10)`) and a delay of twenty frames at the top of the bounce (`3(20)`).
 * `0-5(3)` – Finally, play all six images of the animation with a delay of three frames each.
 
 <DocsDemo>

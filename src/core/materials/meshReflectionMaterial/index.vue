@@ -1,33 +1,33 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
-import { shallowRef, onBeforeUnmount, watch, computed } from 'vue'
+import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
 import { useLogger, useTresContext } from '@tresjs/core'
 import type {
-  Texture,
-  TextureDataType,
+  BufferGeometry,
+  Camera,
   Mapping,
   Object3D,
-  Camera,
   Scene,
+  Texture,
+  TextureDataType,
   WebGLRenderer,
-  BufferGeometry,
 } from 'three'
 import {
+  Color,
+  DepthFormat,
+  DepthTexture,
+  Euler,
+  HalfFloatType,
   LinearFilter,
   Matrix4,
   PerspectiveCamera,
   Plane,
+  TangentSpaceNormalMap,
+  UnsignedShortType,
+  Vector2,
   Vector3,
   Vector4,
   WebGLRenderTarget,
-  DepthTexture,
-  DepthFormat,
-  UnsignedShortType,
-  HalfFloatType,
-  Color,
-  Euler,
-  Vector2,
-  TangentSpaceNormalMap,
 } from 'three'
 import type { TresColor } from '@tresjs/core'
 import { BlurPass } from './BlurPass'
@@ -73,7 +73,7 @@ export interface MeshReflectionMaterialProps {
   /** Offsets the reflection. */
   reflectorOffset?: number
 
-  color?: TresColor 
+  color?: TresColor
   roughness?: number
   metalness?: number
   map?: Texture
@@ -129,20 +129,20 @@ const props = withDefaults(
     reflectorOffset: 0,
 
     // NOTE: MeshStandardMaterial props
-    // If you try to simplify this file by removing the props below 
-    // make sure that the fall-through props like 'roughnessMap' and 
+    // If you try to simplify this file by removing the props below
+    // make sure that the fall-through props like 'roughnessMap' and
     // 'normalMap' are actually falling through and visible in the material.
-    color: () => new Color( 0x333333 ),
+    color: () => new Color(0x333333),
     roughness: 1.0,
     roughnessMap: null,
     metalness: 0.0,
     lightMapIntensity: 1.0,
     aoMapIntensity: 1.0,
-    emissive: () => new Color( 0x000000 ),
+    emissive: () => new Color(0x000000),
     emissiveIntensity: 1.0,
     bumpScale: 1,
     normalMapType: TangentSpaceNormalMap,
-    normalScale: () => new Vector2( 1, 1 ),
+    normalScale: () => new Vector2(1, 1),
     displacementScale: 1,
     displacementBias: 0,
     envMapRotation: () => new Euler(),
@@ -182,14 +182,16 @@ const state = {
 }
 
 const fboSharp = new WebGLRenderTarget(
-  props.resolution, props.resolution,
+  props.resolution,
+  props.resolution,
   {
     minFilter: LinearFilter,
     magFilter: LinearFilter,
     type: HalfFloatType,
     depthBuffer: true,
     depthTexture: new DepthTexture(
-      props.resolution, props.resolution,
+      props.resolution,
+      props.resolution,
       DepthFormat as TextureDataType,
       UnsignedShortType as Mapping,
     ),
@@ -197,7 +199,8 @@ const fboSharp = new WebGLRenderTarget(
 )
 
 const fboBlur = new WebGLRenderTarget(
-  props.resolution, props.resolution,
+  props.resolution,
+  props.resolution,
   {
     minFilter: LinearFilter,
     magFilter: LinearFilter,
@@ -208,7 +211,7 @@ const fboBlur = new WebGLRenderTarget(
 function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _: BufferGeometry, object: Object3D) {
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
- 
+
   state.reflectorWorldPosition.setFromMatrixPosition(object.matrixWorld)
   state.cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld as Matrix4)
   state.rotationMatrix.extractRotation(object.matrixWorld)
@@ -218,10 +221,10 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
   state.view.subVectors(state.reflectorWorldPosition, state.cameraWorldPosition)
 
   // NOTE: Avoid rendering when reflector is facing away
-  if (state.view.dot(state.normal) > 0) return
+  if (state.view.dot(state.normal) > 0) { return }
 
   // NOTE: Avoid re-rendering the reflective object.
-  object.visible = false 
+  object.visible = false
 
   state.view.reflect(state.normal).negate()
   state.view.add(state.reflectorWorldPosition)
@@ -246,7 +249,7 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
   state.textureMatrix.multiply(state.virtualCamera.projectionMatrix)
   state.textureMatrix.multiply(state.virtualCamera.matrixWorldInverse)
   state.textureMatrix.multiply(object.matrixWorld)
-  
+
   // NOTE: Now update projection matrix with new clip reflectorPlane, implementing code from: http://www.terathon.com/code/oblique.html
   // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
   state.reflectorPlane.setFromNormalAndCoplanarPoint(state.normal, state.reflectorWorldPosition)
@@ -272,7 +275,7 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
 
   renderer.shadowMap.autoUpdate = false
   renderer.setRenderTarget(fboSharp)
-  if (!renderer.autoClear) renderer.clear()
+  if (!renderer.autoClear) { renderer.clear() }
 
   renderer.render(scene, state.virtualCamera)
   blurpass.render(renderer, fboSharp, fboBlur)
@@ -285,16 +288,22 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
 }
 
 watch(
-  () => [props.resolution], 
+  () => [props.resolution],
   () => {
     fboSharp.setSize(props.resolution, props.resolution)
     fboBlur.setSize(props.resolution, props.resolution)
-  })
+  },
+)
 
 watch(() => [
-  props.resolution, blurWidth.value, blurHeight.value, 
-  props.blurDepthEdgeMin, props.blurDepthEdgeMax, props.blurDepthScale, 
-  props.blurDepthBias], () => {
+  props.resolution,
+  blurWidth.value,
+  blurHeight.value,
+  props.blurDepthEdgeMin,
+  props.blurDepthEdgeMax,
+  props.blurDepthScale,
+  props.blurDepthBias,
+], () => {
   blurpass?.dispose()
   blurpass = new BlurPass({
     resolution: props.resolution,
@@ -314,42 +323,42 @@ watch(materialRef, () => {
 })
 
 // NOTE: Begin #615 warning
-// The Tres core doesn't currently swap mesh materials when a 
+// The Tres core doesn't currently swap mesh materials when a
 // material component recompiles.
 //
 // Issue: https://github.com/Tresjs/tres/issues/615
-// 
+//
 // Workaround: Warn users if they trigger a recompile.
 //
 // TODO: This code can be removed when #615 is resolved
 watch(() => [hasBlur.value], () => {
   useLogger().logWarning(
     'MeshReflectionMaterial: Setting blurMixRough or blurMixSmooth to 0, then non-zero triggers a recompile.'
-      + 'The TresJS core cannot currently handle recompiled materials.',
+    + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDepth, () => {
   useLogger().logWarning(
     'MeshReflectionMaterial: Setting depthScale to 0, then non-zero triggers a recompile.'
-      + 'The TresJS core cannot currently handle recompiled materials.',
+    + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDistortion, () => {
   useLogger().logWarning(
     'MeshReflectionMaterial: Toggling distortionMap triggers a recompile.'
-      + 'The TresJS core cannot currently handle recompiled materials.',
+    + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasRoughness, () => {
   useLogger().logWarning(
     'MeshReflectionMaterial: Toggling roughnessMap triggers a recompile.'
-      + 'The TresJS core cannot currently handle recompiled materials.',
+    + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(() => [props.normalMap], () => {
   useLogger().logWarning(
     'MeshReflectionMaterial: Toggling normalMap triggers a recompile.'
-      + 'The TresJS core cannot currently handle recompiled materials.',
+    + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 // End #615 warning
@@ -367,8 +376,8 @@ defineExpose({ instance: materialRef })
 
 <template>
   <TresMeshReflectionMaterial
-    :key="`key${hasBlur ? '0' : '1'  
-    }${hasDepth ? '0' : '1'  
+    :key="`key${hasBlur ? '0' : '1'
+    }${hasDepth ? '0' : '1'
     }${hasDistortion ? '0' : '1'
     }${hasRoughness ? '0' : '1'
     }`"

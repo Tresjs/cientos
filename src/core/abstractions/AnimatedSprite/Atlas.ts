@@ -1,4 +1,4 @@
-import { TextureLoader, type Texture } from 'three'
+import { type Texture, TextureLoader } from 'three'
 import { useLoader, useLogger } from '@tresjs/core'
 import { getNumbersFromEnd, stripUnderscoresNumbersFromEnd } from './StringOps'
 import { expand } from './AtlasAnimationDefinitionParser'
@@ -67,14 +67,14 @@ export function getAtlasFrames(
   reversed: boolean,
 ): AtlasFrame[] {
   let frames: AtlasFrame[]
-  if (typeof animationNameOrFrameNumber === 'string')
-    frames = getAtlasFramesByAnimationName(atlas, animationNameOrFrameNumber)
-  else if (typeof animationNameOrFrameNumber === 'number')
+  if (typeof animationNameOrFrameNumber === 'string') { frames = getAtlasFramesByAnimationName(atlas, animationNameOrFrameNumber) }
+  else if (typeof animationNameOrFrameNumber === 'number') {
     frames = getAtlasFramesByIndices(
       atlas,
       animationNameOrFrameNumber,
       animationNameOrFrameNumber,
     )
+  }
   else {
     frames = getAtlasFramesByIndices(
       atlas,
@@ -104,7 +104,7 @@ export type Atlasish = AtlasData | [number, number] | number
 
 interface TexturePackerFrameData {
   filename: string
-  frame: { x: number; y: number; w: number; h: number }
+  frame: { x: number, y: number, w: number, h: number }
 }
 
 interface TexturePackerFrameDataArray {
@@ -257,7 +257,7 @@ function getAtlasFramesByIndices(
   }
   const result = []
   const sign = Math.sign(endI - startI)
-  if (sign === 0) return [atlas.frames[startI]]
+  if (sign === 0) { return [atlas.frames[startI]] }
   for (let i = startI; i !== endI + sign; i += sign) {
     result.push(atlas.frames[i])
   }

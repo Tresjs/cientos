@@ -55,11 +55,11 @@ export class MeshReflectionMaterial extends MeshStandardMaterial {
     if (!shader.defines?.USE_UV) {
       shader.defines.USE_UV = ''
     }
-    // NOTE: Start #605 fix 
-    // Tres lowercases pierced props. As a result, a component 
-    // can't set "defines", which are written in ALL_CAPS by 
+    // NOTE: Start #605 fix
+    // Tres lowercases pierced props. As a result, a component
+    // can't set "defines", which are written in ALL_CAPS by
     // convention in the Three.js codebase.
-    // 
+    //
     // Issue: https://github.com/Tresjs/tres/issues/605
     //
     // A fix has been merged into TresJS v4:
@@ -108,7 +108,7 @@ export class MeshReflectionMaterial extends MeshStandardMaterial {
         uniform sampler2D distortionMap;
         uniform float distortion;
         uniform float cameraNear;
-			  uniform float cameraFar;
+        uniform float cameraFar;
         uniform float mixMain;
         uniform float sharpMix;
         uniform float blurMixSmooth;

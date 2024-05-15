@@ -8,7 +8,7 @@ export function stripUnderscoresNumbersFromEnd(str: string) {
 export function getNumbersFromEnd(str: string) {
   const matches = str.match(numbersAtEnd)
   if (matches) {
-    return parseInt(matches[matches.length - 1])
+    return Number.parseInt(matches[matches.length - 1])
   }
   return null
 }
