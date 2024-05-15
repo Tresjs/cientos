@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
-import { BakeShadows, CameraControls, vLightHelper } from '@tresjs/cientos'
-import { TresCanvas, useRenderLoop } from '@tresjs/core'
+import { BakeShadows, CameraControls  } from '@tresjs/cientos'
+import { TresCanvas, useRenderLoop, vLightHelper } from '@tresjs/core'
 import { Color, NoToneMapping, SRGBColorSpace } from 'three'
 
 const gl = {

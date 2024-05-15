@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping } from 'three'
-import { Box, KeyboardControls, Sky, StatsGl } from '@tresjs/cientos'
+import { Box, KeyboardControls, StatsGl } from '@tresjs/cientos'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -25,7 +25,7 @@ const hasChange = (state: any) => {
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 3, 10]" />
     <StatsGl />
-    <Sky />
+    <!-- <Sky /> -->
     <KeyboardControls
       @change="state => hasChange(state)"
       @is-lock="state => isActive(state)"
