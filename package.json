@@ -69,7 +69,7 @@
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
     "@tresjs/core": "4.0.0-next.1",
-    "@tresjs/eslint-config-vue": "^0.2.1",
+    "@tresjs/eslint-config": "^1.0.0",
     "@tweakpane/core": "^1.1.9",
     "@types/node": "^20.12.10",
     "@types/three": "^0.164.0",
