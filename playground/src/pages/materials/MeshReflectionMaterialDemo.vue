@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
-import { TresCanvas, useRenderLoop, useTexture } from '@tresjs/core'
+import { TresCanvas, useTexture } from '@tresjs/core'
 import { MeshReflectionMaterial, OrbitControls } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
@@ -66,7 +66,6 @@ const [roughnessMap, normalMap, distortionMap, diffuseMap]
 const lightX = shallowRef(0)
 const lightZ = shallowRef(0)
 const rotationY = shallowRef(0)
-
 </script>
 
 <template>

@@ -10,6 +10,7 @@ const isPlaying = shallowRef(false)
 const soundRef = shallowRef()
 
 watch(soundRef, (value) => {
+  // eslint-disable-next-line no-console
   console.log(value.instance)
 })
 </script>

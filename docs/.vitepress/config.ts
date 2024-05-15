@@ -1,19 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { resolve } from 'pathe'
-import componentList from '../component-list/components'
 
 const whitelist = ['TresCanvas', 'TresLeches', 'TresScene']
-
-const collapsedSidebarCategories = new Set(['Materials', 'Shapes', 'Misc', 'Directives'])
-const sidebar = [
-  {
-    text: 'Guide',
-    items: [{ text: 'Introduction', link: '/guide/' }],
-  },
-  ...componentList,
-].map(
-  c => collapsedSidebarCategories.has(c.text) ? Object.assign(c, { collapsed: true }) : c,
-)
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({

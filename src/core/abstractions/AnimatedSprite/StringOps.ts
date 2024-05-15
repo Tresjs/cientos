@@ -1,5 +1,5 @@
-const numbersAtEnd = /[0-9]*$/
-const underscoresNumbersAtEnd = /_*[0-9]*$/
+const numbersAtEnd = /\d*$/
+const underscoresNumbersAtEnd = /_*\d*$/
 
 export function stripUnderscoresNumbersFromEnd(str: string) {
   return str.replace(underscoresNumbersAtEnd, '')

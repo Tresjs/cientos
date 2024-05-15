@@ -23,6 +23,7 @@ const statsRef = shallowRef()
 const { onBeforeLoop } = useRenderLoop()
 
 watch(statsRef, (value) => {
+  // eslint-disable-next-line no-console
   console.log('jaime ~ watch ~ value:', value.instance)
 })
 

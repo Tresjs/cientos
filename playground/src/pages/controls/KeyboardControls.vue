@@ -11,8 +11,14 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const isActive = (state: boolean) => console.log(state)
-const hasChange = (state: any) => console.log('change', state)
+const isActive = (state: boolean) => {
+  // eslint-disable-next-line no-console
+  console.log(state)
+}
+const hasChange = (state: any) => {
+  // eslint-disable-next-line no-console
+  console.log('change', state)
+}
 </script>
 
 <template>

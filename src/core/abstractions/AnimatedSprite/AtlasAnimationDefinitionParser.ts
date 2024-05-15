@@ -15,6 +15,7 @@ export function expand(definitionStr: string): number[] {
   const result: number[] = []
   for (const { startFrame, endFrame, duration } of parsed) {
     if (duration <= 0) {
+      continue
     }
     else if (endFrame < 0 || startFrame === endFrame) {
       for (let _ = 0; _ < duration; _++) {
@@ -194,6 +195,7 @@ function tokenize(definition: string): Token[] {
       }
     }
     else if (c === ' ') {
+      continue
     }
     else if (c === ',') {
       result.push({ name: 'COMMA', value: -1, startI: ii })

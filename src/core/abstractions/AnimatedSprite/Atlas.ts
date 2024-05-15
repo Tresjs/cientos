@@ -286,7 +286,7 @@ function groupAtlasFramesByKey(
   for (const frame of frames) {
     if (getNumbersFromEnd(frame.name) !== null) {
       const key = stripUnderscoresNumbersFromEnd(frame.name)
-      if (result.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(result, key)) {
         result[key].push(frame)
       }
       else {
