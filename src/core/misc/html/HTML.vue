@@ -12,7 +12,7 @@ import {
   Vector3,
 } from 'three'
 import type { TresCamera, TresObject3D } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 
 import type { Mutable } from '@vueuse/core'
 import vertexShader from './shaders/vertex.glsl'
@@ -224,9 +224,9 @@ watchEffect(() => {
 
 const visible = ref(true)
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(() => {
   if (groupRef.value && camera.value && renderer.value) {
     camera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)
