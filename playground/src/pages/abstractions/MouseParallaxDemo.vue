@@ -24,7 +24,20 @@ const gl = {
     <TorusKnot>
       <TresMeshNormalMaterial />
     </TorusKnot>
-    <MouseParallax :factor="6" />
+    <MouseParallax :factor="3" />
+    <TresAmbientLight :intensity="1" />
+  </TresCanvas>
+  <TresCanvas v-bind="gl">
+    <TresPerspectiveCamera
+      :position="[0, 0, 7.5]"
+      :fov="75"
+      :near="0.1"
+      :far="1000"
+    />
+    <TorusKnot>
+      <TresMeshNormalMaterial />
+    </TorusKnot>
+    <MouseParallax :factor="3" local />
     <TresAmbientLight :intensity="1" />
   </TresCanvas>
 </template>

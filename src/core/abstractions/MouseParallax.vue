@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, toRefs, watch } from 'vue'
 import type { Group } from 'three'
-import { useLoop, useTresContext } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
 import type { UseMouseOptions } from '@vueuse/core'
 
@@ -68,9 +68,9 @@ const cameraGroupRef = ref<Group>()
 const cursorX = computed(() => (x.value / width.value - 0.5) * factor.value)
 const cursorY = computed(() => -(y.value / height.value - 0.5) * factor.value)
 
-const { onBeforeRender } = useLoop()
+const { onLoop } = useRenderLoop()
 
-onBeforeRender(({ delta }) => {
+onLoop(({ delta }) => {
   if (
     disabled.value
     || !cameraGroupRef.value

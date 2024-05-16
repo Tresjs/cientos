@@ -19,7 +19,7 @@ import {
   Vector3,
   Vector4,
 } from 'three'
-import { useLoop, useTresContext } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types'
 
@@ -416,9 +416,9 @@ function addEventListeners() {
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
 }
 
-const { onBeforeRender } = useLoop()
+const { onLoop } = useRenderLoop()
 
-onBeforeRender(({ delta }) => {
+onLoop(({ delta }) => {
   if (controlsRef.value?.enabled) { controlsRef.value?.update(delta) }
 })
 

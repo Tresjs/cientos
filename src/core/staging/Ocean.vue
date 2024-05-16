@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, shallowRef, toRefs } from 'vue'
-import { useLoop, useTexture, useTresContext } from '@tresjs/core'
+import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { TresColor, TresVector3 } from '@tresjs/core'
 import { Water } from 'three/addons/objects/Water.js'
 import { FrontSide, RepeatWrapping, Vector3 } from 'three'
@@ -151,9 +151,9 @@ const { normalMap } = (await useTexture({ normalMap: waterNormals.value })) as {
 
 normalMap.wrapS = normalMap.wrapT = RepeatWrapping
 
-const { onBeforeRender } = useLoop()
+const { onLoop } = useRenderLoop()
 
-onBeforeRender(({ delta }) => {
+onLoop(({ delta }) => {
   waterRef.value.material.uniforms.time.value += delta
 })
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, shallowRef, watch } from 'vue'
-import { useLogger, useLoop, useTresContext } from '@tresjs/core'
+import { useLogger, useRenderLoop, useTresContext } from '@tresjs/core'
 import { useScroll, useWindowScroll, useWindowSize } from '@vueuse/core'
 
 export interface ScrollControlsProps {
@@ -184,9 +184,9 @@ watch(
   },
 )
 
-const { onBeforeRender } = useLoop()
+const { onLoop } = useRenderLoop()
 
-onBeforeRender(() => {
+onLoop(() => {
   if (camera.value?.position) {
     const delta
       = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll

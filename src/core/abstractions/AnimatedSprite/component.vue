@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
-import { normalizeVectorFlexibleParam, useLoop } from '@tresjs/core'
+import { normalizeVectorFlexibleParam, useRenderLoop } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlasish } from './Atlas'
@@ -99,7 +99,7 @@ let frameHeldOnLoopEnd = false
 let dirtyFlag = true
 const TEXTURE_PX_TO_WORLD_UNITS = 0.01
 
-useLoop().onBeforeRender(({ delta }) => {
+useRenderLoop().onLoop(({ delta }) => {
   if (!props.paused && !frameHeldOnLoopEnd) {
     cooldown -= delta * props.fps
   }
