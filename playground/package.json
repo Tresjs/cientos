@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tresjs/core": "3.9.0",
+    "@tresjs/core": "4.0.0-rc.1",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

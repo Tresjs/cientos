@@ -34,8 +34,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(release-it@17.2.1)
       '@tresjs/core':
-        specifier: 4.0.0-next.1
-        version: 4.0.0-next.1(three@0.164.1)(vue@3.4.27)
+        specifier: 4.0.0-rc.1
+        version: 4.0.0-rc.1(three@0.164.1)(vue@3.4.27)
       '@tresjs/eslint-config':
         specifier: ^1.0.0
         version: 1.0.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5)
@@ -1719,13 +1719,14 @@ packages:
       - '@vue/composition-api'
     dev: false
 
-  /@tresjs/core@4.0.0-next.1(three@0.164.1)(vue@3.4.27):
-    resolution: {integrity: sha512-JNHFE8iqKSWz7TjIafslMDFx2EGgu9pc+UlklcLcvnt0v954UvkCTDgxOBJmmwWABhWkjUPPK8ve9Ovq2Q6amg==}
+  /@tresjs/core@4.0.0-rc.1(three@0.164.1)(vue@3.4.27):
+    resolution: {integrity: sha512-XD1FXGLO2/+0okR2bUAnfiKzngFKfeSUFg98rnv4qla4F1jFKmzpJCKF2MkhpIPupaN/vx5VJ/VZhL/e03UKsQ==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'
     dependencies:
       '@alvarosabu/utils': 3.2.0
+      '@vue/devtools-api': 6.6.1
       '@vueuse/core': 10.9.0(vue@3.4.27)
       three: 0.164.1
       vue: 3.4.27(typescript@5.4.5)
@@ -2312,7 +2313,6 @@ packages:
 
   /@vue/devtools-api@6.6.1:
     resolution: {integrity: sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==}
-    dev: false
 
   /@vue/devtools-api@7.2.0(vue@3.4.27):
     resolution: {integrity: sha512-92RsjyH9WKNFO6U/dECUMakq4dm2CeqEDJYLJ8wZ81AnCifpXE7d4jPIjK34ENsPaapA6BSfIZdH/qzLOHiepA==}

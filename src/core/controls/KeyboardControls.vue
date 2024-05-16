@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, toRefs, watchEffect } from 'vue'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
 import { Quaternion, Vector3 } from 'three'
@@ -100,9 +100,9 @@ const moveForward = (delta: number, movementSpeed: number) => {
   if (sidewardMove.value || forwardMove.value) { emit('change', controls.value) }
 }
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(({ delta }) => {
+onBeforeRender(({ delta }) => {
   if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
     moveForward(delta, forwardMove.value)
     controls.value.moveRight(sidewardMove.value)
