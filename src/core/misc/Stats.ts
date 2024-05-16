@@ -1,5 +1,5 @@
 import { defineComponent, onUnmounted } from 'vue'
-import { useRenderLoop } from '@tresjs/core'
+import { useLoop } from '@tresjs/core'
 import StatsImpl from 'stats.js'
 
 export const Stats = defineComponent({
@@ -20,10 +20,9 @@ export const Stats = defineComponent({
     stats.showPanel(props.showPanel || 0)
     node?.appendChild(stats.dom)
 
-    const { onBeforeLoop, onAfterLoop, resume } = useRenderLoop()
-    resume()
-    onBeforeLoop(() => stats.begin())
-    onAfterLoop(() => stats.end())
+    const { onBeforeRender, onAfterRender } = useLoop()
+    onBeforeRender(() => stats.begin(), Number.NEGATIVE_INFINITY)
+    onAfterRender(() => stats.end(), Number.POSITIVE_INFINITY)
 
     onUnmounted(() => {
       node?.removeChild(stats.dom)
