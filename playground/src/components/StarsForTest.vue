@@ -20,13 +20,14 @@ onBeforeRender(() => {
   (star.value.instance as Points).rotation.y += 0.003
 })
 </script>
+
 <template>
-    <Stars
-      ref="star"
-      :radius="options.radius"
-      :depth="options.depth"
-      :count="options.count"
-      :size="options.size"
-      :size-attenuation="options.sizeAttenuation"
-    />
+  <Stars
+    ref="star"
+    :radius="options.radius"
+    :depth="options.depth"
+    :count="options.count"
+    :size="options.size"
+    :size-attenuation="options.sizeAttenuation"
+  />
 </template>
