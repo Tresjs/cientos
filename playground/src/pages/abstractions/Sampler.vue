@@ -26,8 +26,6 @@ const { samples } = useControls({
     value: 1,
   },
 })
-
-
 </script>
 
 <template>
