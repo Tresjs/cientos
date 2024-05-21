@@ -37,8 +37,8 @@ importers:
         specifier: 4.0.0-next.1
         version: 4.0.0-next.1(three@0.164.1)(vue@3.4.27)
       '@tresjs/eslint-config':
-        specifier: ^1.0.0
-        version: 1.0.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5)
+        specifier: ^1.1.0
+        version: 1.1.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5)
       '@tweakpane/core':
         specifier: ^1.1.9
         version: 1.1.9
@@ -1733,10 +1733,10 @@ packages:
       - '@vue/composition-api'
     dev: true
 
-  /@tresjs/eslint-config@1.0.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-m28JMAHfJ/jSESh5o38EdPfD27HD+ptRiUSh6lgF6CY8mQ5QreFlTzUcYsaBqvoCC1PnKzUyGBBomscXj5X5cw==}
+  /@tresjs/eslint-config@1.1.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-Iyxqj1MMLC6TnFxFG9UtPkJgxOWqxF2gJfuMvHF/oRpQQKrMNlPUqJdV6ieQoGjLVTfudnHOSYv9Sl96zZSgfA==}
     peerDependencies:
-      eslint: 8.x
+      eslint: 9.x
     dependencies:
       '@antfu/eslint-config': 2.18.0(@vue/compiler-sfc@3.4.27)(eslint-plugin-format@0.1.1)(eslint@9.2.0)(typescript@5.4.5)
       eslint: 9.2.0
