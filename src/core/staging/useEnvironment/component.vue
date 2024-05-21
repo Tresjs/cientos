@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { onUnmounted, ref, toRaw, useSlots, watch } from 'vue'
 import { CubeCamera, HalfFloatType, WebGLCubeRenderTarget } from 'three'
 import type { CubeTexture, Texture } from 'three'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import type { EnvironmentOptions } from './const'
 import EnvSence from './envSence'
 import { useEnvironment } from '.'
@@ -33,18 +33,18 @@ onUnmounted(() => {
   envSence.value?.destructor()
   fbo.value?.dispose()
 })
-const { onBeforeLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 let count = 1
-onBeforeLoop(() => {
+onBeforeRender(() => {
   if (cubeCamera && envSence.value && fbo.value) {
     if (props.frames === Number.POSITIVE_INFINITY || count < props.frames) {
       cubeCamera.update(renderer.value, toRaw(envSence.value.virtualScene))
       count++
     }
   }
-})
+}, -1)
 const useEnvironmentTexture = (await useEnvironment(props, fbo as any)).texture
-const setTextureEnvAndBG = (fbo: WebGLCubeRenderTarget) => {
+const setTextureEnvAndBG = (fbo?: WebGLCubeRenderTarget) => {
   if (fbo) {
     scene.value.environment = fbo.texture
     if (props.background) {
@@ -90,6 +90,6 @@ texture.value = useEnvironmentTexture
     v-if="fbo"
     ref="envSence"
   >
-    <slot></slot>
+    <slot />
   </TresEnvSence>
 </template>
