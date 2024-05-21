@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { Fbo, OrbitControls } from '@tresjs/cientos'
+import { Fbo, OrbitControls, Stats } from '@tresjs/cientos'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
@@ -18,7 +18,7 @@ const materialRef = ref(null)
 const torusRef = shallowRef(null)
 const capsuleRef = shallowRef(null)
 
-const { onLoop } = useRenderLoop()
+const { onLoop, resume } = useRenderLoop()
 
 const state = shallowReactive({
   depth: false,
@@ -37,6 +37,7 @@ onMounted(async () => {
     capsuleRef.value.rotation.x = elapsed * 0.471
     capsuleRef.value.rotation.z = elapsed * 0.632
   })
+  resume()
 })
 
 const { 'Depth Buffer': isUseDepthBuffer, 'MSAA Samples': numMsaaSamples } = useControls({
@@ -67,7 +68,7 @@ watch(
     <OrbitControls />
 
     <TresGridHelper :args="[10, 10]" />
-
+ <Stats />
     <Fbo
       ref="fboRef"
       v-bind="state"
