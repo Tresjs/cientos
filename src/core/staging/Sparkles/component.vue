@@ -12,7 +12,7 @@ import {
   Vector3,
 } from 'three'
 import type { TresColor } from '@tresjs/core'
-import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
+import { useLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { Ref } from 'vue'
 import { onMounted, onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { VectorFlexibleParams } from '@tresjs/core/dist/utils/normalize'
@@ -356,7 +356,7 @@ watch(refs.map, () => {
 
 const rotation = new Quaternion()
 const normal = new Vector3()
-useRenderLoop().onLoop(({ elapsed }) => {
+useLoop().onBeforeRender(({ elapsed }) => {
   sparkles.getWorldQuaternion(rotation)
   normal.copy(props.directionalLight ? props.directionalLight.position : Object3D.DEFAULT_UP).normalize()
   normal.applyQuaternion(rotation.invert())

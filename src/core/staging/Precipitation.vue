@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, toRefs, watchEffect } from 'vue'
 import type { TresColor } from '@tresjs/core'
-import { useRenderLoop } from '@tresjs/core'
+import { useLoop } from '@tresjs/core'
 
 export interface PrecipitationProps {
   /**
@@ -171,9 +171,9 @@ watchEffect(() => {
   setPosition()
 })
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(() => {
   if (geometryRef.value?.attributes.position.array && geometryRef.value?.attributes.position.count) {
     const positionArray = geometryRef.value.attributes.position.array
     for (let i = 0; i < geometryRef.value.attributes.position.count; i++) {
