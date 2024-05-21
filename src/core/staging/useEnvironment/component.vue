@@ -90,6 +90,6 @@ texture.value = useEnvironmentTexture
     v-if="fbo"
     ref="envSence"
   >
-    <slot />
+    <slot></slot>
   </TresEnvSence>
 </template>

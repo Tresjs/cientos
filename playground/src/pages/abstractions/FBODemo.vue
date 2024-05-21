@@ -68,7 +68,7 @@ watch(
     <OrbitControls />
 
     <TresGridHelper :args="[10, 10]" />
- <Stats />
+    <Stats />
     <Fbo
       ref="fboRef"
       v-bind="state"
