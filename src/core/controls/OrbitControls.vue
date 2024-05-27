@@ -280,7 +280,7 @@ const {
   target,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate, render } = useTresContext()
 
 const controlsRef = ref<OrbitControls | null>(null)
 
@@ -296,8 +296,15 @@ watch(controlsRef, (value) => {
   }
 })
 
+function onChange() {
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
+  emit('change', controlsRef.value)
+}
+
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'change', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'change', onChange)
   useEventListener(controlsRef.value as any, 'start', () => emit('start', controlsRef.value))
   useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
 }
