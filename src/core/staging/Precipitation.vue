@@ -160,7 +160,7 @@ const setSpeed = () => {
   velocityArray = new Float32Array(count.value * 2)
   for (let i = 0; i < count.value * 2; i += 2) {
     velocityArray[i] = ((Math.random() - 0.5) / 5) * speed.value * randomness.value
-    velocityArray[i + 1] = (Math.random() / 5) * speed.value + 0.01
+    velocityArray[i + 1] = (Math.random() / 5) * speed.value
   }
 }
 setSpeed()
