@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRenderLoop } from '@tresjs/core'
+import { useLoop } from '@tresjs/core'
 import { MathUtils } from 'three'
 import { shallowRef } from 'vue'
 
@@ -31,10 +31,10 @@ defineExpose({
   const AMPLITUDE_ROTATION_Z = 1 / 20
   const START_OFFSET = Math.random() * 10000
 
-  const { onLoop } = useRenderLoop()
+  const { onBeforeRender } = useLoop()
   let elapsed = START_OFFSET
 
-  onLoop(({ delta }) => {
+  onBeforeRender(({ delta }) => {
     if (!groupRef.value) { return }
 
     elapsed += delta * props.speed

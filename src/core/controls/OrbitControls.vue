@@ -4,7 +4,7 @@ import { TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
 import { onUnmounted, ref, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
 export interface OrbitControlsProps {
@@ -302,9 +302,9 @@ function addEventListeners() {
   useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
 }
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
   }
