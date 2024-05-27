@@ -28,7 +28,7 @@ const { args, color } = toRefs(props)
 const circleRef = shallowRef()
 
 defineExpose({
-  value: circleRef,
+  instance: circleRef,
 })
 </script>
 

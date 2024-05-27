@@ -1,7 +1,7 @@
 {
   "name": "@tresjs/cientos",
   "type": "module",
-  "version": "3.9.0",
+  "version": "4.0.0-next.0",
   "packageManager": "pnpm@8.10.2",
   "description": "Collection of useful helpers and fully functional, ready-made abstractions for Tres",
   "author": "Alvaro Saburido <hola@alvarosaburido.dev> (https://github.com/alvarosabu/)",
@@ -55,23 +55,20 @@
   "peerDependencies": {
     "@tresjs/core": ">=3.2",
     "three": ">=0.133",
-    "tweakpane": ">=3.0.0",
     "vue": ">=3.3"
   },
   "dependencies": {
-    "@tresjs/core": "3.9.0",
-    "@vueuse/core": "^10.9.0",
-    "camera-controls": "^2.8.3",
-    "stats-gl": "^2.2.8",
+    "@vueuse/core": "^10.7.2",
+    "camera-controls": "^2.7.4",
+    "stats-gl": "^2.0.1",
     "stats.js": "^0.17.0",
     "three-custom-shader-material": "^5.4.0",
     "three-stdlib": "^2.29.11"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
-    "@tresjs/core": "^3.2.1",
+    "@tresjs/core": "4.0.0-next.1",
     "@tresjs/eslint-config": "^1.1.0",
-    "@tweakpane/core": "^1.1.9",
     "@types/node": "^20.12.10",
     "@types/three": "^0.164.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
@@ -87,7 +84,6 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "three": "^0.164.1",
-    "tweakpane": "^3.1.10",
     "typescript": "^5.4.5",
     "unocss": "^0.59.4",
     "vite": "^5.2.11",

@@ -27,7 +27,7 @@ const { args, color } = toRefs(props)
 const octahedronRef = shallowRef()
 
 defineExpose({
-  value: octahedronRef,
+  instance: octahedronRef,
 })
 </script>
 

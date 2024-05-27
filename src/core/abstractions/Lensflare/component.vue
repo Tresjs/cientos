@@ -61,7 +61,7 @@ const userDefaultLensflareElementPropsRef
   = shallowRef<Partial<LensflareElementProps>>(filterLensflareElementProps(props))
 
 defineExpose({
-  value: lensflareRef,
+  instance: lensflareRef,
 })
 
 const textureLoader = new TextureLoader()

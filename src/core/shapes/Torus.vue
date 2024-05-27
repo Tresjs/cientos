@@ -28,7 +28,7 @@ const { args, color } = toRefs(props)
 const torusRef = shallowRef()
 
 defineExpose({
-  value: torusRef,
+  instance: torusRef,
 })
 </script>
 

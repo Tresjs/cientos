@@ -29,7 +29,7 @@ const { args, color } = toRefs(props)
 const sphereRef = shallowRef()
 
 defineExpose({
-  value: sphereRef,
+  instance: sphereRef,
 })
 </script>
 

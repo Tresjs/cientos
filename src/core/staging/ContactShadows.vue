@@ -6,7 +6,7 @@
 // https://github.com/pmndrs/drei/blob/master/src/core/ContactShadows.tsx#L113
 
 import type { TresColor } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import type {
   ColorRepresentation,
   Material,
@@ -154,7 +154,7 @@ const props = withDefaults(defineProps<ContactShadowsProps>(), {
 const groupRef = shallowRef()
 const shadowCamera = shallowRef<OrthographicCamera>()
 
-defineExpose(groupRef)
+defineExpose({ instance: groupRef })
 
 let renderTarget: WebGLRenderTarget, renderTargetBlur: WebGLRenderTarget
 let planeGeometry: PlaneGeometry, blurPlane: Mesh
@@ -247,13 +247,13 @@ function blurShadows(blur: number) {
   blurPlane.visible = false
 }
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
 let count = 0
 let initialBackground: Color | Texture | null
 let initialOverrideMaterial: Material | null
 
-onLoop(() => {
+onBeforeRender(() => {
   if (!shadowCamera.value || scene.value === undefined || renderer.value === undefined) { return }
 
   if (props.frames === Number.POSITIVE_INFINITY || count < props.frames) {

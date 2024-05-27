@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<{
 const modelRef = ref()
 
 defineExpose({
-  value: modelRef,
+  instance: modelRef,
 })
 
 const model = await useFBX(props.path as string)

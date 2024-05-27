@@ -80,7 +80,7 @@ const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
 
 defineExpose({
-  reflectorRef,
+  instance: reflectorRef,
 })
 </script>
 

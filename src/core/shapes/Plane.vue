@@ -28,7 +28,7 @@ const { args, color } = toRefs(props)
 const planeRef = shallowRef()
 
 defineExpose({
-  value: planeRef,
+  instance: planeRef,
 })
 </script>
 
