@@ -16,7 +16,7 @@ const isActive = (state: boolean) => {
   // eslint-disable-next-line no-console
   console.log(state)
 }
-const hasChange = (state: any) => {
+const hasChange = () => {
 
   /* console.log('change', state) */
 }

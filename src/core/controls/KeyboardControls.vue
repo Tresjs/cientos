@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRefs, watch, watchEffect } from 'vue'
+import { ref, toRefs, watchEffect } from 'vue'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
