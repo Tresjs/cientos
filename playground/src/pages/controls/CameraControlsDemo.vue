@@ -6,6 +6,7 @@ import { CameraControls } from '@tresjs/cientos'
 import { BasicShadowMap, MathUtils, NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
+import { useState } from '../../composables/state'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -70,14 +71,14 @@ useControls(
     dollyInc: {
       type: 'button',
       onClick: () => {
-        controlsRef?.value?.value?.dolly(1, true)
+        controlsRef?.value?.instance?.dolly(1, true)
       },
       label: 'Increment (+1)',
     },
     dollyDec: {
       type: 'button',
       onClick: () => {
-        controlsRef?.value?.value?.dolly(-1, true)
+        controlsRef?.value?.instance?.dolly(-1, true)
       },
       label: 'Increment (-1)',
     },
@@ -91,28 +92,28 @@ useControls(
       type: 'button',
       label: 'Rotate theta 45°',
       onClick: () => {
-        controlsRef?.value?.value?.rotate(45 * MathUtils.DEG2RAD, 0, true)
+        controlsRef?.value?.instance.rotate(45 * MathUtils.DEG2RAD, 0, true)
       },
     },
     rotateTheta90: {
       type: 'button',
       label: 'Rotate theta -90°',
       onClick: () => {
-        controlsRef?.value?.value?.rotate(-90 * MathUtils.DEG2RAD, 0, true)
+        controlsRef?.value?.instance.rotate(-90 * MathUtils.DEG2RAD, 0, true)
       },
     },
     rotateTheta360: {
       type: 'button',
       label: 'Rotate theta 360°',
       onClick: () => {
-        controlsRef?.value?.value?.rotate(360 * MathUtils.DEG2RAD, 0, true)
+        controlsRef?.value?.instance.rotate(360 * MathUtils.DEG2RAD, 0, true)
       },
     },
     rotatePhi20: {
       type: 'button',
       label: 'Rotate phi 20°',
       onClick: () => {
-        controlsRef?.value?.value?.rotate(0, 20 * MathUtils.DEG2RAD, true)
+        controlsRef?.value?.instance.rotate(0, 20 * MathUtils.DEG2RAD, true)
       },
     },
   },
@@ -125,16 +126,25 @@ useControls(
       type: 'button',
       label: 'Fit to the bounding box of the mesh',
       onClick: () => {
-        controlsRef?.value?.value?.fitToBox(boxMeshRef.value, true)
+        controlsRef?.value?.instance.fitToBox(boxMeshRef.value, true)
       },
     },
   },
 )
+
+// For testing render mode on-demand,
+
+const { renderingTimes } = useState()
+
+function onRender() {
+  renderingTimes.value = 1
+}
 </script>
 
 <template>
   <TresLeches />
-  <TresCanvas v-bind="gl">
+  <GraphPane />
+  <TresCanvas render-mode="on-demand" v-bind="gl" @render="onRender">
     <TresPerspectiveCamera :position="[5, 5, 5]" />
     <CameraControls
       v-bind="controlsState"

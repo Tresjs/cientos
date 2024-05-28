@@ -34,8 +34,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(release-it@17.2.1)
       '@tresjs/core':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1(three@0.164.1)(vue@3.4.27)
+        specifier: 4.0.0-rc.2
+        version: 4.0.0-rc.2(three@0.164.1)(vue@3.4.27)
       '@tresjs/eslint-config':
         specifier: ^1.0.0
         version: 1.0.0(@vue/compiler-sfc@3.4.27)(eslint@9.2.0)(typescript@5.4.5)
@@ -131,8 +131,8 @@ importers:
   playground:
     dependencies:
       '@tresjs/core':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1(three@0.164.1)(vue@3.4.27)
+        specifier: 4.0.0-rc.2
+        version: 4.0.0-rc.2(three@0.164.1)(vue@3.4.27)
       vue-router:
         specifier: ^4.2.5
         version: 4.3.2(vue@3.4.27)
@@ -1698,8 +1698,8 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@tresjs/core@4.0.0-rc.1(three@0.164.1)(vue@3.4.27):
-    resolution: {integrity: sha512-XD1FXGLO2/+0okR2bUAnfiKzngFKfeSUFg98rnv4qla4F1jFKmzpJCKF2MkhpIPupaN/vx5VJ/VZhL/e03UKsQ==}
+  /@tresjs/core@4.0.0-rc.2(three@0.164.1)(vue@3.4.27):
+    resolution: {integrity: sha512-Kfje1U5Isja3w95njOdenCCh2fnvvnWU27rCB2tC6yTvwm+J/kSH0YWdWNgvi3w6iY9dbLvnH6pO9Cxo3/za+g==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'

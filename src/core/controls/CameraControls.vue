@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CameraControls from 'camera-controls'
-import { computed, onUnmounted, ref, toRefs, watchEffect } from 'vue'
+import { computed, onUnmounted, ref, toRefs, watch } from 'vue'
 import type {
   Camera,
   Object3D,
@@ -386,7 +386,7 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate, render } = useTresContext()
 
 const mouseButtons = computed(() => getMouseButtons(
   props.camera || activeCamera.value,
@@ -400,18 +400,25 @@ const touches = computed(() => getTouches(
 const controlsRef = ref<CameraControls | null>(null)
 extend({ CameraControls })
 
-watchEffect(() => {
+watch(controlsRef, (value) => {
   addEventListeners()
-  if (controlsRef.value && makeDefault.value) {
-    controls.value = controlsRef.value
+  if (value && makeDefault.value) {
+    controls.value = value
   }
   else {
     controls.value = null
   }
 })
 
+function onChange() {
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
+  emit('change', controlsRef.value)
+}
+
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'update', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'update', onChange)
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
 }
@@ -419,7 +426,9 @@ function addEventListeners() {
 const { onBeforeRender } = useLoop()
 
 onBeforeRender(({ delta }) => {
-  if (controlsRef.value?.enabled) { controlsRef.value?.update(delta) }
+  if (controlsRef.value && controlsRef.value.enabled) {
+    controlsRef.value?.update(delta)
+  }
 })
 
 onUnmounted(() => {
