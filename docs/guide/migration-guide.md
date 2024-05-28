@@ -1,6 +1,6 @@
 # Migration Guide from v3
 
-This guide is intended to help you migrate from v3 to the newest versions of TresJS 🤩✨.
+This guide is intended to help you migrate from v3 to the newest version of Cientos 🤩✨.
 
 ::: code-group
 
@@ -22,18 +22,18 @@ yarn upgrade @tresjs/cientos
 
 ### Updated defineExport properties
 
-From the beginning we have started to export our components using `value` but this create a very ambiguos situation with some components, at the moment of access them using template Ref we end with something like:
+Since the beginning we have exported our components using `value` but this creates a very ambiguos situation with some components, when we access them using `template ref`, we end up with something like:
 
 ```vue{6}
 <script>
-import { shallowRef } from 'vue'
+import { shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { Stars } from '@tresjs/cientos'
 
 const starsRef = shallowRef()
 
 watch(starsRef, () => {
-  // to access here we have a nested `value` here so
+  // to access the instance we have a nested `value.value`
   console.log(starsRef.value.value)
   // Wrong ❌
 
@@ -49,9 +49,9 @@ watch(starsRef, () => {
 </template>
 ```
 
-This create confusion, and was not a good DX unfortunately to fix this a breaking change have to be introduced, and this is the right moment
+This creates confusion, and was not a good DX. Unfortunately, to fix this, a breaking change needed to be introduced, and we felt this was the right moment.
 
-Now the implementation is very similar but instead of two confusing `values` we standarized all our component with `instance`, so to access the component will be:
+Now the implementation is very similar but instead of two confusing `values` we have standardized all our components with `instance`, so to access the components now use:
 
 ```js
 // Correct ✅
@@ -60,35 +60,36 @@ console.log(starsRef.value.instance);
 
 ### Remove tweakPane from deps
 
-After some iteration we decided to drop the instance of `useTweakPane` some of the reasons are:
+After some iteration, we decided to drop the instance of `useTweakPane` some of the reasons are:
 
-- no compatibility with the v4 of TweakPane
+- No compatibility with the v4 of [TweakPane](https://tweakpane.github.io/docs/)
 - Massive bundle size
-- Not so intuitive
+- Not so intuitive, lot of code repetition
 - Support for the upcoming pkg [Leches](https://tresleches.tresjs.org/)
 
 ### Move directives to core
 
-The use of Directives start as a experiment to see if was a valuable option for the ecosystem, since we have a good reception, 
-we decided that the most appropriated is that the `directives` lives under the core pkg [Directives section](https://docs.tresjs.org/directives/v-log.html)
+The use of `directives` started as a experiment to see how valuable it would be for the ecosystem, since it has had a good reception, we have decided that it is appropriate for the `directives` to live under the core pkg [Directives section](https://docs.tresjs.org/directives/v-log.html).
 
-So now, you have to import your directives from the core
-// Correct ✅
+So now you have to import your directives from the core:
+```
+Correct ✅
 import { vLog } from '@tresjs/core'
-
 ```
 
-instead of
-// Wrong ❌
-import { Stars } from '@tresjs/cientos'
+Instead of:
+```
+Wrong ❌
+import { vLog } from '@tresjs/cientos'
 ```
 
-*Since the addition of the new `useLoop` method, `vAlwaysLookAt` and `vRotate` has been temporarily remove.
+*Since the addition of the new `useLoop` method, `vAlwaysLookAt` and `vRotate` have been temporarily remove.
 
 ### Changes in KeyboardControls
 
-The implementation of `KeyboardControls` has been change, since this Component doesn't provide the right setup for what was originally developed,
-we take the decision to adopt a floating controls similar to Unreal Engine 5 which make more sense to the name of this component.
+The implementation of `KeyboardControls` has been change, since this component doesn't provide the right setup for what was originally developed. We took the decision to adopt a floating controls similar to Unreal Engine 5, which make more sense for the name of this component.
 
-We have also introduce the `PointLockControls`, so you don't have to do it manually
+We have also brought the `PointLockControls` inside `KeyboardControls`, so you don't have to set it up manually.
+
+Check it out with a live example [here](https://cientos.tresjs.org/guide/controls/keyboard-controls.html).
 
