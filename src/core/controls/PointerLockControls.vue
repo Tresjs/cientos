@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
 
 const emit = defineEmits(['isLock', 'change'])
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate, render } = useTresContext()
 
 const controlsRef = ref<null | PointerLockControls>(null)
 let triggerSelector: HTMLElement | undefined
@@ -68,14 +68,24 @@ watch(controlsRef, (value) => {
   }
   const selector = document.getElementById(props.selector || '')
   triggerSelector = selector || renderer.value.domElement
+  addEventListeners()
+})
 
-  useEventListener(controls.value as any, 'change', () => emit('change', controls.value))
+function onChange() {
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
+  emit('change', controlsRef.value)
+}
+
+function addEventListeners() {
+  useEventListener(controlsRef.value as any, 'change', onChange)
   useEventListener(triggerSelector, 'click', () => {
     controls.value?.lock()
     controls.value?.addEventListener('lock', () => isLockEmitter(true))
     controls.value?.addEventListener('unlock', () => isLockEmitter(false))
   })
-})
+}
 
 onUnmounted(() => {
   controls.value?.removeEventListener('lock', () => isLockEmitter(true))

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRefs, watchEffect } from 'vue'
+import { ref, toRefs, watch, watchEffect } from 'vue'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
@@ -61,7 +61,24 @@ const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
-const { camera: activeCamera, controls, renderer } = useTresContext()
+const { camera: activeCamera, controls, renderer, invalidate, render } = useTresContext()
+
+defineExpose({
+  instance: controls,
+})
+
+const isActive = (isLock: boolean) => emit('isLock', isLock)
+
+const hasChange = (state: any) => {
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
+  emit('change', state)
+}
+
+const moveVector = new Vector3()
+const rotationVector = new Vector3()
+const tmpQuaternion = new Quaternion()
 
 const sidewardMove = ref(0)
 const forwardMove = ref(0)
@@ -77,18 +94,6 @@ watchEffect(() => {
   else { forwardMove.value = 0 }
 })
 
-defineExpose({
-  instance: controls,
-})
-
-const isActive = (isLock: boolean) => emit('isLock', isLock)
-
-const hasChange = (state: any) => emit('change', state)
-
-const moveVector = new Vector3()
-const rotationVector = new Vector3()
-const tmpQuaternion = new Quaternion()
-
 const moveForward = (delta: number, movementSpeed: number) => {
   if (!activeCamera.value?.position && !moveVector) { return }
   const camera = activeCamera.value
@@ -97,7 +102,7 @@ const moveForward = (delta: number, movementSpeed: number) => {
 
   tmpQuaternion.set(rotationVector.x * rotMult, rotationVector.y * rotMult, rotationVector.z * rotMult, 1).normalize()
   camera?.quaternion.multiply(tmpQuaternion)
-  if (sidewardMove.value || forwardMove.value) { emit('change', controls.value) }
+  if (sidewardMove.value || forwardMove.value) { hasChange(controls.value) }
 }
 
 const { onBeforeRender } = useLoop()

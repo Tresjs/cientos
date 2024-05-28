@@ -2,6 +2,7 @@
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping } from 'three'
 import { Box, KeyboardControls, StatsGl } from '@tresjs/cientos'
+import { useState } from '../../composables/state'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -16,13 +17,22 @@ const isActive = (state: boolean) => {
   console.log(state)
 }
 const hasChange = (state: any) => {
-  // eslint-disable-next-line no-console
-  console.log('change', state)
+
+  /* console.log('change', state) */
+}
+
+// For testing render mode on-demand,
+
+const { renderingTimes } = useState()
+
+function onRender() {
+  renderingTimes.value = 1
 }
 </script>
 
 <template>
-  <TresCanvas v-bind="gl">
+  <GraphPane />
+  <TresCanvas render-mode="on-demand" v-bind="gl" @render="onRender">
     <TresPerspectiveCamera :position="[0, 3, 10]" />
     <StatsGl />
     <!-- <Sky /> -->
