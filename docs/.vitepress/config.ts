@@ -58,7 +58,7 @@ export default defineConfig({
         text: 'Guide',
         items: [
           { text: 'Introduction', link: '/guide/' },
-          { text: 'Migration from V3', link: '/guide/migration-guide' }
+          { text: 'Migration from V3', link: '/guide/migration-guide' },
         ],
       },
       {

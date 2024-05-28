@@ -55,7 +55,7 @@ Now the implementation is very similar but instead of two confusing `values` we 
 
 ```js
 // Correct ✅
-console.log(starsRef.value.instance);
+console.log(starsRef.value.instance)
 ```
 
 ### Remove tweakPane from deps
@@ -92,4 +92,3 @@ The implementation of `KeyboardControls` has been change, since this component d
 We have also brought the `PointLockControls` inside `KeyboardControls`, so you don't have to set it up manually.
 
 Check it out with a live example [here](https://cientos.tresjs.org/guide/controls/keyboard-controls.html).
-
