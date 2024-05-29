@@ -83,6 +83,12 @@ export interface GLTFResult {
   scene: Scene
 }
 
+/**
+ * Create the loader for Draco.
+ *
+ * @param {string} decoderPath
+ * @return {*}
+ */
 function createDRACOLoader(decoderPath: string): DRACOLoader {
   const dracoLoader = new DRACOLoader()
   dracoLoader.setDecoderPath(decoderPath)
