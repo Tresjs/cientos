@@ -26,25 +26,30 @@ export interface GLTFResult {
   scene: THREE.Scene
 }
 
-let dracoLoader: DRACOLoader | null = null
+async function createDRACOLoader(decoderPath: string): Promise<DRACOLoader> {
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath(decoderPath)
+  return dracoLoader
+}
 
 /**
  * Sets the extensions for the GLTFLoader.
  *
  * @param {GLTFLoaderOptions} options
+ * @param {DRACOLoader} [dracoLoader]
  * @param {(loader: GLTFLoader) => void} [extendLoader]
  * @return {*}
  */
-function setExtensions(options: GLTFLoaderOptions, extendLoader?: (loader: GLTFLoader) => void) {
+function setExtensions(
+  options: GLTFLoaderOptions,
+  dracoLoader: DRACOLoader | null,
+  extendLoader?: (loader: GLTFLoader) => void,
+) {
   return (loader: GLTFLoader) => {
     if (extendLoader) {
       extendLoader(loader as GLTFLoader)
     }
-    if (options.draco) {
-      if (!dracoLoader) {
-        dracoLoader = new DRACOLoader()
-      }
-      dracoLoader.setDecoderPath(options.decoderPath || 'https://www.gstatic.com/draco/versioned/decoders/1.4.3/')
+    if (options.draco && dracoLoader) {
       loader.setDRACOLoader(dracoLoader)
     }
   }
@@ -63,13 +68,20 @@ function setExtensions(options: GLTFLoaderOptions, extendLoader?: (loader: GLTFL
  */
 export async function useGLTF<T extends string | string[]>(
   path: T,
-  options: GLTFLoaderOptions = {
-    draco: false,
-  },
+  options: GLTFLoaderOptions = { draco: false },
   extendLoader?: (loader: GLTFLoader) => void,
 ): Promise<T extends string[] ? GLTFResult[] : GLTFResult> {
-  const gltfModel = (await useLoader(GLTFLoader, path, setExtensions(options, extendLoader))) as unknown as GLTFResult
+  const dracoLoader = options.draco
+    ? await createDRACOLoader(
+      options.decoderPath
+      || 'https://www.gstatic.com/draco/versioned/decoders/1.4.3/',
+    )
+    : null
+  const gltfModel = (await useLoader(
+    GLTFLoader,
+    path,
+    setExtensions(options, dracoLoader, extendLoader),
+  )) as unknown as GLTFResult
   dracoLoader?.dispose()
-  dracoLoader = null
   return gltfModel
 }
