@@ -83,7 +83,11 @@ export interface GLTFResult {
   scene: Scene
 }
 
-let dracoLoader: DRACOLoader | null = null
+function createDRACOLoader(decoderPath: string): DRACOLoader {
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath(decoderPath)
+  return dracoLoader
+}
 
 export interface TresGLTFLoaderType extends TresLoader<GLTF> {
   setDRACOLoader?: (dracoLoader: DRACOLoader) => void
@@ -93,21 +97,20 @@ export interface TresGLTFLoaderType extends TresLoader<GLTF> {
  * Sets the extensions for the GLTFLoader.
  *
  * @param {GLTFLoaderOptions} options - Options for the loader
+ * @param {DRACOLoader} [dracoLoader]
  * @param {(loader: TresGLTFLoaderType) => void} [extendLoader] - Function to extend the loader
  */
-function setExtensions(options: GLTFLoaderOptions, extendLoader?: (loader: TresGLTFLoaderType) => void) {
+function setExtensions(
+  options: GLTFLoaderOptions,
+  dracoLoader: DRACOLoader | null,
+  extendLoader?: (loader: TresGLTFLoaderType,
+) => void) {
   return (loader: TresGLTFLoaderType) => {
     if (extendLoader) {
       extendLoader(loader)
     }
-    if (options.draco) {
-      if (!dracoLoader) {
-        dracoLoader = new DRACOLoader()
-      }
-      dracoLoader.setDecoderPath(options.decoderPath || 'https://www.gstatic.com/draco/versioned/decoders/1.4.3/')
-      if (loader.setDRACOLoader) {
-        loader.setDRACOLoader(dracoLoader)
-      }
+    if (options.draco && dracoLoader && loader.setDRACOLoader) {
+      loader.setDRACOLoader(dracoLoader)
     }
   }
 }
@@ -129,8 +132,17 @@ export async function useGLTF<T extends string | string[]>(
   },
   extendLoader?: (loader: TresGLTFLoaderType) => void,
 ): Promise<T extends string[] ? GLTFResult[] : GLTFResult> {
-  const gltfModel = (await useLoader<GLTF>(TresGLTFLoader, path, setExtensions(options, extendLoader))) as unknown as GLTFResult
+  const dracoLoader = options.draco
+    ? createDRACOLoader(
+      options.decoderPath
+      || 'https://www.gstatic.com/draco/versioned/decoders/1.4.3/',
+    )
+    : null
+  const gltfModel = (await useLoader<GLTF>(
+    TresGLTFLoader,
+    path,
+    setExtensions(options, dracoLoader, extendLoader),
+  )) as unknown as GLTFResult
   dracoLoader?.dispose()
-  dracoLoader = null
   return gltfModel as T extends string[] ? GLTFResult[] : GLTFResult
 }
