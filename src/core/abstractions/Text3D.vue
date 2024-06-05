@@ -151,7 +151,7 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend } = useTresContext()
+const { extend, invalidate, render } = useTresContext()
 
 extend({ TextGeometry })
 
@@ -205,6 +205,10 @@ watchEffect(() => {
     text3DRef.value.geometry = new TextGeometry(localText.value, textOptions.value as TextGeometryParameters)
     if (center.value) {
       text3DRef.value.geometry.center()
+    }
+
+    if (render.mode.value === 'on-demand') {
+      invalidate()
     }
   }
 })
