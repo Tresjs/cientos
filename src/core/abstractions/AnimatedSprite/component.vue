@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
-import { normalizeVectorFlexibleParam, useLoop } from '@tresjs/core'
+import { normalizeVectorFlexibleParam, useLoop, useTresContext } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlasish } from './Atlas'
@@ -85,6 +85,8 @@ const scaleY = ref(0)
 const groupRef = shallowRef()
 defineExpose({ instance: groupRef })
 
+const { render: renderMode, invalidate } = useTresContext()
+
 const [texture, atlas] = await getTextureAndAtlasAsync(props.image, props.atlas)
 texture.matrixAutoUpdate = false
 
@@ -98,6 +100,12 @@ let frameNum = 0
 let frameHeldOnLoopEnd = false
 let dirtyFlag = true
 const TEXTURE_PX_TO_WORLD_UNITS = 0.01
+
+watch(props, () => {
+  if (renderMode.mode.value === 'on-demand') {
+    invalidate()
+  }
+})
 
 useLoop().onBeforeRender(({ delta }) => {
   if (!props.paused && !frameHeldOnLoopEnd) {
@@ -146,6 +154,10 @@ useLoop().onBeforeRender(({ delta }) => {
   if (frameNameToEmit) {
     emit('frame', frameNameToEmit)
     frameNameToEmit = null
+  }
+
+  if (renderMode.mode.value === 'on-demand') {
+    invalidate()
   }
 })
 
@@ -220,10 +232,10 @@ onUnmounted(() => {
         :position="[positionX, positionY, 0]"
       >
         <TresSpriteMaterial
-          :toneMapped="false"
+          :tone-mapped="false"
           :map="texture"
           :transparent="true"
-          :alphaTest="props.alphaTest"
+          :alpha-test="props.alphaTest"
         />
       </TresSprite>
     </template>
@@ -234,13 +246,13 @@ onUnmounted(() => {
       >
         <TresPlaneGeometry :args="[1, 1]" />
         <TresMeshBasicMaterial
-          :toneMapped="false"
+          :tone-mapped="false"
           :side="DoubleSide"
           :map="texture"
           :transparent="true"
-          :alphaTest="props.alphaTest"
-          :depthWrite="props.depthWrite"
-          :depthTest="props.depthTest"
+          :alpha-test="props.alphaTest"
+          :depth-write="props.depthWrite"
+          :depth-test="props.depthTest"
         />
       </TresMesh>
     </template>
