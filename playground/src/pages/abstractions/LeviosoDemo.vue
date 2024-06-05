@@ -38,7 +38,7 @@ const groupRef = shallowRef()
 
 <template>
   <TresLeches />
-  <TresCanvas v-bind="gl">
+  <TresCanvas render-mode="on-demand" v-bind="gl">
     <TresPerspectiveCamera :position="[11, 11, 11]" />
     <OrbitControls />
     <Levioso
