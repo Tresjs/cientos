@@ -47,7 +47,7 @@ export function useFBO(options: FboOptions) {
   const { height, width, settings, depth } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
 
   const { onBeforeRender } = useLoop()
-  const { camera, renderer, scene, sizes } = useTresContext()
+  const { camera, renderer, scene, sizes, render } = useTresContext()
 
   watchEffect(() => {
     target.value?.dispose()
@@ -68,12 +68,16 @@ export function useFBO(options: FboOptions) {
     }
   })
 
-  onBeforeRender(() => {
+  onBeforeRender(({ invalidate }) => {
     renderer.value.setRenderTarget(target.value)
     renderer.value.clear()
     renderer.value.render(scene.value, camera.value as Camera)
 
     renderer.value.setRenderTarget(null)
+
+    if (render.mode.value === 'on-demand') {
+      invalidate()
+    }
   }, Number.POSITIVE_INFINITY)
 
   onBeforeUnmount(() => {
