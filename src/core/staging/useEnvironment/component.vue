@@ -23,23 +23,31 @@ const props = withDefaults(defineProps<EnvironmentOptions>(), {
 const texture: Ref<Texture | CubeTexture | null> = ref(null)
 defineExpose({ texture })
 
-const { extend, renderer, scene } = useTresContext()
+const { extend, renderer, scene, render, invalidate } = useTresContext()
 let slots = null as any
 const fbo = ref(null as null | WebGLCubeRenderTarget)
 let cubeCamera = null as null | CubeCamera
 
 const envSence = ref<EnvSence | null>(null)
-onUnmounted(() => {
-  envSence.value?.destructor()
-  fbo.value?.dispose()
+
+watch(props, () => {
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
 })
+
 const { onBeforeRender } = useLoop()
 let count = 1
+
 onBeforeRender(() => {
   if (cubeCamera && envSence.value && fbo.value) {
     if (props.frames === Number.POSITIVE_INFINITY || count < props.frames) {
       cubeCamera.update(renderer.value, toRaw(envSence.value.virtualScene))
       count++
+
+      if (render.mode.value === 'on-demand') {
+        invalidate()
+      }
     }
   }
 }, -1)
@@ -61,6 +69,9 @@ const setTextureEnvAndBG = (fbo?: WebGLCubeRenderTarget) => {
 watch(useEnvironmentTexture, () => {
   if (fbo.value) {
     setTextureEnvAndBG(fbo.value)
+    if (render.mode.value === 'on-demand') {
+      invalidate()
+    }
   }
 }, { immediate: true, deep: true })
 
@@ -81,8 +92,18 @@ watch(useSlots().default, (value) => {
   fbo.value?.dispose()
   fbo.value = null
   setTextureEnvAndBG()
+
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
 }, { immediate: true, deep: true })
+
 texture.value = useEnvironmentTexture
+
+onUnmounted(() => {
+  envSence.value?.destructor()
+  fbo.value?.dispose()
+})
 </script>
 
 <template>
