@@ -103,17 +103,21 @@ const calculateOpacity = (scale: number, density: number): number => (scale / 6)
 
 const { map } = (await useTexture({ map: texture.value })) as { map: Texture }
 
-const { renderer, camera } = useTresContext()
+const { renderer, camera, render } = useTresContext()
 const colorSpace = computed(() => renderer.value?.outputColorSpace)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
+onBeforeRender(({ invalidate }) => {
   if (smokeRef.value && camera.value && groupRef.value) {
     groupRef.value?.children.forEach((child: Object3D, index: number) => {
       child.rotation.z += smoke[index].rotation
     })
     smokeRef.value.lookAt(camera.value?.position)
+
+    if (render.mode.value === 'on-demand') {
+      invalidate()
+    }
   }
 })
 </script>
