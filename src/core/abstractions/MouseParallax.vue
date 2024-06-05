@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<MouseParallaxProps>(), {
   local: false,
 })
 
-const { camera, renderer } = useTresContext()
+const { camera, renderer, render } = useTresContext()
 
 const { disabled, factor, ease, local } = toRefs(props)
 
@@ -70,7 +70,7 @@ const cursorY = computed(() => -(y.value / height.value - 0.5) * factor.value)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta }) => {
+onBeforeRender(({ delta, invalidate }) => {
   if (
     disabled.value
     || !cameraGroupRef.value
@@ -83,6 +83,10 @@ onBeforeRender(({ delta }) => {
     += (cursorX.value - cameraGroupRef.value.position.x) * ease.value * delta
   cameraGroupRef.value.position.y
     += (cursorY.value - cameraGroupRef.value.position.y) * ease.value * delta
+
+  if (render.mode.value === 'on-demand') {
+    invalidate()
+  }
 })
 
 watch(
