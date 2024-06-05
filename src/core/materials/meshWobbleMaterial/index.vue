@@ -15,6 +15,8 @@ const props = withDefaults(
   },
 )
 
+const { render } = useTresContext()
+
 const materialRef = shallowRef()
 
 const { extend } = useTresContext()
@@ -22,9 +24,13 @@ extend({ MeshWobbleMaterial })
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ elapsed }) => {
+onBeforeRender(({ elapsed, invalidate }) => {
   if (materialRef.value) {
     materialRef.value.time = elapsed * props?.speed
+
+    if (render.mode.value === 'on-demand') {
+      invalidate()
+    }
   }
 })
 
