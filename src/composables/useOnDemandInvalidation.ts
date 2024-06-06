@@ -4,9 +4,17 @@ import { useTresContext } from '@tresjs/core' // Replace with the actual import 
 export function useOnDemandInvalidation(props: Record<string, any>) {
   const { render, invalidate } = useTresContext()
 
-  watch(props, () => {
+  function invalidateOnDemand() {
     if (render.mode.value === 'on-demand') {
       invalidate()
     }
+  }
+
+  watch(props, () => {
+    invalidateOnDemand()
   })
+
+  return {
+    invalidateOnDemand,
+  }
 }
