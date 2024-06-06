@@ -4,6 +4,7 @@ import { onUnmounted, ref, toRaw, useSlots, watch } from 'vue'
 import { CubeCamera, HalfFloatType, WebGLCubeRenderTarget } from 'three'
 import type { CubeTexture, Texture } from 'three'
 import { useLoop, useTresContext } from '@tresjs/core'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import type { EnvironmentOptions } from './const'
 import EnvSence from './envSence'
 import { useEnvironment } from '.'
@@ -20,6 +21,9 @@ const props = withDefaults(defineProps<EnvironmentOptions>(), {
   frames: Number.POSITIVE_INFINITY,
 })
 
+// Automatically invalidate on demand when props change
+useOnDemandInvalidation(props)
+
 const texture: Ref<Texture | CubeTexture | null> = ref(null)
 defineExpose({ texture })
 
@@ -29,12 +33,6 @@ const fbo = ref(null as null | WebGLCubeRenderTarget)
 let cubeCamera = null as null | CubeCamera
 
 const envSence = ref<EnvSence | null>(null)
-
-watch(props, () => {
-  if (render.mode.value === 'on-demand') {
-    invalidate()
-  }
-})
 
 const { onBeforeRender } = useLoop()
 let count = 1

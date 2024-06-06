@@ -4,6 +4,7 @@ import type { TresVector2 } from '@tresjs/core'
 import { normalizeVectorFlexibleParam, useLoop, useTresContext } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import type { Atlasish } from './Atlas'
 import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas'
 
@@ -77,6 +78,9 @@ const emit = defineEmits<{
   (e: 'click', event: Intersection): void
 }>()
 
+// Automatically invalidate on demand when props change
+useOnDemandInvalidation(props)
+
 const positionX = ref(0)
 const positionY = ref(0)
 const scaleX = ref(0)
@@ -100,12 +104,6 @@ let frameNum = 0
 let frameHeldOnLoopEnd = false
 let dirtyFlag = true
 const TEXTURE_PX_TO_WORLD_UNITS = 0.01
-
-watch(props, () => {
-  if (renderMode.mode.value === 'on-demand') {
-    invalidate()
-  }
-})
 
 useLoop().onBeforeRender(({ delta }) => {
   if (!props.paused && !frameHeldOnLoopEnd) {
