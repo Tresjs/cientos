@@ -313,6 +313,8 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
+
+    invalidateOnDemand()
   }
 })
 
