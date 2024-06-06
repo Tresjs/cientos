@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { TresCanvas, useRenderLoop } from '@tresjs/core'
+import { TresCanvas, useLoop, useRenderLoop } from '@tresjs/core'
 import { Box, ScrollControls, Sphere, Stars } from '@tresjs/cientos'
 import { NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
+import GraphPane from '../../components/GraphPane.vue'
+import { useState } from '../../composables/state'
 
 const scRef = ref()
 const sphereRef = ref()
@@ -28,20 +30,31 @@ useControls({
   progress: progress.value,
 })
 
-const { onLoop } = useRenderLoop()
-onLoop(() => {
+/* const { onBeforeRender } = useLoop()
+onBeforeRender(() => {
   if (boxRef.value) {
     boxRef.value.instance.rotation.x = progress.value * 10
     boxRef.value.instance.rotation.y = progress.value * 2
   }
-})
+}) */
+
+// For testing render mode on-demand,
+
+const { renderingTimes } = useState()
+
+function onRender() {
+  renderingTimes.value = 1
+}
 </script>
 
 <template>
+  <GraphPane class="important-fixed" />
   <TresLeches class="important-fixed" />
   <TresCanvas
     v-bind="gl"
     window-size
+    render-mode="on-demand"
+    @render="onRender"
   >
     <TresPerspectiveCamera :position="[0, 2, 5]" />
     <Stars :radius="1" />

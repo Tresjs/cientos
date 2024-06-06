@@ -3,6 +3,7 @@ import { computed, shallowRef, toRefs, toValue, useSlots, watchEffect } from 'vu
 import type { TextGeometryParameters } from 'three-stdlib'
 import { FontLoader, TextGeometry } from 'three-stdlib'
 import { useTresContext } from '@tresjs/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface Glyph {
   _cachedOutline: string[]
@@ -136,6 +137,8 @@ const props = withDefaults(defineProps<Text3DProps>(), {
   needUpdates: false,
 })
 
+useOnDemandInvalidation(props)
+
 const {
   center,
   font,
@@ -151,7 +154,7 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend, invalidate, render } = useTresContext()
+const { extend } = useTresContext()
 
 extend({ TextGeometry })
 
@@ -205,10 +208,6 @@ watchEffect(() => {
     text3DRef.value.geometry = new TextGeometry(localText.value, textOptions.value as TextGeometryParameters)
     if (center.value) {
       text3DRef.value.geometry.center()
-    }
-
-    if (render.mode.value === 'on-demand') {
-      invalidate()
     }
   }
 })
