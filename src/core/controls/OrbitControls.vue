@@ -314,7 +314,9 @@ onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
 
-    invalidateOnDemand()
+    if (autoRotate.value) {
+      invalidateOnDemand()
+    }
   }
 })
 
