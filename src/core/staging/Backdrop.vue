@@ -2,6 +2,7 @@
 import type { BufferAttribute, PlaneGeometry } from 'three'
 import type { Ref } from 'vue'
 import { ref, shallowRef, toRefs, watch } from 'vue'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface BackdropProps {
   floor?: number
@@ -14,6 +15,8 @@ const props = withDefaults(defineProps<BackdropProps>(), {
   segments: 20,
   receiveShadow: false,
 })
+
+useOnDemandInvalidation(props)
 
 const easeInExpo = (x: number) => (x === 0 ? 0 : 2 ** (10 * x - 10))
 

@@ -15,7 +15,7 @@ const gl = {
 </script>
 
 <template>
-  <TresCanvas v-bind="gl">
+  <TresCanvas v-bind="gl" render-mode="on-demand">
     <TresPerspectiveCamera :position="[11, 11, 11]" />
     <OrbitControls />
     <Backdrop
