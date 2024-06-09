@@ -10,7 +10,7 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/Cylinder.vue'),
   },
   {
-    path: '/shapes/cline2',
+    path: '/shapes/line2',
     name: 'Line2',
     component: () => import('../../pages/shapes/Line2Demo.vue'),
   },
