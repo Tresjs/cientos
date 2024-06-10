@@ -5,6 +5,11 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/CatmullRomCurve3Demo.vue'),
   },
   {
+    path: '/shapes/cylinder',
+    name: 'Cylinder',
+    component: () => import('../../pages/shapes/Cylinder.vue'),
+  },
+  {
     path: '/shapes/line2',
     name: 'Line2',
     component: () => import('../../pages/shapes/Line2Demo.vue'),
