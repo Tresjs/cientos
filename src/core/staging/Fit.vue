@@ -2,6 +2,7 @@
 import { nextTick, onMounted, shallowRef, watch } from 'vue'
 import type { Object3D } from 'three'
 import { Box3, Group, Vector3 } from 'three'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface Props {
   /**
@@ -23,6 +24,8 @@ const props: Props = withDefaults(defineProps<Props>(), {
   into: () => new Box3(new Vector3(-0.5, -0.5, -0.5), new Vector3(0.5, 0.5, 0.5)),
   precise: false,
 })
+
+useOnDemandInvalidation(props)
 
 const middle = shallowRef<Group>(new Group())
 const inner = shallowRef<Group>(new Group())
