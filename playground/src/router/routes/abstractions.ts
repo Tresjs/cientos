@@ -52,7 +52,7 @@ export const abstractionsRoutes = [
   {
     path: '/abstractions/positional-audio',
     name: 'PositionalAudio',
-    component: () => import('../../pages/abstractions/PositionalAudio.vue'),
+    component: () => import('../../pages/abstractions/PositionalAudioDemo.vue'),
   },
   {
     path: '/abstractions/animated-sprite',
