@@ -19,6 +19,7 @@ const { value: scale } = useControls({
 <template>
   <TresLeches class="important-top-4 important-left-4" />
   <TresCanvas clear-color="#333">
+    <TresPerspectiveCamera />
     <OrbitControls />
     <TresPointLight :position="[x, 0, z]">
       <Lensflare
