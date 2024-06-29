@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import { useTresContext } from '@tresjs/core'
-
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 
 interface CustomShaderMaterialProps {
   baseMaterial: Function
@@ -13,6 +13,8 @@ interface CustomShaderMaterialProps {
 }
 
 const props = defineProps<CustomShaderMaterialProps>()
+
+useOnDemandInvalidation(props)
 
 const customShaderMaterialClass = shallowRef(null)
 

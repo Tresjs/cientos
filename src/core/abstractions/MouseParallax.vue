@@ -4,6 +4,7 @@ import type { Group } from 'three'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
 import type { UseMouseOptions } from '@vueuse/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface MouseParallaxProps {
   /**
@@ -47,6 +48,8 @@ const props = withDefaults(defineProps<MouseParallaxProps>(), {
   local: false,
 })
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const { camera, renderer } = useTresContext()
 
 const { disabled, factor, ease, local } = toRefs(props)
@@ -83,6 +86,8 @@ onBeforeRender(({ delta }) => {
     += (cursorX.value - cameraGroupRef.value.position.x) * ease.value * delta
   cameraGroupRef.value.position.y
     += (cursorY.value - cameraGroupRef.value.position.y) * ease.value * delta
+
+  invalidateOnDemand()
 })
 
 watch(

@@ -3,6 +3,7 @@ import { computed, shallowRef, toRefs, toValue, useSlots, watchEffect } from 'vu
 import type { TextGeometryParameters } from 'three-stdlib'
 import { FontLoader, TextGeometry } from 'three-stdlib'
 import { useTresContext } from '@tresjs/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface Glyph {
   _cachedOutline: string[]
@@ -150,6 +151,8 @@ const {
   bevelOffset,
   bevelSegments,
 } = toRefs(props)
+
+useOnDemandInvalidation(props)
 
 const { extend } = useTresContext()
 

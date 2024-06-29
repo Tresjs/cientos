@@ -5,6 +5,7 @@ import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
 import { Quaternion, Vector3 } from 'three'
 import type { Camera } from 'three'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 import { PointerLockControls } from './index'
 
 export interface KeyboardControlsProps {
@@ -61,6 +62,8 @@ const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const { camera: activeCamera, controls, renderer } = useTresContext()
 
 const sidewardMove = ref(0)
@@ -106,6 +109,8 @@ onBeforeRender(({ delta }) => {
   if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
     moveForward(delta, forwardMove.value)
     controls.value.moveRight(sidewardMove.value)
+
+    invalidateOnDemand()
   }
 })
 </script>

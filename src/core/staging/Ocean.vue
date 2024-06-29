@@ -2,10 +2,11 @@
 import { nextTick, onMounted, shallowRef, toRefs } from 'vue'
 import { useLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { TresColor, TresVector3 } from '@tresjs/core'
-import { Water } from 'three/addons/objects/Water.js'
+import { Water } from 'three-stdlib'
 import { FrontSide, RepeatWrapping, Vector3 } from 'three'
 import type { Texture } from 'three'
-import type { Sky } from 'three/addons/objects/Sky.js'
+import type { Sky } from 'three-stdlib'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface OceanProps {
   /**
@@ -121,6 +122,8 @@ const props = withDefaults(defineProps<OceanProps>(), {
 
 const { textureWidth, textureHeight, waterNormals, sunDirection, sunColor, waterColor, distortionScale, size, clipBias, alpha, side } = toRefs(props)
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const { extend, scene } = useTresContext()
 
 extend({ Water })
@@ -155,6 +158,7 @@ const { onBeforeRender } = useLoop()
 
 onBeforeRender(({ delta }) => {
   waterRef.value.material.uniforms.time.value += delta
+  invalidateOnDemand()
 })
 </script>
 

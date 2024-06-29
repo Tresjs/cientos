@@ -29,10 +29,7 @@ const fbo = ref(null as null | WebGLCubeRenderTarget)
 let cubeCamera = null as null | CubeCamera
 
 const envSence = ref<EnvSence | null>(null)
-onUnmounted(() => {
-  envSence.value?.destructor()
-  fbo.value?.dispose()
-})
+
 const { onBeforeRender } = useLoop()
 let count = 1
 onBeforeRender(() => {
@@ -83,6 +80,11 @@ watch(useSlots().default, (value) => {
   setTextureEnvAndBG()
 }, { immediate: true, deep: true })
 texture.value = useEnvironmentTexture
+
+onUnmounted(() => {
+  envSence.value?.destructor()
+  fbo.value?.dispose()
+})
 </script>
 
 <template>

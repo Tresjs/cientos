@@ -22,6 +22,7 @@ import {
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface CameraControlsProps {
   /**
@@ -369,6 +370,8 @@ const {
   colliderMeshes,
 } = toRefs(props)
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 // allow for tree shaking, only importing required classes
 const subsetOfTHREE = {
   Box3,
@@ -411,7 +414,10 @@ watchEffect(() => {
 })
 
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'update', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'update', () => {
+    emit('change', controlsRef.value)
+    invalidateOnDemand()
+  })
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
 }

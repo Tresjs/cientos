@@ -2,7 +2,7 @@ export const materialsRoutes = [
   {
     path: '/materials/wobble-material',
     name: 'WobbleMaterial',
-    component: () => import('../../pages/materials/WobbleMaterial.vue'),
+    component: () => import('../../pages/materials/WobbleMaterialDemo.vue'),
   },
   {
     path: '/materials/glass-material',

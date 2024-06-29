@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, toRefs, watchEffect } from 'vue'
 import { Spherical, Vector3 } from 'three'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface StarsProps {
   /**
@@ -84,6 +85,8 @@ const position = ref()
 const scale = ref()
 
 const { radius, depth, count, size, sizeAttenuation, transparent, alphaMap, alphaTest } = toRefs(props)
+
+useOnDemandInvalidation(props)
 
 const setStars = () => {
   let circle = radius.value + depth.value

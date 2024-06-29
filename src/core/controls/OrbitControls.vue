@@ -6,6 +6,7 @@ import { onUnmounted, ref, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface OrbitControlsProps {
   /**
@@ -280,6 +281,8 @@ const {
   target,
 } = toRefs(props)
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const { camera: activeCamera, renderer, extend, controls } = useTresContext()
 
 const controlsRef = ref<OrbitControls | null>(null)
@@ -297,7 +300,10 @@ watch(controlsRef, (value) => {
 })
 
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'change', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'change', () => {
+    emit('change', controlsRef.value)
+    invalidateOnDemand()
+  })
   useEventListener(controlsRef.value as any, 'start', () => emit('start', controlsRef.value))
   useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
 }
@@ -307,6 +313,10 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
+
+    if (autoRotate.value) {
+      invalidateOnDemand()
+    }
   }
 })
 

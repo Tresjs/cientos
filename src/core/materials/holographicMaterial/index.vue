@@ -4,6 +4,7 @@ import { useLoop, useTresContext } from '@tresjs/core'
 import type { TresColor } from '@tresjs/core'
 import { FrontSide } from 'three'
 import type { Side } from 'three'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 
 import HolographicMaterial from './HolographicMaterialParameters'
 
@@ -36,6 +37,8 @@ const props = withDefaults(
   },
 )
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const MeshHolographicMaterialClass = shallowRef()
 
 const { extend } = useTresContext()
@@ -48,6 +51,7 @@ const { onBeforeRender } = useLoop()
 
 onBeforeRender(() => {
   MeshHolographicMaterialClass.value?.update()
+  invalidateOnDemand()
 })
 </script>
 

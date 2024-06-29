@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
-import { Sky as SkyImpl } from 'three/examples/jsm/objects/Sky'
+import { Sky as SkyImpl } from 'three-stdlib'
 import { computed, shallowRef } from 'vue'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface SkyProps {
   /**
@@ -45,6 +46,8 @@ const props = withDefaults(defineProps<SkyProps>(), {
   azimuth: 180,
   distance: 450000,
 })
+
+useOnDemandInvalidation(props)
 
 const skyRef = shallowRef<SkyImpl>()
 const skyImpl = new SkyImpl()

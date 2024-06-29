@@ -6,6 +6,7 @@ import type { Camera, Event, Object3D } from 'three'
 import { TransformControls } from 'three-stdlib'
 import { useEventListener } from '@vueuse/core'
 import { useTresContext } from '@tresjs/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface TransformControlsProps {
   object: Object3D
@@ -39,23 +40,46 @@ const emit = defineEmits(['dragging', 'change', 'mouseDown', 'mouseUp', 'objectC
 const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ }
   = toRefs(props)
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const controlsRef: ShallowRef<TransformControls | undefined> = shallowRef()
 
 const { controls, camera: activeCamera, renderer, extend } = useTresContext()
 
 extend({ TransformControls })
 
+const onChange = () => {
+  invalidateOnDemand()
+  emit('change')
+}
+
 const onDragingChange = (e: Event) => {
   if (controls.value) { controls.value.enabled = !e.value }
+  invalidateOnDemand()
   emit('dragging', e.value)
 }
 
+const onMouseDown = () => {
+  invalidateOnDemand()
+  emit('mouseDown')
+}
+
+const onMouseUp = () => {
+  invalidateOnDemand()
+  emit('mouseDown')
+}
+
+const onObjectChange = () => {
+  invalidateOnDemand()
+  emit('objectChange')
+}
+
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'change', () => emit('change'))
+  useEventListener(controlsRef.value as any, 'change', onChange)
   useEventListener(controlsRef.value as any, 'dragging-changed', onDragingChange)
-  useEventListener(controlsRef.value as any, 'mouseDown', () => emit('mouseDown'))
-  useEventListener(controlsRef.value as any, 'mouseUp', () => emit('mouseUp'))
-  useEventListener(controlsRef.value as any, 'objectChange', () => emit('objectChange'))
+  useEventListener(controlsRef.value as any, 'mouseDown', onMouseDown)
+  useEventListener(controlsRef.value as any, 'mouseUp', onMouseUp)
+  useEventListener(controlsRef.value as any, 'objectChange', onObjectChange)
 }
 
 watchEffect(() => {

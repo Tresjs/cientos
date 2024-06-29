@@ -10,6 +10,7 @@ declare module 'vue' {
     AkuAku: typeof import('./src/components/AkuAku.vue')['default']
     FboCube: typeof import('./src/components/FboCube.vue')['default']
     Gltf: typeof import('./src/components/gltf/index.vue')['default']
+    GraphPane: typeof import('./src/components/GraphPane.vue')['default']
     ModelsDemo: typeof import('./src/components/ModelsDemo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

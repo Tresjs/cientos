@@ -4,6 +4,7 @@ import type { TresVector2 } from '@tresjs/core'
 import { normalizeVectorFlexibleParam, useLoop } from '@tresjs/core'
 import type { Intersection } from 'three'
 import { DoubleSide } from 'three'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import type { Atlasish } from './Atlas'
 import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas'
 
@@ -76,6 +77,8 @@ const emit = defineEmits<{
   (e: 'loop', frameName: string): void
   (e: 'click', event: Intersection): void
 }>()
+
+useOnDemandInvalidation(props)
 
 const positionX = ref(0)
 const positionY = ref(0)

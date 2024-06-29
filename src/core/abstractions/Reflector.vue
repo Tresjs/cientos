@@ -2,7 +2,8 @@
 import { shallowRef, toRefs } from 'vue'
 import { useTresContext } from '@tresjs/core'
 import type { TresColor } from '@tresjs/core'
-import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
+import { Reflector } from 'three-stdlib'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface ReflectorProps {
   /**
@@ -78,6 +79,8 @@ extend({ Reflector })
 
 const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
+
+useOnDemandInvalidation(props)
 
 defineExpose({
   instance: reflectorRef,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { Box, OrbitControls, PositionalAudio } from '@tresjs/cientos'
+import { useState } from '../../composables/state'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -30,6 +31,12 @@ const handlerAudio = (action: string) => {
 
 const onContinue = () => {
   ready.value = true
+}
+
+const { renderingTimes } = useState()
+
+function onRender() {
+  renderingTimes.value = 1
 }
 </script>
 
@@ -65,8 +72,8 @@ const onContinue = () => {
       </button>
     </div>
   </div>
-
-  <TresCanvas v-bind="gl">
+  <GraphPane />
+  <TresCanvas v-bind="gl" render-mode="on-demand" @render="onRender">
     <TresPerspectiveCamera :position="[0, 0.5, 5]" />
     <OrbitControls />
 
