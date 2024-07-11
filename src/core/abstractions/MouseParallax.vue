@@ -16,7 +16,7 @@ export interface MouseParallaxProps {
   disabled?: boolean
   /**
    * The factor to multiply the mouse movement by.
-   * @type {number}
+   * @type {number | [number, number]}
    * @default 2.5
    * @memberof MouseParallaxProps
    *
@@ -24,7 +24,7 @@ export interface MouseParallaxProps {
   factor?: number | [number, number]
   /**
    * The factor to smooth the mouse movement by.
-   * @type {number}
+   * @type {number | [number, number]}
    * @default 2.5
    * @memberof MouseParallaxProps
    *
@@ -64,12 +64,20 @@ const { width, height } = local.value
   : useWindowSize()
 
 const cameraGroupRef = ref<Group>()
+const _factor = ref()
+const _ease = ref()
 
-const _factor = Array.isArray(factor.value) ? factor.value : [factor.value, factor.value]
-const _ease = Array.isArray(ease.value) ? ease.value : [ease.value, ease.value]
+watch(
+  [factor, ease],
+  () => {
+    _factor.value = Array.isArray(factor.value) ? factor.value : [factor.value, factor.value]
+    _ease.value = Array.isArray(ease.value) ? ease.value : [ease.value, ease.value]
+  },
+  { immediate: true },
+)
 
-const cursorX = computed(() => (x.value / width.value - 0.5) * _factor[0])
-const cursorY = computed(() => -(y.value / height.value - 0.5) * _factor[1])
+const cursorX = computed(() => (x.value / width.value - 0.5) * _factor.value[0])
+const cursorY = computed(() => -(y.value / height.value - 0.5) * _factor.value[1])
 
 const { onBeforeRender } = useLoop()
 
@@ -83,9 +91,9 @@ onBeforeRender(({ delta }: { delta: number }) => {
     return
   }
   cameraGroupRef.value.position.x
-    += (cursorX.value - cameraGroupRef.value.position.x) * _ease[0] * delta
+    += (cursorX.value - cameraGroupRef.value.position.x) * _ease.value[0] * delta
   cameraGroupRef.value.position.y
-    += (cursorY.value - cameraGroupRef.value.position.y) * _ease[1] * delta
+    += (cursorY.value - cameraGroupRef.value.position.y) * _ease.value[1] * delta
 })
 
 watch(

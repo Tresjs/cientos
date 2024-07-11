@@ -10,9 +10,9 @@
 
 You only need to import it and add it to your template as `<MouseParallax />`. Additionally, you can pass the following props:
 
-`factor` is a number to increase the movement range of the camera. This could be an array of two values corresponding to the x and y values, in that order, ej. `:factor=[x,y]` .
+`factor` is a number to increase the movement range of the camera. This could be an array of two values corresponding to the x and y values, in that order: `:factor=[x,y]`.
 
-`ease` is a number that smooths the movement. This could be an array of two values corresponding to the x and y values, in that order, ej. `:ease=[x,y]` .
+`ease` is a number that smooths the movement. This could be an array of two values corresponding to the x and y values, in that order: `:ease=[x,y]`.
 
 `local` is a boolean that enables movement based on the position of the mouse on the canvas rather than the window.
 
