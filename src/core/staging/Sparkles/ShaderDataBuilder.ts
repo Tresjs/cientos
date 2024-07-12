@@ -15,11 +15,9 @@ import {
   ShaderDataEntryXyzGradient,
 } from './ShaderData'
 
-const rgbaSuffixes = ['r', 'rg', 'rgb', 'rgba'] as const
-const xyzwSuffixes = ['x', 'xy', 'xyz', 'xyzw'] as const
-type ShaderSuffix =
-  | (typeof rgbaSuffixes)[number]
-  | (typeof xyzwSuffixes)[number]
+type rgbaSuffixes = 'r' | 'rg' | 'rgb' | 'rgba'
+type xyzwSuffixes = 'x' | 'xy' | 'xyz' | 'xyzw'
+type ShaderSuffix = rgbaSuffixes | xyzwSuffixes
 
 export default class ShaderDataBuilder {
   private entries: ShaderDataEntry<any>[]
