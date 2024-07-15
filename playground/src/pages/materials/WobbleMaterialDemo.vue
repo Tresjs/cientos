@@ -20,6 +20,7 @@ const context = ref()
   <TresCanvas
     v-bind="gl"
     ref="context"
+    render-mode="on-demand"
   >
     <TresPerspectiveCamera :position="[3, 3, 3]" />
     <TresMesh>
