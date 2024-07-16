@@ -2,6 +2,7 @@
 import { ref, shallowRef, watch } from 'vue'
 import { useLogger, useLoop, useTresContext } from '@tresjs/core'
 import { useScroll, useWindowScroll, useWindowSize } from '@vueuse/core'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface ScrollControlsProps {
   /**
@@ -64,6 +65,8 @@ const props = withDefaults(
 )
 
 const emit = defineEmits(['update:modelValue'])
+
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
 
 const { logWarning } = useLogger()
 
@@ -195,6 +198,8 @@ onBeforeRender(() => {
     if (wrapperRef.value.children.length > 0) {
       wrapperRef.value.position[direction] += delta
     }
+
+    invalidateOnDemand()
   }
 })
 

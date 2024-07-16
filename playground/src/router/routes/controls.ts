@@ -22,12 +22,12 @@ export const controlsRoutes = [
   {
     path: '/controls/keyboard-controls',
     name: 'KeyboardControls',
-    component: () => import('../../pages/controls/KeyboardControls.vue'),
+    component: () => import('../../pages/controls/KeyboardControlsDemo.vue'),
   },
   {
     path: '/controls/pointerlock-controls',
     name: 'PointerLockControls',
-    component: () => import('../../pages/controls/PointerLockControls.vue'),
+    component: () => import('../../pages/controls/PointerLockControlsDemo.vue'),
   },
   {
     path: '/controls/scroll-controls',

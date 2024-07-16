@@ -30,7 +30,7 @@ const { samples } = useControls({
 
 <template>
   <TresLeches />
-  <TresCanvas v-bind="gl">
+  <TresCanvas v-bind="gl" render-mode="on-demand">
     <TresPerspectiveCamera :position="[0, 0.5, 5]" />
     <OrbitControls />
 

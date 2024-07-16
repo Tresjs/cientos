@@ -3,6 +3,7 @@ import { computed, shallowRef, toRefs } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import { useLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { Object3D, Texture } from 'three'
+import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface SmokeProps {
   /**
@@ -83,6 +84,7 @@ const props = withDefaults(defineProps<SmokeProps>(), {
 })
 
 const { width, depth, segments, texture, color, depthTest, opacity, speed } = toRefs(props)
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
 
 const smokeRef = shallowRef()
 const groupRef = shallowRef()
@@ -114,6 +116,7 @@ onBeforeRender(() => {
       child.rotation.z += smoke[index].rotation
     })
     smokeRef.value.lookAt(camera.value?.position)
+    invalidateOnDemand()
   }
 })
 </script>
