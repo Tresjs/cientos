@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRefs, watch } from 'vue'
+import { computed, ref, shallowRef, toRefs, watch } from 'vue'
 import type { Group } from 'three'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
@@ -63,7 +63,7 @@ const { width, height } = local.value
   ? useElementSize(renderer.value.domElement)
   : useWindowSize()
 
-const cameraGroupRef = ref<Group>()
+const cameraGroupRef = shallowRef<Group>()
 const _factor = ref()
 const _ease = ref()
 
