@@ -56,7 +56,10 @@ export default defineConfig({
     sidebar: [
       {
         text: 'Guide',
-        items: [{ text: 'Introduction', link: '/guide/' }],
+        items: [
+          { text: 'Introduction', link: '/guide/' },
+          { text: 'Migration from v3', link: '/guide/migrating-from-v3' },
+        ],
       },
       {
         text: 'Abstractions',
