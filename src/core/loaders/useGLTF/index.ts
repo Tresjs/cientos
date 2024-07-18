@@ -22,7 +22,7 @@ export interface GLTFLoaderOptions {
 export interface GLTFResult {
   animations: Array<THREE.AnimationClip>
   nodes: Record<string, TresObject3D>
-  materials: Record<string, THREE.Material>
+  materials: Record<string, THREE.MeshStandardMaterial>
   scene: THREE.Scene
 }
 
