@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import { useLoop, useTresContext } from '@tresjs/core'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 
 import { WobbleMaterialImpl as MeshWobbleMaterial } from './material'
 
@@ -15,6 +16,8 @@ const props = withDefaults(
   },
 )
 
+const { invalidateOnDemand } = useOnDemandInvalidation(props)
+
 const materialRef = shallowRef()
 
 const { extend } = useTresContext()
@@ -25,6 +28,7 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(({ elapsed }) => {
   if (materialRef.value) {
     materialRef.value.time = elapsed * props?.speed
+    invalidateOnDemand()
   }
 })
 

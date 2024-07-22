@@ -7,6 +7,7 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 import { degToRad } from 'three/src/math/MathUtils.js'
 import type { Atlasish } from '../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import { useState } from '../../composables/state'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
   + '462ad0f669f78d2c5ed7007b5134b419f646efad/textures/animated-sprite/'
@@ -119,16 +120,23 @@ const centerDemoImgData = (() => {
   canvas.parentElement?.removeChild(canvas)
   return imgData
 })()
+
+const { renderingTimes } = useState()
+
+function onRender() {
+  renderingTimes.value = 1
+}
 </script>
 
 <template>
   <TresLeches />
+  <GraphPane />
   <div style="position:absolute; top:0; z-index:1; font: 10px sans-serif; padding:10px;">
     <p>@frame: {{ lastFrame }}</p>
     <p>@end: {{ lastEnd }}</p>
     <p>@loop: {{ lastLoop }}</p>
   </div>
-  <TresCanvas v-bind="gl">
+  <TresCanvas v-bind="gl" render-mode="on-demand" @render="onRender">
     <TresPerspectiveCamera :position="[11, 11, 11]" />
     <OrbitControls />
     <TresGroup :position="[0, 0, -4]">

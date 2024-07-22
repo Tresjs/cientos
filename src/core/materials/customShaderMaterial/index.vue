@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import { useTresContext } from '@tresjs/core'
-
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
+import type { Fn } from '@vueuse/core'
+import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 
 interface CustomShaderMaterialProps {
-  baseMaterial: Function
+  baseMaterial: Fn
   vertexShader?: string
   fragmentShader?: string
   silent?: boolean
@@ -13,6 +14,8 @@ interface CustomShaderMaterialProps {
 }
 
 const props = defineProps<CustomShaderMaterialProps>()
+
+useOnDemandInvalidation(props)
 
 const customShaderMaterialClass = shallowRef(null)
 
