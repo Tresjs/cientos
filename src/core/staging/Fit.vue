@@ -2,7 +2,7 @@
 import { nextTick, onMounted, shallowRef, watch } from 'vue'
 import type { Object3D } from 'three'
 import { Box3, Group, Vector3 } from 'three'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
+import { useTresContext } from '@tresjs/core'
 
 export interface Props {
   /**
@@ -20,12 +20,17 @@ export interface Props {
   precise?: boolean
 }
 
-const props: Props = withDefaults(defineProps<Props>(), {
-  into: () => new Box3(new Vector3(-0.5, -0.5, -0.5), new Vector3(0.5, 0.5, 0.5)),
-  precise: false,
-})
+const props = withDefaults(
+  defineProps<Props>(),
+  {
+    into: () => new Box3(new Vector3(-0.5, -0.5, -0.5), new Vector3(0.5, 0.5, 0.5)),
+    precise: false,
+  },
+)
 
-useOnDemandInvalidation(props)
+const { invalidate } = useTresContext()
+
+watch(props, () => invalidate())
 
 const middle = shallowRef<Group>(new Group())
 const inner = shallowRef<Group>(new Group())
