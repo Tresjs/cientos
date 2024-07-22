@@ -2,7 +2,6 @@
 import { useLoop } from '@tresjs/core'
 import { MathUtils } from 'three'
 import { shallowRef } from 'vue'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 const props = withDefaults(
   defineProps<{
@@ -18,9 +17,6 @@ const props = withDefaults(
     range: () => [-0.1, 0.1],
   },
 )
-
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const groupRef = shallowRef()
 
 defineExpose({
@@ -37,8 +33,8 @@ defineExpose({
   const { onBeforeRender } = useLoop()
   let elapsed = START_OFFSET
 
-  onBeforeRender(({ delta }) => {
-    if (!groupRef.value) { return }
+  onBeforeRender(({ delta, invalidate }) => {
+    if (!groupRef.value || props.speed === 0) { return }
 
     elapsed += delta * props.speed
     const theta = elapsed * PERIOD_SCALE
@@ -49,7 +45,7 @@ defineExpose({
     group.rotation.z = Math.sin(theta) * AMPLITUDE_ROTATION_Z * props.rotationFactor
     group.position.y = MathUtils.mapLinear(Math.sin(theta), -1, 1, props.range[0], props.range[1]) * props.floatFactor
 
-    invalidateOnDemand()
+    invalidate()
   })
 }
 </script>
