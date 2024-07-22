@@ -30,7 +30,6 @@ import {
   WebGLRenderTarget,
 } from 'three'
 import type { TresColor } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import { BlurPass } from './BlurPass'
 import { MeshReflectionMaterial } from './material'
 
@@ -157,7 +156,8 @@ const props = withDefaults(
   },
 )
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
+const { extend, invalidate } = useTresContext()
+extend({ MeshReflectionMaterial })
 
 const blurWidth = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[0] : props.blurSize))
 const blurHeight = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[1] : props.blurSize))
@@ -212,6 +212,8 @@ const fboBlur = new WebGLRenderTarget(
 )
 
 function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _: BufferGeometry, object: Object3D) {
+  invalidate()
+
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
 
@@ -288,8 +290,6 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
   renderer.shadowMap.autoUpdate = currentShadowAutoUpdate
   object.visible = true
   renderer.setRenderTarget(null)
-
-  invalidateOnDemand()
 }
 
 watch(
@@ -373,8 +373,6 @@ onBeforeUnmount(() => {
   fboBlur.dispose()
   blurpass.dispose()
 })
-
-useTresContext().extend({ MeshReflectionMaterial })
 
 defineExpose({ instance: materialRef })
 </script>
