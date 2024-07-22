@@ -2,7 +2,6 @@
 import { shallowRef, toRefs, watchEffect } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import { useLoop } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface PrecipitationProps {
   /**
@@ -144,8 +143,6 @@ const {
   randomness,
 } = toRefs(props)
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const geometryRef = shallowRef()
 let positionArray: [] | Float32Array = []
 let velocityArray: [] | Float32Array = []
@@ -176,7 +173,7 @@ watchEffect(() => {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
+onBeforeRender(({ invalidate }) => {
   if (geometryRef.value?.attributes.position.array && geometryRef.value?.attributes.position.count) {
     const positionArray = geometryRef.value.attributes.position.array
     for (let i = 0; i < geometryRef.value.attributes.position.count; i++) {
@@ -191,7 +188,7 @@ onBeforeRender(() => {
     }
     geometryRef.value.attributes.position.needsUpdate = true
 
-    invalidateOnDemand()
+    invalidate()
   }
 })
 
