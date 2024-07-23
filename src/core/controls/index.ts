@@ -16,5 +16,5 @@ export {
   ScrollControls,
   CameraControls,
   BaseCameraControls,
-  DragControls
+  DragControls,
 }

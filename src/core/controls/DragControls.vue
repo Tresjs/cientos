@@ -17,7 +17,7 @@ export interface TransformControlsProps {
    * @memberof OrbitControlsProps
    * @see https://threejs.org/docs/#examples/en/controls/OrbitControls.domElement
    */
-   domElement?: HTMLElement
+  domElement?: HTMLElement
 }
 
 withDefaults(defineProps<TransformControlsProps>(), {
@@ -34,7 +34,7 @@ const controlsRef = ref<DragControls | null>(null)
 extend({ DragControls })
 
 watchEffect(() => {
-  if(controlsRef.value) {
+  if (controlsRef.value) {
     addEventListeners()
   }
 })
@@ -63,7 +63,7 @@ defineExpose({ value: controlsRef })
     :objects="objects"
     :camera="camera || activeCamera"
     :mode="mode"
-    :enabled="enabled"    
+    :enabled="enabled"
     :args="[objects, camera || activeCamera, domElement || renderer.domElement]"
   />
 </template>
