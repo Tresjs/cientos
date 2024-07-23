@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { ShallowRef } from 'vue'
-import { onUnmounted, shallowRef, toRefs, watchEffect } from 'vue'
+import { onUnmounted, shallowRef, toRefs, watch, watchEffect } from 'vue'
 import type { Camera, Event, Object3D } from 'three'
 
 import { TransformControls } from 'three-stdlib'
 import { useEventListener } from '@vueuse/core'
 import { useTresContext } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface TransformControlsProps {
   object: Object3D
@@ -40,37 +39,39 @@ const emit = defineEmits(['dragging', 'change', 'mouseDown', 'mouseUp', 'objectC
 const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ }
   = toRefs(props)
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const controlsRef: ShallowRef<TransformControls | undefined> = shallowRef()
 
-const { controls, camera: activeCamera, renderer, extend } = useTresContext()
+const { controls, camera: activeCamera, renderer, extend, invalidate } = useTresContext()
+
+watch(props, () => {
+  invalidate()
+})
 
 extend({ TransformControls })
 
 const onChange = () => {
-  invalidateOnDemand()
+  invalidate()
   emit('change')
 }
 
 const onDragingChange = (e: Event) => {
   if (controls.value) { controls.value.enabled = !e.value }
-  invalidateOnDemand()
+  invalidate()
   emit('dragging', e.value)
 }
 
 const onMouseDown = () => {
-  invalidateOnDemand()
+  invalidate()
   emit('mouseDown')
 }
 
 const onMouseUp = () => {
-  invalidateOnDemand()
+  invalidate()
   emit('mouseDown')
 }
 
 const onObjectChange = () => {
-  invalidateOnDemand()
+  invalidate()
   emit('objectChange')
 }
 

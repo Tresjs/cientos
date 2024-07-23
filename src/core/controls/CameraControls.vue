@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CameraControls from 'camera-controls'
-import { computed, onUnmounted, ref, toRefs, watchEffect } from 'vue'
+import { computed, onUnmounted, ref, toRefs, watch, watchEffect } from 'vue'
 import type {
   Camera,
   Object3D,
@@ -22,7 +22,6 @@ import {
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface CameraControlsProps {
   /**
@@ -370,8 +369,6 @@ const {
   colliderMeshes,
 } = toRefs(props)
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 // allow for tree shaking, only importing required classes
 const subsetOfTHREE = {
   Box3,
@@ -389,7 +386,11 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+
+watch(props, () => {
+  invalidate()
+})
 
 const mouseButtons = computed(() => getMouseButtons(
   props.camera || activeCamera.value,
@@ -416,7 +417,7 @@ watchEffect(() => {
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'update', () => {
     emit('change', controlsRef.value)
-    invalidateOnDemand()
+    invalidate()
   })
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
@@ -424,8 +425,10 @@ function addEventListeners() {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta }) => {
-  if (controlsRef.value?.enabled) { controlsRef.value?.update(delta) }
+onBeforeRender(({ delta, invalidate }) => {
+  if (controlsRef.value?.enabled) {
+    controlsRef.value?.update(delta)
+  }
 })
 
 onUnmounted(() => {
