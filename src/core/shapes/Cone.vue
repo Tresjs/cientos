@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { TresColor } from '@tresjs/core'
+import { type TresColor, useTresContext } from '@tresjs/core'
 import type { ConeGeometry } from 'three'
-import { shallowRef, toRefs } from 'vue'
+import { shallowRef, toRefs, watch } from 'vue'
 
 export interface ConeProps {
   /**
@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<ConeProps>(), {
   color: '#ffffff',
 })
 const { args, color } = toRefs(props)
+const { invalidate } = useTresContext()
+watch(args, () => invalidate())
 
 const coneRef = shallowRef()
 

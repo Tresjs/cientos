@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { TresColor } from '@tresjs/core'
+import { type TresColor, useTresContext } from '@tresjs/core'
 import type { CylinderGeometry } from 'three'
-import { shallowRef, toRefs } from 'vue'
+import { shallowRef, toRefs, watch } from 'vue'
 
 export interface CylinderProps {
   /**
@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<CylinderProps>(), {
   color: '#ffffff',
 })
 const { args, color } = toRefs(props)
+const { invalidate } = useTresContext()
+watch(args, () => invalidate())
 
 const cylinderRef = shallowRef()
 

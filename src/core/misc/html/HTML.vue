@@ -226,7 +226,9 @@ const visible = ref(true)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
+onBeforeRender(({ invalidate }) => {
+  invalidate()
+
   if (groupRef.value && camera.value && renderer.value) {
     camera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)

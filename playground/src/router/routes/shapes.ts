@@ -24,4 +24,9 @@ export const shapesRoutes = [
     name: 'RoundedBox',
     component: () => import('../../pages/shapes/RoundedBoxDemo.vue'),
   },
+  {
+    path: '/shapes/on-demand-shapes',
+    name: 'on-demand Shapes',
+    component: () => import('../../pages/shapes/OnDemandShapesDemo.vue'),
+  },
 ]
