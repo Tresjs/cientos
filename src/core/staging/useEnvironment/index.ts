@@ -12,7 +12,6 @@ import {
 import { RGBELoader } from 'three-stdlib'
 import type { Ref } from 'vue'
 import { computed, ref, toRefs, unref, watch } from 'vue'
-import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import type { EnvironmentOptions } from './const'
 import { environmentPresets } from './const'
 
@@ -36,7 +35,7 @@ export async function useEnvironment(
   options: Partial<EnvironmentOptions>,
   fbo: Ref<WebGLCubeRenderTarget | undefined>,
 ): Promise<Texture | CubeTexture> {
-  const { scene } = useTresContext()
+  const { scene, invalidate } = useTresContext()
 
   const {
     preset,
@@ -46,7 +45,9 @@ export async function useEnvironment(
     background,
   } = toRefs(options)
 
-  const { invalidateOnDemand } = useOnDemandInvalidation(options)
+  watch(options, () => {
+    invalidate()
+  })
 
   const texture: Ref<Texture | CubeTexture | undefined> = ref()
   const isCubeMap = computed(() => Array.isArray((files as Ref<string[]>).value))
@@ -125,7 +126,7 @@ export async function useEnvironment(
         texture.value = result.value
         texture.value.mapping = EquirectangularReflectionMapping
       }
-      invalidateOnDemand()
+      invalidate()
     }
     else if (value && !(value in environmentPresets)) {
       throw new Error(`Preset must be one of: ${Object.keys(environmentPresets).join(', ')}`)
