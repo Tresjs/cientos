@@ -1,20 +1,16 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
 import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
-import { useLogger, useTresContext } from '@tresjs/core'
+import { useLogger, useLoop, useTresContext } from '@tresjs/core'
 import type {
-  BufferGeometry,
   Camera,
-  Mapping,
   Object3D,
   Scene,
   Texture,
-  TextureDataType,
   WebGLRenderer,
 } from 'three'
 import {
   Color,
-  DepthFormat,
   DepthTexture,
   Euler,
   HalfFloatType,
@@ -23,14 +19,12 @@ import {
   PerspectiveCamera,
   Plane,
   TangentSpaceNormalMap,
-  UnsignedShortType,
   Vector2,
   Vector3,
   Vector4,
   WebGLRenderTarget,
 } from 'three'
 import type { TresColor } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 import { BlurPass } from './BlurPass'
 import { MeshReflectionMaterial } from './material'
 
@@ -157,7 +151,8 @@ const props = withDefaults(
   },
 )
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
+const { extend, invalidate } = useTresContext()
+extend({ MeshReflectionMaterial })
 
 const blurWidth = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[0] : props.blurSize))
 const blurHeight = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[1] : props.blurSize))
@@ -195,8 +190,6 @@ const fboSharp = new WebGLRenderTarget(
     depthTexture: new DepthTexture(
       props.resolution,
       props.resolution,
-      DepthFormat as TextureDataType,
-      UnsignedShortType as Mapping,
     ),
   },
 )
@@ -211,7 +204,9 @@ const fboBlur = new WebGLRenderTarget(
   },
 )
 
-function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _: BufferGeometry, object: Object3D) {
+function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, object: Object3D) {
+  invalidate()
+
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
 
@@ -288,8 +283,6 @@ function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, _
   renderer.shadowMap.autoUpdate = currentShadowAutoUpdate
   object.visible = true
   renderer.setRenderTarget(null)
-
-  invalidateOnDemand()
 }
 
 watch(
@@ -374,8 +367,12 @@ onBeforeUnmount(() => {
   blurpass.dispose()
 })
 
-useTresContext().extend({ MeshReflectionMaterial })
-
+useLoop().onBeforeRender(({ renderer, scene, camera, invalidate }) => {
+  const parent = (materialRef.value as any)?.__tres?.parent
+  if (!parent) { return }
+  onBeforeRender(renderer, scene, camera, parent)
+  invalidate()
+})
 defineExpose({ instance: materialRef })
 </script>
 
@@ -396,4 +393,4 @@ defineExpose({ instance: materialRef })
     :defines-USE_DEPTH="hasDepth ? '' : undefined"
     :defines-USE_DISTORTION="hasDistortion ? '' : undefined"
   />
-</template>./blurPass
+</template>

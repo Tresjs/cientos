@@ -69,7 +69,7 @@ function getInterpolatedVertexColors(vertexColors: VertexColors | null, numPoint
 const lineMaterial = new LineMaterial()
 const lineGeometry = new LineGeometry()
 const line = new Line2(lineGeometry, lineMaterial)
-const sizes = useTresContext().sizes
+const { sizes, invalidate } = useTresContext()
 const hasVertexColors = computed(() => Array.isArray(props.vertexColors))
 
 function updateLineMaterial(material: LineMaterial, props: PropsType) {
@@ -123,11 +123,18 @@ watch(() => [
   props.dashScale,
   props.dashSize,
   props.dashOffset,
-], () => updateLineMaterial(lineMaterial, props))
-watch([props.points, props.vertexColors], () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch(() => props.vertexColors, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch(() => props.points, () => updateLineGeometry(lineGeometry, props.points, props.vertexColors))
-watch([sizes.height, sizes.width], () => lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value))
+], () => {
+  updateLineMaterial(lineMaterial, props)
+  invalidate()
+})
+watch(() => [props.points, props.vertexColors], () => {
+  updateLineGeometry(lineGeometry, props.points, props.vertexColors)
+  invalidate()
+})
+watch(() => [sizes.height, sizes.width], () => {
+  lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value)
+  invalidate()
+})
 
 onUnmounted(() => {
   lineGeometry.dispose()
