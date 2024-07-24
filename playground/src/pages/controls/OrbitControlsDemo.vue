@@ -186,7 +186,7 @@ function onRender() {
 <template>
   <TresLeches />
   <GraphPane />
-  <TresCanvas v-bind="gl" render-mode="on-demand" @render="onRender">
+  <TresCanvas v-bind="gl" @render="onRender">
     <TresPerspectiveCamera :position="[3, 3, 3]" />
     <OrbitControls
       v-bind="controlsState"
