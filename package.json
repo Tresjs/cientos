@@ -53,7 +53,7 @@
     "prepare": "node .husky/install.mjs"
   },
   "peerDependencies": {
-    "@tresjs/core": ">=3.2",
+    "@tresjs/core": ">=4.2.1",
     "three": ">=0.133",
     "vue": ">=3.3"
   },
