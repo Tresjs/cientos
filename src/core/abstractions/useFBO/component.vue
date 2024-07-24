@@ -5,6 +5,7 @@ import { useFBO } from '.'
 const props = withDefaults(defineProps<FboOptions>(), {
   depth: false,
   settings: undefined,
+  autoRender: true,
 })
 
 const target = useFBO(props)
