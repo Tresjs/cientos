@@ -34,7 +34,7 @@ defineExpose({
   let elapsed = START_OFFSET
 
   onBeforeRender(({ delta, invalidate }) => {
-    if (!groupRef.value || props.speed === 0) { return }
+    if (!groupRef.value) { return }
 
     elapsed += delta * props.speed
     const theta = elapsed * PERIOD_SCALE
