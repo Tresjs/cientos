@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, toRefs, watch } from 'vue'
-import type { Group } from 'three'
+import type { Group, Object3D } from 'three'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
 import type { UseMouseOptions } from '@vueuse/core'
@@ -100,7 +100,7 @@ onBeforeRender(({ delta, invalidate }) => {
 
 watch(
   () => cameraGroupRef.value,
-  value => value?.add(camera.value),
+  value => value?.add(camera.value as Object3D),
 )
 </script>
 

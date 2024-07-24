@@ -1,4 +1,5 @@
 import { type Texture, TextureLoader } from 'three'
+import type { LoaderProto } from '@tresjs/core'
 import { useLoader, useLogger } from '@tresjs/core'
 import { getNumbersFromEnd, stripUnderscoresNumbersFromEnd } from './StringOps'
 import { expand } from './AtlasAnimationDefinitionParser'
@@ -6,9 +7,9 @@ import { expand } from './AtlasAnimationDefinitionParser'
 export async function getTextureAndAtlasAsync(
   imagePathOrImageData: string,
   atlasPathOrAtlasish: string | Atlasish,
-): Promise<[Texture, Atlas]> {
-  const texturePromise: Promise<Texture> = useLoader(
-    TextureLoader,
+): Promise<[Texture | Texture[], Atlas]> {
+  const texturePromise: Promise<Texture | Texture[]> = useLoader<Texture>(
+    TextureLoader as LoaderProto<Texture>,
     imagePathOrImageData,
   )
   const atlasishPromise: Promise<Atlasish>
@@ -21,8 +22,8 @@ export async function getTextureAndAtlasAsync(
     ([texture, atlasish]) => {
       const atlas = getAtlas(
         atlasish,
-        texture.image.width,
-        texture.image.height,
+        (texture as Texture).image.width,
+        (texture as Texture).image.height,
       )
       return [texture, atlas]
     },

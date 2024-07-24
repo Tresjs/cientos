@@ -47,14 +47,14 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [
-        analyze(),
+        /*  analyze(), */
         /* visualizer({
           gzipSize: true,
           brotliSize: true,
           open: true,
         }), */
       ],
-      external: ['three', 'vue', '@tresjs/core', 'tweakpane', '@tweakpane/core', '@tweakpane/plugin-essentials'],
+      external: ['three', 'vue', '@tresjs/core'],
       output: {
         exports: 'named',
         // Provide global variables to use in the UMD build
@@ -68,6 +68,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['three', 'vue', '@tresjs/core', 'tweakpane', '@tweakpane/core', '@tweakpane/plugin-essentials'],
+    exclude: ['three', 'vue', '@tresjs/core'],
   },
 })
