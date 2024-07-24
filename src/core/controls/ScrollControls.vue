@@ -2,7 +2,6 @@
 import { ref, shallowRef, watch } from 'vue'
 import { useLogger, useLoop, useTresContext } from '@tresjs/core'
 import { useScroll, useWindowScroll, useWindowSize } from '@vueuse/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface ScrollControlsProps {
   /**
@@ -66,14 +65,16 @@ const props = withDefaults(
 
 const emit = defineEmits(['update:modelValue'])
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const { logWarning } = useLogger()
 
 if (props.smoothScroll < 0) { logWarning('SmoothControl must be greater than zero') }
 if (props.pages < 0) { logWarning('Pages must be greater than zero') }
 
-const { camera, controls, renderer } = useTresContext()
+const { camera, controls, renderer, invalidate } = useTresContext()
+
+watch(props, () => {
+  invalidate()
+})
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')
 
@@ -189,7 +190,7 @@ watch(
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
+onBeforeRender(({ invalidate }) => {
   if (camera.value?.position) {
     const delta
       = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
@@ -199,7 +200,7 @@ onBeforeRender(() => {
       wrapperRef.value.position[direction] += delta
     }
 
-    invalidateOnDemand()
+    invalidate()
   }
 })
 

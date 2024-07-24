@@ -3,7 +3,6 @@ import type { Camera, RenderTargetOptions } from 'three'
 import { DepthTexture, FloatType, HalfFloatType, LinearFilter, WebGLRenderTarget } from 'three'
 import type { Ref } from 'vue'
 import { isReactive, onBeforeUnmount, reactive, ref, toRefs, watch } from 'vue'
-import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
 
 export interface FboOptions {
   /*
@@ -46,10 +45,9 @@ export function useFBO(options: FboOptions) {
   const target: Ref<WebGLRenderTarget | null> = ref(null)
 
   const { height, width, settings, depth } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
-  const { invalidateOnDemand } = useOnDemandInvalidation(options)
 
   const { onBeforeRender } = useLoop()
-  const { camera, renderer, scene, sizes } = useTresContext()
+  const { camera, renderer, scene, sizes, invalidate } = useTresContext()
 
   watch(() => [width?.value, sizes.width.value, height?.value, sizes.height.value], () => {
     target.value?.dispose()
@@ -69,7 +67,7 @@ export function useFBO(options: FboOptions) {
       )
     }
 
-    invalidateOnDemand()
+    invalidate()
   }, { immediate: true })
 
   onBeforeRender(() => {

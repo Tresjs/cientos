@@ -4,7 +4,6 @@ import { PointerLockControls } from 'three-stdlib'
 import type { Camera } from 'three'
 import { useEventListener } from '@vueuse/core'
 import { useTresContext } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface PointerLockControlsProps {
   /**
@@ -49,9 +48,11 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
 
 const emit = defineEmits(['isLock', 'change'])
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+watch(props, () => {
+  invalidate()
+})
 
 const controlsRef = ref<null | PointerLockControls>(null)
 let triggerSelector: HTMLElement | undefined
@@ -74,13 +75,13 @@ watch(controlsRef, (value) => {
 
   useEventListener(controls.value as any, 'change', () => {
     emit('change', controls.value)
-    invalidateOnDemand()
+    invalidate()
   })
   useEventListener(triggerSelector, 'click', () => {
     controls.value?.lock()
     controls.value?.addEventListener('lock', () => isLockEmitter(true))
     controls.value?.addEventListener('unlock', () => isLockEmitter(false))
-    invalidateOnDemand()
+    invalidate()
   })
 })
 

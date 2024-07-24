@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, toRefs, watchEffect } from 'vue'
+import { ref, toRefs, watch, watchEffect } from 'vue'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
 import { Quaternion, Vector3 } from 'three'
 import type { Camera } from 'three'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 import { PointerLockControls } from './index'
 
 export interface KeyboardControlsProps {
@@ -62,9 +61,11 @@ const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
+const { camera: activeCamera, controls, renderer, invalidate } = useTresContext()
 
-const { camera: activeCamera, controls, renderer } = useTresContext()
+watch(props, () => {
+  invalidate()
+})
 
 const sidewardMove = ref(0)
 const forwardMove = ref(0)
@@ -105,12 +106,12 @@ const moveForward = (delta: number, movementSpeed: number) => {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta }) => {
+onBeforeRender(({ delta, invalidate }) => {
   if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
     moveForward(delta, forwardMove.value)
     controls.value.moveRight(sidewardMove.value)
 
-    invalidateOnDemand()
+    invalidate()
   }
 })
 </script>

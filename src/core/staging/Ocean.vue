@@ -6,7 +6,6 @@ import { Water } from 'three-stdlib'
 import { FrontSide, RepeatWrapping, Vector3 } from 'three'
 import type { Texture } from 'three'
 import type { Sky } from 'three-stdlib'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface OceanProps {
   /**
@@ -122,8 +121,6 @@ const props = withDefaults(defineProps<OceanProps>(), {
 
 const { textureWidth, textureHeight, waterNormals, sunDirection, sunColor, waterColor, distortionScale, size, clipBias, alpha, side } = toRefs(props)
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const { extend, scene } = useTresContext()
 
 extend({ Water })
@@ -156,9 +153,9 @@ normalMap.wrapS = normalMap.wrapT = RepeatWrapping
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta }) => {
+onBeforeRender(({ delta, invalidate }) => {
   waterRef.value.material.uniforms.time.value += delta
-  invalidateOnDemand()
+  invalidate()
 })
 </script>
 

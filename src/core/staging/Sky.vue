@@ -2,8 +2,8 @@
 // eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
 import { Sky as SkyImpl } from 'three-stdlib'
-import { computed, shallowRef } from 'vue'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
+import { computed, shallowRef, watch } from 'vue'
+import { useTresContext } from '@tresjs/core'
 
 export interface SkyProps {
   /**
@@ -47,7 +47,9 @@ const props = withDefaults(defineProps<SkyProps>(), {
   distance: 450000,
 })
 
-useOnDemandInvalidation(props)
+const { invalidate } = useTresContext()
+
+watch(props, () => invalidate())
 
 const skyRef = shallowRef<SkyImpl>()
 const skyImpl = new SkyImpl()

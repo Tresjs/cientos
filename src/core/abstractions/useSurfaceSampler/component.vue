@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import type { InstancedMesh, Mesh } from 'three'
-import { useOnDemandInvalidation } from '../../../composables/useOnDemandInvalidation'
+import { useTresContext } from '@tresjs/core'
 import type { useSurfaceSamplerProps } from '.'
 import { useSurfaceSampler } from '.'
 
@@ -11,7 +11,10 @@ const samplerRef = ref()
 const instancedRef = ref()
 const meshToSampleRef = ref()
 
-useOnDemandInvalidation(props)
+const { invalidate } = useTresContext()
+
+watch(props, () => invalidate())
+
 // TODO: refactor to use watch instead.
 watchEffect(() => {
   instancedRef.value = props.instanceMesh ?? samplerRef.value?.children.find((c: any) => Object.prototype.hasOwnProperty.call(c, 'instanceMatrix')) as InstancedMesh

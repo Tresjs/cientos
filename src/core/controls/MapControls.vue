@@ -5,7 +5,6 @@ import type { Camera } from 'three'
 import { MapControls } from 'three-stdlib'
 import { onUnmounted, ref, toRefs, watch } from 'vue'
 import { useEventListener } from '@vueuse/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface MapControlsProps {
   /**
@@ -255,8 +254,6 @@ const props = withDefaults(defineProps<MapControlsProps>(), {
 
 const emit = defineEmits(['change', 'start', 'end'])
 
-const { invalidateOnDemand } = useOnDemandInvalidation(props)
-
 const {
   autoRotate,
   autoRotateSpeed,
@@ -278,7 +275,11 @@ const {
   rotateSpeed,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+
+watch(props, () => {
+  invalidate()
+})
 
 const controlsRef = ref<MapControls | null>(null)
 
@@ -295,7 +296,7 @@ watch(controls, (value) => {
 
 function onChange() {
   addEventListeners()
-  invalidateOnDemand()
+  invalidate()
   emit('change', controlsRef.value)
 }
 function addEventListeners() {
@@ -305,11 +306,11 @@ function addEventListeners() {
 }
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
+onBeforeRender(({ invalidate }) => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
 
-    invalidateOnDemand()
+    invalidate()
   }
 })
 

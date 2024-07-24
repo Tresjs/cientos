@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, shallowRef, toRefs, toValue, useSlots, watchEffect } from 'vue'
+import { computed, shallowRef, toRefs, toValue, useSlots, watch, watchEffect } from 'vue'
 import type { TextGeometryParameters } from 'three-stdlib'
 import { FontLoader, TextGeometry } from 'three-stdlib'
 import { useTresContext } from '@tresjs/core'
-import { useOnDemandInvalidation } from '../../composables/useOnDemandInvalidation'
 
 export interface Glyph {
   _cachedOutline: string[]
@@ -152,9 +151,9 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-useOnDemandInvalidation(props)
+const { extend, invalidate } = useTresContext()
 
-const { extend } = useTresContext()
+watch(props, () => invalidate())
 
 extend({ TextGeometry })
 
