@@ -296,7 +296,7 @@ watch(controls, (value) => {
 
 function onChange() {
   addEventListeners()
-  invalidateOnDemand()
+  invalidate()
   emit('change', controlsRef.value)
 }
 function addEventListeners() {
