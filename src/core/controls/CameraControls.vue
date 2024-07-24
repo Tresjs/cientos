@@ -428,6 +428,7 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(({ delta, invalidate }) => {
   if (controlsRef.value?.enabled) {
     controlsRef.value?.update(delta)
+    invalidate()
   }
 })
 
