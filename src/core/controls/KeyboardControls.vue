@@ -106,12 +106,12 @@ const moveForward = (delta: number, movementSpeed: number) => {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta }) => {
+onBeforeRender(({ delta, invalidate }) => {
   if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
     moveForward(delta, forwardMove.value)
     controls.value.moveRight(sidewardMove.value)
 
-    invalidateOnDemand()
+    invalidate()
   }
 })
 </script>
