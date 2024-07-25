@@ -11,6 +11,7 @@ const capsuleRef = shallowRef(null)
 const { onBeforeRender, resume } = useLoop()
 
 const state = shallowReactive({
+  autoRender: true,
   depth: false,
   settings: {
     samples: 1,

@@ -39,12 +39,21 @@ export interface FboOptions {
    * @memberof FboProps
    */
   settings?: RenderTargetOptions
+
+  /**
+   * Whether to automatically render the FBO on the default scene.
+   *
+   *  @default true
+   *  @type {boolean}
+   *  @memberof FboProps
+   */
+  autoRender?: boolean
 }
 
 export function useFBO(options: FboOptions) {
   const target: Ref<WebGLRenderTarget | null> = ref(null)
 
-  const { height, width, settings, depth } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
+  const { height, width, settings, depth, autoRender = ref(true) } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
 
   const { onBeforeRender } = useLoop()
   const { camera, renderer, scene, sizes, invalidate } = useTresContext()
@@ -71,11 +80,13 @@ export function useFBO(options: FboOptions) {
   }, { immediate: true })
 
   onBeforeRender(() => {
-    renderer.value.setRenderTarget(target.value)
-    renderer.value.clear()
-    renderer.value.render(scene.value, camera.value as Camera)
+    if (autoRender.value) {
+      renderer.value.setRenderTarget(target.value)
+      renderer.value.clear()
+      renderer.value.render(scene.value, camera.value as Camera)
 
-    renderer.value.setRenderTarget(null)
+      renderer.value.setRenderTarget(null)
+    }
   }, Number.POSITIVE_INFINITY)
 
   onBeforeUnmount(() => {
