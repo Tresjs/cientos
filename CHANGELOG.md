@@ -1,5 +1,12 @@
 
 
+## [4.0.0-rc.1](https://github.com/Tresjs/cientos/compare/4.0.0-rc.0...4.0.0-rc.1) (2024-07-25)
+
+
+### Features
+
+* **fbo:** add autoRender flag as an option to useFBO ([#458](https://github.com/Tresjs/cientos/issues/458)) ([ddcd4ac](https://github.com/Tresjs/cientos/commit/ddcd4ac36cfd5b5cbb06e967878a9468b390a17c))
+
 ## [4.0.0-rc.0](https://github.com/Tresjs/cientos/compare/4.0.0-next.1...4.0.0-rc.0) (2024-07-24)
 
 
