@@ -65,6 +65,8 @@ After some iteration, we decided to drop the instance of `useTweakPane`. Some of
 - Not so intuitive, lots of code repetition
 - Support for the upcoming pkg [Leches](https://tresleches.tresjs.org/)
 
+You can check this recipe on the tres docs on how to use tweakpane with tres: [TweakPane](https://docs.tresjs.org/cookbook/tweakpane.html)
+
 ### Move directives to core
 
 The use of `directives` started as a experiment to see how valuable it would be for the ecosystem. Since it has had a good reception, we have decided that it is appropriate for the `directives` to live under the core pkg [Directives section](https://docs.tresjs.org/directives/v-log.html).
