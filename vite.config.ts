@@ -3,6 +3,8 @@ import { defineConfig } from 'vite'
 
 import banner from 'vite-plugin-banner'
 import dts from 'vite-plugin-dts'
+/* import analyze from 'rollup-plugin-analyzer' */
+
 
 /* import { visualizer } from 'rollup-plugin-visualizer' */
 import { templateCompilerOptions } from '@tresjs/core'

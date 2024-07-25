@@ -1,5 +1,18 @@
 
 
+## [4.0.0-rc.0](https://github.com/Tresjs/cientos/compare/4.0.0-next.1...4.0.0-rc.0) (2024-07-24)
+
+
+### Features
+
+* **Sparkles:** invalidate on update ([#446](https://github.com/Tresjs/cientos/issues/446)) ([cbfd226](https://github.com/Tresjs/cientos/commit/cbfd226b94fb363f3a59a735365c679e8142420f))
+
+
+### Bug Fixes
+
+* reimplement ContactShadows for v4 ([#449](https://github.com/Tresjs/cientos/issues/449)) ([d71c328](https://github.com/Tresjs/cientos/commit/d71c328969da64beee05088ced05bd7b632d6f31))
+* update to core v4.2.2 to remove warning on invalidation ([42afa6e](https://github.com/Tresjs/cientos/commit/42afa6e67962796d2ce076a29917262f9ca09ea5))
+
 ## [4.0.0-next.1](https://github.com/Tresjs/cientos/compare/3.9.0...4.0.0-next.1) (2024-07-17)
 
 
