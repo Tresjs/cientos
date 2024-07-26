@@ -1,5 +1,7 @@
 
 
+## [4.0.0-rc.2](https://github.com/Tresjs/cientos/compare/4.0.0-rc.1...4.0.0-rc.2) (2024-07-26)
+
 ## [4.0.0-rc.1](https://github.com/Tresjs/cientos/compare/4.0.0-rc.0...4.0.0-rc.1) (2024-07-25)
 
 
