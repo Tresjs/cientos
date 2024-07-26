@@ -24,7 +24,7 @@ const state = reactive({
   far: 10,
   smooth: true,
   resolution: 512,
-  scale: 1,
+  scale: 10,
   tint: '#000000',
   color: '#0000ff',
   depthWrite: false,
@@ -181,12 +181,12 @@ onUnmounted(() => clearInterval(intervalId))
     >
       <TresMeshNormalMaterial />
     </TorusKnot>
-    <TresGroup :rotation-x="rotationX.value">
+    <TresGroup>
       <ContactShadows v-bind="state" :position-y="0.0001" />
-      <TresMesh :rotation-x="-Math.PI / 2" :scale="10">
+      <!-- <TresMesh :rotation-x="-Math.PI / 2" :scale="10">
         <TresPlaneGeometry />
         <TresMeshBasicMaterial color="gray" />
-      </TresMesh>
+      </TresMesh> -->
     </TresGroup>
   </TresCanvas>
 </template>
