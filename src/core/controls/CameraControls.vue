@@ -3,6 +3,7 @@ import CameraControls from 'camera-controls'
 import { computed, onUnmounted, ref, toRefs, watch, watchEffect } from 'vue'
 import type {
   Camera,
+  EventDispatcher,
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,
@@ -407,7 +408,7 @@ extend({ CameraControls })
 watchEffect(() => {
   addEventListeners()
   if (controlsRef.value && makeDefault.value) {
-    controls.value = controlsRef.value
+    controls.value = controlsRef.value as unknown as EventDispatcher<object> & { enabled: boolean }
   }
   else {
     controls.value = null

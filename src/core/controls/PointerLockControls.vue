@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onUnmounted, ref, watch } from 'vue'
 import { PointerLockControls } from 'three-stdlib'
-import type { Camera } from 'three'
+import type { Camera, EventDispatcher } from 'three'
 import { useEventListener } from '@vueuse/core'
 import { useTresContext } from '@tresjs/core'
 
@@ -65,7 +65,7 @@ const isLockEmitter = (event: boolean) => {
 
 watch(controlsRef, (value) => {
   if (value && props.makeDefault) {
-    controls.value = value
+    controls.value = value as unknown as EventDispatcher<object> & { enabled: boolean }
   }
   else {
     controls.value = null
