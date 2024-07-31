@@ -21,6 +21,7 @@ export {
   Box,
   CatmullRomCurve3,
   Circle,
+  Cylinder,
   Cone,
   Cylinder,
   Dodecahedron,
