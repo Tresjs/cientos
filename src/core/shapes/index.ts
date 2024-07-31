@@ -23,7 +23,6 @@ export {
   Circle,
   Cylinder,
   Cone,
-  Cylinder,
   Dodecahedron,
   Icosahedron,
   Line2,
