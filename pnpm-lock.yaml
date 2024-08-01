@@ -34,8 +34,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(release-it@17.6.0(typescript@5.5.4))
       '@tresjs/core':
-        specifier: 4.2.3
-        version: 4.2.3(three@0.167.0)(vue@3.4.31(typescript@5.5.4))
+        specifier: 4.2.4
+        version: 4.2.4(three@0.167.0)(vue@3.4.31(typescript@5.5.4))
       '@tresjs/eslint-config':
         specifier: ^1.1.0
         version: 1.1.0(@vue/compiler-sfc@3.4.35)(eslint@9.8.0)(typescript@5.5.4)
@@ -1136,8 +1136,8 @@ packages:
       three: '>=0.133'
       vue: '>=3.4'
 
-  '@tresjs/core@4.2.3':
-    resolution: {integrity: sha512-QZllV1XTfZMTvBeI0GkRWesI3WbsqvYXzkYjULArlxrESv8a4hZr4seCGpSWIaecNRFZoIaslkhCrSdxPos/1w==}
+  '@tresjs/core@4.2.4':
+    resolution: {integrity: sha512-Outn0VuNAnDuUG9co4F0QG4frFxLRjOFmyjP+UDsB++PB6n2MGTdul/Rjw22hpX2Mi4yd7eTB7W8j8G8O4Dztg==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'
@@ -5452,7 +5452,7 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@tresjs/core@4.2.3(three@0.167.0)(vue@3.4.31(typescript@5.5.4))':
+  '@tresjs/core@4.2.4(three@0.167.0)(vue@3.4.31(typescript@5.5.4))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
       '@vue/devtools-api': 6.6.3
