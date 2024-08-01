@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
-    "@tresjs/core": "4.2.4",
+    "@tresjs/core": "4.2.5",
     "@tresjs/eslint-config": "^1.1.0",
     "@types/node": "^22.0.0",
     "@types/three": "^0.167.1",
