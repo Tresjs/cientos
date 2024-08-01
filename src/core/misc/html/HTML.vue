@@ -3,7 +3,6 @@ import type { Ref, VNode } from 'vue'
 import { computed, createVNode, isRef, onUnmounted, ref, render, toRefs, useAttrs, watch, watchEffect } from 'vue'
 import type {
   OrthographicCamera,
-  WebGLRenderer,
 } from 'three'
 import {
   DoubleSide,
@@ -11,7 +10,7 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import type { TresCamera, TresObject3D } from '@tresjs/core'
+import type { TresCamera, TresObject, TresObject3D } from '@tresjs/core'
 import { useLoop, useTresContext } from '@tresjs/core'
 
 import type { Mutable } from '@vueuse/core'
@@ -47,7 +46,7 @@ export interface HTMLProps {
   // https://www.youtube.com/watch?v=ScZcUEDGjJI
   // as well as Joe Pea in CodePen: https://codepen.io/trusktr/pen/RjzKJx
   /* occlude?: Ref<Ref<TresObject3D>>[] | boolean | 'raycast' | 'blending' */
-  occlude?: Ref<TresObject3D>[] | boolean | 'raycast' | 'blending'
+  occlude?: Ref<TresObject3D | TresObject3D[] | null>[] | boolean | 'raycast' | 'blending'
 }
 
 const props = withDefaults(defineProps<HTMLProps>(), {
@@ -132,7 +131,7 @@ const styles = computed(() => {
         height: `${sizes.height.value}px`,
       }),
       zIndex: 2,
-      ...attrs.style,
+      ...Object.assign({}, attrs.style),
       willChange: 'transform',
     }
   }
@@ -144,7 +143,7 @@ const transformInnerStyles = computed(() => ({
 }))
 
 // Occlussion
-const occlusionMeshRef = ref(null!)
+const occlusionMeshRef = ref<TresObject>(null!)
 const isMeshSizeSet = ref(false)
 
 const isRayCastOcclusion = computed(
@@ -155,8 +154,8 @@ const isRayCastOcclusion = computed(
 
 watch(
   () => occlude,
-  (value) => {
-    if (value && value === 'blending') {
+  ({ value }) => {
+    if (value === 'blending') {
       el.value.style.zIndex = `${Math.floor(zIndexRange.value[0] / 2)}`
       el.value.style.position = 'absolute'
       el.value.style.pointerEvents = 'none'
@@ -171,9 +170,9 @@ watch(
 
 watch(
   () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value, slots.default?.()],
-  ([group, _renderer]: [TresObject3D | null, WebGLRenderer]): void => {
-    if (group && _renderer) {
-      const target = portal?.value || _renderer.domElement
+  ([group, renderer]): void => {
+    if (group && renderer) {
+      const target = portal?.value || renderer.domElement
       scene.value?.updateMatrixWorld()
 
       if (transform.value) {
@@ -251,7 +250,7 @@ onBeforeRender(({ invalidate }) => {
 
       if (isRayCastOcclusion.value) {
         if (Array.isArray(occlude?.value)) {
-          raytraceTarget = occlude?.value
+          raytraceTarget = occlude?.value as unknown as TresObject3D[]
         }
         else if (occlude?.value !== 'blending') {
           raytraceTarget = [scene.value as unknown as TresObject3D]
@@ -334,7 +333,7 @@ onBeforeRender(({ invalidate }) => {
   if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
     if (transform.value) {
       if (vnode.value?.el && vnode.value?.children) {
-        const el = vnode.value?.children[0]
+        const el = (vnode.value?.children as unknown as Array<HTMLElement>)[0]
 
         if (el?.clientWidth && el?.clientHeight) {
           const { isOrthographicCamera } = camera.value as OrthographicCamera
