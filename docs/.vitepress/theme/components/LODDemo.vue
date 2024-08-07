@@ -4,7 +4,7 @@ import { LOD, OrbitControls, Sphere } from '@tresjs/cientos'
 </script>
 
 <template>
-  <TresCanvas v-bind="gl">
+  <TresCanvas>
     <TresPerspectiveCamera :position="[0, 2, 4]" />
     <OrbitControls :enablePan="false" :enableDamping="false" :enableRotate="false" />
     <LOD :distance="0" name="high">
