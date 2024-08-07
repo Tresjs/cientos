@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Box, CameraControls, LOD, Sphere } from '@tresjs/cientos'
+import { CameraControls, LOD, Sphere } from '@tresjs/cientos'
 import { shallowRef, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { NoToneMapping, SRGBColorSpace } from 'three'
