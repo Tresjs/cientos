@@ -307,14 +307,18 @@ onBeforeRender(({ invalidate }) => {
         el.value.style.height = `${sizes.height.value}px`
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
-        if (vnode.value?.el && vnode.value?.children) {
+        if (vnode.value?.el && vnode.value?.children && Array.isArray(vnode.value.children)) {
           vnode.value.el.style.willChange = 'transform'
           vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
-          vnode.value.children[0].willChange = 'transform'
-          vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
-            matrix,
-            1 / ((distanceFactor?.value || 10) / 400),
-          )
+
+          const firstChild = vnode.value.children[0] as VNode
+          if (firstChild && firstChild.el) {
+            firstChild.el.style.willChange = 'transform'
+            firstChild.el.style.transform = getObjectCSSMatrix(
+              matrix,
+              1 / ((distanceFactor?.value || 10) / 400),
+            )
+          }
         }
       }
       else {

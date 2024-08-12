@@ -11,11 +11,10 @@ import {
   Uniform,
   Vector3,
 } from 'three'
-import type { TresColor } from '@tresjs/core'
+import type { TresColor, VectorFlexibleParams } from '@tresjs/core'
 import { useLoop, useTexture, useTresContext } from '@tresjs/core'
 import type { Ref } from 'vue'
 import { onMounted, onUnmounted, shallowRef, toRefs, watch } from 'vue'
-import type { VectorFlexibleParams } from '@tresjs/core/dist/utils/normalize'
 import type { Gradient } from '../../../utils/Gradient'
 import ShaderDataBuilder from './ShaderDataBuilder'
 import useEmptyDataTexture from './useEmptyDataTexture'
