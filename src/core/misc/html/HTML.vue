@@ -45,8 +45,8 @@ export interface HTMLProps {
   // Occlusion based off work by Jerome Etienne and James Baicoianu
   // https://www.youtube.com/watch?v=ScZcUEDGjJI
   // as well as Joe Pea in CodePen: https://codepen.io/trusktr/pen/RjzKJx
-  /* occlude?: Ref<Ref<TresObject3D>>[] | boolean | 'raycast' | 'blending' */
-  occlude?: Ref<TresObject3D | TresObject3D[] | null>[] | boolean | 'raycast' | 'blending'
+  occlude?: Ref<TresObject3D | null> | Ref<TresObject3D | null>[] | boolean | 'raycast' | 'blending'
+
 }
 
 const props = withDefaults(defineProps<HTMLProps>(), {
