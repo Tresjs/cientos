@@ -37,6 +37,8 @@ const controlsState = reactive({
   showZ: true,
 })
 
+useControls('fpsgraph')
+
 const { mode, enabled, space, axis, size, showX, showY, showZ } = useControls({
   mode: {
     label: 'Mode',
@@ -84,8 +86,8 @@ watch([mode.value, enabled.value, space.value, axis.value, size.value, showX.val
     v-bind="gl"
     ref="context"
   >
-    <TresPerspectiveCamera :position="[3, 3, 3]" />
-    <OrbitControls make-default />
+    <TresPerspectiveCamera :position="[11, 11, 11]" :look-at="[0, 0, 0]" />
+    <!-- <OrbitControls make-default /> -->
 
     <TresMesh
       ref="boxRef"

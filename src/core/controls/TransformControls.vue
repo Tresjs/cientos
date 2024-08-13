@@ -43,7 +43,7 @@ const controlsRef = shallowRef<TransformControls | null>(null)
 
 const { controls, camera: activeCamera, renderer, extend, invalidate } = useTresContext()
 
-watch(props, () => {
+watch([object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ], () => {
   invalidate()
 })
 
@@ -88,12 +88,8 @@ function addEventListeners() {
 }
 
 watch(controlsRef, (value) => {
-  addEventListeners()
   if (value) {
-    controls.value = value as unknown as TresControl
-  }
-  else {
-    controls.value = null
+    addEventListeners()
   }
 })
 
