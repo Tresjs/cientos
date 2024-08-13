@@ -4,7 +4,6 @@ import type { Camera, Event, Object3D } from 'three'
 
 import { TransformControls } from 'three-stdlib'
 import { useEventListener } from '@vueuse/core'
-import type { TresControl } from '@tresjs/core'
 import { useTresContext } from '@tresjs/core'
 
 export interface TransformControlsProps {
