@@ -197,7 +197,7 @@ watch(() => props.resetOnEnd, () => {
 watch(() => props.flipX, render)
 
 watch(() => [props.center], () => {
-  [centerX, centerY] = normalizeVectorFlexibleParam(props.center)
+  [centerX, centerY] = normalizeVectorFlexibleParam(props.center as number[])
   render()
 }, { immediate: true })
 

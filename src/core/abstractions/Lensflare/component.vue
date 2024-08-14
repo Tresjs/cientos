@@ -41,7 +41,7 @@ export interface LensflareProps {
   /**
    * default texture of lensflare elements
    */
-  texture?: Texture | string[]
+  texture?: Texture | string
 }
 
 const props = withDefaults(defineProps<LensflareProps>(), {

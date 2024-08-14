@@ -67,6 +67,8 @@ const props = withDefaults(defineProps<ReflectorProps>(), {
   textureHeight: 512,
   clipBias: 0,
   multisample: 4,
+  // @ts-expect-error: `ReflectorShader` is not present in imported type but is present here:
+  // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js#L32
   shader: Reflector.ReflectorShader,
 })
 
