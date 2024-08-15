@@ -129,7 +129,7 @@ For our Cientos heart cartoon character animation, here's how the filenames map 
 | cientosIdleToWalkTransition0000.png | cientosIdleToWalkTransition |
 | cientosWalk0000.png, cientosWalk0001.png, ... | cientosWalk |
 
-Try it out by clicking a few times below:
+Try it out by clicking a few times on the character below:
 
 <DocsDemo>
   <AnimatedSpriteNamedAnimationDemo />
