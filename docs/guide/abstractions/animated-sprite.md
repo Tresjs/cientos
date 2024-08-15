@@ -51,16 +51,48 @@ In the wild, spritesheets are often distributed without atlases and the images a
 
 ## Props
 
-<CientosPropsTable
-component-path="src/core/abstractions/AnimatedSprite/component.vue"
-:fields="['name', 'description', 'default', 'required']"
-:on-format-value="({valueFormatted, propName, fieldName, getFieldFormatted})=> {
-  if (fieldName === 'description') {
-    const type = getFieldFormatted('type')
-    return type + ' – ' + valueFormatted
-  }
-}"
- />
+<table>
+<thead>
+<tr><th>Name</th><th>Description</th><th>Default</th></tr>
+</thead>
+<tbody>
+<tr><td>image</td><td><code>string</code> –
+  URL of the image texture or an image dataURL. This prop is not reactive.
+</td><td></td></tr>
+<tr><td>atlas</td><td><code>string | Atlasish</code> –
+  <ul>
+   <li>If <code>string</code>, the URL of the JSON atlas.</li>
+   <li>If <code>number</code>, the number of columns in the texture.</li>
+   <li>If <code>[number, number]</code>, the number of columns/rows in the texture.</li>
+   <li>If <code>AtlasData</code>, the atlas as a JS object.</li>
+  </ul>
+  <p>This prop is not reactive.</p>
+</td><td></td></tr>
+<tr><td>definitions</td><td><code>Record&lt;string, string&gt;</code> – Specify playback frame order and repeated frames (delays). <code>definitions</code> is a record where keys are atlas animation names and values are strings containing an animation definition.<br />
+  <p>A "animation definition" comma-separated string of frame numbers with optional parentheses-surrounded durations.</p>
+   <p>Here is how various definition strings convert to arrays of frames for playback:</p>
+  <ul>
+  <li>"0,2,1" - [0,2,1], i.e., play frame 0, 2, then 1.</li>
+  <li>"2(10)" - [2,2,2,2,2,2,2,2,2,2], i.e., play from 2 10 times.</li>
+  <li>"1-4" - [1,2,3,4]</li>
+  <li>"10-5(2)" - [10,10,9,9,8,8,7,7,6,6,5,5]</li>
+  <li>"1-4(3),10(2)" - [1,1,1,2,2,2,3,3,3,4,4,4,10,10]</li>
+  </ul>
+</td><td></td></tr>
+<tr><td>fps</td><td><code>number</code> – Desired frames per second of the animation.</td><td><code>30</code></td></tr>
+<tr><td>loop</td><td><code>boolean</code> – Whether or not the animation should loop.</td><td><code>true</code></td></tr>
+<tr><td>animation</td><td><code>string | [number, number] | number</code> – If <code>string</code>, name of the animation to play. If <code>[number, number]</code>, start and end frames of the animation. If <code>number</code>, frame number to display.</td><td><code>0</code></td></tr>
+<tr><td>paused</td><td><code>boolean</code> – Whether the animation is paused.</td><td><code>false</code></td></tr>
+<tr><td>reversed</td><td><code>boolean</code> – Whether to play the animation in reverse.</td><td><code>false</code></td></tr>
+<tr><td>flipX</td><td><code>boolean</code> – Whether the sprite should be flipped, left to right.</td><td><code>false</code></td></tr>
+<tr><td>resetOnEnd</td><td><code>boolean</code> – For a non-looping animation, when the animation ends, whether to display the zeroth frame.</td><td><code>false</code></td></tr>
+<tr><td>asSprite</td><td><code>boolean</code> – Whether to display the object as a THREE.Sprite. <a href="https://threejs.org/docs/?q=sprite#api/en/objects/Sprite">See THREE.Sprite</a></td><td><code>true</code></td></tr>
+<tr><td>center</td><td><code>TresVector2</code> – Anchor point of the object. A value of [0.5, 0.5] corresponds to the center. [0, 0] is left, bottom.</td><td><code>[0.5, 0.5]</code></td></tr>
+<tr><td>alphaTest</td><td><code>number</code> – Alpha test value for the material. <a href="https://threejs.org/docs/#api/en/materials/Material.alphaTest">See THREE.Material.alphaTest</a></td><td><code>0.0</code></td></tr>
+<tr><td>depthTest</td><td><code>boolean</code> – Depth test value for the material. <a href="https://threejs.org/docs/#api/en/materials/Material.depthTest">See THREE.Material.depthTest</a></td><td><code>true</code></td></tr>
+<tr><td>depthWrite</td><td><code>boolean</code> – Depth write value for the material. <a href="https://threejs.org/docs/#api/en/materials/Material.depthWrite">See THREE.Material.depthWrite</a></td><td><code>true</code></td></tr>
+</tbody>
+</table>
 
 ## Events
 
