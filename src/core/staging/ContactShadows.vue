@@ -312,8 +312,8 @@ function setColors(ps: typeof props, pool: ReturnType<typeof init>) {
     const { r, g, b } = tint
     shader.fragmentShader = /* glsl */`
     ${shader.fragmentShader.replace(
-      'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
-      `gl_FragColor = vec4( ${r}, ${g}, ${b}, ( 1.0 - fragCoordZ ) * opacity);`,
+    'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
+    `gl_FragColor = vec4( ${r}, ${g}, ${b}, ( 1.0 - fragCoordZ ) * opacity);`,
   )}
     `
   }
