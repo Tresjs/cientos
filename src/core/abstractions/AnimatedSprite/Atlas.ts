@@ -229,8 +229,8 @@ function getAtlasFramesByAnimationName(
   if (!(name in atlas.animations)) {
     useLogger().logError(
       `Cientos Atlas: getAtlasFramesByAnimationName
-The animation name "${name}" does not exist in this atlas. 
-Available names: 
+The animation name "${name}" does not exist in this atlas.
+Available names:
 ${Object.keys(atlas.animations)
   .map(n => `* ${n}\n`)
   .join('')}`,
