@@ -31,8 +31,9 @@ export default defineConfig({
     }),
     glsl(),
     banner({
-      content: `/**\n * name: ${pkg.name}\n * version: v${pkg.version
-        }\n * (c) ${new Date().getFullYear()}\n * description: ${pkg.description}\n * author: ${pkg.author}\n */`,
+      content: `/**\n * name: ${pkg.name}\n * version: v${
+        pkg.version
+      }\n * (c) ${new Date().getFullYear()}\n * description: ${pkg.description}\n * author: ${pkg.author}\n */`,
     }),
   ],
   build: {
