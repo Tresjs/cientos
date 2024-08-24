@@ -11,7 +11,7 @@ It uses the [CubeTextureLoader](https://threejs.org/docs/#api/en/loaders/CubeTex
 ## Usage
 
 ::: warning
-`UseEnvironment` needs to be wrapped by a Suspense component. Please check the [Suspense API](https://vuejs.org/guide/built-ins/suspense.html#suspense) for more info
+`UseEnvironment` needs to be wrapped by a Suspense component
 :::
 
 ```ts

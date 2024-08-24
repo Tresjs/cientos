@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import type { Material } from 'three'
+import type { Material, WebGLRenderer } from 'three'
 import {
   BufferAttribute,
   BufferGeometry,
@@ -96,7 +96,7 @@ export class BlurPass {
     this.scene.add(this.screen)
   }
 
-  render(renderer, inputBuffer, outputBuffer) {
+  render(renderer: WebGLRenderer, inputBuffer: WebGLRenderTarget, outputBuffer: WebGLRenderTarget) {
     const scene = this.scene
     const camera = this.camera
     const renderTargetA = this.renderTargetA

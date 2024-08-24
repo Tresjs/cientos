@@ -2,7 +2,7 @@
 import { onUnmounted, shallowRef, toRefs, watch, watchEffect } from 'vue'
 import type { TresOptions } from '@tresjs/core'
 import { useLoader } from '@tresjs/core'
-import type { SVGResultPaths } from 'three-stdlib'
+import type { SVGResult, SVGResultPaths } from 'three-stdlib'
 import { SVGLoader } from 'three-stdlib'
 import type { BufferGeometry, MeshBasicMaterialParameters } from 'three'
 import { DoubleSide, ShapeGeometry, Vector2 } from 'three'
@@ -114,7 +114,7 @@ watch([skipFills, skipStrokes, fillMaterial, strokeMaterial, paths], updateLayer
 
 async function useSVG(src: string) {
   const srcStr = !src.startsWith('<svg') ? src : encodeURI(`data:image/svg+xml;utf8,${src}`)
-  return useLoader(SVGLoader, srcStr)
+  return useLoader(SVGLoader, srcStr) as Promise<SVGResult>
 };
 
 onUnmounted(dispose)

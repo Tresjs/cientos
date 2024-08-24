@@ -227,13 +227,14 @@ function getAtlasFramesByAnimationName(
   name: string,
 ): AtlasFrame[] {
   if (!(name in atlas.animations)) {
+    const animationsMsg = Object.keys(atlas.animations)
+      .map(n => `* ${n}\n`)
+      .join('')
     useLogger().logError(
       `Cientos Atlas: getAtlasFramesByAnimationName
-The animation name "${name}" does not exist in this atlas. 
-Available names: 
-${Object.keys(atlas.animations)
-  .map(n => `* ${n}\n`)
-  .join('')}`,
+The animation name "${name}" does not exist in this atlas.
+Available names:
+${animationsMsg}`,
     )
     return [getNullAtlasFrame()]
   }

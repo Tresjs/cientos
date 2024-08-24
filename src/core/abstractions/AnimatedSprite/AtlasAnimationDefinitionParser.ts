@@ -179,8 +179,7 @@ interface Token {
 
 function tokenize(definition: string): Token[] {
   const result: Token[] = []
-  let ii = 0
-  while (ii < definition.length) {
+  for (let ii = 0; ii < definition.length; ii++) {
     const c = definition[ii]
     if ('0123456789'.includes(c)) {
       if (
@@ -212,7 +211,6 @@ function tokenize(definition: string): Token[] {
     else {
       logDefinitionBadCharacter('0123456789,-()', c, definition, ii)
     }
-    ii++
   }
 
   return result

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { TresObject } from '@tresjs/core'
 import { useGLTF } from '.'
 
 export interface GLTFModelProps {
@@ -81,7 +82,7 @@ const { scene: model } = await useGLTF(props.path as string, {
   decoderPath: props.decoderPath,
 })
 if (props.castShadow || props.receiveShadow) {
-  model.traverse((child) => {
+  model.traverse((child: TresObject) => {
     if (child.isMesh) {
       child.castShadow = props.castShadow
       child.receiveShadow = props.receiveShadow

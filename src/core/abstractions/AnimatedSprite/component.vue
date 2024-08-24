@@ -2,7 +2,7 @@
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
 import { normalizeVectorFlexibleParam, useLoop, useTresContext } from '@tresjs/core'
-import type { Intersection, Texture } from 'three'
+import type { Texture } from 'three'
 import { DoubleSide } from 'three'
 import type { Atlas, Atlasish } from './Atlas'
 import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas'
@@ -35,7 +35,7 @@ export interface AnimatedSpriteProps {
   loop?: boolean
   /** If `string`, name of the animation to play. If `[number, number]`, start and end frames of the animation. If `number`, frame number to display. */
   animation?: string | [number, number] | number
-  /** Event callback when the animation ends. */
+  /** Whether the animation is paused. */
   paused?: boolean
   /** Whether to play the animation in reverse. */
   reversed?: boolean
@@ -74,7 +74,6 @@ const emit = defineEmits<{
   (e: 'frame', frameName: string): void
   (e: 'end', frameName: string): void
   (e: 'loop', frameName: string): void
-  (e: 'click', event: Intersection): void
 }>()
 
 const { invalidate } = useTresContext()
@@ -197,7 +196,7 @@ watch(() => props.resetOnEnd, () => {
 watch(() => props.flipX, render)
 
 watch(() => [props.center], () => {
-  [centerX, centerY] = normalizeVectorFlexibleParam(props.center)
+  [centerX, centerY] = normalizeVectorFlexibleParam(props.center as number[])
   render()
 }, { immediate: true })
 
@@ -218,7 +217,6 @@ onUnmounted(() => {
 <template>
   <TresGroup
     ref="groupRef"
-    v-bind="$attrs"
   >
     <template v-if="props.asSprite">
       <TresSprite

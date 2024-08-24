@@ -19,6 +19,7 @@ import {
   Vector3,
   Vector4,
 } from 'three'
+import type { TresControl } from '@tresjs/core'
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types'
@@ -401,7 +402,7 @@ const touches = computed(() => getTouches(
   props.touches,
 ))
 
-const controlsRef = ref<CameraControls | null>(null)
+const controlsRef = ref<TresControl & CameraControls | null>(null)
 extend({ CameraControls })
 
 watchEffect(() => {

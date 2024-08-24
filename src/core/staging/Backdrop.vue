@@ -22,8 +22,8 @@ const { floor, segments, receiveShadow } = toRefs(props)
 const planeRef: Ref<PlaneGeometry | null> = ref(null)
 
 watch(
-  () => [segments.value, floor.value, planeRef.value],
-  ([segments, floor, planeRef]: [number, number, PlaneGeometry]) => {
+  [segments, floor, planeRef],
+  ([segments, floor, planeRef]) => {
     if (!planeRef || segments === null) { return }
     let i = 0
     const offset = segments / segments / 2
