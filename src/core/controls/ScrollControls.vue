@@ -178,7 +178,9 @@ watch(
         canvas.style.width = '100%'
       }
       scrollContainer.appendChild(fill)
-      value.domElement.parentNode.style.position = 'relative'
+      if (value?.domElement.parentNode) {
+        (value.domElement.parentNode as HTMLElement).style.position = 'relative'
+      }
       value?.domElement?.parentNode?.appendChild(scrollContainer)
       scrollNodeY.value = props.horizontal ? width.value * props.pages : height.value * props.pages
     }

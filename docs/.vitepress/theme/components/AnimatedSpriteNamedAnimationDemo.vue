@@ -12,12 +12,7 @@ const animations = ref(
 </script>
 
 <template>
-  <TresCanvas
-    clear-color="#82DBC5"
-    @click="() => {
-      animations.push(animations.shift() as string)
-    }"
-  >
+  <TresCanvas clear-color="#82DBC5">
     <TresPerspectiveCamera :position="[0, 0, 15]" />
     <Suspense>
       <AnimatedSprite
@@ -26,6 +21,7 @@ const animations = ref(
         :animation="animations[0]"
         :fps="15"
         :loop="true"
+        @click="() => { animations.push(animations.shift() as string) }"
       />
     </Suspense>
   </TresCanvas>

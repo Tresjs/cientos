@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { ShallowRef } from 'vue'
-import { onUnmounted, shallowRef, toRefs, watch, watchEffect } from 'vue'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { Camera, Event, Object3D } from 'three'
 
 import { TransformControls } from 'three-stdlib'
@@ -39,11 +38,11 @@ const emit = defineEmits(['dragging', 'change', 'mouseDown', 'mouseUp', 'objectC
 const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ }
   = toRefs(props)
 
-const controlsRef: ShallowRef<TransformControls | undefined> = shallowRef()
+const controlsRef = shallowRef<TransformControls | null>(null)
 
 const { controls, camera: activeCamera, renderer, extend, invalidate } = useTresContext()
 
-watch(props, () => {
+watch([object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ], () => {
   invalidate()
 })
 
@@ -54,8 +53,12 @@ const onChange = () => {
   emit('change')
 }
 
-const onDragingChange = (e: Event) => {
-  if (controls.value) { controls.value.enabled = !e.value }
+interface DraggingEvent extends Event {
+  value: boolean
+}
+
+const onDragingChange = (e: DraggingEvent) => {
+  if (controls.value) { controls.value.enabled = !(e).value }
   invalidate()
   emit('dragging', e.value)
 }
@@ -83,8 +86,8 @@ function addEventListeners() {
   useEventListener(controlsRef.value as any, 'objectChange', onObjectChange)
 }
 
-watchEffect(() => {
-  if (controlsRef.value) {
+watch(controlsRef, (value) => {
+  if (value) {
     addEventListeners()
   }
 })
