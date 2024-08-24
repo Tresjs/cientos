@@ -13,7 +13,7 @@ A composable that allows you to easily load glTF models into your **TresJS** sce
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls } from '@tresjs/cientos'
-import AsyncComponent from './AsyncComponent.vue'
+import TheModel from './TheModel.vue'
 </script>
 
 <template>
@@ -21,7 +21,7 @@ import AsyncComponent from './AsyncComponent.vue'
     <TresPerspectiveCamera :position="[3, 2, 5]" />
     <OrbitControls />
     <Suspense>
-      <AsyncComponent />
+      <TheModel />
     </Suspense>
     <TresDirectionalLight
       :intensity="2"
@@ -31,7 +31,7 @@ import AsyncComponent from './AsyncComponent.vue'
   </TresCanvas>
 </template>
 ```
-```vue{2,6} [AsyncComponent.vue]
+```vue{2,6} [TheModel.vue]
 <script setup lang="ts">
 import { useGLTF } from '@tresjs/cientos'
 

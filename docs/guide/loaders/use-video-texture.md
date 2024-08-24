@@ -15,7 +15,7 @@ This composable is based on the Drei [useVideoTexture](https://github.com/pmndrs
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls } from '@tresjs/cientos'
-import AsyncComponent from './AsyncComponent.vue'
+import TheModel from './TheModel.vue'
 </script>
 
 <template>
@@ -26,14 +26,14 @@ import AsyncComponent from './AsyncComponent.vue'
     />
     <OrbitControls />
     <Suspense>
-      <AsyncComponent />
+      <TheModel />
     </Suspense>
     <TresGridHelper />
     <TresAmbientLight />
   </TresCanvas>
 </template>
 ```
-```vue{3,8,13} [AsyncComponent.vue]
+```vue{3,8,13} [TheVideoTexture.vue]
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Sphere, useVideoTexture } from '@tresjs/cientos'
