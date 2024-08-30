@@ -124,7 +124,6 @@ export async function useEnvironment(
         throw new Error(`Failed to load environment map: ${error}`)
       }
       if (texture.value) {
-        texture.value = texture.value
         if (texture.value) {
           texture.value.mapping = EquirectangularReflectionMapping
         }
