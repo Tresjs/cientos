@@ -5,6 +5,7 @@ import PointerLockControls from './PointerLockControls.vue'
 import MapControls from './MapControls.vue'
 import ScrollControls from './ScrollControls.vue'
 import CameraControls, { BaseCameraControls } from './CameraControls.vue'
+import DragControls from './DragControls.vue'
 
 export {
   OrbitControls,
@@ -15,4 +16,5 @@ export {
   ScrollControls,
   CameraControls,
   BaseCameraControls,
+  DragControls,
 }
