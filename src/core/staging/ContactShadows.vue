@@ -5,13 +5,7 @@
 // NOTE: Shader inspiration taken from R3F/Drei:
 // https://github.com/pmndrs/drei/blob/b50a2d4b1a1278ae36058b9b53b85a00ef195762/src/core/ContactShadows.tsx#L10
 
-import type { TresColor } from '@tresjs/core'
 import { useLoop } from '@tresjs/core'
-import type {
-  ColorRepresentation,
-  Scene,
-  WebGLRenderer,
-} from 'three'
 import {
   Color,
   Group,
@@ -25,6 +19,12 @@ import {
 } from 'three'
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib'
 import { onUnmounted, watch } from 'vue'
+import type { TresColor } from '@tresjs/core'
+import type {
+  ColorRepresentation,
+  Scene,
+  WebGLRenderer,
+} from 'three'
 
 export interface ContactShadowsProps {
   /**
@@ -312,9 +312,9 @@ function setColors(ps: typeof props, pool: ReturnType<typeof init>) {
     const { r, g, b } = tint
     shader.fragmentShader = /* glsl */`
     ${shader.fragmentShader.replace(
-    'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
-    `gl_FragColor = vec4( ${r}, ${g}, ${b}, ( 1.0 - fragCoordZ ) * opacity);`,
-  )}
+        'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
+        `gl_FragColor = vec4( ${r}, ${g}, ${b}, ( 1.0 - fragCoordZ ) * opacity);`,
+      )}
     `
   }
 }
