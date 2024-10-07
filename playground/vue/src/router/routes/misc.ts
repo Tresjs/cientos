@@ -29,4 +29,9 @@ export const miscRoutes = [
     name: 'GLTFExporter',
     component: () => import('../../pages/misc/GLTFExporterDemo.vue'),
   },
+  {
+    path: '/misc/LOD',
+    name: 'LOD',
+    component: () => import('../../pages/misc/LODDemo.vue'),
+  },
 ]
