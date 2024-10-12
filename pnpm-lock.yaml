@@ -35,7 +35,7 @@ importers:
         version: 8.0.2(release-it@17.6.0(typescript@5.5.4))
       '@tresjs/core':
         specifier: ^4.2.10
-        version: 4.2.10(three@0.168.0)(vue@3.5.3(typescript@5.5.4))
+        version: 4.3.0(three@0.168.0)(vue@3.5.3(typescript@5.5.4))
       '@tresjs/eslint-config':
         specifier: ^1.4.0
         version: 1.4.0(@typescript-eslint/utils@8.8.0(eslint@9.11.1(jiti@1.21.6))(typescript@5.5.4))(@vue/compiler-sfc@3.5.3)(eslint@9.11.1(jiti@1.21.6))(typescript@5.5.4)
@@ -1125,12 +1125,6 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@tresjs/core@4.2.10':
-    resolution: {integrity: sha512-ZKS/G9s86t69TfPUdvAzQkcgqvsLhTGhSKI0BssT/+RZDU0ueFMDKW8g15rNjvs/OM0KEHEPl/W8g87H1YhAbw==}
-    peerDependencies:
-      three: '>=0.133'
-      vue: '>=3.4'
-
   '@tresjs/core@4.3.0':
     resolution: {integrity: sha512-OmtWJNOSWuV+oI8yD1Nj4Hd59BQ1nyd5E/lpXSrKyI0iwkfpwLKOnr5vHOt5fQYoWxEbZ47XzSCzcpTMwNN2GQ==}
     peerDependencies:
@@ -1566,9 +1560,6 @@ packages:
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
-
-  '@vue/devtools-api@6.6.3':
-    resolution: {integrity: sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==}
 
   '@vue/devtools-api@6.6.4':
     resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
@@ -5517,16 +5508,6 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@tresjs/core@4.2.10(three@0.168.0)(vue@3.5.3(typescript@5.5.4))':
-    dependencies:
-      '@alvarosabu/utils': 3.2.0
-      '@vue/devtools-api': 6.6.3
-      '@vueuse/core': 10.11.1(vue@3.5.3(typescript@5.5.4))
-      three: 0.168.0
-      vue: 3.5.3(typescript@5.5.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-
   '@tresjs/core@4.3.0(three@0.168.0)(vue@3.5.3(typescript@5.5.4))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
@@ -6200,8 +6181,6 @@ snapshots:
     dependencies:
       de-indent: 1.0.2
       he: 1.2.0
-
-  '@vue/devtools-api@6.6.3': {}
 
   '@vue/devtools-api@6.6.4': {}
 
