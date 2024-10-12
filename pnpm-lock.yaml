@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@vueuse/core':
         specifier: ^11.0.1
-        version: 11.0.3(vue@3.5.3(typescript@5.5.4))
+        version: 11.1.0(vue@3.5.3(typescript@5.5.4))
       camera-controls:
         specifier: ^2.9.0
         version: 2.9.0(three@0.168.0)
@@ -9351,7 +9351,7 @@ snapshots:
       '@vitejs/plugin-vue': 5.1.4(vite@5.4.6(@types/node@22.5.4))(vue@3.5.3(typescript@5.5.4))
       '@vue/devtools-api': 7.4.4
       '@vue/shared': 3.5.3
-      '@vueuse/core': 11.0.3(vue@3.5.3(typescript@5.5.4))
+      '@vueuse/core': 11.1.0(vue@3.5.3(typescript@5.5.4))
       '@vueuse/integrations': 11.0.3(focus-trap@7.5.4)(vue@3.5.3(typescript@5.5.4))
       focus-trap: 7.5.4
       mark.js: 8.11.1
