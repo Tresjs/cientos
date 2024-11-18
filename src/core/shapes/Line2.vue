@@ -4,15 +4,17 @@ import { Vector2, Vector3 } from 'three'
 import { Line2 } from 'three/examples/jsm/lines/Line2'
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
-import { computed, onUnmounted, shallowRef, watch } from 'vue'
+import { isReactive, onUnmounted, shallowRef, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import type { Color } from 'three'
 
-type Points = (Vector3 | Vector2 | [number, number, number] | [number, number] | number)[]
+type Point = Vector3 | Vector2 | [number, number, number] | [number, number]
+type Points = (Point | number)[]
 type VertexColors = Array<TresColor>
+
 export interface LineProps {
   points: Points
-  vertexColors?: VertexColors | null
+  vertexColors?: VertexColors
   color?: TresColor
   lineWidth?: number
   worldUnits?: boolean
@@ -25,7 +27,7 @@ export interface LineProps {
 }
 
 const props = withDefaults(defineProps<LineProps>(), {
-  vertexColors: null,
+  vertexColors: () => [],
   color: 'white',
   lineWidth: 1,
   worldUnits: false,
@@ -39,7 +41,7 @@ const props = withDefaults(defineProps<LineProps>(), {
 
 type PropsType = typeof props
 
-function getInterpolatedVertexColors(vertexColors: VertexColors | null, numPoints: number): Color[] {
+function getInterpolatedVertexColors(vertexColors: VertexColors, numPoints: number): Color[] {
   if (!vertexColors || vertexColors.length === 0) {
     return Array.from({ length: numPoints }).fill(normalizeColor(props.color)) as Color[]
   }
@@ -66,18 +68,16 @@ function getInterpolatedVertexColors(vertexColors: VertexColors | null, numPoint
   return iColors
 }
 
-const lineMaterial = new LineMaterial()
-const lineGeometry = new LineGeometry()
-const line = new Line2(lineGeometry, lineMaterial)
+const line = new Line2(new LineGeometry(), new LineMaterial())
 const { sizes, invalidate } = useTresContext()
-const hasVertexColors = computed(() => Array.isArray(props.vertexColors))
 
-function updateLineMaterial(material: LineMaterial, props: PropsType) {
+function updateLineMaterial(line: Line2, props: PropsType) {
+  const material = line.material
   material.color = normalizeColor(props.color)
   material.linewidth = props.lineWidth
   material.alphaToCoverage = props.alphaToCoverage
   material.worldUnits = props.worldUnits
-  material.vertexColors = Array.isArray(props.vertexColors)
+  material.vertexColors = props.vertexColors.length > 0
   material.dashed = props.dashed
   material.dashScale = props.dashScale
   material.dashSize = props.dashSize
@@ -86,7 +86,9 @@ function updateLineMaterial(material: LineMaterial, props: PropsType) {
   material.needsUpdate = true
 }
 
-function updateLineGeometry(geometry: LineGeometry, points: Points, vertexColors: VertexColors | null) {
+function updateLineGeometry(line: Line2, props: PropsType) {
+  const points = props.points
+  const vertexColors = props.vertexColors
   const pValues = points.map((p) => {
     if (p instanceof Vector3) {
       return [p.x, p.y, p.z]
@@ -101,16 +103,30 @@ function updateLineGeometry(geometry: LineGeometry, points: Points, vertexColors
       return p
     }
   }).flat()
-  geometry.setPositions(pValues.flat())
 
-  const colors = getInterpolatedVertexColors(vertexColors, points.length).map(c => c.toArray()).flat()
-  geometry.setColors(colors)
+  if (pValues.length > line.geometry.getAttribute('position').array.length) {
+    // NOTE:
+    // https://threejs.org/docs/?q=linegeom#examples/en/lines/LineGeometry
+    // LineGeometry docs currently (11/2024) say that `setPositions` will
+    // replace points, but the implementation does not appear to allow points
+    // to be added. Points outside of the current `array.length` are not
+    // drawn to screen. So ...
+    const geo = line.geometry
+    // Create a new Geometry.
+    line.geometry = new LineGeometry()
+    // Dispose old geometry.
+    geo.dispose()
+  }
+  line.geometry.setPositions(pValues.flat())
+
+  const colors = getInterpolatedVertexColors(vertexColors, pValues.length / 3).map(c => c.toArray()).flat()
+  line.geometry.setColors(colors)
 
   line.computeLineDistances()
 }
 
-updateLineMaterial(lineMaterial, props)
-updateLineGeometry(lineGeometry, props.points, props.vertexColors)
+updateLineMaterial(line, props)
+updateLineGeometry(line, props)
 line.computeLineDistances()
 
 watch(() => [
@@ -118,27 +134,38 @@ watch(() => [
   props.lineWidth,
   props.alphaToCoverage,
   props.worldUnits,
-  hasVertexColors,
   props.dashed,
   props.dashScale,
   props.dashSize,
   props.dashOffset,
 ], () => {
-  updateLineMaterial(lineMaterial, props)
-  invalidate()
-})
-watch(() => [props.points, props.vertexColors], () => {
-  updateLineGeometry(lineGeometry, props.points, props.vertexColors)
-  invalidate()
-})
-watch(() => [sizes.height, sizes.width], () => {
-  lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value)
+  updateLineMaterial(line, props)
   invalidate()
 })
 
+watch(() => [sizes.width.value, sizes.height.value], () => {
+  line.material.resolution = new Vector2(sizes.width.value, sizes.height.value)
+  invalidate()
+})
+
+if (isReactive(props.vertexColors)) {
+  watch(props.vertexColors, () => {
+    updateLineMaterial(line, props)
+    updateLineGeometry(line, props)
+    invalidate()
+  })
+}
+
+if (isReactive(props.points)) {
+  watch(props.points, () => {
+    updateLineGeometry(line, props)
+    invalidate()
+  })
+}
+
 onUnmounted(() => {
-  lineGeometry.dispose()
-  lineMaterial.dispose()
+  line.geometry.dispose()
+  line.material.dispose()
 })
 
 const lineRef = shallowRef()
