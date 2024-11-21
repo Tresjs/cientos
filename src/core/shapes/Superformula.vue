@@ -158,11 +158,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="superformulaRef"
-    v-bind="$attrs"
-    :geometry="geometry"
-  >
+  <TresMesh ref="superformulaRef" :geometry="geometry">
     <slot>
       <TresMeshBasicMaterial :color="color" />
     </slot>

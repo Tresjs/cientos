@@ -35,10 +35,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="torusRef"
-    v-bind="$attrs"
-  >
+  <TresMesh ref="torusRef">
     <TresTorusGeometry :args="args" />
     <slot>
       <TresMeshBasicMaterial :color="color" />
