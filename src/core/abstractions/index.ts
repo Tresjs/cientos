@@ -1,5 +1,6 @@
 import AnimatedSprite from './AnimatedSprite/component.vue'
 import { GlobalAudio } from './GlobalAudio'
+import GradientTexture from './GradientTexture.vue'
 import Lensflare from './Lensflare/component.vue'
 import Levioso from './Levioso.vue'
 import MouseParallax from './MouseParallax.vue'
@@ -17,6 +18,7 @@ export {
   AnimatedSprite,
   Fbo,
   GlobalAudio,
+  GradientTexture,
   Lensflare,
   Levioso,
   MouseParallax,

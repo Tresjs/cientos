@@ -59,4 +59,9 @@ export const abstractionsRoutes = [
     name: 'AnimatedSprite',
     component: () => import('../../pages/abstractions/AnimatedSpriteDemo.vue'),
   },
+  {
+    path: '/abstractions/gradient-texture',
+    name: 'GradientTexture',
+    component: () => import('../../pages/abstractions/GradientTextureDemo.vue'),
+  },
 ]
