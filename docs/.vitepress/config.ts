@@ -76,6 +76,7 @@ export default defineConfig({
           { text: 'useSurfaceSampler', link: '/guide/abstractions/use-surface-sampler' },
           { text: 'Sampler', link: '/guide/abstractions/sampler' },
           { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
+          { text: 'Image', link: '/guide/abstractions/image' },
         ],
       },
       {
@@ -128,6 +129,7 @@ export default defineConfig({
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
           { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
+          { text: 'ScreenQuad', link: '/guide/shapes/screen-quad' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
           { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
