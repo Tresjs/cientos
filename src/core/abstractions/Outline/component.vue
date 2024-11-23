@@ -21,7 +21,7 @@ interface OutlineProps {
   transparent?: boolean
   /** Outline thickness, default 0.05 */
   thickness?: number
-  /** Geometry crease angle (0 === no crease), default: Math.PI */
+  /** Geometry crease angle (-1 === no crease), default: Math.PI, See [BufferGeometryUtils.toCreasedNormals](https://threejs.org/docs/#examples/en/utils/BufferGeometryUtils.toCreasedNormals) */
   angle?: number
   toneMapped?: boolean
   polygonOffset?: boolean

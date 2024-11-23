@@ -62,6 +62,6 @@ export const abstractionsRoutes = [
   {
     path: '/abstractions/outline',
     name: 'Outline',
-    component: () => import('../../pages/abstractions/outline/OutlineDemo.vue'),
+    component: () => import('../../pages/abstractions/OutlineDemo.vue'),
   },
 ]
