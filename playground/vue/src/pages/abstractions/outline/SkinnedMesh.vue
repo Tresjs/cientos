@@ -9,9 +9,9 @@ actions.SambaDance.play()
 </script>
 
 <template>
-    <TresGroup>
+  <TresGroup>
     <TresSkinnedMesh v-if="loaded" castShadow receiveShadow :geometry="nodes.Ch03.geometry" :material="materials.Ch03_Body" :skeleton="nodes.Ch03.skeleton">
-        <Outline :thickness="0.001" color="black" />
+      <Outline :thickness="0.001" color="black" />
     </TresSkinnedMesh>
-    </TresGroup>
+  </TresGroup>
 </template>

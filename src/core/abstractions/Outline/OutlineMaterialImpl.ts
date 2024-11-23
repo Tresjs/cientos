@@ -1,17 +1,17 @@
-import { Color, Vector2 } from "three"
-import { shaderMaterial } from "../../../utils/shaderMaterial"
+import { Color, Vector2 } from 'three'
+import { shaderMaterial } from '../../../utils/shaderMaterial'
 
 // NOTE: Source
 // https://github.com/pmndrs/drei/blob/master/src/core/Outlines.tsx
 
 const OutlineMaterialImpl = shaderMaterial(
-    {
-      screenspace: false,
-      color: new Color('black'),
-      opacity: 1,
-      thickness: 0.05,
-      size: new Vector2(1, 1),
-    },
+  {
+    screenspace: false,
+    color: new Color('black'),
+    opacity: 1,
+    thickness: 0.05,
+    size: new Vector2(1, 1),
+  },
   `#include <common>
    #include <morphtarget_pars_vertex>
    #include <skinning_pars_vertex>
@@ -20,15 +20,15 @@ const OutlineMaterialImpl = shaderMaterial(
    uniform vec2 size;
    void main() {
      #if defined (USE_SKINNING)
-	     #include <beginnormal_vertex>
+       #include <beginnormal_vertex>
        #include <morphnormal_vertex>
        #include <skinbase_vertex>
        #include <skinnormal_vertex>
        #include <defaultnormal_vertex>
      #endif
      #include <begin_vertex>
-	   #include <morphtarget_vertex>
-	   #include <skinning_vertex>
+     #include <morphtarget_vertex>
+     #include <skinning_vertex>
      #include <project_vertex>
      vec4 tNormal = vec4(normal, 0.0);
      vec4 tPosition = vec4(transformed, 1.0);
@@ -53,7 +53,7 @@ const OutlineMaterialImpl = shaderMaterial(
      gl_FragColor = vec4(color, opacity);
      #include <tonemapping_fragment>
      #include <colorspace_fragment>
-   }`
-  )
-  
+   }`,
+)
+
 export default OutlineMaterialImpl
