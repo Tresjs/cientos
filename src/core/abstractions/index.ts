@@ -3,6 +3,8 @@ import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
 import Levioso from './Levioso.vue'
 import MouseParallax from './MouseParallax.vue'
+import Outline from './Outline/component.vue'
+import OutlineMaterial from './Outline/OutlineMaterial.vue'
 import PositionalAudio from './PositionalAudio.vue'
 import Reflector from './Reflector.vue'
 import Text3D from './Text3D.vue'
@@ -20,6 +22,8 @@ export {
   Lensflare,
   Levioso,
   MouseParallax,
+  Outline,
+  OutlineMaterial,
   PositionalAudio,
   Reflector,
   Sampler,

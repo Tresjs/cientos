@@ -59,4 +59,9 @@ export const abstractionsRoutes = [
     name: 'AnimatedSprite',
     component: () => import('../../pages/abstractions/AnimatedSpriteDemo.vue'),
   },
+  {
+    path: '/abstractions/outline',
+    name: 'Outline',
+    component: () => import('../../pages/abstractions/outline/OutlineDemo.vue'),
+  },
 ]
