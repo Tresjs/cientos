@@ -11,12 +11,11 @@ export default [
       { text: 'GlobalAudio', link: '/guide/abstractions/global-audio' },
       { text: 'Fbo', link: '/guide/abstractions/fbo' },
       { text: 'useFBO', link: '/guide/abstractions/use-fbo' },
-      {
-        text: 'useSurfaceSampler',
-        link: '/guide/abstractions/use-surface-sampler',
-      },
+      { text: 'useSurfaceSampler', link: '/guide/abstractions/use-surface-sampler' },
       { text: 'Sampler', link: '/guide/abstractions/sampler' },
       { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
+      { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
+      { text: 'Billboard', link: '/guide/abstractions/billboard' },
     ],
   },
   {
@@ -25,10 +24,7 @@ export default [
       { text: 'OrbitControls', link: '/guide/controls/orbit-controls' },
       { text: 'CameraControls', link: '/guide/controls/camera-controls' },
       { text: 'TransformControls', link: '/guide/controls/transform-controls' },
-      {
-        text: 'PointerLockControls',
-        link: '/guide/controls/pointer-lock-controls',
-      },
+      { text: 'PointerLockControls', link: '/guide/controls/pointer-lock-controls' },
       { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
       { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
       { text: 'MapControls', link: '/guide/controls/map-controls' },
@@ -48,21 +44,18 @@ export default [
   },
   {
     text: 'Materials',
+    collapsed: true,
     items: [
       { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
       { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
-      {
-        text: 'CustomShaderMaterial',
-        link: '/guide/materials/custom-shader-material',
-      },
-      {
-        text: 'HolographicMaterial',
-        link: '/guide/materials/holographic-material',
-      },
+      { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
+      { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+      { text: 'HolographicMaterial', link: '/guide/materials/holographic-material' },
     ],
   },
   {
     text: 'Shapes',
+    collapsed: true,
     items: [
       { text: 'Box', link: '/guide/shapes/box' },
       { text: 'CatmullRomCurve3', link: '/guide/shapes/catmullromcurve3' },
@@ -102,6 +95,7 @@ export default [
   },
   {
     text: 'Misc',
+    collapsed: true,
     items: [
       { text: 'Stats', link: '/guide/misc/stats' },
       { text: 'Html', link: '/guide/misc/html-component' },
@@ -112,6 +106,7 @@ export default [
   },
   {
     text: 'Directives',
+    collapsed: true,
     items: [
       { text: 'v-log', link: '/guide/directives/v-log' },
       { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
