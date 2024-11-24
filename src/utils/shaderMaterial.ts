@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { CubeTexture, Texture, Matrix4, Matrix3, Quaternion, Vector4, Vector3, Vector2, Color, ShaderMaterial, UniformsUtils, MathUtils } from "three"
+import type { Color, CubeTexture, Matrix3, Matrix4, Quaternion, Texture, Vector2, Vector3, Vector4 } from 'three'
+import { MathUtils, ShaderMaterial, UniformsUtils } from 'three'
 
 export function shaderMaterial(
   uniforms: {
