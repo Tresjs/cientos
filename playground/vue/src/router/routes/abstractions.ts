@@ -59,4 +59,9 @@ export const abstractionsRoutes = [
     name: 'AnimatedSprite',
     component: () => import('../../pages/abstractions/AnimatedSpriteDemo.vue'),
   },
+  {
+    path: '/abstractions/screen-space',
+    name: 'ScreenSpace',
+    component: () => import('../../pages/abstractions/ScreenSpaceDemo.vue'),
+  }
 ]
