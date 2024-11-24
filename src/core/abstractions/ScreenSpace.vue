@@ -2,12 +2,12 @@
 import { shallowRef } from 'vue'
 import { useLoop } from '@tresjs/core'
 
-export type ScreenSpaceProps = {
+export interface ScreenSpaceProps {
   depth?: number
 }
 
 const props = withDefaults(defineProps<ScreenSpaceProps>(), {
-    depth: -1
+  depth: -1,
 })
 
 const outerRef = shallowRef()
@@ -23,9 +23,9 @@ defineExpose({ instance: outerRef })
 </script>
 
 <template>
-    <TresGroup ref="outerRef">
-      <TresGroup :position-z="-props.depth">
-        <slot></slot>
-      </TresGroup>
+  <TresGroup ref="outerRef">
+    <TresGroup :position-z="-props.depth">
+      <slot></slot>
     </TresGroup>
+  </TresGroup>
 </template>

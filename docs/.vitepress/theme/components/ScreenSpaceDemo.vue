@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ScreenSpace, OrbitControls } from '@tresjs/cientos'
+import { OrbitControls, ScreenSpace } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 </script>
 

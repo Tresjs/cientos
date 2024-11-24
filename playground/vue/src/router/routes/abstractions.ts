@@ -63,5 +63,5 @@ export const abstractionsRoutes = [
     path: '/abstractions/screen-space',
     name: 'ScreenSpace',
     component: () => import('../../pages/abstractions/ScreenSpaceDemo.vue'),
-  }
+  },
 ]
