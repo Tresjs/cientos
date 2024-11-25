@@ -64,7 +64,7 @@ const { progress, hasFinishLoading } = await useProgress()
         :background="background.value"
         :files="environmentFiles"
         :blur="blur.value"
-        path="https://raw.githubusercontent.com/Tresjs/assets/refs/heads/main/textures/environmentMap/"
+        path="https://raw.githubusercontent.com/Tresjs/assets/main/textures/environmentMap"
       />
     </Suspense>
     <Sphere>
