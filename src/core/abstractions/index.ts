@@ -5,6 +5,7 @@ import Levioso from './Levioso.vue'
 import MouseParallax from './MouseParallax.vue'
 import PositionalAudio from './PositionalAudio.vue'
 import Reflector from './Reflector.vue'
+import TextTroika from './TextTroika.vue'
 import Text3D from './Text3D.vue'
 import { useAnimations } from './useAnimations'
 import Fbo from './useFBO/component.vue'
@@ -24,5 +25,6 @@ export {
   Reflector,
   Sampler,
   Text3D,
+  TextTroika,
   useAnimations,
 }
