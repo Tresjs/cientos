@@ -10,6 +10,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/Text3DDemo.vue'),
   },
   {
+    path: '/abstractions/text-troika',
+    name: 'TextTroika',
+    component: () => import('../../pages/abstractions/TextTroikaDemo.vue'),
+  },
+  {
     path: '/abstractions/mouse-parallax',
     name: 'MouseParallax',
     component: () => import('../../pages/abstractions/MouseParallaxDemo.vue'),
