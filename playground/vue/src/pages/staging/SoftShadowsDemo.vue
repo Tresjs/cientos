@@ -29,7 +29,7 @@ setInterval(() => {
 </script>
 
 <template>
-  <TresCanvas :shadows="true" :shadowMap-enabled="true" @ready="ready">
+  <TresCanvas :shadows="true" :shadowMap-enabled="true">
     <TresFog :args="['#FFFFFF', 5, 100]" />
 
     <OrbitControls />
