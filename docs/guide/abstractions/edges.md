@@ -8,12 +8,11 @@ The `cientos` package provides an abstraction of [EdgesGeometry](https://threejs
 
 ## Usage
 
-The `<Edges>` component is easy to set up as it automatically derives geometry from its parent. You can simply wrap it around any [Object3D](https://threejs.org/docs/#api/en/core/Object3D), [Mesh](https://threejs.org/docs/#api/en/objects/Mesh), or [primitive](https://docs.tresjs.org/advanced/primitive.html) to automatically apply edge rendering. You can give to `<Edges>` a custom material. *(see code bellow)* 
-
+The `<Edges>` component is easy to set up as it automatically derives geometry from its parent. You can simply wrap it around any [Object3D](https://threejs.org/docs/#api/en/core/Object3D), [Mesh](https://threejs.org/docs/#api/en/objects/Mesh), or [primitive](https://docs.tresjs.org/advanced/primitive.html) to automatically apply edge rendering. You can give to `<Edges>` a custom material. *(see code bellow)*
 
 ```vue
 <script setup lang="ts">
-import { Edges, Box } from '@tresjs/cientos'
+import { Box, Edges } from '@tresjs/cientos'
 </script>
 
 <template>
@@ -35,7 +34,7 @@ import { Edges, Box } from '@tresjs/cientos'
 
 ## Props
 
-`<Edges>` is based on [LineSegments](https://threejs.org/docs/#api/en/objects/LineSegments) and supports all of its props.
+`<Edges>` is based on [LineSegments](https://threejs.org/docs/#api/en/objects/LineSegments) & [Line](https://threejs.org/docs/#api/en/objects/Line) and supports all of its props.
 
 | Prop              | Description                                          | Default                   |
 | :---------------- | :--------------------------------------------------- | ------------------------- |
@@ -46,13 +45,12 @@ import { Edges, Box } from '@tresjs/cientos'
 
 | Event       | Description                                                      |
 | :---------- | :--------------------------------------------------------------- |
-| `root` | Root reference — Inheritance of [LineSegments](https://threejs.org/docs/#api/en/objects/LineSegments).|
-
+| `instance` | Instance reference — Inheritance of [LineSegments](https://threejs.org/docs/#api/en/objects/LineSegments).|
 
 ```typescript{1}
 const edgesRef = shallowRef(null)
 
-console.log(edgesRef.value.root) // root properties
+console.log(edgesRef.value.instance) // instance properties
 ```
 
 ```vue{2}
@@ -60,4 +58,3 @@ console.log(edgesRef.value.root) // root properties
     <Edges ref="edgesRef" />
 </template>
 ```
-

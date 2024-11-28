@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { Edges, OrbitControls, Box } from '@tresjs/cientos'
-import { useControls, TresLeches } from '@tresjs/leches'
+import { Box, Edges, OrbitControls } from '@tresjs/cientos'
+import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
 const gl = {

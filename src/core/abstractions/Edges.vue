@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, toRefs, watch, shallowRef, useSlots, ref } from 'vue'
-import type { LineSegments, BufferGeometry } from 'three'
+import { ref, shallowRef, toRefs, watch } from 'vue'
+import type { BufferGeometry, LineSegments } from 'three'
 import { EdgesGeometry } from 'three'
 import type { TresColor } from '@tresjs/core'
 
@@ -20,10 +20,6 @@ const lineSegmentsRef = shallowRef<LineSegments>()
 const saveGeometry = ref<BufferGeometry | null>(null)
 const saveThreshold = ref<number>(1)
 
-const slots = useSlots()
-
-const hasChildren = computed(() => !!slots.default)
-
 defineExpose({
   root: lineSegmentsRef,
 })
@@ -31,7 +27,7 @@ defineExpose({
 // Watch for changes in lineSegments, thresholdAngle, and color.
 watch(
   () => [lineSegmentsRef.value, threshold.value],
-  () => {    
+  () => {
     if (lineSegmentsRef.value) {
       const parent = lineSegmentsRef.value.parent
 
@@ -44,7 +40,7 @@ watch(
         ) {
           saveGeometry.value = geometry
           saveThreshold.value = threshold.value
-          
+
           lineSegmentsRef.value.geometry = new EdgesGeometry(geometry, threshold.value)
         }
       }
@@ -58,11 +54,8 @@ watch(
     ref="lineSegmentsRef"
     v-bind="$attrs"
   >
-    <template v-if="hasChildren">
-      <slot />
-    </template>
-    <template v-else>
+    <slot>
       <TresLineBasicMaterial :color="color" />
-    </template>
+    </slot>
   </TresLineSegments>
 </template>
