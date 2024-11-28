@@ -174,7 +174,7 @@ defineExpose({ instance: lineRef })
 
 <template>
   <primitive
-    :ref="lineRef"
+    ref="lineRef"
     :object="line"
   />
 </template>
