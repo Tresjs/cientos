@@ -88,6 +88,7 @@ export default defineConfig({
           { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
           { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
           { text: 'MapControls', link: '/guide/controls/map-controls' },
+          { text: 'Helper', link: '/guide/controls/helper' },
         ],
       },
       {
