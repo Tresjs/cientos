@@ -1,12 +1,12 @@
 <script setup lang="ts">
-/* 
+import { Color, DoubleSide } from 'three'
+/*
 ** This section of code is inspired by the Lightformer component from the drei library:
 ** https://github.com/pmndrs/drei/blob/master/src/core/Lightformer.tsx
 ** The Lightformer component in drei provides functionality for creating light probes in a scene.
 */
-import { defineProps, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { MeshBasicMaterial, Texture } from 'three'
-import { Color, DoubleSide } from 'three'
 
 const props = withDefaults(defineProps<{
   args?: any[]
@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<{
   toneMapped: false,
   map: null as any,
   intensity: 1,
-  color: new Color(0xffffff),
+  color: new Color(0xFFFFFF),
 })
 
 const material = ref<MeshBasicMaterial>()
@@ -51,7 +51,7 @@ watchEffect(() => {
 
     <TresMeshBasicMaterial
       ref="material"
-      :toneMapped="toneMapped"
+      :tone-mapped="toneMapped"
       :map="map"
       :side="DoubleSide"
       :color="color"

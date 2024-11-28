@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, useSlots, shallowRef, watchEffect, toRefs, toValue } from 'vue'
-import type { TextGeometryParameters } from 'three-stdlib'
-import { TextGeometry, FontLoader } from 'three-stdlib'
 import { useTresContext } from '@tresjs/core'
+import { FontLoader, TextGeometry } from 'three-stdlib'
+import { computed, shallowRef, toRefs, toValue, useSlots, watch, watchEffect } from 'vue'
+import type { TextGeometryParameters } from 'three-stdlib'
 
 export interface Glyph {
   _cachedOutline: string[]
@@ -151,7 +151,9 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend } = useTresContext()
+const { extend, invalidate } = useTresContext()
+
+watch(props, () => invalidate())
 
 extend({ TextGeometry })
 
@@ -160,15 +162,15 @@ const loader = new FontLoader()
 const slots = useSlots()
 
 const localText = computed(() => {
-  if (text?.value) return text.value
-  else if (slots.default) return (slots.default()[0].children as string)?.trim()
+  if (text?.value) { return text.value }
+  else if (slots.default) { return (slots.default()[0].children as string)?.trim() }
   return needUpdates.value ? '' : 'TresJS'
 })
 
 const text3DRef = shallowRef()
 
 defineExpose({
-  value: text3DRef,
+  instance: text3DRef,
 })
 
 const localFont = await new Promise((resolve, reject) => {
@@ -183,7 +185,6 @@ const localFont = await new Promise((resolve, reject) => {
     }
   }
   catch (error) {
-    // eslint-disable-next-line no-console
     reject(console.error('cientos', error))
   }
 })
@@ -221,6 +222,6 @@ watchEffect(() => {
       :args="[localText, textOptions]"
       :center="center"
     />
-    <slot />
+    <slot></slot>
   </TresMesh>
 </template>

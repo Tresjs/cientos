@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { TresCanvas } from '@tresjs/core'
 import { MouseParallax, TorusKnot } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
 </script>
 
 <template>
@@ -14,7 +14,7 @@ import { MouseParallax, TorusKnot } from '@tresjs/cientos'
     </TorusKnot>
     <MouseParallax
       :factor="5"
-      :ease="3"
+      :ease="[3, 0.1]"
     />
   </TresCanvas>
 </template>

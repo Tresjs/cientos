@@ -1,9 +1,9 @@
 <!-- eslint-disable max-len -->
 <script setup lang="ts">
-import type { TresColor } from '@tresjs/core'
-import type { TubeGeometry } from 'three'
+import { type TresColor, useTresContext } from '@tresjs/core'
 import { QuadraticBezierCurve3, Vector3 } from 'three'
-import { shallowRef, toRefs } from 'vue'
+import { shallowRef, toRefs, watch } from 'vue'
+import type { TubeGeometry } from 'three'
 
 export interface TubeProps {
   /**
@@ -35,11 +35,13 @@ const props = withDefaults(defineProps<TubeProps>(), {
   color: '#ffffff',
 })
 const { args, color } = toRefs(props)
+const { invalidate } = useTresContext()
+watch(args, () => invalidate())
 
 const tubeRef = shallowRef()
 
 defineExpose({
-  value: tubeRef,
+  instance: tubeRef,
 })
 </script>
 

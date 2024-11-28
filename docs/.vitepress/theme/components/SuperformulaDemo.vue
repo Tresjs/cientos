@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { OrbitControls, Superformula } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { Superformula, OrbitControls } from '@tresjs/cientos'
 </script>
 
 <template>

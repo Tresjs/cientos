@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { watchEffect, shallowRef, toRefs } from 'vue'
+import { useLoop } from '@tresjs/core'
+import { shallowRef, toRefs, watchEffect } from 'vue'
 import type { TresColor } from '@tresjs/core'
-import { useRenderLoop } from '@tresjs/core'
 
 export interface PrecipitationProps {
   /**
@@ -116,7 +116,7 @@ export interface PrecipitationProps {
 const props = withDefaults(defineProps<PrecipitationProps>(), {
   size: 0.1,
   area: () => [10, 10, 20],
-  color: 0xffffff,
+  color: 0xFFFFFF,
   alphaTest: 0.01,
   opacity: 0.8,
   count: 5000,
@@ -160,7 +160,7 @@ const setSpeed = () => {
   velocityArray = new Float32Array(count.value * 2)
   for (let i = 0; i < count.value * 2; i += 2) {
     velocityArray[i] = ((Math.random() - 0.5) / 5) * speed.value * randomness.value
-    velocityArray[i + 1] = (Math.random() / 5) * speed.value + 0.01
+    velocityArray[i + 1] = (Math.random() / 5) * speed.value
   }
 }
 setSpeed()
@@ -171,9 +171,9 @@ watchEffect(() => {
   setPosition()
 })
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(({ invalidate }) => {
   if (geometryRef.value?.attributes.position.array && geometryRef.value?.attributes.position.count) {
     const positionArray = geometryRef.value.attributes.position.array
     for (let i = 0; i < geometryRef.value.attributes.position.count; i++) {
@@ -183,18 +183,21 @@ onLoop(() => {
       positionArray[i * 3] += velocityX
       positionArray[i * 3 + 1] -= velocityY
 
-      if (positionArray[i * 3] <= -area.value[0] / 2 || positionArray[i * 3] >= area.value[0] / 2)
-        positionArray[i * 3] = positionArray[i * 3] * -1
-      if (positionArray[i * 3 + 1] <= -area.value[1] / 2 || positionArray[i * 3 + 1] >= area.value[1] / 2)
-        positionArray[i * 3 + 1] = positionArray[i * 3 + 1] * -1
+      if (positionArray[i * 3] <= -area.value[0] / 2 || positionArray[i * 3] >= area.value[0] / 2) { positionArray[i * 3] = positionArray[i * 3] * -1 }
+      if (positionArray[i * 3 + 1] <= -area.value[1] / 2 || positionArray[i * 3 + 1] >= area.value[1] / 2) { positionArray[i * 3 + 1] = positionArray[i * 3 + 1] * -1 }
     }
     geometryRef.value.attributes.position.needsUpdate = true
+
+    invalidate()
   }
 })
+
+const pointsRef = shallowRef()
+defineExpose({ instance: pointsRef })
 </script>
 
 <template>
-  <TresPoints>
+  <TresPoints ref="pointsRef">
     <TresPointsMaterial
       :size="size"
       :color="color"

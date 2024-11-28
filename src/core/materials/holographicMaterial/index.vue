@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-import type { TresColor } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import { FrontSide } from 'three'
+import { shallowRef } from 'vue'
+import type { TresColor } from '@tresjs/core'
 import type { Side } from 'three'
 
-import HolographicMaterial from './material'
+import HolographicMaterial from './HolographicMaterialParameters'
 
 const props = withDefaults(
   defineProps<{
@@ -30,7 +30,7 @@ const props = withDefaults(
     hologramBrightness: 0.7,
     scanlineSize: 8.0,
     signalSpeed: 0.45,
-    hologramOpacity: 1.,
+    hologramOpacity: 1.0,
     hologramColor: '#00d5ff',
     side: FrontSide,
   },
@@ -44,10 +44,11 @@ extend({ HolographicMaterial })
 
 defineExpose({ root: MeshHolographicMaterialClass, constructor: HolographicMaterial })
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(({ invalidate }) => {
   MeshHolographicMaterialClass.value?.update()
+  invalidate()
 })
 </script>
 

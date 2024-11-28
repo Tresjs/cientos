@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import type { VNode, Ref } from 'vue'
-import { computed, createVNode, toRefs, render, watchEffect, ref, watch, useAttrs, isRef, onUnmounted } from 'vue'
-import type {
-  WebGLRenderer,
-  OrthographicCamera } from 'three'
+import { useLoop, useTresContext } from '@tresjs/core'
 import {
   DoubleSide,
   PlaneGeometry,
   ShaderMaterial,
-  Vector3 } from 'three'
-import type { TresCamera, TresObject3D } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-
+  Vector3,
+} from 'three'
+import { computed, createVNode, isRef, onUnmounted, ref, render, toRefs, useAttrs, watch, watchEffect } from 'vue'
+import type { TresCamera, TresObject, TresObject3D } from '@tresjs/core'
 import type { Mutable } from '@vueuse/core'
-import vertexShader from './shaders/vertex.glsl'
+import type {
+  OrthographicCamera,
+} from 'three'
+
+import type { VNode } from 'vue'
 import fragmentShader from './shaders/fragment.glsl'
-import { 
+import vertexShader from './shaders/vertex.glsl'
+import {
   calculatePosition,
+  epsilon,
+  getCameraCSSMatrix,
+  getObjectCSSMatrix,
   isObjectBehindCamera,
   isObjectVisible,
+  objectScale,
   objectZIndex,
-  getCameraCSSMatrix,
-  epsilon,
-  getObjectCSSMatrix,
-  objectScale, 
 } from './utils'
 
 export interface HTMLProps {
@@ -44,8 +45,7 @@ export interface HTMLProps {
   // Occlusion based off work by Jerome Etienne and James Baicoianu
   // https://www.youtube.com/watch?v=ScZcUEDGjJI
   // as well as Joe Pea in CodePen: https://codepen.io/trusktr/pen/RjzKJx
-  /* occlude?: Ref<Ref<TresObject3D>>[] | boolean | 'raycast' | 'blending' */
-  occlude?: Ref<TresObject3D>[] | boolean | 'raycast' | 'blending'
+  occlude?: TresObject3D | null | (TresObject3D | null)[] | boolean | 'raycast' | 'blending'
 }
 
 const props = withDefaults(defineProps<HTMLProps>(), {
@@ -59,6 +59,8 @@ const props = withDefaults(defineProps<HTMLProps>(), {
 })
 
 const emits = defineEmits(['onOcclude'])
+
+const slots = defineSlots()
 
 type PointerEventsProperties =
   | 'auto'
@@ -74,8 +76,6 @@ type PointerEventsProperties =
   | 'inherit'
 
 const attrs = useAttrs()
-
-const slots = defineSlots()
 
 const groupRef = ref<TresObject3D>()
 const meshRef = ref<TresObject3D>()
@@ -130,7 +130,7 @@ const styles = computed(() => {
         height: `${sizes.height.value}px`,
       }),
       zIndex: 2,
-      ...attrs.style,
+      ...Object.assign({}, attrs.style),
       willChange: 'transform',
     }
   }
@@ -142,7 +142,7 @@ const transformInnerStyles = computed(() => ({
 }))
 
 // Occlussion
-const occlusionMeshRef = ref(null!)
+const occlusionMeshRef = ref<TresObject>(null!)
 const isMeshSizeSet = ref(false)
 
 const isRayCastOcclusion = computed(
@@ -153,8 +153,8 @@ const isRayCastOcclusion = computed(
 
 watch(
   () => occlude,
-  (value) => {
-    if (value && value === 'blending') {
+  ({ value }) => {
+    if (value === 'blending') {
       el.value.style.zIndex = `${Math.floor(zIndexRange.value[0] / 2)}`
       el.value.style.position = 'absolute'
       el.value.style.pointerEvents = 'none'
@@ -169,9 +169,9 @@ watch(
 
 watch(
   () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value, slots.default?.()],
-  ([group, _renderer]: [TresObject3D | null, WebGLRenderer]): void => {
-    if (group && _renderer) {
-      const target = portal?.value || _renderer.domElement
+  ([group, renderer]): void => {
+    if (group && renderer) {
+      const target = portal?.value || renderer.domElement
       scene.value?.updateMatrixWorld()
 
       if (transform.value) {
@@ -182,7 +182,7 @@ watch(
           width: sizes.width.value,
           height: sizes.height.value,
         })
-        el.value.style.cssText 
+        el.value.style.cssText
         = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;`
       }
 
@@ -193,11 +193,11 @@ watch(
       if (transform.value) {
         vnode.value = createVNode('div', { id: 'outer', style: styles.value }, [
           createVNode('div', { id: 'inner', style: transformInnerStyles.value }, [
-            createVNode('div', { 
+            createVNode('div', {
               key: meshRef.value?.uuid,
               id: scene?.value.uuid,
               class: attrs.class,
-              style: attrs.style, 
+              style: attrs.style,
             }, slots.default?.()),
           ]),
         ])
@@ -206,9 +206,8 @@ watch(
         vnode.value = createVNode('div', {
           key: meshRef.value?.uuid,
           id: scene?.value.uuid,
-          style: styles.value, 
-        },
-        slots.default?.())
+          style: styles.value,
+        }, slots.default?.())
       }
       render(vnode.value, el.value)
     }
@@ -223,9 +222,11 @@ watchEffect(() => {
 
 const visible = ref(true)
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(({ invalidate }) => {
+  invalidate()
+
   if (groupRef.value && camera.value && renderer.value) {
     camera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)
@@ -248,7 +249,7 @@ onLoop(() => {
 
       if (isRayCastOcclusion.value) {
         if (Array.isArray(occlude?.value)) {
-          raytraceTarget = occlude?.value
+          raytraceTarget = occlude?.value as unknown as TresObject3D[]
         }
         else if (occlude?.value !== 'blending') {
           raytraceTarget = [scene.value as unknown as TresObject3D]
@@ -305,14 +306,18 @@ onLoop(() => {
         el.value.style.height = `${sizes.height.value}px`
         el.value.style.perspective = isOrthographicCamera ? '' : `${fov}px`
 
-        if (vnode.value?.el && vnode.value?.children) {
+        if (vnode.value?.el && vnode.value?.children && Array.isArray(vnode.value.children)) {
           vnode.value.el.style.willChange = 'transform'
           vnode.value.el.style.transform = `${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`
-          vnode.value.children[0].willChange = 'transform'
-          vnode.value.children[0].el.style.transform = getObjectCSSMatrix(
-            matrix,
-            1 / ((distanceFactor?.value || 10) / 400),
-          )
+
+          const firstChild = vnode.value.children[0] as VNode
+          if (firstChild && firstChild.el) {
+            firstChild.el.style.willChange = 'transform'
+            firstChild.el.style.transform = getObjectCSSMatrix(
+              matrix,
+              1 / ((distanceFactor?.value || 10) / 400),
+            )
+          }
         }
       }
       else {
@@ -331,7 +336,7 @@ onLoop(() => {
   if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
     if (transform.value) {
       if (vnode.value?.el && vnode.value?.children) {
-        const el = vnode.value?.children[0]
+        const el = (vnode.value?.children as unknown as Array<HTMLElement>)[0]
 
         if (el?.clientWidth && el?.clientHeight) {
           const { isOrthographicCamera } = camera.value as OrthographicCamera
@@ -379,7 +384,7 @@ onLoop(() => {
   }
 })
 
-//TODO: Check ShaderMaterial disposal
+// TODO: Check ShaderMaterial disposal
 const shaders = computed(() => ({
   vertexShader: transform.value
     ? undefined
@@ -405,6 +410,8 @@ onUnmounted(() => {
   }
   el.value.remove()
 })
+
+defineExpose({ instance: groupRef })
 </script>
 
 <template>

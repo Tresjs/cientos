@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { TresObject } from '@tresjs/core'
 import { useGLTF } from '.'
 
 export interface GLTFModelProps {
@@ -11,7 +12,7 @@ export interface GLTFModelProps {
    * @required
    * @memberof GLTFModelProps
    *
-   **/
+   */
   path: string
   /**
    *
@@ -21,7 +22,7 @@ export interface GLTFModelProps {
    * @default false
    * @memberof GLTFModelProps
    *
-   **/
+   */
   draco?: boolean
   /**
    *
@@ -31,7 +32,7 @@ export interface GLTFModelProps {
    * @default false
    * @memberof GLTFModelProps
    *
-   **/
+   */
   castShadow?: boolean
   /**
    *
@@ -41,7 +42,7 @@ export interface GLTFModelProps {
    * @default false
    * @memberof GLTFModelProps
    *
-   **/
+   */
   receiveShadow?: boolean
   /**
    *
@@ -51,7 +52,7 @@ export interface GLTFModelProps {
    * @default 'https://www.gstatic.com/draco/versioned/decoders/1.4.1/'
    * @memberof GLTFModelProps
    *
-   **/
+   */
   decoderPath?: string
 }
 
@@ -73,15 +74,15 @@ const props = withDefaults(
 const modelRef = ref()
 
 defineExpose({
-  value: modelRef,
+  instance: modelRef,
 })
 
 const { scene: model } = await useGLTF(props.path as string, {
   draco: props.draco,
   decoderPath: props.decoderPath,
 })
-if ( props.castShadow || props.receiveShadow ) {
-  model.traverse((child) => {
+if (props.castShadow || props.receiveShadow) {
+  model.traverse((child: TresObject) => {
     if (child.isMesh) {
       child.castShadow = props.castShadow
       child.receiveShadow = props.receiveShadow

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useTresContext } from '@tresjs/core'
 // eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
-import { Sky as SkyImpl } from 'three/examples/jsm/objects/Sky'
-import { computed, shallowRef } from 'vue'
+import { Sky as SkyImpl } from 'three-stdlib'
+import { computed, shallowRef, watch } from 'vue'
 
 export interface SkyProps {
   /**
@@ -46,6 +47,10 @@ const props = withDefaults(defineProps<SkyProps>(), {
   distance: 450000,
 })
 
+const { invalidate } = useTresContext()
+
+watch(props, () => invalidate())
+
 const skyRef = shallowRef<SkyImpl>()
 const skyImpl = new SkyImpl()
 const sunPosition = computed(() =>
@@ -59,7 +64,7 @@ function getSunPosition(azimuth: number, elevation: number) {
 }
 
 defineExpose({
-  root: skyRef,
+  instance: skyRef,
   sunPosition: sunPosition.value,
 })
 </script>

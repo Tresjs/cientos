@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { shallowRef, computed, toRefs } from 'vue'
+import { useLoop, useTexture, useTresContext } from '@tresjs/core'
+import { computed, shallowRef, toRefs } from 'vue'
 import type { TresColor } from '@tresjs/core'
-import { useTexture, useRenderLoop, useTresContext } from '@tresjs/core'
 import type { Object3D, Texture } from 'three'
 
 export interface SmokeProps {
@@ -88,10 +88,10 @@ const smokeRef = shallowRef()
 const groupRef = shallowRef()
 
 defineExpose({
-  value: smokeRef,
+  instance: smokeRef,
 })
 
-const smoke = [...new Array(segments)].map((_, index) => ({
+const smoke = [...[segments]].map((_, index) => ({
   x: width.value / 2 - Math.random() * width.value,
   y: width.value / 2 - Math.random() * width.value,
   scale: 0.4 + Math.sin(((index + 1) / segments.value) * Math.PI) * ((0.2 + Math.random()) * 10),
@@ -106,14 +106,15 @@ const { map } = (await useTexture({ map: texture.value })) as { map: Texture }
 const { renderer, camera } = useTresContext()
 const colorSpace = computed(() => renderer.value?.outputColorSpace)
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(({ invalidate }) => {
   if (smokeRef.value && camera.value && groupRef.value) {
     groupRef.value?.children.forEach((child: Object3D, index: number) => {
       child.rotation.z += smoke[index].rotation
     })
     smokeRef.value.lookAt(camera.value?.position)
+    invalidate()
   }
 })
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { OrbitControls, useFBX } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { useFBX, OrbitControls } from '@tresjs/cientos'
 
 const path = 'https://raw.githubusercontent.com/'
   + 'Tresjs/assets/main/models/fbx/low-poly-truck/Jeep_done.fbx'

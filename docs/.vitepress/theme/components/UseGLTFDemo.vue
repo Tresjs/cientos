@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { OrbitControls, useGLTF } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { useGLTF, OrbitControls } from '@tresjs/cientos'
 
 const path = 'https://raw.githubusercontent.com/'
-+ 'Tresjs/assets/main/models/gltf/blender-cube.glb'
+  + 'Tresjs/assets/main/models/gltf/blender-cube.glb'
 const { scene } = await useGLTF(path)
 </script>
 

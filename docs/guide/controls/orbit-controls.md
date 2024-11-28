@@ -4,15 +4,14 @@
   <OrbitControlsDemo />
 </DocsDemo>
 
-
 [OrbitControls](https://threejs.org/docs/index.html?q=orbit#examples/en/controls/OrbitControls) is a camera controller that allows you to orbit around a target. It's a great way to explore your scene.
 
 However, it is not part of the core of ThreeJS. So to use it you would need to import it from the `three/examples/jsm/controls/OrbitControls` module.
 
-Here is where the fancy part begins. ✨  
+Here is where the fancy part begins. ✨
 The `cientos` package provides a component called `<OrbitControls />` that is a wrapper of the `OrbitControls` from the [`three-stdlib`](https://github.com/pmndrs/three-stdlib) module.
 
-The nicest part? You don't need to extend the catalog or pass any arguments.  
+The nicest part? You don't need to extend the catalog or pass any arguments.
 It just works. 💯
 
 ## Usage
@@ -31,7 +30,7 @@ Is really important that the Perspective camera is set first in the canvas. Othe
 | **camera**          | The camera to control.                                                                                                                                                           | `undefined`                                                                      |
 | **domElement**      | The dom element to listen to.                                                                                                                                                    | `undefined`                                                                      |
 | **target**          | The target to orbit around.                                                                                                                                                      | `undefined`                                                                      |
-| **enableDamping**   | If `true`, the controls will use damping (inertia), which can be used to give a sense of weight to the controls.                                                                 | `false`                                                                          |
+| **enableDamping**   | If `true`, the controls will use damping (inertia), which can be used to give a sense of weight to the controls.                                                                 | `true`                                                                          |
 | **dampingFactor**   | The damping inertia used if `.enableDamping` is set to true.                                                                                                                     | `0.05`                                                                           |
 | **autoRotate**      | Set to true to automatically rotate around the target.                                                                                                                           | `false`                                                                          |
 | **autoRotateSpeed** | How fast to rotate around the target if `.autoRotate` is true.                                                                                                                   | `2`                                                                              |

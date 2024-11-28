@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { Box, ScrollControls, Sphere, Stars } from '@tresjs/cientos'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { ScrollControls, Stars, Sphere, Box } from '@tresjs/cientos'
+import { ref } from 'vue'
 
 const scRef = ref()
 const boxRef = ref()
@@ -10,8 +10,8 @@ const progress = ref(0)
 const { onLoop } = useRenderLoop()
 onLoop(() => {
   if (boxRef.value) {
-    boxRef.value.value.rotation.x = progress.value * 10
-    boxRef.value.value.rotation.y = progress.value * 2
+    boxRef.value.instance.rotation.x = progress.value * 10
+    boxRef.value.instance.rotation.y = progress.value * 2
   }
 })
 </script>
@@ -37,7 +37,7 @@ onLoop(() => {
       <Box
         ref="boxRef"
         :scale="0.5"
-        :color="0xff00ff"
+        :color="0xFF00FF"
         :position="[-1, 1, 0]"
       />
     </ScrollControls>
