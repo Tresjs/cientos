@@ -21,7 +21,7 @@ const saveGeometry = ref<BufferGeometry | null>(null)
 const saveThreshold = ref<number>(1)
 
 defineExpose({
-  root: lineSegmentsRef,
+  instance: lineSegmentsRef,
 })
 
 // Watch for changes in lineSegments, thresholdAngle, and color.

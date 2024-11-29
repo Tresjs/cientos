@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useSeek } from '@tresjs/core'
 import { Box, ContactShadows, Edges, OrbitControls } from '@tresjs/cientos'
-import { gsap } from 'gsap'
 import { MOUSE, TOUCH } from 'three'
 
 const gl = {
@@ -11,60 +10,14 @@ const gl = {
 
 const dataBoxes = [{
   color: '#82DBC5',
-  edgeColor: '#292929',
+  edgeColor: '#505050',
 }, {
   color: '#505050',
-  edgeColor: '#292929',
+  edgeColor: 'white',
 }, {
   color: '#F6B03B',
-  edgeColor: '#292929',
+  edgeColor: '#505050',
 }]
-
-const { seek } = useSeek()
-
-// To be added when @pointer-enter and @pointer-leave are fixed. Currently it returns a loop of values.
-
-// function onPointerEnter(ev) {
-//   const object = ev.object
-//   const edge = seek(object, 'type', 'LineSegments')
-
-//   gsap.to(object.position, {
-//     y: 0.25,
-//     duration: 1,
-//     overwrite: true,
-//     ease: 'elastic.out(1,0.4)',
-//   })
-
-//   gsap.to(edge?.scale, {
-//     x: 1.1,
-//     y: 1.1,
-//     z: 1.1,
-//     duration: 1,
-//     overwrite: true,
-//     ease: 'elastic.out(1,0.4)',
-//   })
-// }
-
-// function onPointerLeave(ev) {
-//   const object = ev
-//   const edge = seek(object, 'type', 'LineSegments')
-
-//   gsap.to(object.position, {
-//     y: 0,
-//     duration: 0.25,
-//     overwrite: true,
-//     ease: 'power3.out',
-//   })
-
-//   gsap.to(edge?.scale, {
-//     x: 1,
-//     y: 1,
-//     z: 1,
-//     duration: 0.25,
-//     overwrite: true,
-//     ease: 'power3.out',
-//   })
-// }
 </script>
 
 <template>
@@ -89,9 +42,7 @@ const { seek } = useSeek()
       <TresMeshBasicMaterial
         :color="dataBoxes[index].color"
       />
-      <Edges :color="dataBoxes[index].edgeColor">
-        <TresMeshNormalMaterial />
-      </Edges>
+      <Edges :color="dataBoxes[index].edgeColor" />
     </Box>
 
     <ContactShadows

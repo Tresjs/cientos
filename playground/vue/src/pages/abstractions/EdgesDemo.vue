@@ -10,7 +10,8 @@ const gl = {
   clearColor: '#F6B03B',
 }
 
-const { edgeColor, edgeThreshold } = useControls({
+const { enabled, edgeColor, edgeThreshold } = useControls({
+  enabled: { value: true, type: 'boolean', label: 'Enabled' },
   edgeColor: { value: '#292929', type: 'color', label: 'Color' },
   edgeThreshold: {
     label: 'Threshold Angle',
@@ -45,6 +46,7 @@ const { edgeColor, edgeThreshold } = useControls({
       <TresMeshBasicMaterial color="#f6f6f6" />
 
       <Edges
+        v-if="enabled.value"
         :scale="1.1"
         :threshold="edgeThreshold.value"
       >

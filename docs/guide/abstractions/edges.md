@@ -8,7 +8,9 @@ The `cientos` package provides an abstraction of [EdgesGeometry](https://threejs
 
 ## Usage
 
-The `<Edges>` component is easy to set up as it automatically derives geometry from its parent. You can simply wrap it around any [Object3D](https://threejs.org/docs/#api/en/core/Object3D), [Mesh](https://threejs.org/docs/#api/en/objects/Mesh), or [primitive](https://docs.tresjs.org/advanced/primitive.html) to automatically apply edge rendering. You can give to `<Edges>` a custom material. *(see code bellow)*
+<<< @/.vitepress/theme/components/EdgesDemo.vue
+
+The `<Edges>` component is easy to set up as it automatically derives geometry from its parent. You can simply wrap it around any [Object3D](https://threejs.org/docs/#api/en/core/Object3D), [Mesh](https://threejs.org/docs/#api/en/objects/Mesh), or [primitive](https://docs.tresjs.org/advanced/primitive.html) to automatically apply edge rendering. You can provide a custom material to `<Edges>`. When a custom material is used, the color prop has no effect. *(see code bellow)*
 
 ```vue
 <script setup lang="ts">
