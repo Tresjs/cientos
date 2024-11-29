@@ -59,6 +59,10 @@ export default [
         text: 'HolographicMaterial',
         link: '/guide/materials/holographic-material',
       },
+      {
+        text: 'PointMaterial',
+        link: '/guide/materials/point-material',
+      },
     ],
   },
   {
@@ -98,6 +102,7 @@ export default [
       { text: 'Sparkles', link: '/guide/staging/sparkles' },
       { text: 'Ocean', link: '/guide/staging/ocean' },
       { text: 'Fit', link: '/guide/staging/fit' },
+      { text: 'Align', link: '/guide/staging/align' },
     ],
   },
   {
