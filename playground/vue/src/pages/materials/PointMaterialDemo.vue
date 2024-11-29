@@ -2,23 +2,23 @@
 import { MathUtils, NoToneMapping } from 'three'
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, PointMaterial } from '@tresjs/cientos'
-import { TresLeches, useControls } from '@tresjs/leches';
+import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
-const positions = new Float32Array(Array.from({ length: 1000 }, i => [
+const positions = new Float32Array(Array.from({ length: 1000 }, _ => [
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),
 ]).flat())
 
 const c = useControls({
-    color: false,
-    depthTest: false,
-    enabled: true,
-    size: { value: 10, min: 0.1, max: 20, step: 0.1},    
-    sizeAttenuation: false,
-    toneMapped: false,
-    transparent: true,
+  color: false,
+  depthTest: false,
+  enabled: true,
+  size: { value: 10, min: 0.1, max: 20, step: 0.1 },
+  sizeAttenuation: false,
+  toneMapped: false,
+  transparent: true,
 })
 </script>
 
