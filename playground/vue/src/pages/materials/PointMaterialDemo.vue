@@ -5,7 +5,7 @@ import { OrbitControls, PointMaterial } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
-const positions = new Float32Array(Array.from({ length: 1000 }, _ => [
+const positions = new Float32Array(Array.from({ length: 1000 }, () => [
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),

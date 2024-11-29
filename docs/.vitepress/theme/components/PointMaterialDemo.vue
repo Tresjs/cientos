@@ -3,7 +3,7 @@ import { MathUtils, NoToneMapping } from 'three'
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, PointMaterial } from '@tresjs/cientos'
 
-const positions = new Float32Array(Array.from({ length: 100 }, _ => [
+const positions = new Float32Array(Array.from({ length: 100 }, () => [
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),
   MathUtils.randFloatSpread(8),
