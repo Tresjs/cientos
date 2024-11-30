@@ -5,6 +5,11 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/CatmullRomCurve3Demo.vue'),
   },
   {
+    path: '/shapes/cubic-bezier-line',
+    name: 'CubicBezierLine',
+    component: () => import('../../pages/shapes/CubicBezierLineDemo.vue'),
+  },
+  {
     path: '/shapes/cylinder',
     name: 'Cylinder',
     component: () => import('../../pages/shapes/Cylinder.vue'),
@@ -12,7 +17,7 @@ export const shapesRoutes = [
   {
     path: '/shapes/line2',
     name: 'Line2',
-    component: () => import('../../pages/shapes/Line2Demo.vue'),
+    component: () => import('../../pages/shapes/CubicBezierLineDemo.vue'),
   },
   {
     path: '/shapes/superformula',
