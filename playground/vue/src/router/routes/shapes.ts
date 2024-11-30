@@ -17,7 +17,7 @@ export const shapesRoutes = [
   {
     path: '/shapes/line2',
     name: 'Line2',
-    component: () => import('../../pages/shapes/CubicBezierLineDemo.vue'),
+    component: () => import('../../pages/shapes/Line2Demo.vue'),
   },
   {
     path: '/shapes/superformula',
