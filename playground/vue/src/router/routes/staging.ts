@@ -22,7 +22,7 @@ export const stagingRoutes = [
   {
     path: '/staging/backdrop',
     name: 'Backdrop',
-    component: () => import('../../pages/staging/BackdropDemo.vue'),
+    component: () => import('../../pages/staging/CircleShadowDemo.vue'),
   },
   {
     path: '/staging/contact-shadows',
@@ -48,5 +48,10 @@ export const stagingRoutes = [
     path: '/staging/fit',
     name: 'Fit',
     component: () => import('../../pages/staging/fit/index.vue'),
+  },
+  {
+    path: '/staging/circle-shadow',
+    name: 'CircleShadow',
+    component: () => import('../../pages/staging/CircleShadowDemo.vue'),
   },
 ]

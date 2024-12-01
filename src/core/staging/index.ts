@@ -3,6 +3,7 @@ import ContactShadows from './ContactShadows.vue'
 import Fit from './Fit.vue'
 import Ocean from './Ocean.vue'
 import Precipitation from './Precipitation.vue'
+import CircleShadow from './CircleShadow.vue'
 import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
 import Sparkles from './Sparkles/component.vue'
@@ -12,6 +13,7 @@ import Lightformer from './useEnvironment/lightformer/index.vue'
 
 export {
   Backdrop,
+  CircleShadow,
   ContactShadows,
   Environment,
   Fit,
