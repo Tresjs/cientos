@@ -110,6 +110,7 @@ export default defineConfig({
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
           { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+          { text: 'PointMaterial', link: '/guide/materials/point-material' },
         ],
       },
       {
@@ -149,6 +150,7 @@ export default defineConfig({
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
           { text: 'Sparkles', link: '/guide/staging/sparkles' },
           { text: 'Ocean', link: '/guide/staging/ocean' },
+          { text: 'Align', link: '/guide/staging/align' },
         ],
       },
       {
