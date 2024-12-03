@@ -3,7 +3,7 @@ import type { Side, Texture } from 'three'
 import { Color, FrontSide } from 'three'
 import type { TresColor } from '@tresjs/core'
 import { useTexture, useTres } from '@tresjs/core'
-import { computed, shallowRef, watch } from 'vue'
+import { computed, shallowRef, watchEffect } from 'vue'
 import ImageMaterial from './ImageMaterial.vue'
 
 export type ImageProps = {
@@ -81,20 +81,26 @@ const planeBounds = computed(() => Array.isArray(props.scale) ? [props.scale[0],
 const imageBounds = computed(() => [texture.value?.image.width ?? 0, texture.value?.image.height ?? 0])
 const resolution = computed(() => Math.max(size.width.value, size.height.value))
 
-watch(() => [props.texture, props.url], () => {
+watchEffect(() => {
   if (props.texture) {
     texture.value = props.texture
   }
   else {
     useTexture([props.url!]).then(t => texture.value = t)
   }
-}, { immediate: true })
+})
+
+const scale = computed(
+  () => Array.isArray(props.scale)
+    ? ([...props.scale, 1] as [number, number, number])
+    : props.scale,
+)
 
 defineExpose({ instance: imageRef })
 </script>
 
 <template>
-  <TresMesh ref="imageRef" :scale="Array.isArray(props.scale) ? [...props.scale, 1] : props.scale">
+  <TresMesh ref="imageRef" :scale="scale">
     <slot>
       <TresPlaneGeometry :args="[1, 1, props.segments, props.segments]" />
     </slot>
