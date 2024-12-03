@@ -149,6 +149,7 @@ export default defineConfig({
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
           { text: 'Sparkles', link: '/guide/staging/sparkles' },
           { text: 'Ocean', link: '/guide/staging/ocean' },
+          { text: 'CircleShadow', link: '/guide/staging/circle-shadow' },
         ],
       },
       {
