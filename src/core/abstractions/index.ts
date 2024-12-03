@@ -2,6 +2,9 @@ import AnimatedSprite from './AnimatedSprite/component.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Lensflare from './Lensflare/component.vue'
 import Levioso from './Levioso.vue'
+import MarchingCube from './MarchingCubes/MarchingCube.vue'
+import MarchingCubes from './MarchingCubes/MarchingCubes.vue'
+import MarchingPlane from './MarchingCubes/MarchingPlane.vue'
 import MouseParallax from './MouseParallax.vue'
 import PositionalAudio from './PositionalAudio.vue'
 import Reflector from './Reflector.vue'
@@ -19,6 +22,9 @@ export {
   GlobalAudio,
   Lensflare,
   Levioso,
+  MarchingCube,
+  MarchingCubes,
+  MarchingPlane,
   MouseParallax,
   PositionalAudio,
   Reflector,
