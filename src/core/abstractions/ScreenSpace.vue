@@ -6,7 +6,7 @@ export interface ScreenSpaceProps {
   depth?: number
 }
 
-const props = withDefaults(defineProps<ScreenSpaceProps>(), {
+withDefaults(defineProps<ScreenSpaceProps>(), {
   depth: -1,
 })
 
@@ -24,7 +24,7 @@ defineExpose({ instance: outerRef })
 
 <template>
   <TresGroup ref="outerRef">
-    <TresGroup :position-z="-props.depth">
+    <TresGroup :position-z="-depth">
       <slot></slot>
     </TresGroup>
   </TresGroup>
