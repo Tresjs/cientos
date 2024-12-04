@@ -17,6 +17,7 @@ export default [
       },
       { text: 'Sampler', link: '/guide/abstractions/sampler' },
       { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
+      { text: 'Billboard', link: '/guide/abstractions/billboard' },
     ],
   },
   {
@@ -58,6 +59,10 @@ export default [
       {
         text: 'HolographicMaterial',
         link: '/guide/materials/holographic-material',
+      },
+      {
+        text: 'MeshDiscardMaterial',
+        link: '/guide/materials/mesh-discard-material',
       },
     ],
   },
