@@ -77,6 +77,7 @@ export default defineConfig({
           { text: 'Sampler', link: '/guide/abstractions/sampler' },
           { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
           { text: 'Image', link: '/guide/abstractions/image' },
+          { text: 'Billboard', link: '/guide/abstractions/billboard' },
         ],
       },
       {
@@ -111,6 +112,7 @@ export default defineConfig({
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
           { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+          { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' },
         ],
       },
       {

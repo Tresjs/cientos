@@ -1,4 +1,5 @@
 import AnimatedSprite from './AnimatedSprite/component.vue'
+import Billboard from './Billboard.vue'
 import { GlobalAudio } from './GlobalAudio'
 import Image from './Image/component.vue'
 import Lensflare from './Lensflare/component.vue'
@@ -16,6 +17,7 @@ export * from './useFBO/'
 export * from './useSurfaceSampler'
 export {
   AnimatedSprite,
+  Billboard,
   Fbo,
   GlobalAudio,
   Image,

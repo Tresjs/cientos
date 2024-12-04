@@ -64,4 +64,9 @@ export const abstractionsRoutes = [
     name: 'Image',
     component: () => import('../../pages/abstractions/ImageDemo.vue'),
   },
+  {
+    path: '/abstractions/billboard',
+    name: 'Billboard',
+    component: () => import('../../pages/abstractions/BillboardDemo.vue'),
+  },
 ]
