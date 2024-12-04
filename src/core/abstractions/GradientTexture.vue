@@ -95,6 +95,8 @@ function update(canvas: HTMLCanvasElement) {
   }
 }
 
+const renderer = useTres().renderer
+
 watch(() => [props.colors, props.stops, props.height, props.width, props.type, props.innerCircleRadius, props.outerCircleRadius], () => { update(canvas) }, { immediate: true })
 
 if (isReactive(props.colors)) {
@@ -109,5 +111,5 @@ defineExpose({ instance: textureRef })
 </script>
 
 <template>
-  <TresCanvasTexture ref="textureRef" :color-space="useTres().renderer.value.outputColorSpace" :args="[canvas]" :attach="props.attach" />
+  <TresCanvasTexture ref="textureRef" :color-space="renderer.outputColorSpace" :args="[canvas]" :attach="props.attach" />
 </template>
