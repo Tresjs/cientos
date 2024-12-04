@@ -78,6 +78,7 @@ export default defineConfig({
           { text: 'Edges', link: '/guide/abstractions/edges' },
           { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
           { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
+          { text: 'Billboard', link: '/guide/abstractions/billboard' },
         ],
       },
       {
@@ -112,6 +113,7 @@ export default defineConfig({
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
           { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+          { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' },
         ],
       },
       {
