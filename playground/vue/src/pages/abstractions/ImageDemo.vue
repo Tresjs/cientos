@@ -2,7 +2,7 @@
 import { TresCanvas } from '@tresjs/core'
 import { Image, OrbitControls } from '@tresjs/cientos'
 import { Color, DoubleSide, FrontSide, NoToneMapping } from 'three'
-import { useControls, TresLeches } from '@tresjs/leches';
+import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
 const URLS = [
@@ -12,16 +12,16 @@ const URLS = [
 
 const c = useControls({
   url: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/Mars_2009_Plouaret.jpg',
-  segments: {value:1, min:1, max:10, step:1},
-  scaleX: {value:1, min:0, max:3, step:0.01},
-  scaleY: {value:1, min:0, max:3, step:0.01},
+  segments: { value: 1, min: 1, max: 10, step: 1 },
+  scaleX: { value: 1, min: 0, max: 3, step: 0.01 },
+  scaleY: { value: 1, min: 0, max: 3, step: 0.01 },
   isRed: false,
-  zoom: {value:1, min:0, max:3, step:0.01},
-  radius: {value:0, min:0, max:1, step:0.01},
-  grayscale: {value:0, min:0, max:1, step:0.01},
+  zoom: { value: 1, min: 0, max: 3, step: 0.01 },
+  radius: { value: 0, min: 0, max: 1, step: 0.01 },
+  grayscale: { value: 0, min: 0, max: 1, step: 0.01 },
   toneMapped: false,
   transparent: true,
-  opacity: {value:1, min:0, max:1, step:0.01},
+  opacity: { value: 1, min: 0, max: 1, step: 0.01 },
   isDoubleSided: true,
   enabled: true,
 })
