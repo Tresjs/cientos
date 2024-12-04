@@ -50,6 +50,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/Sampler.vue'),
   },
   {
+    path: '/abstractions/edges',
+    name: 'Edges',
+    component: () => import('../../pages/abstractions/EdgesDemo.vue'),
+  },
+  {
     path: '/abstractions/positional-audio',
     name: 'PositionalAudio',
     component: () => import('../../pages/abstractions/PositionalAudioDemo.vue'),
@@ -63,5 +68,15 @@ export const abstractionsRoutes = [
     path: '/abstractions/outline',
     name: 'Outline',
     component: () => import('../../pages/abstractions/OutlineDemo.vue'),
+  },
+  {
+    path: '/abstractions/image',
+    name: 'Image',
+    component: () => import('../../pages/abstractions/ImageDemo.vue'),
+  },
+  {
+    path: '/abstractions/billboard',
+    name: 'Billboard',
+    component: () => import('../../pages/abstractions/BillboardDemo.vue'),
   },
 ]
