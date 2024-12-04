@@ -11,6 +11,7 @@ import Text3D from './Text3D.vue'
 import { useAnimations } from './useAnimations'
 import Fbo from './useFBO/component.vue'
 import Sampler from './useSurfaceSampler/component.vue'
+import Edges from './Edges.vue'
 
 export * from '../staging/useEnvironment'
 export * from './useFBO/'
@@ -18,6 +19,7 @@ export * from './useSurfaceSampler'
 export {
   AnimatedSprite,
   Billboard,
+  Edges,
   Fbo,
   GlobalAudio,
   Image,
