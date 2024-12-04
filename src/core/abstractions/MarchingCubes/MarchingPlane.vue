@@ -12,7 +12,7 @@ interface MarchingPlaneProps {
 
 const props = withDefaults(defineProps<MarchingPlaneProps>(), {
   planeType: 'x',
-  strength: -1.5,
+  strength: 0.5,
   subtract: 12,
 })
 
