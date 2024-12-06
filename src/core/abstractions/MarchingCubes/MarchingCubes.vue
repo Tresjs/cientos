@@ -3,7 +3,7 @@ import type { Material } from 'three'
 import { MarchingCubes as MarchingCubesImpl } from 'three-stdlib'
 import { computed, provide } from 'vue'
 import { useLoop } from '@tresjs/core'
-import MARCHING_CUBES_PROVIDE_KEY from './MARCHING_CUBES_PROVIDE_KEY'
+import { MARCHING_CUBES_PROVIDE_KEY } from './const'
 
 export interface MarchingCubesProps {
   resolution?: number

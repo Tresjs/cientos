@@ -37,8 +37,9 @@ const c = useControls({
   x: { value: 0, min: -1, max: 1, step: 0.1 },
   y: { value: 0, min: -1, max: 1, step: 0.1 },
   z: { value: 0, min: -1, max: 1, step: 0.1 },
-  strength: { value: 0.5, min: -1, max: 5 },
+  strength: { value: 0.5, min: -5, max: 5 },
   subtract: { value: 12, min: 0, max: 100 },
+  enableColors: true,
 })
 </script>
 
@@ -58,23 +59,24 @@ const c = useControls({
         :strength="c.strength.value.value"
         :subtract="c.subtract.value.value"
       />
-      <MarchingCube ref="r0" />
-      <MarchingCube ref="r1" />
-      <MarchingCube ref="r2" />
-      <MarchingCube ref="r3" />
-      <MarchingCube ref="r4" />
-      <MarchingCube ref="r5" />
-      <MarchingCube ref="r6" />
-      <MarchingCube ref="r7" />
-      <MarchingCube ref="r8" />
-      <MarchingCube ref="r9" />
+      <MarchingCube ref="r0" color="red" />
+      <MarchingCube ref="r1" color="red" />
+      <MarchingCube ref="r2" color="red" />
+      <MarchingCube ref="r3" color="blue" />
+      <MarchingCube ref="r4" color="blue" />
+      <MarchingCube ref="r5" color="blue" />
+      <MarchingCube ref="r6" color="green" />
+      <MarchingCube ref="r7" color="green" />
+      <MarchingCube ref="r8" color="green" />
+      <MarchingCube ref="r9" color="green" />
 
-      <TresMeshPhongMaterial specular="#111111" :shininess="30" color="#049ef4" :reflectivity="1" />
+      <TresMeshBasicMaterial v-if="c.enableColors.value.value" :vertex-colors="true" />
+      <TresMeshPhongMaterial v-else specular="#111111" :shininess="30" color="#049ef4" :reflectivity="1" />
     </MarchingCubes>
     <TresAxesHelper />
 
-	  <TresDirectionalLight color="#ffffff" :intensity="3" :position="[0, 200, 0]" />
-	  <TresDirectionalLight color="#ffffff" :intensity="3" :position="[100, 200, 100]" />
+    <TresDirectionalLight color="#ffffff" :intensity="3" :position="[0, 200, 0]" />
+    <TresDirectionalLight color="#ffffff" :intensity="3" :position="[100, 200, 100]" />
 
     <OrbitControls :enable-pan="false" :zoom-speed="0.5" />
   </TresCanvas>

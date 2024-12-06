@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import { computed, inject, shallowRef } from 'vue'
-import MARCHING_CUBES_PROVIDE_KEY from './MARCHING_CUBES_PROVIDE_KEY'
+import { Color, type ColorRepresentation, Vector3 } from 'three'
 import type { MarchingCubesApi } from './MarchingCubes.vue'
-import type { ColorRepresentation } from 'three'
-import { Color, Vector3 } from 'three'
+import { MARCHING_CUBES_PROVIDE_KEY } from './const'
 
 interface MarchingCubeProps {
   strength?: number

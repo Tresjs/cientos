@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
-import MARCHING_CUBES_PROVIDE_KEY from './MARCHING_CUBES_PROVIDE_KEY'
+import { MARCHING_CUBES_PROVIDE_KEY } from './const'
 import type { MarchingCubesApi } from './MarchingCubes.vue'
 import { useLoop } from '@tresjs/core'
 
