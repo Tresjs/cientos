@@ -5,6 +5,7 @@ import Ocean from './Ocean.vue'
 import Precipitation from './Precipitation.vue'
 import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
+import SoftShadows from './SoftShadows.vue'
 import Sparkles from './Sparkles/component.vue'
 import Stars from './Stars.vue'
 import Environment from './useEnvironment/component.vue'
@@ -20,6 +21,7 @@ export {
   Precipitation,
   Sky,
   Smoke,
+  SoftShadows,
   Sparkles,
   Stars,
 }
