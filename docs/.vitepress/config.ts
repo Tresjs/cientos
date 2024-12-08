@@ -153,10 +153,12 @@ export default defineConfig({
           { text: 'Sky', link: '/guide/staging/sky' },
           { text: 'Stars', link: '/guide/staging/stars' },
           { text: 'Smoke', link: '/guide/staging/smoke' },
+          { text: 'AccumulativeShadows', link: '/guide/staging/accumulative-shadows' },
           { text: 'ContactShadows', link: '/guide/staging/contact-shadows' },
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
           { text: 'Sparkles', link: '/guide/staging/sparkles' },
           { text: 'Ocean', link: '/guide/staging/ocean' },
+          { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
         ],
       },
       {
