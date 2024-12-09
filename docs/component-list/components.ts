@@ -17,6 +17,12 @@ export default [
       },
       { text: 'Sampler', link: '/guide/abstractions/sampler' },
       { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
+      { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
+      { text: 'GradientTexture', link: '/guide/abstractions/gradient-texture' },
+      { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
+      { text: 'Outline', link: '/guide/abstractions/outline' },
+      { text: 'Image', link: '/guide/abstractions/image' },
+      { text: 'Billboard', link: '/guide/abstractions/billboard' },
     ],
   },
   {
@@ -58,6 +64,10 @@ export default [
       {
         text: 'HolographicMaterial',
         link: '/guide/materials/holographic-material',
+      },
+      {
+        text: 'MeshDiscardMaterial',
+        link: '/guide/materials/mesh-discard-material',
       },
     ],
   },
