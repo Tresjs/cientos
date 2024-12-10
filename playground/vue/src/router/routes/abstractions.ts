@@ -50,6 +50,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/Sampler.vue'),
   },
   {
+    path: '/abstractions/edges',
+    name: 'Edges',
+    component: () => import('../../pages/abstractions/EdgesDemo.vue'),
+  },
+  {
     path: '/abstractions/positional-audio',
     name: 'PositionalAudio',
     component: () => import('../../pages/abstractions/PositionalAudioDemo.vue'),
@@ -63,5 +68,40 @@ export const abstractionsRoutes = [
     path: '/abstractions/mask',
     name: 'Mask',
     component: () => import('../../pages/abstractions/MaskDemo.vue'),
+  },
+  {
+    path: '/abstractions/cube-camera',
+    name: 'CubeCamera',
+    component: () => import('../../pages/abstractions/CubeCameraDemo.vue'),
+  },
+  {
+    path: '/abstractions/gradient-texture',
+    name: 'GradientTexture',
+    component: () => import('../../pages/abstractions/GradientTextureDemo.vue'),
+  },
+  {
+    path: '/abstractions/screen-space',
+    name: 'ScreenSpace',
+    component: () => import('../../pages/abstractions/ScreenSpaceDemo.vue'),
+  },
+  {
+    path: '/abstractions/outline',
+    name: 'Outline',
+    component: () => import('../../pages/abstractions/OutlineDemo.vue'),
+  },
+  {
+    path: '/abstractions/image',
+    name: 'Image',
+    component: () => import('../../pages/abstractions/ImageDemo.vue'),
+  },
+  {
+    path: '/abstractions/billboard',
+    name: 'Billboard',
+    component: () => import('../../pages/abstractions/BillboardDemo.vue'),
+  },
+  {
+    path: '/abstractions/screen-sizer',
+    name: 'ScreenSizer',
+    component: () => import('../../pages/abstractions/ScreenSizerDemo.vue'),
   },
 ]
