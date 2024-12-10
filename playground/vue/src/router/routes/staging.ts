@@ -50,6 +50,11 @@ export const stagingRoutes = [
     component: () => import('../../pages/staging/fit/index.vue'),
   },
   {
+    path: '/staging/grid',
+    name: 'Grid',
+    component: () => import('../../pages/staging/GridDemo.vue'),
+  },
+  {
     path: '/staging/accumulative-shadows',
     name: 'Accumulative Shadows',
     component: () => import('../../pages/staging/AccumulativeShadowsDemo.vue'),
