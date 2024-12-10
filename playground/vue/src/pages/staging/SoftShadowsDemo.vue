@@ -2,7 +2,12 @@
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, SoftShadows } from '@tresjs/cientos'
 import { Group, MeshPhongMaterial, SphereGeometry, Vector3 } from 'three'
+import { TresLeches, useControls } from '@tresjs/leches'
+import '@tresjs/leches/styles'
 
+const c = useControls({
+  samples: { value: 5, min: 1, max: 10, step: 1 },
+})
 const sphereGeo = new SphereGeometry(0.3, 20, 20)
 const sphereMat = new MeshPhongMaterial({ color: '#82dbc5' })
 const spherePositions = Array.from({ length: 10 }).fill(null).map(() => new Vector3())
@@ -13,22 +18,23 @@ for (const p of spherePositions) {
 }
 
 const spheres = shallowRef(new Group())
-setInterval(() => {
-  for (const sphere of spheres.value.children) {
-    sphere.userData.phase += 0.1
-    sphere.position.y = Math.sin(sphere.userData.phase) ** 2 * 3 + 0.5
-  }
-}, 1000 / 30)
+let intervalId: ReturnType<typeof setInterval>
+onMounted(() => {
+  intervalId = setInterval(() => {
+    for (const sphere of spheres.value.children) {
+      sphere.userData.phase += 0.01
+      sphere.position.y = Math.sin(sphere.userData.phase) ** 2 * 3 + 0.5
+    }
+  }, 1000 / 30)
+})
 
-const samples = shallowRef(1)
-let elapsed = 0
-setInterval(() => {
-  elapsed += 1000 / 30
-  samples.value = Math.floor((elapsed * 0.001) % 10) + 1
-}, 1000 / 30)
+onUnmounted(() => {
+  clearInterval(intervalId)
+})
 </script>
 
 <template>
+  <TresLeches />
   <TresCanvas :shadows="true" :shadowMap-enabled="true">
     <TresFog :args="['#FFFFFF', 5, 100]" />
 
@@ -46,7 +52,7 @@ setInterval(() => {
       :shadow-camera-far="20"
     />
 
-    <SoftShadows :samples="samples" />
+    <SoftShadows :samples="c.samples.value" />
 
     <TresMesh :position="[0, 1.5, 1]" :scale-y="3" :cast-shadow="true" :receive-shadow="true" name="column">
       <TresBoxGeometry />
