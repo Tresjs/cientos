@@ -21,7 +21,8 @@ export function useHelper<T extends HelperConstructor>(
 
   watchEffect(() => {
     if (object3D && toValue(object3D) && helperConstructor) {
-      helper.value = currentHelper = new (helperConstructor as any)(toValue(object3D), ...args)
+      // eslint-disable-next-line new-cap
+      helper.value = currentHelper = new helperConstructor(toValue(object3D), ...args)
     }
 
     if (currentHelper) {
