@@ -15,7 +15,7 @@ export function useHelper<T extends HelperConstructor>(
   ...args: any[]
 ) {
   const helper = shallowRef<HelperType>()
-  const scene = useTres().scene
+  const { scene } = useTres()
 
   let currentHelper: HelperType = undefined!
 
