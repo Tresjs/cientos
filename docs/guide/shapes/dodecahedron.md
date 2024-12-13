@@ -4,7 +4,7 @@
 
 The `cientos` package provides a `<Dodecahedron />` component that serves as a short-cut for a `DodecahedronGeometry` and a `MeshBasicMaterial` with a `Mesh` object.
 
-```typescript
+```
 args: [radius: number, detail: number]
 ```
 
@@ -12,7 +12,7 @@ Reference: [DodecahedronGeometry](https://threejs.org/docs/?q=dode#api/en/geomet
 
 ## Usage
 
-```html
+```vue
 <Dodecahedron :args="[1, 0]" color="deeppink" />
 
 // Dodecahedron with a custom material transformations

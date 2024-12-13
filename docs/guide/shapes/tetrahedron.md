@@ -4,7 +4,7 @@
 
 The `cientos` package provides a `<Tetrahedron />` component that serves as a short-cut for a `TetrahedronGeometry` and a `MeshBasicMaterial` with a `Mesh` object.
 
-```typescript
+```
 args: [radius: number, detail: number]
 ```
 
@@ -12,7 +12,7 @@ Reference: [TetrahedronGeometry](https://threejs.org/docs/?q=tetr#api/en/geometr
 
 ## Usage
 
-```html
+```vue
 <Tetrahedron :args="[1, 0]" color="yellow" />
 
 // Tetrahedron with a custom material transformations

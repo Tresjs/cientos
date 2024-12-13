@@ -2,7 +2,9 @@
 
 The [Transform Controls](https://threejs.org/docs/#examples/en/controls/TransformControls) are a set of three gizmos that can be used to translate, rotate and scale objects in the scene. It adapts a similar interaction model of DCC tools like Blender
 
-<StackBlitzEmbed projectId="tresjs-transform-controls" />
+<DocsDemo>
+  <TransformControlsDemo />
+</DocsDemo>
 
 ## Usage
 
@@ -14,13 +16,13 @@ const boxRef = shallowRef()
 </script>
 <template>
   <TresCanvas>
-    <TresPerspectiveCamera :args="[45," 1, 0.1, 1000] />
+    <TresPerspectiveCamera :args="[45, 1, 0.1, 1000]" />
     <OrbitControls make-default />
-      <TransformControls :object="boxRef" />
-      <TresMesh ref="boxRef" :position="[0, 4, 0]" cast-shadow>
-          <TresBoxGeometry :args="[1.5, 1.5, 1.5]" />
-          <TresMeshToonMaterial color="#4F4F4F" />
-      </TresMesh>
+    <TransformControls :object="boxRef" />
+    <TresMesh ref="boxRef" :position="[0, 4, 0]" cast-shadow>
+      <TresBoxGeometry :args="[1.5, 1.5, 1.5]" />
+      <TresMeshToonMaterial color="#4F4F4F" />
+    </TresMesh>
   </TresCanvas>
 </template>
 ```
@@ -39,7 +41,7 @@ The Transform Controls can be used in three different modes:
 
 The default mode allows you to move the object around the scene.
 
-```html
+```vue
 <TransformControls mode="translate" :object="sphereRef" />
 ```
 
@@ -49,7 +51,7 @@ The default mode allows you to move the object around the scene.
 
 The rotate mode allows you to rotate the object around the scene.
 
-```html
+```vue
 <TransformControls mode="rotate" :object="boxRef" />
 ```
 
@@ -59,7 +61,7 @@ The rotate mode allows you to rotate the object around the scene.
 
 The scale mode allows you to scale the object around the scene.
 
-```html
+```vue
 <TransformControls mode="scale" :object="sphereRef" />
 ```
 
@@ -67,7 +69,7 @@ The scale mode allows you to scale the object around the scene.
 
 | Prop                | Description                                                                                   | Default     |
 | :------------------ | :-------------------------------------------------------------------------------------------- | ----------- |
-|  **object**         | The instance [Object3D](https://threejs.org/docs/index.html#api/en/core/Object3D) to control. | `null`      |
+| **object**         | The instance [Object3D](https://threejs.org/docs/index.html#api/en/core/Object3D) to control. | `null`      |
 | **mode**            | The mode of the controls. Can be `translate`, `rotate` or `scale`.                            | `translate` |
 | **enabled**         | If `true`, the controls will be enabled.                                                      | `true`      |
 | **axis**            | The axis to use for the controls. Can be `X`, `Y`, `Z`, `XY`, `YZ`, `XZ`, `XYZ`.              | `XYZ`       |

@@ -3,13 +3,15 @@ import { defineConfig } from 'vite'
 
 import banner from 'vite-plugin-banner'
 import dts from 'vite-plugin-dts'
-import analyze from 'rollup-plugin-analyzer'
+/* import analyze from 'rollup-plugin-analyzer' */
+
 /* import { visualizer } from 'rollup-plugin-visualizer' */
+import { templateCompilerOptions } from '@tresjs/core'
+
+import { bold, gray, lightGreen, yellow } from 'kolorist'
 
 import { resolve } from 'pathe'
-
-import { lightGreen, yellow, gray, bold } from 'kolorist'
-
+import glsl from 'vite-plugin-glsl'
 import pkg from './package.json'
 
 // eslint-disable-next-line no-console
@@ -17,22 +19,17 @@ console.log(`${lightGreen('▲')} ${gray('■')} ${yellow('♥')} ${bold('Tres/c
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    alias: {
-      '/@': resolve(__dirname, './src'),
-    },
     dedupe: ['@tresjs/core'],
   },
   plugins: [
     vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag.startsWith('Tres') && tag !== 'TresCanvas',
-        },
-      },
+      isProduction: false,
+      ...templateCompilerOptions,
     }),
     dts({
       insertTypesEntry: true,
     }),
+    glsl(),
     banner({
       content: `/**\n * name: ${pkg.name}\n * version: v${
         pkg.version
@@ -51,11 +48,11 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [
-        analyze(),
+        /*  analyze(), */
         /* visualizer({
           gzipSize: true,
           brotliSize: true,
-          open: false,
+          open: true,
         }), */
       ],
       external: ['three', 'vue', '@tresjs/core'],
@@ -65,8 +62,8 @@ export default defineConfig({
         // for externalized deps
         globals: {
           '@tresjs/core': 'TresjsCore',
-          three: 'Three',
-          vue: 'Vue',
+          'three': 'Three',
+          'vue': 'Vue',
         },
       },
     },

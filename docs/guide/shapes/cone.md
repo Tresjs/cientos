@@ -4,7 +4,7 @@
 
 The `cientos` package provides a `<Cone />` component that serves as a short-cut for a `ConeGeometry` and a `MeshBasicMaterial` with a `Mesh` object.
 
-```typescript
+```
 args: [
   radius: number,
   height: number,
@@ -20,7 +20,7 @@ Reference: [ConeGeometry](https://threejs.org/docs/?q=cone#api/en/geometries/Con
 
 ## Usage
 
-```html
+```vue
 <Cone :args="[1, 1, 8]" color="orange" />
 
 // Cone with a custom material transformations

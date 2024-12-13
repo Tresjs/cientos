@@ -4,7 +4,7 @@
 
 The `cientos` package provides a `<Plane />` component that serves as a short-cut for a `PlaneGeometry` and a `MeshBasicMaterial` with a `Mesh` object.
 
-```typescript
+```
 args: [width: number, height: number, widthSegments: number, heightSegments: number]
 ```
 
@@ -16,7 +16,7 @@ A convenient default rotation is applied to the _x-axis_ of the plane (`-Math.PI
 
 ## Usage
 
-```html
+```vue
 <Plane :args="[1, 1]" color="teal" />
 
 // Plane with a custom material transformations

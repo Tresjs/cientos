@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { OrbitControls, Levioso, GLTFModel } from '/@'
-import { BasicShadowMap, sRGBEncoding, NoToneMapping } from 'three'
+import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
 import Feather from './Feather.vue'
 
 const gl = {
@@ -9,19 +9,24 @@ const gl = {
   shadows: true,
   alpha: false,
   shadowMapType: BasicShadowMap,
-  outputEncoding: sRGBEncoding,
+  outputColorSpace: SRGBColorSpace,
   toneMapping: NoToneMapping,
 }
 </script>
 
 <template>
-  <TresCanvas v-bind="gl" ref="context">
+  <TresCanvas
+    v-bind="gl"
+  >
     <TresPerspectiveCamera :position="[1, 2, 1]" />
     <Suspense>
       <Feather />
     </Suspense>
     <TresAmbientLight :intensity="1" />
-    <TresDirectionalLight :intensity="1" :position="[2, 2, 2]" />
+    <TresDirectionalLight
+      :intensity="1"
+      :position="[2, 2, 2]"
+    />
     <OrbitControls />
   </TresCanvas>
 </template>

@@ -1,82 +1,98 @@
 {
   "name": "@tresjs/cientos",
-  "description": "Collection of useful helpers and fully functional, ready-made abstractions for Tres",
-  "version": "2.0.0-beta.3",
   "type": "module",
+  "version": "4.0.3",
+  "packageManager": "pnpm@9.15.0",
+  "description": "Collection of useful helpers and fully functional, ready-made abstractions for Tres",
   "author": "Alvaro Saburido <hola@alvarosaburido.dev> (https://github.com/alvarosabu/)",
-  "files": [
-    "dist"
-  ],
   "license": "MIT",
-  "main": "./dist/trescientos.umd.cjs",
-  "module": "./dist/trescientos.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/trescientos.js",
-      "require": "./dist/trescientos.umd.cjs"
-    },
-    "./styles": "./dist/style.css",
-    "./*": "./dist/trescientos.js"
-  },
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tresjs/cientos.git"
   },
   "keywords": [
     "vue",
     "3d",
     "threejs",
     "three",
-    "threejs-vue"
+    "threejs-vue",
+    "composables"
   ],
+  "maintainers": [
+    "Alvaro Saburido (https://github.com/alvarosabu/)",
+    "Jaime Torrealba (https://github.com/JaimeTorrealba)",
+    "Andre Tchen (https://github.com/andretchen0)"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/trescientos.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts"
+    },
+    "./*": "./*"
+  },
+  "main": "./dist/trescientos.js",
+  "module": "./dist/trescientos.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "dev": "vite",
-    "playground": "cd playground && nr dev",
+    "dev": "cd playground/vue && pnpm dev",
+    "dev:nuxt": "cd playground/nuxt && pnpm dev",
     "build": "vite build",
-    "preview": "vite preview",
     "release": "release-it",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.vue",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "peerDependencies": {
-    "@tresjs/core": "2.0.0-beta.10",
-    "three": "latest",
-    "vue": "^3.2.47"
-  },
-  "devDependencies": {
-    "@alvarosabu/prettier-config": "^1.3.0",
-    "@release-it/conventional-changelog": "^5.1.1",
-    "@tresjs/core": "2.0.0-beta.9",
-    "@tweakpane/plugin-essentials": "^0.1.8",
-    "@types/three": "^0.150.1",
-    "@vitejs/plugin-vue": "^4.1.0",
-    "gsap": "^3.11.5",
-    "kolorist": "^1.7.0",
-    "pathe": "^1.1.0",
-    "prettier": "^2.8.7",
-    "release-it": "^15.10.1",
-    "rollup-plugin-analyzer": "^4.0.0",
-    "rollup-plugin-visualizer": "^5.9.0",
-    "tweakpane": "^3.1.7",
-    "typescript": "^5.0.4",
-    "unocss": "^0.51.4",
-    "vite": "^4.2.1",
-    "vite-plugin-banner": "^0.7.0",
-    "vite-plugin-dts": "2.2.0",
-    "vite-svg-loader": "^4.0.0",
-    "vitepress": "1.0.0-alpha.65",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
-    "eslint": "^8.38.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-vue": "^9.11.0"
+    "@tresjs/core": ">=4.2.1",
+    "three": ">=0.133",
+    "vue": ">=3.3"
   },
   "dependencies": {
-    "@vueuse/core": "^10.0.2",
-    "three": "^0.150.1",
-    "three-stdlib": "^2.21.8",
-    "vue": "^3.2.47"
+    "@vueuse/core": "^12.0.0",
+    "camera-controls": "^2.9.0",
+    "stats-gl": "^2.0.1",
+    "stats.js": "^0.17.0",
+    "three-custom-shader-material": "^5.4.0",
+    "three-stdlib": "^2.34.0"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "^9.0.3",
+    "@tresjs/core": "^4.3.1",
+    "@tresjs/eslint-config": "^1.4.0",
+    "@types/node": "^22.10.1",
+    "@types/three": "^0.170.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^9.16.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "gsap": "^3.12.5",
+    "kolorist": "^1.8.0",
+    "pathe": "^1.1.2",
+    "release-it": "^17.10.0",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "three": "^0.171.0",
+    "typescript": "^5.7.2",
+    "unocss": "^0.65.1",
+    "vite": "^6.0.2",
+    "vite-plugin-banner": "^0.8.0",
+    "vite-plugin-dts": "4.3.0",
+    "vite-plugin-glsl": "^1.3.1",
+    "vite-svg-loader": "^5.1.0",
+    "vitepress": "1.5.0"
   }
 }

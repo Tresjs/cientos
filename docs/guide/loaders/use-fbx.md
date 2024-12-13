@@ -1,21 +1,50 @@
 # useFBX
 
+<DocsDemo>
+  <UseFBXDemo />
+</DocsDemo>
+
 A composable that allows you to easily load glTF models into your **TresJS** scene.
 
 ## Usage
 
-```ts
+::: code-group
+```vue [app.vue]
+<script setup lang="ts">
+import { OrbitControls } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+import TheModel from './TheModel.vue'
+</script>
+
+<template>
+  <TresCanvas clear-color="#1F90FF">
+    <TresPerspectiveCamera :position="[11, 11, 11]" />
+    <OrbitControls />
+    <Suspense>
+      <TheModel />
+    </Suspense>
+    <TresDirectionalLight
+      :intensity="2"
+      :position="[3, 3, 3]"
+    />
+    <TresAmbientLight :intensity="1" />
+  </TresCanvas>
+</template>
+```
+```vue{2,6} [TheModel.vue]
+<script setup lang="ts">
 import { useFBX } from '@tresjs/cientos'
 
-const model = await useFBX('/models/AkuAku.fbx')
-```
+const path = 'https://raw.githubusercontent.com/'
+  + 'Tresjs/assets/main/models/fbx/low-poly-truck/Jeep_done.fbx'
+const { scene } = await useFBX(path)
+</script>
 
-Then is as straightforward as adding the scene to your scene:
-
-```html{3}
-<TresCanvas shadows alpha>
-  <Suspense>
-    <TresMesh v-bind="scene" />
-  </Suspense>
-</TresCanvas>
+<template>
+  <primitive
+    :object="scene"
+    :scale="0.025"
+  />
+</template>
 ```
+:::
