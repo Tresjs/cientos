@@ -66,10 +66,10 @@ export default [
         text: 'HolographicMaterial',
         link: '/guide/materials/holographic-material',
       },
-      {
+      /* {
         text: 'MeshDiscardMaterial',
         link: '/guide/materials/mesh-discard-material',
-      },
+      }, */
     ],
   },
   {
