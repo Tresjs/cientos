@@ -17,6 +17,13 @@ export default [
       },
       { text: 'Sampler', link: '/guide/abstractions/sampler' },
       { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
+      { text: 'Mask', link: '/guide/abstractions/mask' },
+      { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
+      { text: 'GradientTexture', link: '/guide/abstractions/gradient-texture' },
+      { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
+      { text: 'Outline', link: '/guide/abstractions/outline' },
+      { text: 'Image', link: '/guide/abstractions/image' },
+      { text: 'Billboard', link: '/guide/abstractions/billboard' },
     ],
   },
   {
@@ -32,6 +39,7 @@ export default [
       { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
       { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
       { text: 'MapControls', link: '/guide/controls/map-controls' },
+      { text: 'Helper', link: '/guide/controls/helper' },
     ],
   },
   {
@@ -62,6 +70,8 @@ export default [
       {
         text: 'PointMaterial',
         link: '/guide/materials/point-material',
+        text: 'MeshDiscardMaterial',
+        link: '/guide/materials/mesh-discard-material',
       },
     ],
   },
@@ -103,6 +113,8 @@ export default [
       { text: 'Ocean', link: '/guide/staging/ocean' },
       { text: 'Fit', link: '/guide/staging/fit' },
       { text: 'Align', link: '/guide/staging/align' },
+      { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
+      { text: 'Grid', link: '/guide/staging/grid' },
     ],
   },
   {
