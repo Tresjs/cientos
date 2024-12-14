@@ -140,6 +140,7 @@ export default defineConfig({
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
           { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
+          { text: 'ScreenQuad', link: '/guide/shapes/screen-quad' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
           { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
