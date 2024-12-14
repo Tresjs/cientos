@@ -1,12 +1,12 @@
-import * as THREE from 'three'
+import { PointsMaterial as PointsMaterialImpl, type PointsMaterialParameters } from 'three'
 
 // NOTE: Source
 // https://github.com/pmndrs/drei/blob/master/src/core/PointMaterial.tsx
 
 const opaque_fragment = 'opaque_fragment'
 
-export class PointMaterial extends THREE.PointsMaterial {
-  constructor(props: THREE.PointsMaterialParameters) {
+export class PointMaterial extends PointsMaterialImpl {
+  constructor(props: PointsMaterialParameters) {
     super(props)
     this.onBeforeCompile = (shader, renderer) => {
       const { isWebGL2 } = renderer.capabilities
