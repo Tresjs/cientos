@@ -68,6 +68,8 @@ export default [
         link: '/guide/materials/holographic-material',
       },
       {
+        text: 'PointMaterial',
+        link: '/guide/materials/point-material',
         text: 'MeshDiscardMaterial',
         link: '/guide/materials/mesh-discard-material',
       },

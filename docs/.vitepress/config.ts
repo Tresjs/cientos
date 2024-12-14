@@ -120,6 +120,7 @@ export default defineConfig({
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
           { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+          { text: 'PointMaterial', link: '/guide/materials/point-material' },
           { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' },
         ],
       },
