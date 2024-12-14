@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { TresColor } from '@tresjs/core'
 import { CatmullRomCurve3, Vector3 } from 'three'
-import { computed } from 'vue'
+import { computed, shallowRef } from 'vue'
+import type { TresColor } from '@tresjs/core'
 import Line2 from './Line2.vue'
 
 type CurveType = 'centripetal' | 'chordal' | 'catmullrom'
@@ -48,20 +48,24 @@ function getSegmentedPoints(curve: CatmullRomCurve3, segments: number): Vector3[
 
 const curve = computed(() => getCatmullRomCurve(props.points, props.closed, props.curveType, props.tension))
 const segmentedPoints = computed(() => getSegmentedPoints(curve.value, props.segments))
+
+const lineRef = shallowRef()
+defineExpose({ instance: lineRef })
 </script>
 
 <template>
-  <Line2 
+  <Line2
+    :ref="lineRef"
     :points="segmentedPoints"
     :vertex-colors="props.vertexColors"
     :color="props.color"
-    :lineWidth="props.lineWidth"
-    :alphaToCoverage="props.alphaToCoverage"
+    :line-width="props.lineWidth"
+    :alpha-to-coverage="props.alphaToCoverage"
     :dashed="props.dashed"
-    :dashSize="props.dashSize"
-    :dashScale="props.dashScale"
-    :dashOffset="props.dashOffset"
-    :gapSize="props.gapSize"
-    :worldUnits="props.worldUnits"
+    :dash-size="props.dashSize"
+    :dash-scale="props.dashScale"
+    :dash-offset="props.dashOffset"
+    :gap-size="props.gapSize"
+    :world-units="props.worldUnits"
   />
 </template>

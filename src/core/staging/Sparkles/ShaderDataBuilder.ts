@@ -1,24 +1,25 @@
 import type { MaybeRef } from 'vue'
+import {
+  ShaderData,
+  ShaderDataEntryScalarGradient,
+  ShaderDataEntryTresColorGradient,
+  ShaderDataEntryXyzGradient,
+} from './ShaderData'
 import type {
-  GradientTresColor,
   GradientScalar,
+  GradientTresColor,
   GradientVectorFlexibleParams,
 } from './../../../utils/Gradient'
 import type {
+  CanvasGradientRenderer,
   ShaderDataEntry,
-  CanvasGradientRenderer } from './ShaderData'
-import {
-  ShaderDataEntryTresColorGradient,
-  ShaderDataEntryScalarGradient,
-  ShaderDataEntryXyzGradient,
-  ShaderData,
 } from './ShaderData'
 
-const rgbaSuffixes = ['r', 'rg', 'rgb', 'rgba'] as const
-const xyzwSuffixes = ['x', 'xy', 'xyz', 'xyzw'] as const
+type rgbaSuffixes = ['r', 'rg', 'rgb', 'rgba']
+type xyzwSuffixes = ['x', 'xy', 'xyz', 'xyzw']
 type ShaderSuffix =
-  | (typeof rgbaSuffixes)[number]
-  | (typeof xyzwSuffixes)[number]
+  | (rgbaSuffixes)[number]
+  | (xyzwSuffixes)[number]
 
 export default class ShaderDataBuilder {
   private entries: ShaderDataEntry<any>[]

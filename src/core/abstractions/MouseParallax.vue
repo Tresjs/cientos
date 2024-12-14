@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, toRefs, watch } from 'vue'
-import type { Group } from 'three'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-import { useMouse, useWindowSize } from '@vueuse/core'
+import { useLoop, useTresContext } from '@tresjs/core'
+import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
+import { computed, ref, shallowRef, toRefs, watch } from 'vue'
+import type { UseMouseOptions } from '@vueuse/core'
+import type { Group, Object3D } from 'three'
 
 export interface MouseParallaxProps {
   /**
@@ -15,51 +16,91 @@ export interface MouseParallaxProps {
   disabled?: boolean
   /**
    * The factor to multiply the mouse movement by.
-   * @type {number}
+   * @type {number | [number, number]}
    * @default 2.5
    * @memberof MouseParallaxProps
    *
-   **/
-  factor?: number
+   */
+  factor?: number | [number, number]
   /**
-   * The factor to multiply the mouse movement by.
-   * @type {number}
+   * The factor to smooth the mouse movement by.
+   * @type {number | [number, number]}
    * @default 2.5
    * @memberof MouseParallaxProps
    *
-   **/
-  ease?: number
+   */
+  ease?: number | [number, number]
+  /**
+   * Whether to apply the parallax effect to the local canvas.
+   * @type {boolean}
+   * @default false
+   * @memberof MouseParallaxProps
+   *
+   */
+  local?: boolean
 }
 
 const props = withDefaults(defineProps<MouseParallaxProps>(), {
   disabled: false,
   factor: 2.5,
   ease: 0.1,
+  local: false,
 })
 
-const { camera } = useTresContext()
+const { camera, renderer } = useTresContext()
 
-const { disabled, factor, ease } = toRefs(props)
+const { disabled, factor, ease, local } = toRefs(props)
 
-const { x, y } = useMouse()
-const { width, height } = useWindowSize()
+const mouseOptions: UseMouseOptions = {}
 
-const cameraGroupRef = ref<Group>()
+if (local.value) {
+  mouseOptions.target = renderer.value.domElement
+  mouseOptions.type = 'client'
+}
 
-const cursorX = computed(() => (x.value / width.value - 0.5) * factor.value)
-const cursorY = computed(() => -(y.value / height.value - 0.5) * factor.value)
+const { x, y } = useMouse(mouseOptions)
+const { width, height } = local.value
+  ? useElementSize(renderer.value.domElement)
+  : useWindowSize()
 
-const { onLoop } = useRenderLoop()
+const cameraGroupRef = shallowRef<Group>()
+const _factor = ref()
+const _ease = ref()
 
-onLoop(({ delta }) => {
-  if (disabled.value || !cameraGroupRef.value) return
-  cameraGroupRef.value.position.x += (cursorX.value - cameraGroupRef.value.position.x) * ease.value * delta
-  cameraGroupRef.value.position.y += (cursorY.value - cameraGroupRef.value.position.y) * ease.value * delta
+watch(
+  [factor, ease],
+  () => {
+    _factor.value = Array.isArray(factor.value) ? factor.value : [factor.value, factor.value]
+    _ease.value = Array.isArray(ease.value) ? ease.value : [ease.value, ease.value]
+  },
+  { immediate: true },
+)
+
+const cursorX = computed(() => (x.value / width.value - 0.5) * _factor.value[0])
+const cursorY = computed(() => -(y.value / height.value - 0.5) * _factor.value[1])
+
+const { onBeforeRender } = useLoop()
+
+onBeforeRender(({ delta, invalidate }) => {
+  if (
+    disabled.value
+    || !cameraGroupRef.value
+    || Number.isNaN(cursorX.value)
+    || Number.isNaN(cursorY.value)
+  ) {
+    return
+  }
+  cameraGroupRef.value.position.x
+    += (cursorX.value - cameraGroupRef.value.position.x) * _ease.value[0] * delta
+  cameraGroupRef.value.position.y
+    += (cursorY.value - cameraGroupRef.value.position.y) * _ease.value[1] * delta
+
+  invalidate()
 })
 
 watch(
   () => cameraGroupRef.value,
-  value => value?.add(camera.value),
+  value => value?.add(camera.value as Object3D),
 )
 </script>
 

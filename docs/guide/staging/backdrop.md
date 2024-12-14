@@ -12,14 +12,19 @@ The `cientos` package provides a `<Backdrop />` component. It's just a curved pl
 <Backdrop />
 
 // Backdrop with a custom material
-<Backdrop  
-  :floor="1.5" 
-  :segments="20" 
-  recieve-shadow>
+<Backdrop
+  :floor="1.5"
+  :segments="20"
+  receive-shadow
+>
     <TresMeshPhysicalMaterial color="orange" :roughness="1" />
 </Backdrop>
 ```
 
 ## Props
 
-<CientosPropsTable component-path="src/core/staging/Backdrop.vue" :fields="['name', 'type', 'default', 'required']" />
+| Name | Type | Default | Required |
+| :--- | :--- | ------- | -------- |
+| floor | number | `0.25` | No |
+| segments | number | `20` | No |
+| receiveShadow | boolean | `false` | No |

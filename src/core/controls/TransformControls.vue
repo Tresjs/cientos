@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { ShallowRef } from 'vue'
-import { onUnmounted, shallowRef, watchEffect, toRefs } from 'vue'
-import type { Object3D, Event } from 'three'
+import { useTresContext } from '@tresjs/core'
+import { useEventListener } from '@vueuse/core'
 
 import { TransformControls } from 'three-stdlib'
-import { useEventListener } from '@vueuse/core'
-import { useTresContext } from '@tresjs/core'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import type { Camera, Event, Object3D } from 'three'
 
 export interface TransformControlsProps {
   object: Object3D
+  camera?: Camera
   mode?: string
   enabled?: boolean
   axis?: 'X' | 'Y' | 'Z' | 'XY' | 'YZ' | 'XZ' | 'XYZ'
@@ -38,27 +38,56 @@ const emit = defineEmits(['dragging', 'change', 'mouseDown', 'mouseUp', 'objectC
 const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ }
   = toRefs(props)
 
-const controlsRef: ShallowRef<TransformControls | undefined> = shallowRef()
+const controlsRef = shallowRef<TransformControls | null>(null)
 
-const { controls, camera, renderer, extend } = useTresContext()
+const { controls, camera: activeCamera, renderer, extend, invalidate } = useTresContext()
+
+watch([object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ], () => {
+  invalidate()
+})
 
 extend({ TransformControls })
 
-const onDragingChange = (e: Event) => {
-  if (controls.value) controls.value.enabled = !e.value
+const onChange = () => {
+  invalidate()
+  emit('change')
+}
+
+interface DraggingEvent extends Event {
+  value: boolean
+}
+
+const onDragingChange = (e: DraggingEvent) => {
+  if (controls.value) { controls.value.enabled = !(e).value }
+  invalidate()
   emit('dragging', e.value)
 }
 
-function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'change', () => emit('change'))
-  useEventListener(controlsRef.value as any, 'dragging-changed', onDragingChange)
-  useEventListener(controlsRef.value as any, 'mouseDown', () => emit('mouseDown'))
-  useEventListener(controlsRef.value as any, 'mouseUp', () => emit('mouseUp'))
-  useEventListener(controlsRef.value as any, 'objectChange', () => emit('objectChange'))
+const onMouseDown = () => {
+  invalidate()
+  emit('mouseDown')
 }
 
-watchEffect(() => {
-  if (controlsRef.value) {
+const onMouseUp = () => {
+  invalidate()
+  emit('mouseDown')
+}
+
+const onObjectChange = () => {
+  invalidate()
+  emit('objectChange')
+}
+
+function addEventListeners() {
+  useEventListener(controlsRef.value as any, 'change', onChange)
+  useEventListener(controlsRef.value as any, 'dragging-changed', onDragingChange)
+  useEventListener(controlsRef.value as any, 'mouseDown', onMouseDown)
+  useEventListener(controlsRef.value as any, 'mouseUp', onMouseUp)
+  useEventListener(controlsRef.value as any, 'objectChange', onObjectChange)
+}
+
+watch(controlsRef, (value) => {
+  if (value) {
     addEventListeners()
   }
 })
@@ -68,14 +97,19 @@ onUnmounted(() => {
     controlsRef.value.dispose()
   }
 })
+
+defineExpose({
+  instance: controlsRef,
+})
 </script>
 
 <template>
   <TresTransformControls
-    v-if="camera && renderer"
+    v-if="(camera || activeCamera) && renderer"
     ref="controlsRef"
+    :key="(camera || activeCamera)?.uuid"
     :object="object"
-    :args="[camera, renderer.domElement]"
+    :args="[camera || activeCamera, renderer.domElement]"
     :mode="mode"
     :enabled="enabled"
     :axis="axis"

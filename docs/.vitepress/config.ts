@@ -1,16 +1,13 @@
-import { defineConfig } from 'vitepress'
 import { resolve } from 'pathe'
+import { defineConfig } from 'vitepress'
 
-const whitelist = [
-  'TresCanvas',
-  'TresLeches',
-  'TresScene',
-]
+const whitelist = ['TresCanvas', 'TresLeches', 'TresScene']
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Cientos',
-  description: 'Collection of useful helpers and fully functional, ready-made abstractions for TresJS',
+  description:
+    'Collection of useful helpers and fully functional, ready-made abstractions for TresJS',
   head: [
     ['link', { rel: 'icon', type: 'image/svg', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#82DBC5' }],
@@ -23,17 +20,26 @@ export default defineConfig({
       'meta',
       {
         property: 'og:image',
-        content: 'https://repository-images.githubusercontent.com/571314349/10996566-7f70-473b-a8e5-4e56fc0ca850',
+        content:
+          'https://repository-images.githubusercontent.com/571314349/10996566-7f70-473b-a8e5-4e56fc0ca850',
       },
     ],
     [
       'meta',
       {
         property: 'twitter:image',
-        content: 'https://repository-images.githubusercontent.com/571314349/10996566-7f70-473b-a8e5-4e56fc0ca850',
+        content:
+          'https://repository-images.githubusercontent.com/571314349/10996566-7f70-473b-a8e5-4e56fc0ca850',
       },
     ],
-    ['script', { defer: 'true', 'data-site': 'OWBUVCJK', src: 'https://cdn.usefathom.com/script.js' }],
+    [
+      'script',
+      {
+        'defer': 'true',
+        'data-site': 'OWBUVCJK',
+        'src': 'https://cdn.usefathom.com/script.js',
+      },
+    ],
   ],
   themeConfig: {
     logo: '/logo.svg',
@@ -43,13 +49,17 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Guide', link: '/guide/' },
+      { text: 'Components', link: '/component-list/' },
       { text: 'Examples', link: 'https://lab.tresjs.org/' },
     ],
 
     sidebar: [
       {
         text: 'Guide',
-        items: [{ text: 'Introduction', link: '/guide/' }],
+        items: [
+          { text: 'Introduction', link: '/guide/' },
+          { text: 'Migration from v3', link: '/guide/migrating-from-v3' },
+        ],
       },
       {
         text: 'Abstractions',
@@ -66,6 +76,16 @@ export default defineConfig({
           { text: 'useSurfaceSampler', link: '/guide/abstractions/use-surface-sampler' },
           { text: 'Sampler', link: '/guide/abstractions/sampler' },
           { text: 'Decal', link: '/guide/abstractions/decal' },
+          /* { text: 'Edges', link: '/guide/abstractions/edges' }, */
+          { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
+          { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
+          /*           { text: 'Mask', link: '/guide/abstractions/mask' },
+          { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
+          { text: 'ScreenSizer', link: '/guide/abstractions/screen-sizer' },
+          { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
+          { text: 'Outline', link: '/guide/abstractions/outline' },
+          { text: 'Image', link: '/guide/abstractions/image' },
+          { text: 'Billboard', link: '/guide/abstractions/billboard' }, */
         ],
       },
       {
@@ -99,6 +119,8 @@ export default defineConfig({
           { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
+          { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
+          /*           { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' }, */
         ],
       },
       {
@@ -109,6 +131,7 @@ export default defineConfig({
           { text: 'CatmullRomCurve3', link: '/guide/shapes/catmullromcurve3' },
           { text: 'Circle', link: '/guide/shapes/circle' },
           { text: 'Cone', link: '/guide/shapes/cone' },
+          { text: 'Cylinder', link: '/guide/shapes/cylinder' },
           { text: 'Dodecahedron', link: '/guide/shapes/dodecahedron' },
           { text: 'Icosahedron', link: '/guide/shapes/icosahedron' },
           { text: 'Line2', link: '/guide/shapes/line2' },
@@ -133,30 +156,24 @@ export default defineConfig({
           { text: 'Sky', link: '/guide/staging/sky' },
           { text: 'Stars', link: '/guide/staging/stars' },
           { text: 'Smoke', link: '/guide/staging/smoke' },
-          { text: 'Contact Shadows', link: '/guide/staging/contact-shadows' },
+          { text: 'ContactShadows', link: '/guide/staging/contact-shadows' },
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
-          { text: 'Sparkles', link: '/guide/staging/sparkles' }],
+          { text: 'Sparkles', link: '/guide/staging/sparkles' },
+          { text: 'Ocean', link: '/guide/staging/ocean' },
+          /*           { text: 'Align', link: '/guide/staging/align' },
+          { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
+          { text: 'Grid', link: '/guide/staging/grid' }, */
+        ],
       },
       {
         text: 'Misc',
         collapsed: true,
         items: [
-          { text: 'useTweakpane', link: '/guide/misc/use-tweakpane' },
           { text: 'Stats', link: '/guide/misc/stats' },
           { text: 'Html', link: '/guide/misc/html-component' },
           { text: 'StatsGl', link: '/guide/misc/stats-gl' },
           { text: 'useGLTFExporter', link: '/guide/misc/use-gltf-exporter' },
           { text: 'BakeShadows', link: '/guide/misc/bake-shadows' },
-        ],
-      },
-      {
-        text: 'Directives',
-        collapsed: true,
-        items: [
-          { text: 'v-log', link: '/guide/directives/v-log' },
-          { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
-          { text: 'v-always-look-at', link: '/guide/directives/v-always-look-at' },
-          { text: 'v-distance-to', link: '/guide/directives/v-distance-to' },
         ],
       },
     ],
@@ -187,7 +204,9 @@ export default defineConfig({
   vue: {
     template: {
       compilerOptions: {
-        isCustomElement: (tag: string) => tag.startsWith('Tres') && !whitelist.includes(tag) || tag === 'primitive',
+        isCustomElement: (tag: string) =>
+          (tag.startsWith('Tres') && !whitelist.includes(tag))
+          || tag === 'primitive',
       },
     },
   },

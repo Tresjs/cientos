@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { Environment, OrbitControls, Sphere, useProgress } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three'
 
-import { OrbitControls, useProgress, Environment, Sphere } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
+import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
+import { ref } from 'vue'
 import '@tresjs/leches/styles'
-import { ref, watchEffect } from 'vue'
 
 const environmentFiles = ['/px.jpg', '/nx.jpg', '/py.jpg', '/ny.jpg', '/pz.jpg', '/nz.jpg']
 
@@ -47,7 +47,7 @@ const { progress, hasFinishLoading } = await useProgress()
     >
       <div class="w-200px">
         Loading... {{ progress }} %
-        <i class="i-ic-twotone-catching-pokemon animate-rotate-in" />
+        <i class="i-ic-twotone-catching-pokemon animate-rotate-in"></i>
       </div>
     </div>
   </Transition>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { Fbo, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { OrbitControls, Fbo } from '@tresjs/cientos'
-import { SRGBColorSpace, ACESFilmicToneMapping } from 'three'
-import { ref, shallowRef, shallowReactive, onMounted, nextTick } from 'vue'
+import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
+import { nextTick, onMounted, ref, shallowReactive, shallowRef } from 'vue'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -54,8 +54,8 @@ onMounted(async () => {
       <TresBoxGeometry :args="[1, 1, 1]" />
 
       <TresMeshBasicMaterial
-        :color="0xffffff"
-        :map="fboRef?.value.texture ?? null"
+        :color="0xFFFFFF"
+        :map="fboRef?.instance.texture ?? null"
       />
     </TresMesh>
 

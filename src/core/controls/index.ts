@@ -1,17 +1,18 @@
-import OrbitControls from './OrbitControls.vue'
+import CameraControls, { BaseCameraControls } from './CameraControls.vue'
 import KeyboardControls from './KeyboardControls.vue'
-import TransformControls from './TransformControls.vue'
-import PointerLockControls from './PointerLockControls.vue'
 import MapControls from './MapControls.vue'
+import OrbitControls from './OrbitControls.vue'
+import PointerLockControls from './PointerLockControls.vue'
 import ScrollControls from './ScrollControls.vue'
-import CameraControls from './CameraControls.vue'
+import TransformControls from './TransformControls.vue'
 
 export {
-  OrbitControls,
-  TransformControls,
-  PointerLockControls,
-  MapControls,
-  KeyboardControls,
-  ScrollControls,
+  BaseCameraControls,
   CameraControls,
+  KeyboardControls,
+  MapControls,
+  OrbitControls,
+  PointerLockControls,
+  ScrollControls,
+  TransformControls,
 }

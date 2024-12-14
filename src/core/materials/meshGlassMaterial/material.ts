@@ -1,8 +1,8 @@
-import type { MeshStandardMaterialParameters } from 'three'
 import { MeshStandardMaterial } from 'three'
+import { Color } from 'three/src/math/Color.js'
 import * as MathUtils from 'three/src/math/MathUtils'
 import { Vector2 } from 'three/src/math/Vector2.js'
-import { Color } from 'three/src/math/Color.js'
+import type { MeshStandardMaterialParameters } from 'three'
 
 class MeshGlassMaterial extends MeshStandardMaterial {
   isMeshPhysicalMaterial: boolean
@@ -58,7 +58,7 @@ class MeshGlassMaterial extends MeshStandardMaterial {
 
     this.thickness = 0.5
     this.thicknessMap = null
-    this.attenuationDistance = Infinity
+    this.attenuationDistance = Number.POSITIVE_INFINITY
     this.attenuationColor = new Color(1, 1, 1)
 
     this.specularIntensity = 1.0
@@ -77,6 +77,7 @@ class MeshGlassMaterial extends MeshStandardMaterial {
   }
 
   set clearcoat(value) {
+    // eslint-disable-next-line style/no-mixed-operators
     if (this._clearcoat > 0 !== value > 0) {
       this.version++
     }
@@ -89,6 +90,7 @@ class MeshGlassMaterial extends MeshStandardMaterial {
   }
 
   set transmission(value) {
+    // eslint-disable-next-line style/no-mixed-operators
     if (this._transmission > 0 !== value > 0) {
       this.version++
     }

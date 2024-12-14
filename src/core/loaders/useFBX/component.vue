@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { TresObject } from '@tresjs/core'
 import { useFBX } from '.'
 
 export interface FBXModelProps {
@@ -19,7 +20,7 @@ export interface FBXModelProps {
    * @default false
    * @memberof FBXModelProps
    *
-   **/
+   */
   castShadow?: boolean
   /**
    *
@@ -29,7 +30,7 @@ export interface FBXModelProps {
    * @default false
    * @memberof FBXModelProps
    *
-   **/
+   */
   receiveShadow?: boolean
 }
 
@@ -45,13 +46,13 @@ const props = withDefaults(defineProps<{
 const modelRef = ref()
 
 defineExpose({
-  value: modelRef,
+  instance: modelRef,
 })
 
 const model = await useFBX(props.path as string)
 
-if ( props.castShadow || props.receiveShadow ) {
-  model.traverse((child) => {
+if (props.castShadow || props.receiveShadow) {
+  model.traverse((child: TresObject) => {
     if (child.isMesh) {
       child.castShadow = props.castShadow
       child.receiveShadow = props.receiveShadow

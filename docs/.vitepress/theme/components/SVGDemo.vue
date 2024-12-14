@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, SVG } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
 
 const svgURL = 'https://raw.githubusercontent.com/'
   + 'Tresjs/assets/main/svgs/cientos_heart.svg'
@@ -10,7 +10,7 @@ const svgURL = 'https://raw.githubusercontent.com/'
   <TresCanvas clear-color="#333">
     <OrbitControls />
     <Suspense>
-      <SVG 
+      <SVG
         :src="svgURL"
         :position="[-0.4, 1, 0]"
         :scale="0.01"

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { Camera } from 'three'
+import { useLoop, useTresContext } from '@tresjs/core'
+import { useEventListener } from '@vueuse/core'
 import { TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { ref, watch, onUnmounted, toRefs } from 'vue'
+import { onUnmounted, ref, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-import { useEventListener } from '@vueuse/core'
+import type { Camera } from 'three'
 
 export interface OrbitControlsProps {
   /**
@@ -238,14 +238,14 @@ const props = withDefaults(defineProps<OrbitControlsProps>(), {
   dampingFactor: 0.05,
   enablePan: true,
   keyPanSpeed: 7,
-  maxAzimuthAngle: Infinity,
-  minAzimuthAngle: -Infinity,
+  maxAzimuthAngle: Number.POSITIVE_INFINITY,
+  minAzimuthAngle: Number.NEGATIVE_INFINITY,
   maxPolarAngle: Math.PI,
   minPolarAngle: 0,
   minDistance: 0,
-  maxDistance: Infinity,
+  maxDistance: Number.POSITIVE_INFINITY,
   minZoom: 0,
-  maxZoom: Infinity,
+  maxZoom: Number.POSITIVE_INFINITY,
   enableZoom: true,
   zoomSpeed: 1,
   enableRotate: true,
@@ -280,7 +280,7 @@ const {
   target,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
 
 const controlsRef = ref<OrbitControls | null>(null)
 
@@ -297,16 +297,23 @@ watch(controlsRef, (value) => {
 })
 
 function addEventListeners() {
-  useEventListener(controlsRef.value as any, 'change', () => emit('change', controlsRef.value))
+  useEventListener(controlsRef.value as any, 'change', () => {
+    emit('change', controlsRef.value)
+    invalidate()
+  })
   useEventListener(controlsRef.value as any, 'start', () => emit('start', controlsRef.value))
   useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
 }
 
-const { onLoop } = useRenderLoop()
+const { onBeforeRender } = useLoop()
 
-onLoop(() => {
+onBeforeRender(({ invalidate }) => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
+
+    if (autoRotate.value) {
+      invalidate()
+    }
   }
 })
 
@@ -316,7 +323,7 @@ onUnmounted(() => {
   }
 })
 
-defineExpose({ value: controlsRef })
+defineExpose({ instance: controlsRef })
 </script>
 
 <template>

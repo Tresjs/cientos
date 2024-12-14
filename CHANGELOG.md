@@ -1,5 +1,179 @@
 
 
+## [4.0.3](https://github.com/Tresjs/cientos/compare/4.0.2...4.0.3) (2024-10-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @tresjs/core to v4.2.10 ([#479](https://github.com/Tresjs/cientos/issues/479)) ([fb3026a](https://github.com/Tresjs/cientos/commit/fb3026aa2f54b2f388f1a074714ac46b10f3af81))
+* discrepancy between param enableDamping in OrbitControl ([#486](https://github.com/Tresjs/cientos/issues/486)) ([97a224c](https://github.com/Tresjs/cientos/commit/97a224c32e5aedf472c77e43dd6c426fc09a1f45))
+
+## [4.0.2](https://github.com/Tresjs/cientos/compare/4.0.1...4.0.2) (2024-08-30)
+
+
+### Bug Fixes
+
+* **useGltf:** use-loader fix for gltf with textures ([#480](https://github.com/Tresjs/cientos/issues/480)) ([f1f983f](https://github.com/Tresjs/cientos/commit/f1f983f94cea8f4cd4bef451c768ff175ddd4f00))
+
+## [4.0.1](https://github.com/Tresjs/cientos/compare/4.0.0...4.0.1) (2024-08-30)
+
+
+### Bug Fixes
+
+* adapt to changes on useloader for Cube Textures ([#476](https://github.com/Tresjs/cientos/issues/476)) ([3641dc6](https://github.com/Tresjs/cientos/commit/3641dc6db3a663b5d28d2e7899f26faf244959ce))
+* **deps:** update dependency @tresjs/core to v4.2.7 ([#466](https://github.com/Tresjs/cientos/issues/466)) ([0596353](https://github.com/Tresjs/cientos/commit/0596353a1d4aed2b984fac58442530279375e1a9))
+
+## [4.0.0](https://github.com/Tresjs/cientos/compare/3.9.0...4.0.0) (2024-08-20)
+
+
+### Features
+
+* Add cylinder component ([9e17559](https://github.com/Tresjs/cientos/commit/9e17559fc98066db79b02b7ea0c98ae3037ac906))
+* V4 ([#420](https://github.com/Tresjs/cientos/issues/420)) ([0cdd58e](https://github.com/Tresjs/cientos/commit/0cdd58ee0b8f1e086899a3efb7ad93575b117ccc)), closes [#425](https://github.com/Tresjs/cientos/issues/425) [#439](https://github.com/Tresjs/cientos/issues/439) [#435](https://github.com/Tresjs/cientos/issues/435) [#441](https://github.com/Tresjs/cientos/issues/441) [#436](https://github.com/Tresjs/cientos/issues/436) [#428](https://github.com/Tresjs/cientos/issues/428)
+
+
+### Bug Fixes
+
+* **SkyDemo:** value.value -> value ([82fe77b](https://github.com/Tresjs/cientos/commit/82fe77b4dc11fd23b47e40bc33a843dc69cf017f))
+* vue attrs hyphenation issues ([4f9b61b](https://github.com/Tresjs/cientos/commit/4f9b61b954a916d8f8880798f06c03b79092896b))
+
+## [4.0.0-rc.2](https://github.com/Tresjs/cientos/compare/4.0.0-rc.1...4.0.0-rc.2) (2024-07-26)
+
+## [4.0.0-rc.1](https://github.com/Tresjs/cientos/compare/4.0.0-rc.0...4.0.0-rc.1) (2024-07-25)
+
+
+### Features
+
+* **fbo:** add autoRender flag as an option to useFBO ([#458](https://github.com/Tresjs/cientos/issues/458)) ([ddcd4ac](https://github.com/Tresjs/cientos/commit/ddcd4ac36cfd5b5cbb06e967878a9468b390a17c))
+
+## [4.0.0-rc.0](https://github.com/Tresjs/cientos/compare/4.0.0-next.1...4.0.0-rc.0) (2024-07-24)
+
+
+### Features
+
+* **Sparkles:** invalidate on update ([#446](https://github.com/Tresjs/cientos/issues/446)) ([cbfd226](https://github.com/Tresjs/cientos/commit/cbfd226b94fb363f3a59a735365c679e8142420f))
+
+
+### Bug Fixes
+
+* reimplement ContactShadows for v4 ([#449](https://github.com/Tresjs/cientos/issues/449)) ([d71c328](https://github.com/Tresjs/cientos/commit/d71c328969da64beee05088ced05bd7b632d6f31))
+* update to core v4.2.2 to remove warning on invalidation ([42afa6e](https://github.com/Tresjs/cientos/commit/42afa6e67962796d2ce076a29917262f9ca09ea5))
+
+## [4.0.0-next.1](https://github.com/Tresjs/cientos/compare/3.9.0...4.0.0-next.1) (2024-07-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **MeshReflectionMaterial:** add features/docs, reorganize
+
+### Features
+
+* 423 enable on demand render mode usage ([#436](https://github.com/Tresjs/cientos/issues/436)) ([b3eef40](https://github.com/Tresjs/cientos/commit/b3eef40430d23e2ba6c5a195c0cf510c0bc54ce9))
+* **AnimatedSprite:** add asSprite prop ([7a14b55](https://github.com/Tresjs/cientos/commit/7a14b5592d78f57785d04bd1484a35e501b7cceb))
+* **AnimatedSprite:** dispose texture onUnmounted ([18d6904](https://github.com/Tresjs/cientos/commit/18d6904570cc34ca9c3e64e6b42ec5c639a6e885))
+* **AnimatedSprite:** remove explicit click event ([042c350](https://github.com/Tresjs/cientos/commit/042c350883aec53bdf0331cc4b3378e06d87fb88))
+* **AnimatedSprite:** remove unnecessary Suspense ([082d695](https://github.com/Tresjs/cientos/commit/082d695f1a6843a8fa5edcd8e6c32ec8530a03a9))
+* **app:** 421 Update components to use useLoop instead of useRenderLoop ([ad3b290](https://github.com/Tresjs/cientos/commit/ad3b290c4afb3adf5bf36ccf02d08ea1beb98bc8))
+* **app:** Add the option for x and y in mouseparallax component ([#444](https://github.com/Tresjs/cientos/issues/444)) ([12d5834](https://github.com/Tresjs/cientos/commit/12d5834becba2cdfc26300fd5bf1ec1f9e26afe3))
+* re-remove tweakpane ([#425](https://github.com/Tresjs/cientos/issues/425)) ([72284ce](https://github.com/Tresjs/cientos/commit/72284ce2e0e378d353b3573a6216ad6f6dcd4425))
+* update to core v4.2 ([14b30f9](https://github.com/Tresjs/cientos/commit/14b30f99282ed3cb1d21cbdf31e672867d79f27c))
+
+
+### Bug Fixes
+
+* **Lensflare demo:** add camera [#435](https://github.com/Tresjs/cientos/issues/435) ([#441](https://github.com/Tresjs/cientos/issues/441)) ([981de57](https://github.com/Tresjs/cientos/commit/981de572c97183b8d2070925daa8209d2fa6b55e))
+* **MeshReflectionMaterial:** add features/docs, reorganize ([58703e3](https://github.com/Tresjs/cientos/commit/58703e362bbe731a56b7ce903160df13513ec18a))
+* remove hardcoded speed number, that setting at 0 doesn't stop the effect ([e67f3a2](https://github.com/Tresjs/cientos/commit/e67f3a295025ca1bfb1c0f664ceccefac389e0af))
+* **SkyDemo:** value.value -> value ([82fe77b](https://github.com/Tresjs/cientos/commit/82fe77b4dc11fd23b47e40bc33a843dc69cf017f))
+* **types:** fixed types generics for `useGLTF` ([#448](https://github.com/Tresjs/cientos/issues/448)) ([62a9bcc](https://github.com/Tresjs/cientos/commit/62a9bcc2d4490c7493667c3316441b5363cb42fc))
+* uncomment section ([fac2253](https://github.com/Tresjs/cientos/commit/fac22534818a15d49f631b790185f4f1266c7339))
+* vue attrs hyphenation issues ([4f9b61b](https://github.com/Tresjs/cientos/commit/4f9b61b954a916d8f8880798f06c03b79092896b))
+
+## [4.0.0-next.0](https://github.com/Tresjs/cientos/compare/3.9.0...4.0.0-next.1) (2024-03-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **app:** 349 Remove directives from cientos
+* **app:** 227 Change the keyboardcontrols implementation
+
+### Features
+
+* add arrow keys support ([39e2094](https://github.com/Tresjs/cientos/commit/39e2094338ba37613b189e7d593ecc2b0a35680b))
+* **AnimatedSprite:** add AnimatedSprite, playground, docs ([d6ea81b](https://github.com/Tresjs/cientos/commit/d6ea81b5540c2f4bf0f233e269ed98992ee8a551))
+* **AnimatedSprite:** allow [numCols, numRows] as atlas prop ([3309d9c](https://github.com/Tresjs/cientos/commit/3309d9c24ee1d006b41bdeaa29eac7c8f9658342))
+* **AnimatedSprite:** always emit last frame name on loop and on end ([ed16136](https://github.com/Tresjs/cientos/commit/ed16136a84143396ae8accc327429c1ef1fbdd1b))
+* **AnimatedSprite:** change default fps ([44831a4](https://github.com/Tresjs/cientos/commit/44831a492e6a881061b9a113d1a627026b172056))
+* **app:** 227 Change the keyboardcontrols implementation ([fed0f86](https://github.com/Tresjs/cientos/commit/fed0f86b3c92aa8ea86be0e6193e1639d421bcc2))
+* **app:** 227 Final details, ready to go ([6f06213](https://github.com/Tresjs/cientos/commit/6f06213d92f9b389c3d1fca377002ae0b060c87b))
+
+
+### Bug Fixes
+
+* **AnimatedSprite:** return nullFrame animation if requested animation not found ([453819e](https://github.com/Tresjs/cientos/commit/453819e0237b58177a34bbeee0af4ce44252195c))
+* **Atlas:** add missing argument to function call ([e6b147e](https://github.com/Tresjs/cientos/commit/e6b147e45520238e8fd467863972af8fe8f8ec37))
+
+
+### Code Refactoring
+
+* **app:** 349 Remove directives from cientos ([8fc4cd5](https://github.com/Tresjs/cientos/commit/8fc4cd582ba85cc09e000627449622e8861ec76a))
+
+## [3.9.0](https://github.com/Tresjs/cientos/compare/3.8.0...3.9.0) (2024-05-07)
+
+### Features
+* add `local` props ([b9192fb](https://github.com/Tresjs/cientos/commit/b9192fb3c5ac617495866ad1df23a93a1068afbd))
+* add camera recognition for default props setup ([c8ebba0](https://github.com/Tresjs/cientos/commit/c8ebba03b72bdf45bd1927aeb953911269cb4bc1))
+* **app:** 252 adding ocean component ([7efb293](https://github.com/Tresjs/cientos/commit/7efb29300a5cda624801316e6bc4f33a88e8de04))
+* **app:** 252 Renamed as ocean, add sky support ([473bac6](https://github.com/Tresjs/cientos/commit/473bac61d9831b9334f4ba78b0d4ab979b7b167f))
+* **app:** Add holographic material to cientos ([f0f4eab](https://github.com/Tresjs/cientos/commit/f0f4eabdda380c912b4e3078ac2eddd7c7643edb))
+* **app:** Add RoundedBox component ([8b6cb67](https://github.com/Tresjs/cientos/commit/8b6cb67b686bf242aa6e96c3b68af535ddb944d1))
+* **cientos/positional-audio:** add positional audio component ([39c334c](https://github.com/Tresjs/cientos/commit/39c334cfeb592ce512c540d8d10fc71b771cacf9))
+* **cientos/positional-audio:** adding more logic and examples for playground ([73c94de](https://github.com/Tresjs/cientos/commit/73c94deb9bc3f2413f17e4ba7124ece2493cea47))
+* **cientos/positional-audio:** delete medias, modifications doc ([ae34177](https://github.com/Tresjs/cientos/commit/ae3417733c8092a83f1ede61ec4b3bfbc4cd61b8))
+* **cientos/positional-audio:** demo clean ([7bc1b61](https://github.com/Tresjs/cientos/commit/7bc1b61c7cb55a78e9fd9b19406cca0508c18643))
+* **cientos/positional-audio:** documentation v1, main example v1 ([bb68bda](https://github.com/Tresjs/cientos/commit/bb68bda3cf1a9b1a042ea388264669879511b4fb))
+* **cientos/positional-audio:** fix issues async, add gui example doc ([65c4c17](https://github.com/Tresjs/cientos/commit/65c4c17a9ce9b24710a5d5895334677e46b1a9a1))
+* **cientos/positional-audio:** fix lint issue, wip doc ([4e2b5fb](https://github.com/Tresjs/cientos/commit/4e2b5fbe0991d06391a02f7de1ab10d425f3651c))
+* **cientos/positional-audio:** fix material issue for the helper, documentation wip ([e0d8f41](https://github.com/Tresjs/cientos/commit/e0d8f41fd6ba32a5b2fdb176eadfc56f251391a2))
+* **cientos/positional-audio:** fix positional async helper and documentation ([f1b9476](https://github.com/Tresjs/cientos/commit/f1b94761ecde13b2e49d6a26fa7a173eeec4f504))
+* **cientos/positional-audio:** improve documentation ([00c4551](https://github.com/Tresjs/cientos/commit/00c4551f367fe05b7a3e3b2888819023244c9c73))
+* **cientos/positional-audio:** improve documentation ([eb30d85](https://github.com/Tresjs/cientos/commit/eb30d8552eeb4b13372c48e96b26237a0d315dc9))
+* **cientos/positional-audio:** improve documentation ([8b65696](https://github.com/Tresjs/cientos/commit/8b656964b6ed8044430075a6a13f51e323a429a6))
+* **cientos/positional-audio:** improve documentation ([a0f02a2](https://github.com/Tresjs/cientos/commit/a0f02a2e8d2c7a96dc1a17099502637e2c557deb))
+* **cientos/positional-audio:** improved code and documentation ([46ca4c4](https://github.com/Tresjs/cientos/commit/46ca4c4f5e6b85671e5d78cb9d59ff21fffd1b1f))
+* **cientos/positional-audio:** rename positionAudioRef ([a036caa](https://github.com/Tresjs/cientos/commit/a036caae705a4fa91642d125355879cb6d517c11))
+* **cientos/positional-audio:** start writing documentation ([1824cbb](https://github.com/Tresjs/cientos/commit/1824cbbacce0242a09f4c405437b4c51a77a1f0f))
+* **cientos/positional-audio:** start writing documentation ([6131e41](https://github.com/Tresjs/cientos/commit/6131e41de1694d8730fa485fbd8a5d3b7d978434))
+* **cientos/transform-controls:** add camera prop ([0ce732d](https://github.com/Tresjs/cientos/commit/0ce732dc4dd74fc5044d7c8b1ad0de18d63a4e86))
+* **docs:** add local prop to docs ([d21694b](https://github.com/Tresjs/cientos/commit/d21694bc5ed6b711c768700b7cfb03145c65ac30))
+* **Fit:** add component, playground, demo ([a521903](https://github.com/Tresjs/cientos/commit/a5219033e79bbb8ec78a49a1277d6adeb699d172))
+
+### Bug Fixes
+* add support for camera prop ([7844743](https://github.com/Tresjs/cientos/commit/78447430076281137bf822d1863ee419d91ca1f7))
+* **app:** 252 Apply review feedback ([4449208](https://github.com/Tresjs/cientos/commit/4449208fccedca0a37ea2e62142b00188a21e0ad))
+* apply feedback ([3a50bc2](https://github.com/Tresjs/cientos/commit/3a50bc29c00dd64775643ab08fe3e5ba569c8248))
+* camera controls ignored props ([37fa163](https://github.com/Tresjs/cientos/commit/37fa163b656a8795727046e363053e99442a46f4))
+* **docs:** better description ([703ab70](https://github.com/Tresjs/cientos/commit/703ab70a69d501d51c448dfdfecc072d83d4b261))
+* little detail in the interface ([fb6456a](https://github.com/Tresjs/cientos/commit/fb6456a063cc28868fe0178b28695c04ad812ccc))
+* transformControls throws error when switching active camera ([f1a477a](https://github.com/Tresjs/cientos/commit/f1a477a46c341f6ed4e58fce1e8999e19feba8d0))
+* **type:** correct the east description ([c26da1f](https://github.com/Tresjs/cientos/commit/c26da1f11524f2445a1b0653f35354de4d3b10ed))
+
+## [4.0.0-next.0](https://github.com/Tresjs/cientos/compare/3.8.0...4.0.0-next.0) (2024-03-27)
+
+
+### Features
+
+* **app:** 252 adding ocean component ([7efb293](https://github.com/Tresjs/cientos/commit/7efb29300a5cda624801316e6bc4f33a88e8de04))
+* **app:** 252 Renamed as ocean, add sky support ([473bac6](https://github.com/Tresjs/cientos/commit/473bac61d9831b9334f4ba78b0d4ab979b7b167f))
+* **app:** Add RoundedBox component ([8b6cb67](https://github.com/Tresjs/cientos/commit/8b6cb67b686bf242aa6e96c3b68af535ddb944d1))
+
+
+### Bug Fixes
+
+* **app:** 252 Apply review feedback ([4449208](https://github.com/Tresjs/cientos/commit/4449208fccedca0a37ea2e62142b00188a21e0ad))
+* apply feedback ([3a50bc2](https://github.com/Tresjs/cientos/commit/3a50bc29c00dd64775643ab08fe3e5ba569c8248))
+* little detail in the interface ([fb6456a](https://github.com/Tresjs/cientos/commit/fb6456a063cc28868fe0178b28695c04ad812ccc))
+
 ## [3.8.0](https://github.com/Tresjs/cientos/compare/3.7.0...3.8.0) (2024-02-07)
 
 ### Features
