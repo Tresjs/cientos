@@ -5,6 +5,11 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/CatmullRomCurve3Demo.vue'),
   },
   {
+    path: '/shapes/quadratic-bezier-line',
+    name: 'QuadraticBezierLine',
+    component: () => import('../../pages/shapes/QuadraticBezierLineDemo.vue'),
+  },
+  {
     path: '/shapes/cylinder',
     name: 'Cylinder',
     component: () => import('../../pages/shapes/Cylinder.vue'),
