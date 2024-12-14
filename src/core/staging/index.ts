@@ -1,4 +1,5 @@
 import AccumulativeShadows from './AccumulativeShadows/component.vue'
+import Align from './Align.vue'
 import Backdrop from './Backdrop.vue'
 import ContactShadows from './ContactShadows.vue'
 import Fit from './Fit.vue'
@@ -8,6 +9,7 @@ import Precipitation from './Precipitation.vue'
 import RandomizedLights from './RandomizedLights/component.vue'
 import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
+import SoftShadows from './SoftShadows.vue'
 import Sparkles from './Sparkles/component.vue'
 import Stars from './Stars.vue'
 import Environment from './useEnvironment/component.vue'
@@ -15,6 +17,7 @@ import Lightformer from './useEnvironment/lightformer/index.vue'
 
 export {
   AccumulativeShadows,
+  Align,
   Backdrop,
   ContactShadows,
   Environment,
@@ -26,6 +29,7 @@ export {
   RandomizedLights,
   Sky,
   Smoke,
+  SoftShadows,
   Sparkles,
   Stars,
 }
