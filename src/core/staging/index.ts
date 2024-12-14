@@ -5,6 +5,7 @@ import Fit from './Fit.vue'
 import Grid from './Grid.vue'
 import Ocean from './Ocean.vue'
 import Precipitation from './Precipitation.vue'
+import CircleShadow from './CircleShadow.vue'
 import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
 import SoftShadows from './SoftShadows.vue'
@@ -16,6 +17,7 @@ import Lightformer from './useEnvironment/lightformer/index.vue'
 export {
   Align,
   Backdrop,
+  CircleShadow,
   ContactShadows,
   Environment,
   Fit,

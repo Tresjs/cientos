@@ -116,6 +116,7 @@ export default [
       { text: 'Align', link: '/guide/staging/align' },
       { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
       { text: 'Grid', link: '/guide/staging/grid' },
+      { text: 'CircleShadow', link: '/guide/staging/circle-shadow' },
     ],
   },
   {
