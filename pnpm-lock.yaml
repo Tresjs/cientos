@@ -25,7 +25,7 @@ importers:
         version: 5.4.0(three@0.171.0)
       three-stdlib:
         specifier: ^2.34.0
-        version: 2.34.0(three@0.171.0)
+        version: 2.35.2(three@0.171.0)
       vue:
         specifier: '>=3.3'
         version: 3.5.13(typescript@5.7.2)
@@ -1306,8 +1306,8 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
-  '@types/draco3d@1.4.7':
-    resolution: {integrity: sha512-sjx6hQ8UArRZf+2ZhpPkjJW8iCkyxar69/IElc9NHuGE40n0U9SuvxX59CHvF4xUH7qfJDQ2lIbANZ0HHJg+BQ==}
+  '@types/draco3d@1.4.10':
+    resolution: {integrity: sha512-AX22jp8Y7wwaBgAixaSvkoG4M/+PlAcm3Qs4OW8yT9DM4xUpWKeFhLueTAyZF39pviAdcDdeJoACapiAceqNcw==}
 
   '@types/estree@1.0.4':
     resolution: {integrity: sha512-2JwWnHK9H+wUZNorf2Zr6ves96WHoWDJIftkcxPKsS7Djta6Zu519LarhRNljPXkpsZR2ZMwNCPeW7omW07BJw==}
@@ -1342,8 +1342,8 @@ packages:
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
-  '@types/offscreencanvas@2019.7.2':
-    resolution: {integrity: sha512-ujCjOxeA07IbEBQYAkoOI+XFw5sT3nhWJ/xZfPR6reJppDG7iPQPZacQiLTtWH1b3a2NYXWlxvYqa40y/LAixQ==}
+  '@types/offscreencanvas@2019.7.3':
+    resolution: {integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -1362,9 +1362,6 @@ packages:
 
   '@types/webxr@0.5.20':
     resolution: {integrity: sha512-JGpU6qiIJQKUuVSKx1GtQnHJGxRjtfGIhzO2ilq43VZZS//f1h1Sgexbdk+Lq+7569a6EYhOWrUpIruR/1Enmg==}
-
-  '@types/webxr@0.5.7':
-    resolution: {integrity: sha512-Rcgs5c2eNFnHp53YOjgtKfl/zWX1Y+uFGUwlSXrWcZWu3yhANRezmph4MninmqybUYT6g9ZE0aQ9QIdPkLR3Kg==}
 
   '@typescript-eslint/eslint-plugin@8.17.0':
     resolution: {integrity: sha512-HU1KAdW3Tt8zQkdvNoIijfWDMvdSweFYm4hWh+KwhPstv+sCmWb89hCIP8msFm9N1R/ooh9honpSuvqKWlYy3w==}
@@ -2222,8 +2219,8 @@ packages:
     resolution: {integrity: sha512-1gxPBJpI/pcjQhKgIU91II6Wkay+dLcN3M6rf2uwP8hRur3HtQXjVrdAK3sjC0piaEuxzMwjXChcETiJl47lAQ==}
     engines: {node: '>=18'}
 
-  draco3d@1.5.6:
-    resolution: {integrity: sha512-+3NaRjWktb5r61ZFoDejlykPEFKT5N/LkbXsaddlw6xNSXBanUYpFc2AXXpbJDilPHazcSreU/DpQIaxfX0NfQ==}
+  draco3d@1.5.7:
+    resolution: {integrity: sha512-m6WCKt/erDXcw+70IJXnG7M3awwQPAsZvJGX5zY7beBqpELw6RDGkYVU0W43AFxye4pDZ5i2Lbyc/NNGqwjUVQ==}
 
   duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
@@ -4091,8 +4088,8 @@ packages:
       react:
         optional: true
 
-  three-stdlib@2.34.0:
-    resolution: {integrity: sha512-U5qJYWgUKBFJqr1coMSbczA964uvouzBjQbtJlaI9LfMwy7hr+kc1Mfh0gqi/2872KmGu9utgff6lj8Oti8+VQ==}
+  three-stdlib@2.35.2:
+    resolution: {integrity: sha512-Ns9ZdiFEAsiv8JvHS28Qgxg4YRTq13Ixa4EDUQZhUovZ3j/GLTou4zE887SLSqsuRZwuy3gklttn2ha5JaJpTQ==}
     peerDependencies:
       three: '>=0.128.0'
 
@@ -5552,7 +5549,7 @@ snapshots:
     dependencies:
       '@types/ms': 0.7.34
 
-  '@types/draco3d@1.4.7': {}
+  '@types/draco3d@1.4.10': {}
 
   '@types/estree@1.0.4': {}
 
@@ -5585,7 +5582,7 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
-  '@types/offscreencanvas@2019.7.2': {}
+  '@types/offscreencanvas@2019.7.3': {}
 
   '@types/semver@7.5.8': {}
 
@@ -5605,8 +5602,6 @@ snapshots:
   '@types/web-bluetooth@0.0.20': {}
 
   '@types/webxr@0.5.20': {}
-
-  '@types/webxr@0.5.7': {}
 
   '@typescript-eslint/eslint-plugin@8.17.0(@typescript-eslint/parser@8.17.0(eslint@9.16.0(jiti@2.4.1))(typescript@5.7.2))(eslint@9.16.0(jiti@2.4.1))(typescript@5.7.2)':
     dependencies:
@@ -6592,7 +6587,7 @@ snapshots:
     dependencies:
       type-fest: 4.30.0
 
-  draco3d@1.5.6: {}
+  draco3d@1.5.7: {}
 
   duplexer@0.1.2: {}
 
@@ -8892,12 +8887,12 @@ snapshots:
       object-hash: 3.0.0
       three: 0.171.0
 
-  three-stdlib@2.34.0(three@0.171.0):
+  three-stdlib@2.35.2(three@0.171.0):
     dependencies:
-      '@types/draco3d': 1.4.7
-      '@types/offscreencanvas': 2019.7.2
-      '@types/webxr': 0.5.7
-      draco3d: 1.5.6
+      '@types/draco3d': 1.4.10
+      '@types/offscreencanvas': 2019.7.3
+      '@types/webxr': 0.5.20
+      draco3d: 1.5.7
       fflate: 0.6.10
       potpack: 1.0.2
       three: 0.171.0
