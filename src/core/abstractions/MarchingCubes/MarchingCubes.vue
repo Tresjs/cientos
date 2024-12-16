@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MeshBasicMaterial, type Material } from 'three'
+import { MeshBasicMaterial } from 'three'
 import { MarchingCubes as MarchingCubesImpl } from 'three-stdlib'
 import { computed, onUnmounted, provide } from 'vue'
 import { useLoop } from '@tresjs/core'
