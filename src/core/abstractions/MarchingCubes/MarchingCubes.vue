@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Material } from 'three'
+import { MeshBasicMaterial, type Material } from 'three'
 import { MarchingCubes as MarchingCubesImpl } from 'three-stdlib'
-import { computed, provide } from 'vue'
+import { computed, onUnmounted, provide } from 'vue'
 import { useLoop } from '@tresjs/core'
 import { MARCHING_CUBES_PROVIDE_KEY } from './const'
 
@@ -19,7 +19,8 @@ const props = withDefaults(defineProps<MarchingCubesProps>(), {
   enableColors: false,
 })
 
-const marchingCubes = computed(() => new MarchingCubesImpl(props.resolution, null as unknown as Material, props.enableUvs, props.enableColors, props.maxPolyCount))
+const defaultMaterial = new MeshBasicMaterial()
+const marchingCubes = computed(() => new MarchingCubesImpl(props.resolution, defaultMaterial, props.enableUvs, props.enableColors, props.maxPolyCount))
 const api = { parent: marchingCubes }
 
 export type MarchingCubesApi = typeof api
@@ -32,6 +33,8 @@ useLoop().onBeforeRender(() => {
   marchingCubes.value.update()
   marchingCubes.value.reset()
 })
+
+onUnmounted(() => { defaultMaterial.dispose() })
 
 defineExpose({ instance: marchingCubes })
 </script>
