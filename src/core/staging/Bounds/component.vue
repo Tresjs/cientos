@@ -18,7 +18,7 @@ export interface BoundsProps {
   /**
    * Whether to re`lookAt` the last target when the screen is resized, false
    */
-  useScreenSize?: boolean
+  useResize?: boolean
   /**
    * Whether to `lookAt` the `Bounds` object when the component is mounts, false
    */
@@ -36,7 +36,7 @@ export interface BoundsProps {
 const props = withDefaults(defineProps<BoundsProps>(), {
   duration: 1.0,
   offset: 0.2,
-  useScreenSize: false,
+  useResize: false,
   useMounted: false,
   clip: false,
 })
@@ -82,7 +82,7 @@ watch(shallowCam, () => {
 const onResize = useDebounceFn(refresh, 100)
 
 watch(() => [size.width.value, size.height.value], () => {
-  if (props.useScreenSize) { onResize() }
+  if (props.useResize) { onResize() }
 })
 
 // NOTE: Tres core doesn't currently allow for most

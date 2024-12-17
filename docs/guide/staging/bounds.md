@@ -23,7 +23,7 @@ If you are using other camera controls, be sure to make them the 'default'.
 | :--- | :--- | ---- |
 | `duration` | Duration of the `lookAt` animation in seconds | `1.0` |
 | `offset` | Additional distance from the target when using `lookAt` with a `Box3` or `Object3D` | `0.2` |
-| `useScreenSize` | Whether to re`lookAt` the last target when the screen is resized | `false` |
+| `useResize` | Whether to re`lookAt` the last target when the screen is resized | `false` |
 | `useMounted` | Whether to `lookAt` the `Bounds` object when the component is mounts | `false` |
 | `clip` | Whether to adjust the camera's `near` and `far` settings when using `lookAt` | `false` |
 | `easing` | Animation's easing function. `t` and the returned value should be in the interval `[0, 1]` | Cubic ease out |

@@ -12,7 +12,7 @@ const c = useControls({
   clip: false,
   useMounted: true,
   useOrthographic: false,
-  useScreenSize: false,
+  useResize: false,
   isLinear: false,
   enabled: true,
   lookAtX: { value: 0, min: -20, max: 20, step: 0.10 },
@@ -122,7 +122,7 @@ const onEndFn = (v: any) => { endArg.value = v.object?.uuid; endCount.value++ }
         :clip="c.clip.value.value"
         :duration="c.duration.value.value"
         :offset="c.offset.value.value"
-        :use-screen-size="c.useScreenSize.value.value"
+        :use-resize="c.useResize.value.value"
         :use-mounted="c.useMounted.value.value"
         :easing="easingFn"
         @start="onStartFn"
