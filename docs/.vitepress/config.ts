@@ -75,16 +75,17 @@ export default defineConfig({
           { text: 'useFBO', link: '/guide/abstractions/use-fbo' },
           { text: 'useSurfaceSampler', link: '/guide/abstractions/use-surface-sampler' },
           { text: 'Sampler', link: '/guide/abstractions/sampler' },
-          /* { text: 'Edges', link: '/guide/abstractions/edges' }, */
+          { text: 'Edges', link: '/guide/abstractions/edges' },
           { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
           { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
-          /*           { text: 'Mask', link: '/guide/abstractions/mask' },
+          { text: 'MarchingCubes', link: '/guide/abstractions/marching-cubes' },
+          { text: 'Mask', link: '/guide/abstractions/mask' },
           { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
           { text: 'ScreenSizer', link: '/guide/abstractions/screen-sizer' },
           { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
           { text: 'Outline', link: '/guide/abstractions/outline' },
           { text: 'Image', link: '/guide/abstractions/image' },
-          { text: 'Billboard', link: '/guide/abstractions/billboard' }, */
+          { text: 'Billboard', link: '/guide/abstractions/billboard' },
         ],
       },
       {
@@ -97,6 +98,7 @@ export default defineConfig({
           { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
           { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
           { text: 'MapControls', link: '/guide/controls/map-controls' },
+          { text: 'Helper', link: '/guide/controls/helper' },
         ],
       },
       {
@@ -119,7 +121,8 @@ export default defineConfig({
           { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
           { text: 'CustomShaderMaterial', link: '/guide/materials/custom-shader-material' },
           { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
-          /*           { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' }, */
+          { text: 'PointMaterial', link: '/guide/materials/point-material' },
+          { text: 'MeshDiscardMaterial', link: '/guide/materials/mesh-discard-material' },
         ],
       },
       {
@@ -138,6 +141,7 @@ export default defineConfig({
           { text: 'Plane', link: '/guide/shapes/plane' },
           { text: 'Ring', link: '/guide/shapes/ring' },
           { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
+          { text: 'ScreenQuad', link: '/guide/shapes/screen-quad' },
           { text: 'Sphere', link: '/guide/shapes/sphere' },
           { text: 'Superformula', link: '/guide/shapes/superformula' },
           { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
@@ -159,9 +163,9 @@ export default defineConfig({
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
           { text: 'Sparkles', link: '/guide/staging/sparkles' },
           { text: 'Ocean', link: '/guide/staging/ocean' },
-          /*           { text: 'Align', link: '/guide/staging/align' },
+          { text: 'Align', link: '/guide/staging/align' },
           { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
-          { text: 'Grid', link: '/guide/staging/grid' }, */
+          { text: 'Grid', link: '/guide/staging/grid' },
         ],
       },
       {

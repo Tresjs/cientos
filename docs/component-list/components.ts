@@ -17,13 +17,14 @@ export default [
       },
       { text: 'Sampler', link: '/guide/abstractions/sampler' },
       { text: 'PositionalAudio', link: '/guide/abstractions/positional-audio' },
-      /*       { text: 'Mask', link: '/guide/abstractions/mask' },
+      { text: 'MarchingCubes', link: '/guide/abstractions/marching-cubes' },
+      { text: 'Mask', link: '/guide/abstractions/mask' },
       { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
       { text: 'GradientTexture', link: '/guide/abstractions/gradient-texture' },
       { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
       { text: 'Outline', link: '/guide/abstractions/outline' },
       { text: 'Image', link: '/guide/abstractions/image' },
-      { text: 'Billboard', link: '/guide/abstractions/billboard' }, */
+      { text: 'Billboard', link: '/guide/abstractions/billboard' },
     ],
   },
   {
@@ -39,6 +40,7 @@ export default [
       { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
       { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
       { text: 'MapControls', link: '/guide/controls/map-controls' },
+      { text: 'Helper', link: '/guide/controls/helper' },
     ],
   },
   {
@@ -66,10 +68,12 @@ export default [
         text: 'HolographicMaterial',
         link: '/guide/materials/holographic-material',
       },
-      /* {
+      {
+        text: 'PointMaterial',
+        link: '/guide/materials/point-material',
         text: 'MeshDiscardMaterial',
         link: '/guide/materials/mesh-discard-material',
-      }, */
+      },
     ],
   },
   {
@@ -87,6 +91,7 @@ export default [
       { text: 'Plane', link: '/guide/shapes/plane' },
       { text: 'Ring', link: '/guide/shapes/ring' },
       { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
+      { text: 'ScreenQuad', link: '/guide/shapes/screen-quad' },
       { text: 'Sphere', link: '/guide/shapes/sphere' },
       { text: 'Superformula', link: '/guide/shapes/superformula' },
       { text: 'Tetrahedron', link: '/guide/shapes/tetrahedron' },
@@ -109,9 +114,9 @@ export default [
       { text: 'Sparkles', link: '/guide/staging/sparkles' },
       { text: 'Ocean', link: '/guide/staging/ocean' },
       { text: 'Fit', link: '/guide/staging/fit' },
-      /* { text: 'Align', link: '/guide/staging/align' },
+      { text: 'Align', link: '/guide/staging/align' },
       { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
-      { text: 'Grid', link: '/guide/staging/grid' }, */
+      { text: 'Grid', link: '/guide/staging/grid' },
     ],
   },
   {

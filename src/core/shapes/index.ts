@@ -10,6 +10,7 @@ import Octahedron from './Octahedron.vue'
 import Plane from './Plane.vue'
 import Ring from './Ring.vue'
 import RoundedBox from './RoundedBox.vue'
+import ScreenQuad from './ScreenQuad.vue'
 import Sphere from './Sphere.vue'
 import Superformula from './Superformula.vue'
 import Tetrahedron from './Tetrahedron.vue'
@@ -30,6 +31,7 @@ export {
   Plane,
   Ring,
   RoundedBox,
+  ScreenQuad,
   Sphere,
   Superformula,
   Tetrahedron,

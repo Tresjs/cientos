@@ -25,6 +25,11 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/RoundedBoxDemo.vue'),
   },
   {
+    path: '/shapes/screenQuad',
+    name: 'ScreenQuad',
+    component: () => import('../../pages/shapes/ScreenQuadDemo.vue'),
+  },
+  {
     path: '/shapes/on-demand-shapes',
     name: 'on-demand Shapes',
     component: () => import('../../pages/shapes/OnDemandShapesDemo.vue'),
