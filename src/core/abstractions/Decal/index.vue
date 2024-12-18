@@ -37,9 +37,10 @@ const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, order, deb
 
 const controlsInMoved = ref<boolean>(false)
 
-const localDecalDebugPosition = reactive<Vector3>(new Vector3(0, 0, 0))
-const localDecalDebugOrientation = reactive<Euler>(new Euler(0, 0, 0))
-const localDecalDebugSize = reactive<Vector3>(new Vector3(1, 1, 1))
+const decalDebugPosition = reactive<Vector3>(new Vector3(0, 0, 0))
+const decalDebugOrientationZ = ref<number>(0)
+const decalDebugSizes = reactive<Vector3>(new Vector3(1, 1, 1))
+const decalDebugScale = ref<number>(1)
 
 const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
@@ -48,7 +49,7 @@ const boxHelperRef = shallowRef<Mesh | null>(null)
 const boxHelperCurrentRef = shallowRef<Mesh | null>(null)
 const currentIntersect = shallowReactive<Intersection | {}>({})
 const nodesDecalRefs = ref([])
-const coucouTest = ref([])
+const decalItemsRef = ref([])
 
 const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).length === 0)
 const meshLineColor = computed(() => new Color(debugLineColor.value))
@@ -69,6 +70,8 @@ const textureMap = computed(() => {
 
     texture.flipY = true
     texture.colorSpace = SRGBColorSpace
+    texture.aspectRatio = texture.image.width / texture.image.height
+    texture.isPortrait = texture.image.height > texture.image.width
     texture.needsUpdate = true
 
     acc[fileName] = texture
@@ -84,6 +87,8 @@ const onClear = () => {
 
   sizeControls.value.visible = false
   orientationZControls.value.visible = false
+
+  boxHelperCurrentRef.value.visible = false
 }
 
 const currentNodesDecalRefs = computed(() => {
@@ -115,14 +120,14 @@ const { sizeControls, orientationZControls, keyTextureSelected, decalSelected, c
   },
   sizeControls: {
     label: 'Size',
-    value: new Vector3(1, 1, 1),
+    value: decalDebugSizes.clone(),
     visible: false,
-    step: 0.01,
+    step: 0.001,
   },
   orientationZControls: {
     label: 'Orientation Z',
     visible: false,
-    value: 0,
+    value: decalDebugOrientationZ.value,
     min: -360, // in degrees
     max: 360, // in degrees
     step: 1,
@@ -166,9 +171,22 @@ const makeGeometryDebugMode = () => {
   const { face: { normal: intersectNormal }, point: intersectPosition } = currentIntersect
 
   const localDecalPosition = intersectPosition.clone()
-  localDecalDebugPosition.copy(localDecalPosition)
+  decalDebugPosition.copy(localDecalPosition)
 
-  const localDecalSize = localDecalDebugSize
+  const aspectRatio = textureMap.value[keyTextureSelected.value.value].aspectRatio
+  const localDecalSize = decalDebugSizes.clone()
+
+  const selectedTexture = textureMap.value[keyTextureSelected.value.value]
+
+  if (selectedTexture.isPortrait) {
+    localDecalSize.y = localDecalSize.x / selectedTexture.aspectRatio
+  }
+  else {
+    localDecalSize.x = localDecalSize.y * selectedTexture.aspectRatio
+  }
+
+  localDecalSize.y = localDecalSize.x / aspectRatio
+
   const localDecalOrientation = boxHelperRef.value.instance.rotation.clone()
 
   target.position.copy(intersectNormal).multiplyScalar(0.01)
@@ -237,23 +255,19 @@ const onPointerDown = () => {
 }
 
 const printDecal = async () => {
-  if (!currentIntersect.point || !meshRefDebug.value) {
-    console.warn('Impossible d\'ajouter un decal sans point d\'intersection ou sans mesh')
-    return
-  }
+  if (!currentIntersect || !meshRefDebug.value) { return }
 
-  const { point } = currentIntersect
   const { rotation } = boxHelperRef.value.instance
   const selectedMap = textureMap.value[keyTextureSelected.value.value]
+  const { face: { normal: intersectNormal }, point } = currentIntersect
 
-  // Ajoute une nouvelle référence au tableau avant de passer à la suite
   const uid = `decal-${nodesDecalRefs.value.length}`
 
   const decalData = {
     position: point.toArray(),
     orientation: rotation.toArray(),
-    size: [1, 1, 1],
-    normal: [1, 1, 1],
+    size: decalDebugSizes.clone().toArray(),
+    normal: intersectNormal.clone().toArray(),
     parent: meshRefDebug.value.parent,
     map: selectedMap,
     uid,
@@ -266,10 +280,10 @@ const printDecal = async () => {
   decalSelected.value.options = computedNodesDecal.value
   decalSelected.value.value = uid
 
-  sizeControls.value.value = new Vector3(1, 1, 1)
+  sizeControls.value.value = decalDebugSizes
   orientationZControls.value.value = 0
 
-  const test = coucouTest.value[uid]
+  const test = decalItemsRef.value[uid]
 
   boxHelperCurrentRef.value.setFromObject(test.instance)
   boxHelperCurrentRef.value.update()
@@ -289,8 +303,12 @@ watch(() => decalSelected.value.value, async (newVal) => {
   if (decalSelectedIsNone.value) {
     sizeControls.value.visible = false
     orientationZControls.value.visible = false
+
+    boxHelperCurrentRef.value.visible = false
   }
   else {
+    boxHelperCurrentRef.value.visible = true
+
     sizeControls.value.visible = true
     orientationZControls.value.visible = true
 
@@ -299,7 +317,7 @@ watch(() => decalSelected.value.value, async (newVal) => {
 
     await nextTick()
 
-    const test = coucouTest.value[newVal]
+    const test = decalItemsRef.value[newVal]
 
     boxHelperCurrentRef.value.setFromObject(test.instance)
     boxHelperCurrentRef.value.update()
@@ -307,7 +325,7 @@ watch(() => decalSelected.value.value, async (newVal) => {
 })
 
 watch([sizeControls.value, orientationZControls.value], () => {
-  if (!nodesDecalRefs.value.length || decalSelectedIsNone.value) { return }
+  if (!nodesDecalRefs.value.length || decalSelectedIsNone.value || !currentNodesDecalRefs.value || !boxHelperCurrentRef.value) { return }
 
   const size = sizeControls.value.value
   const orientation = new Vector3().fromArray(currentNodesDecalRefs.value.orientation)
@@ -321,12 +339,6 @@ watch([sizeControls.value, orientationZControls.value], () => {
   currentNodesDecalRefs.value.orientation = orientationArr
 
   boxHelperCurrentRef.value.update()
-})
-
-watch([meshRefDebug, keyTextureSelected.value], () => {
-  if (!meshRefDebug.value) { }
-
-  // console.log(keyTextureSelected.value.value)
 })
 
 watch(controls, () => {
@@ -365,7 +377,7 @@ onUnmounted(() => {
     name="debugDecal"
     :visible="!!(!currentIntersectIsEmpty)"
   >
-    <!-- <slot></slot> -->
+    <slot></slot>
   </TresMesh>
 
   <Item
@@ -373,7 +385,7 @@ onUnmounted(() => {
     :key="`nodes-decal-${index}`"
     :ref="
       (el) => {
-        coucouTest[item.uid] = el
+        decalItemsRef[item.uid] = el
       }
     "
     :properties="{ ...item, index }"
@@ -396,5 +408,5 @@ onUnmounted(() => {
     <TresMeshNormalMaterial />
   </Box>
 
-  <TresBoxHelper ref="boxHelperCurrentRef" :material-depthTest="false" />
+  <TresBoxHelper v-if="debug" ref="boxHelperCurrentRef" :material-depthTest="false" />
 </template>

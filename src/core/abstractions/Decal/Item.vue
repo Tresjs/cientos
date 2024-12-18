@@ -29,14 +29,27 @@ defineExpose({
 })
 
 const makeGeometry = () => {
-  const { parent, normal, position, size, orientation } = properties.value
+  const { parent, normal, position, size, orientation, map } = properties.value
   const target = meshRef.value
 
   if (!parent || !target) { return }
 
   const decalNormal = new Vector3().fromArray(normal)
   const decalPosition = new Vector3(...position)
+
+  const aspectRatio = map.aspectRatio
+
   const decalSize = new Vector3(...size)
+
+  if (map.isPortrait) {
+    decalSize.y = decalSize.x / map.aspectRatio
+  }
+  else {
+    decalSize.x = decalSize.y * map.aspectRatio
+  }
+
+  decalSize.y = decalSize.x / aspectRatio
+
   const decalOrientation = new Euler(...orientation)
 
   target.position.copy(decalNormal).multiplyScalar(0.01)
@@ -55,7 +68,7 @@ watch(meshRef, () => {
 })
 
 onUnmounted(() => {
-
+  meshRef.value?.geometry.dispose()
 })
 </script>
 

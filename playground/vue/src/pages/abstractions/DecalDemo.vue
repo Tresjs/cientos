@@ -37,7 +37,7 @@ useControls({})
 
     <TresMesh ref="boxRef" :scale="1">
       <Suspense>
-        <Decal debug :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png']" />
+        <Decal debug :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
       </Suspense>
 
       <TresMeshPhysicalMaterial :roughness=".5" />
