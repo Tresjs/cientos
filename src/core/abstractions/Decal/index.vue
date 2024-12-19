@@ -16,6 +16,7 @@ export interface DecalProps {
   debugLineColor?: string
   depthTest?: boolean
   depthWrite?: boolean
+  scale?: number
   polygonOffsetFactor?: number
   map?: string[] | null
   mesh?: ShallowRef<Mesh | null>
@@ -27,20 +28,21 @@ const props = withDefaults(defineProps<DecalProps>(), {
   debugLineColor: '#0000ff',
   depthTest: true,
   depthWrite: false,
+  scale: 1,
   polygonOffsetFactor: -10,
   map: null,
   mesh: () => shallowRef(null),
   order: () => Math.round(Math.random() * 100),
 })
 
-const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, order, debugLineColor } = toRefs(props)
+const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, order, debugLineColor, scale } = toRefs(props)
 
 const controlsInMoved = ref<boolean>(false)
 
 const decalDebugPosition = reactive<Vector3>(new Vector3(0, 0, 0))
 const decalDebugOrientationZ = ref<number>(0)
 const decalDebugSizes = reactive<Vector3>(new Vector3(1, 1, 1))
-const decalDebugScale = ref<number>(1)
+const decalDebugScale = ref<number>(scale.value)
 
 const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
@@ -79,16 +81,54 @@ const textureMap = computed(() => {
   }, {})
 })
 
-const onClear = () => {
+const onClearDecals = () => {
   nodesDecalRefs.value = []
 
   decalSelected.value.value = 'none'
   decalSelected.value.options = computedNodesDecal.value
 
-  sizeControls.value.visible = false
+  scaleControls.value.visible = false
   orientationZControls.value.visible = false
 
   boxHelperCurrentRef.value.visible = false
+}
+
+const onDeleteCurrentDecal = async () => {
+  const selectedUid = decalSelected.value.value
+
+  if (selectedUid === 'none') {
+    console.warn('No decal selected for deletion.')
+    return
+  }
+
+  const indexToDelete = nodesDecalRefs.value.findIndex(node => node.uid === selectedUid)
+
+  if (indexToDelete === -1) {
+    console.warn(`Decal with UID ${selectedUid} not found.`)
+    return
+  }
+
+  nodesDecalRefs.value.splice(indexToDelete, 1)
+
+  await nextTick()
+
+  if (nodesDecalRefs.value.length > 0) {
+    const newSelectedIndex = Math.min(indexToDelete, nodesDecalRefs.value.length - 1)
+    const newSelectedUid = nodesDecalRefs.value[newSelectedIndex]?.uid
+
+    decalSelected.value.value = 'none'
+
+    updateControlsFromDecal(decalDebugScale.value, decalDebugOrientationZ.value)
+  }
+  else {
+    decalSelected.value.value = 'none'
+    scaleControls.value.visible = false
+    orientationZControls.value.visible = false
+    boxHelperCurrentRef.value.visible = false
+    deleteBtn.value.visible = false
+  }
+
+  decalSelected.value.options = computedNodesDecal.value
 }
 
 const currentNodesDecalRefs = computed(() => {
@@ -105,8 +145,7 @@ const computedNodesDecal = computed(() => {
   ]
 })
 
-const { sizeControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn } = useControls({
-
+const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn, deleteBtn } = useControls({
   keyTextureSelected: {
     options: Object.keys(textureMap.value).map((key, index) => ({
       text: key,
@@ -118,10 +157,12 @@ const { sizeControls, orientationZControls, keyTextureSelected, decalSelected, c
     options: computedNodesDecal.value,
     value: 'none',
   },
-  sizeControls: {
-    label: 'Size',
-    value: decalDebugSizes.clone(),
+  scaleControls: {
+    label: 'Scale',
+    value: decalDebugScale.value,
     visible: false,
+    min: 0.001,
+    max: decalDebugScale.value * 10,
     step: 0.001,
   },
   orientationZControls: {
@@ -132,13 +173,22 @@ const { sizeControls, orientationZControls, keyTextureSelected, decalSelected, c
     max: 360, // in degrees
     step: 1,
   },
+  deleteBtn: {
+    label: 'Delete Decal ${index}',
+    type: 'button',
+    onClick: onDeleteCurrentDecal,
+    visible: false,
+    size: 'sm',
+  },
   clearBtn: {
     label: 'Clear Decals',
     type: 'button',
-    onClick: onClear,
+    onClick: onClearDecals,
     size: 'sm',
   },
 })
+
+deleteBtn.value.visible = false
 
 watchEffect(() => {
   if (!meshRef?.value) { return }
@@ -156,7 +206,7 @@ watch(meshLineRef, () => {
   meshLineRef.value.geometry.setFromPoints([new Vector3(), new Vector3()])
 })
 
-const makeGeometryDebugMode = () => {
+const printDebugDecal = () => {
   if (currentIntersectIsEmpty.value) { return }
 
   const parent = mesh?.value || meshRefDebug.value?.parent
@@ -186,6 +236,7 @@ const makeGeometryDebugMode = () => {
   }
 
   localDecalSize.y = localDecalSize.x / aspectRatio
+  localDecalSize.multiplyScalar(decalDebugScale.value)
 
   const localDecalOrientation = boxHelperRef.value.instance.rotation.clone()
 
@@ -235,7 +286,7 @@ onLoop(({ delta, elapsed, clock }) => {
     positions.setXYZ(1, nLineHelper.x, nLineHelper.y, nLineHelper.z)
     positions.needsUpdate = true
 
-    makeGeometryDebugMode()
+    printDebugDecal()
   }
   else {
     for (const key in currentIntersect) {
@@ -254,20 +305,27 @@ const onPointerDown = () => {
   controlsInMoved.value = false
 }
 
+const updateControlsFromDecal = (scale, orientationZ) => {
+  scaleControls.value.value = scale
+  orientationZControls.value.value = orientationZ
+}
+
 const printDecal = async () => {
   if (!currentIntersect || !meshRefDebug.value) { return }
 
-  const { rotation } = boxHelperRef.value.instance
+  const orientation = boxHelperRef.value.instance.rotation.clone()
   const selectedMap = textureMap.value[keyTextureSelected.value.value]
   const { face: { normal: intersectNormal }, point } = currentIntersect
 
   const uid = `decal-${nodesDecalRefs.value.length}`
 
   const decalData = {
-    position: point.toArray(),
-    orientation: rotation.toArray(),
-    size: decalDebugSizes.clone().toArray(),
-    normal: intersectNormal.clone().toArray(),
+    position: point.clone(),
+    orientation: orientation.clone(),
+    orientationZ: decalDebugOrientationZ.value,
+    size: decalDebugSizes.clone(),
+    scale: scaleControls.value.value,
+    normal: intersectNormal.clone(),
     parent: meshRefDebug.value.parent,
     map: selectedMap,
     uid,
@@ -275,17 +333,15 @@ const printDecal = async () => {
 
   nodesDecalRefs.value.push(decalData)
 
-  await nextTick()
+  updateControlsFromDecal(decalDebugScale.value, decalDebugOrientationZ.value)
 
   decalSelected.value.options = computedNodesDecal.value
   decalSelected.value.value = uid
 
-  sizeControls.value.value = decalDebugSizes
-  orientationZControls.value.value = 0
+  await nextTick()
 
-  const test = decalItemsRef.value[uid]
-
-  boxHelperCurrentRef.value.setFromObject(test.instance)
+  const targetMesh = decalItemsRef.value[uid]
+  boxHelperCurrentRef.value.setFromObject(targetMesh.instance)
   boxHelperCurrentRef.value.update()
 }
 
@@ -301,42 +357,39 @@ const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
 
 watch(() => decalSelected.value.value, async (newVal) => {
   if (decalSelectedIsNone.value) {
-    sizeControls.value.visible = false
+    scaleControls.value.visible = false
     orientationZControls.value.visible = false
-
     boxHelperCurrentRef.value.visible = false
+    deleteBtn.value.visible = false
   }
   else {
     boxHelperCurrentRef.value.visible = true
-
-    sizeControls.value.visible = true
+    scaleControls.value.visible = true
     orientationZControls.value.visible = true
-
-    sizeControls.value.value = new Vector3().fromArray(currentNodesDecalRefs.value.size)
-    orientationZControls.value.value = MathUtils.radToDeg(currentNodesDecalRefs.value.orientation[2])
+    deleteBtn.value.visible = true
+    deleteBtn.value.value.label = `Delete ${currentNodesDecalRefs.value.uid}`
 
     await nextTick()
 
-    const test = decalItemsRef.value[newVal]
+    const selectedDecal = currentNodesDecalRefs.value
+    updateControlsFromDecal(selectedDecal.scale, selectedDecal.orientationZ)
 
-    boxHelperCurrentRef.value.setFromObject(test.instance)
+    const targetMesh = decalItemsRef.value[newVal]
+    boxHelperCurrentRef.value.setFromObject(targetMesh.instance)
     boxHelperCurrentRef.value.update()
   }
 })
 
-watch([sizeControls.value, orientationZControls.value], () => {
+watch([scaleControls.value, orientationZControls.value], () => {
   if (!nodesDecalRefs.value.length || decalSelectedIsNone.value || !currentNodesDecalRefs.value || !boxHelperCurrentRef.value) { return }
 
-  const size = sizeControls.value.value
-  const orientation = new Vector3().fromArray(currentNodesDecalRefs.value.orientation)
+  const orientation = currentNodesDecalRefs.value.orientation.clone()
   const orientationZ = orientationZControls.value.value
   orientation.z = MathUtils.degToRad(orientationZ)
 
-  const sizeArr = size.toArray()
-  const orientationArr = orientation.toArray()
-
-  currentNodesDecalRefs.value.size = sizeArr
-  currentNodesDecalRefs.value.orientation = orientationArr
+  currentNodesDecalRefs.value.scale = scaleControls.value.value
+  currentNodesDecalRefs.value.orientation = orientation
+  currentNodesDecalRefs.value.orientationZ = orientationZ
 
   boxHelperCurrentRef.value.update()
 })

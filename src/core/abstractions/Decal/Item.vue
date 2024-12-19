@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, defineProps, onUnmounted, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import { defineProps, onUnmounted, shallowRef, toRefs, watch, withDefaults } from 'vue'
 import type { Mesh } from 'three'
-import { Euler, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 
 export interface DecalProps {
@@ -29,17 +28,17 @@ defineExpose({
 })
 
 const makeGeometry = () => {
-  const { parent, normal, position, size, orientation, map } = properties.value
+  const { parent, normal, position, size, orientation, map, scale } = properties.value
   const target = meshRef.value
 
   if (!parent || !target) { return }
 
-  const decalNormal = new Vector3().fromArray(normal)
-  const decalPosition = new Vector3(...position)
+  const decalNormal = normal.clone()
+  const decalPosition = position.clone()
 
   const aspectRatio = map.aspectRatio
 
-  const decalSize = new Vector3(...size)
+  const decalSize = size.clone()
 
   if (map.isPortrait) {
     decalSize.y = decalSize.x / map.aspectRatio
@@ -49,15 +48,16 @@ const makeGeometry = () => {
   }
 
   decalSize.y = decalSize.x / aspectRatio
+  decalSize.multiplyScalar(scale)
 
-  const decalOrientation = new Euler(...orientation)
+  const decalOrientation = orientation.clone()
 
   target.position.copy(decalNormal).multiplyScalar(0.01)
   target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
 }
 
 watch(
-  () => properties.value.orientation,
+  () => [properties.value.orientation, properties.value.scale],
   () => {
     makeGeometry()
   },
