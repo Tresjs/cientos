@@ -1,6 +1,7 @@
 import AccumulativeShadows from './AccumulativeShadows/component.vue'
 import Align from './Align.vue'
 import Backdrop from './Backdrop.vue'
+import Bounds from './Bounds/component.vue'
 import ContactShadows from './ContactShadows.vue'
 import Fit from './Fit.vue'
 import Grid from './Grid.vue'
@@ -19,6 +20,7 @@ export {
   AccumulativeShadows,
   Align,
   Backdrop,
+  Bounds,
   ContactShadows,
   Environment,
   Fit,

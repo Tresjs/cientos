@@ -45,6 +45,11 @@ export const stagingRoutes = [
     component: () => import('../../pages/staging/OceanDemo.vue'),
   },
   {
+    path: '/staging/bounds',
+    name: 'Bounds',
+    component: () => import('../../pages/staging/BoundsDemo.vue'),
+  },
+  {
     path: '/staging/fit',
     name: 'Fit',
     component: () => import('../../pages/staging/fit/index.vue'),
