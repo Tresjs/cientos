@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, watch, watchEffect } from 'vue'
-import type { BoundsControlsProto, OnFitCallbackArg } from './Bounds'
+import type { BoundsControlsProto, OnLookAtCallbackArg } from './Bounds'
 import { Bounds } from './Bounds'
 import { useLoop, useTres } from '@tresjs/core'
 import { PerspectiveCamera } from 'three'
@@ -42,9 +42,9 @@ const props = withDefaults(defineProps<BoundsProps>(), {
 })
 
 const emit = defineEmits<{
-  (e: 'start', sizeProps: OnFitCallbackArg): void
-  (e: 'cancel', sizeProps: OnFitCallbackArg): void
-  (e: 'end', sizeProps: OnFitCallbackArg): void
+  (e: 'start', sizeProps: OnLookAtCallbackArg): void
+  (e: 'cancel', sizeProps: OnLookAtCallbackArg): void
+  (e: 'end', sizeProps: OnLookAtCallbackArg): void
 }>()
 
 const { invalidate, camera, controls, sizes: size } = useTres()
@@ -52,9 +52,9 @@ const defaultEasing = (t: number) => 1 - (1 - t) ** 3
 
 const bounds = new Bounds(camera.value ?? new PerspectiveCamera())
 bounds.easing = props.easing ?? defaultEasing
-bounds.onFitStart = (arg: OnFitCallbackArg) => emit('start', arg)
-bounds.onFitCancel = (arg: OnFitCallbackArg) => emit('cancel', arg)
-bounds.onFitEnd = (arg: OnFitCallbackArg) => emit('end', arg)
+bounds.onStart = (arg: OnLookAtCallbackArg) => emit('start', arg)
+bounds.onCancel = (arg: OnLookAtCallbackArg) => emit('cancel', arg)
+bounds.onEnd = (arg: OnLookAtCallbackArg) => emit('end', arg)
 
 const refresh = () => {
   bounds.offset = props.offset
@@ -79,10 +79,10 @@ watch(shallowCam, () => {
   if (camera.value) { bounds.camera = camera.value }
 }, { immediate: true, deep: false })
 
-const onResize = useDebounceFn(refresh, 100)
+const refreshDebounce = useDebounceFn(refresh, 250, { maxWait: 2000 })
 
 watch(() => [size.width.value, size.height.value], () => {
-  if (props.useResize) { onResize() }
+  if (props.useResize) { refreshDebounce() }
 })
 
 // NOTE: Tres core doesn't currently allow for most
@@ -93,7 +93,7 @@ watch(() => [props.easing], () => {
   bounds.easing = props.easing ?? defaultEasing
 }, { immediate: true })
 
-onMounted(() => { if (props.useMounted) { bounds.lookAt() } })
+onMounted(() => { if (props.useMounted) { refreshDebounce() } })
 onUnmounted(() => bounds.dispose())
 defineExpose({ instance: bounds })
 </script>

@@ -35,7 +35,7 @@ interface GoalT {
   object: Box3 | Object3D | undefined
 }
 
-export interface OnFitCallbackArg {
+export interface OnLookAtCallbackArg {
   position: Vector3
   quaternion: Quaternion
   zoom: number | undefined
@@ -56,7 +56,6 @@ type CachedFitArgs =
 
 enum AnimationState {
   NONE = 0,
-  START = 1,
   ACTIVE = 2,
 }
 
@@ -90,8 +89,8 @@ export class Bounds extends Object3D {
     object: undefined,
   }
 
-  private animationState = AnimationState.NONE
-  private t = 0.0
+  private _animationState = AnimationState.NONE
+  private _t = 0.0
   private _controls: BoundsControlsProto | null = null
   private _controlsRemoveEventListener = () => {}
 
@@ -108,9 +107,9 @@ export class Bounds extends Object3D {
     this.controls = null
   }
 
-  onFitStart(_: OnFitCallbackArg) {}
-  onFitCancel(_: OnFitCallbackArg) {}
-  onFitEnd(_: OnFitCallbackArg) {}
+  onStart(_: OnLookAtCallbackArg) {}
+  onCancel(_: OnLookAtCallbackArg) {}
+  onEnd(_: OnLookAtCallbackArg) {}
   easing = easingFnDefault
 
   get controls() {
@@ -129,18 +128,18 @@ export class Bounds extends Object3D {
       // should cancel animations here.
       // https://threejs.org/docs/#examples/en/controls/OrbitControls
       const callback = () => {
-        if (controls && this._goal.lookAt && this.animationState !== AnimationState.NONE) {
+        if (controls && this._goal.lookAt && this._animationState !== AnimationState.NONE) {
           const front = new Vector3().setFromMatrixColumn(this.camera.matrix, 2)
           const d0 = this._start.position.distanceTo(controls.target)
           const d1 = (this._goal.position || this._start.position).distanceTo(this._goal.lookAt)
-          const d = (1 - this.t) * d0 + this.t * d1
+          const d = (1 - this._t) * d0 + this._t * d1
 
           controls.target.copy(this.camera.position).addScaledVector(front, -d)
           controls.update()
           this._stop()
         }
 
-        this.animationState = AnimationState.NONE
+        this._animationState = AnimationState.NONE
       }
 
       controls.addEventListener('start', callback)
@@ -151,7 +150,7 @@ export class Bounds extends Object3D {
 
   private _stop() {
     if (this._goal.position) {
-      this.onFitCancel(this._goal as OnFitCallbackArg)
+      this.onCancel(this._goal as OnLookAtCallbackArg)
     }
     _resetGoal(this._goal)
   }
@@ -340,25 +339,22 @@ export class Bounds extends Object3D {
       }
     }
 
-    this.animationState = AnimationState.START
-    this.t = 0
+    this._t = 0
+    this._animationState = AnimationState.ACTIVE
 
-    this.onFitStart && this.onFitStart(this._goal as OnFitCallbackArg)
+    this.onStart && this.onStart(this._goal as OnLookAtCallbackArg)
   }
 
   animate(delta: number) {
-    if (this.animationState === AnimationState.NONE) {
+    if (this._animationState === AnimationState.NONE) {
       return false
     }
 
-    if (this.animationState === AnimationState.START) {
-      this.animationState = AnimationState.ACTIVE
-    }
-    else if (this.animationState === AnimationState.ACTIVE) {
-      this.t += delta / this.duration
-      this.t = clamp(this.t, 0, 1)
+    if (this._animationState === AnimationState.ACTIVE) {
+      this._t += delta / this.duration
+      this._t = clamp(this._t, 0, 1)
 
-      if (this.t >= 1) {
+      if (this._t >= 1) {
         this._goal.position && this.camera.position.copy(this._goal.position)
         this._goal.quaternion && this.camera.quaternion.copy(this._goal.quaternion)
         this._goal.up && this.camera.up.copy(this._goal.up)
@@ -374,12 +370,12 @@ export class Bounds extends Object3D {
           this._controls.update()
         }
 
-        this.animationState = AnimationState.NONE
-        this.onFitEnd && this.onFitEnd(this._goal as OnFitCallbackArg)
+        this._animationState = AnimationState.NONE
+        this.onEnd && this.onEnd(this._goal as OnLookAtCallbackArg)
         _resetGoal(this._goal)
       }
       else {
-        const k = this.easing && this.easing(this.t)
+        const k = this.easing && this.easing(this._t)
 
         this._goal.position && this.camera.position.lerpVectors(this._start.position, this._goal.position, k)
         this._goal.quaternion && this.camera.quaternion.slerpQuaternions(this._start.quaternion, this._goal.quaternion, k)
