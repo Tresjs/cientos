@@ -159,6 +159,7 @@ export default defineConfig({
           { text: 'Sky', link: '/guide/staging/sky' },
           { text: 'Stars', link: '/guide/staging/stars' },
           { text: 'Smoke', link: '/guide/staging/smoke' },
+          { text: 'AccumulativeShadows', link: '/guide/staging/accumulative-shadows' },
           { text: 'ContactShadows', link: '/guide/staging/contact-shadows' },
           { text: 'Precipitation', link: '/guide/staging/precipitation' },
           { text: 'Sparkles', link: '/guide/staging/sparkles' },
@@ -166,6 +167,7 @@ export default defineConfig({
           { text: 'Align', link: '/guide/staging/align' },
           { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
           { text: 'Grid', link: '/guide/staging/grid' },
+          { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
         ],
       },
       {
