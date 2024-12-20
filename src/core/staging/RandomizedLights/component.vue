@@ -4,7 +4,7 @@ import type { VectorFlexibleParams } from '@tresjs/core'
 import { extend, normalizeVectorFlexibleParam } from '@tresjs/core'
 import RandomizedLights from './RandomizedLights'
 
-interface RandomizedLightProps {
+export interface RandomizedLightsProps {
   /** Number of lights, 8 */
   count?: number
   /** Radius of the jiggle, higher values make softer light, 1 */
@@ -29,7 +29,7 @@ interface RandomizedLightProps {
   position?: VectorFlexibleParams
 }
 
-const props = withDefaults(defineProps<RandomizedLightProps>(), {
+const props = withDefaults(defineProps<RandomizedLightsProps>(), {
   count: 8,
   radius: 1,
   intensity: Math.PI,
