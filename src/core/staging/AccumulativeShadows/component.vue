@@ -157,7 +157,7 @@ useLoop().onBeforeRender(() => {
 
 watchEffect(() => gLights.value.traverse = () => null)
 
-defineExpose({ instance: gOuter })
+defineExpose({ instance: gOuter, update: () => { reset(); update() } })
 </script>
 
 <template>
