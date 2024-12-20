@@ -1,4 +1,4 @@
-import type { LensflareElementProps, SeedProps } from '.'
+import type { LensflareElementProps, SeedProps } from './index.js'
 
 export const TEXTURE_PATH
   = 'https://raw.githubusercontent.com/Tresjs/assets/93976c7d63ac83d4a254a41a10b2362bc17e90c9/textures/lensflare/'

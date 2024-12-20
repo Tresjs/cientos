@@ -15,9 +15,9 @@ import { onMounted, onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { TresColor, VectorFlexibleParams } from '@tresjs/core'
 import type { Blending, BufferGeometry, IUniform, ShaderMaterialParameters, Texture } from 'three'
 import type { Ref } from 'vue'
-import ShaderDataBuilder from './ShaderDataBuilder'
-import useEmptyDataTexture from './useEmptyDataTexture'
-import type { Gradient } from '../../../utils/Gradient'
+import ShaderDataBuilder from './ShaderDataBuilder.js'
+import useEmptyDataTexture from './useEmptyDataTexture.js'
+import type { Gradient } from '../../../utils/Gradient.js'
 
 interface SparkleProps {
   /**
@@ -273,7 +273,7 @@ const shaderMaterialParameters: ShaderMaterialParameters = {
       float normalP = smoothstep(uNormalThreshold, 1., dotNormal);
       float lifetimeNoise = uLifetimeNoise * mix(normalP, 1.0, uMixNoise);
 
-      float t = uTime + position.x * 1. * uNoiseScale + position.y * 10. * uNoiseScale + 
+      float t = uTime + position.x * 1. * uNoiseScale + position.y * 10. * uNoiseScale +
       position.z * 7.3 * uNoiseScale + sin(lifetimeNoise * (position.x + 13. * position.y)) * lifetimeNoise;
 
       float lifetimeP = max(-0.0001, mix(-uCooldownRatio, 1. + cos(t) * lifetimeNoise, fract(t)));

@@ -1,5 +1,5 @@
 import { Color, Vector2 } from 'three'
-import { shaderMaterial } from '../../../utils/shaderMaterial'
+import { shaderMaterial } from '../../../utils/shaderMaterial.js'
 
 // NOTE: Source
 // https://github.com/pmndrs/drei/blob/master/src/core/Outlines.tsx

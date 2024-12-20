@@ -4,8 +4,8 @@ import { DoubleSide } from 'three'
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
 import type { Texture } from 'three'
-import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas'
-import type { Atlas, Atlasish } from './Atlas'
+import { getAtlasFrames, getNullAtlasFrame, getTextureAndAtlasAsync, setAtlasDefinitions } from './Atlas.js'
+import type { Atlas, Atlasish } from './Atlas.js'
 
 export interface AnimatedSpriteProps {
   /** URL of the image texture or an image dataURL. This prop is not reactive. */

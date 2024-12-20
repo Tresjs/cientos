@@ -13,12 +13,12 @@ import {
   normalizeColorGradient,
   normalizeFlexibleVector3Gradient,
   normalizeScalarGradient,
-} from './../../../utils/Gradient'
+} from './../../../utils/Gradient.js'
 import type {
   GradientScalar,
   GradientTresColor,
   GradientVectorFlexibleParams,
-} from './../../../utils/Gradient'
+} from './../../../utils/Gradient.js'
 
 export type CanvasGradientRenderer<T> = (
   g: CanvasGradient,

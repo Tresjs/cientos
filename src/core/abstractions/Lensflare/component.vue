@@ -6,8 +6,8 @@ import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import type { Texture } from 'three'
 import type { LensflareElement } from 'three/examples/jsm/objects/Lensflare'
-import { partialLensflarePropsArrayToLensflarePropsArray as fillInProps, filterLensflareElementProps } from '.'
-import type { LensflareElementProps, SeedProps } from '.'
+import { partialLensflarePropsArrayToLensflarePropsArray as fillInProps, filterLensflareElementProps } from './index.js'
+import type { LensflareElementProps, SeedProps } from './index.js'
 
 export interface LensflareProps {
   /**

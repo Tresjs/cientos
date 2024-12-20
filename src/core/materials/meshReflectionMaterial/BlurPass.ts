@@ -38,7 +38,7 @@ import {
 } from 'three'
 import type { Material, WebGLRenderer } from 'three'
 
-import { ConvolutionMaterial } from './ConvolutionMaterial'
+import { ConvolutionMaterial } from './ConvolutionMaterial.js'
 
 export interface BlurPassProps {
   resolution: number

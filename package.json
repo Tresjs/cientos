@@ -27,7 +27,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/trescientos.js"
+      "default": "./dist/trescientos.js"
     },
     "./core": {
       "types": "./dist/core/index.d.ts"
@@ -47,7 +47,7 @@
   "scripts": {
     "dev": "cd playground/vue && pnpm dev",
     "dev:nuxt": "cd playground/nuxt && pnpm dev",
-    "build": "vite build",
+    "build": "vite build && node ./scripts/postbuild.mjs",
     "release": "release-it",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -86,6 +86,7 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "three": "^0.171.0",
+    "tinyglobby": "^0.2.10",
     "typescript": "^5.7.2",
     "unocss": "^0.65.1",
     "vite": "^6.0.2",

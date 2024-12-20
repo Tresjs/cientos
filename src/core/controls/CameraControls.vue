@@ -22,7 +22,7 @@ import type {
   OrthographicCamera,
   PerspectiveCamera,
 } from 'three'
-import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types'
+import { isOrthographicCamera, isPerspectiveCamera } from '../../utils/types.js'
 
 export interface CameraControlsProps {
   /**
