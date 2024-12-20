@@ -1,8 +1,8 @@
 import { useLoader, useLogger } from '@tresjs/core'
 import { type Texture, TextureLoader } from 'three'
 import type { LoaderProto } from '@tresjs/core'
-import { expand } from './AtlasAnimationDefinitionParser'
-import { getNumbersFromEnd, stripUnderscoresNumbersFromEnd } from './StringOps'
+import { expand } from './AtlasAnimationDefinitionParser.js'
+import { getNumbersFromEnd, stripUnderscoresNumbersFromEnd } from './StringOps.js'
 
 export async function getTextureAndAtlasAsync(
   imagePathOrImageData: string,

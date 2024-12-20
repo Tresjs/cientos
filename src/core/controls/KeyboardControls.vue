@@ -5,7 +5,7 @@ import { Quaternion, Vector3 } from 'three'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
 import { ref, toRefs, watch, watchEffect } from 'vue'
 import type { Camera } from 'three'
-import { PointerLockControls } from './index'
+import { PointerLockControls } from './index.js'
 
 export interface KeyboardControlsProps {
   /**

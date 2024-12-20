@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { TresObject } from '@tresjs/core'
-import { useFBX } from '.'
+import { useFBX } from './index.js'
 
 export interface FBXModelProps {
   /**

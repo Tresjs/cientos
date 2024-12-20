@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Vector3 } from 'three'
-import { calculateScaleFactor } from '../../utils/calculateScaleFactor'
+import { calculateScaleFactor } from '../../utils/calculateScaleFactor.js'
 import { computed, shallowRef } from 'vue'
 import { useLoop, useTres } from '@tresjs/core'
 

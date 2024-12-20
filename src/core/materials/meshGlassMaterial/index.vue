@@ -2,7 +2,7 @@
 import { useTresContext } from '@tresjs/core'
 import { shallowRef } from 'vue'
 
-import MeshGlassMaterial from './material'
+import MeshGlassMaterial from './material.js'
 
 const MeshGlassMaterialClass = shallowRef()
 

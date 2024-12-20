@@ -7,10 +7,10 @@ import {
   easeInQuart,
   easeOutBounce,
   linear,
-} from '../../../utils/easing'
+} from '../../../utils/easing.js'
 import Lensflare from './component.vue'
-import { defaultLensflareElementProps, defaultSeedProps } from './constants'
-import RandUtils from './RandUtils'
+import { defaultLensflareElementProps, defaultSeedProps } from './constants.js'
+import RandUtils from './RandUtils.js'
 
 export { Lensflare }
 

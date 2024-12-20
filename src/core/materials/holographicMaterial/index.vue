@@ -5,7 +5,7 @@ import { shallowRef } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import type { Side } from 'three'
 
-import HolographicMaterial from './HolographicMaterialParameters'
+import HolographicMaterial from './HolographicMaterialParameters.js'
 
 const props = withDefaults(
   defineProps<{

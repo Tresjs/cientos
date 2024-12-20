@@ -81,6 +81,9 @@ importers:
       three:
         specifier: ^0.171.0
         version: 0.171.0
+      tinyglobby:
+        specifier: ^0.2.10
+        version: 0.2.10
       typescript:
         specifier: ^5.7.2
         version: 5.7.2

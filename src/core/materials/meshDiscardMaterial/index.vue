@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTresContext } from '@tresjs/core'
 import { shallowRef } from 'vue'
-import { MeshDiscardMaterial } from './material'
+import { MeshDiscardMaterial } from './material.js'
 
 const meshDiscardMaterialRef = shallowRef()
 

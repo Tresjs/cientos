@@ -2,8 +2,8 @@
 import { useTresContext } from '@tresjs/core'
 import { ref, watch, watchEffect } from 'vue'
 import type { InstancedMesh, Mesh } from 'three'
-import { useSurfaceSampler } from '.'
-import type { useSurfaceSamplerProps } from '.'
+import { useSurfaceSampler } from './index.js'
+import type { useSurfaceSamplerProps } from './index.js'
 
 const props = defineProps<useSurfaceSamplerProps>()
 

@@ -2,7 +2,7 @@
 import { useLoop, useTresContext } from '@tresjs/core'
 import { shallowRef, watch } from 'vue'
 
-import { WobbleMaterialImpl as MeshWobbleMaterial } from './material'
+import { WobbleMaterialImpl as MeshWobbleMaterial } from './material.js'
 
 const props = withDefaults(
   defineProps<{

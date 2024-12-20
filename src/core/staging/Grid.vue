@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { shaderMaterial } from '../../utils/shaderMaterial'
+import { shaderMaterial } from '../../utils/shaderMaterial.js'
 import type { ColorRepresentation, PlaneGeometry, ShaderMaterial, Side, Uniform } from 'three'
 import { BackSide, Color, Mesh, Plane, Vector3 } from 'three'
 import { extend, useLoop } from '@tresjs/core'
@@ -88,7 +88,7 @@ const GridMaterial = shaderMaterial(
     void main() {
       localPosition = position.xzy;
       if (infiniteGrid) localPosition *= 1.0 + fadeDistance;
-      
+
       worldPosition = modelMatrix * vec4(localPosition, 1.0);
       if (followCamera) {
         worldPosition.xyz += (worldCamProjPosition - worldPlanePosition);
