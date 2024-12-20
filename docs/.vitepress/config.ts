@@ -167,8 +167,9 @@ export default defineConfig({
           { text: 'Align', link: '/guide/staging/align' },
           { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
           { text: 'Grid', link: '/guide/staging/grid' },
-          { text: 'Bounds', link: '/guide/staging/bounds' },
           { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
+          { text: 'Bounds', link: '/guide/staging/bounds' },
+          { text: 'Stage', link: '/guide/staging/stage' },
         ],
       },
       {

@@ -74,4 +74,9 @@ export const stagingRoutes = [
     name: 'Accumulative Shadows',
     component: () => import('../../pages/staging/AccumulativeShadowsDemo.vue'),
   },
+  {
+    path: '/staging/stage',
+    name: 'Stage',
+    component: () => import('../../pages/staging/StageDemo.vue'),
+  },
 ]
