@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<AccumulativeShadowsProps>(), {
   blend: 20,
   scale: 10,
   opacity: 1,
-  alphaTest: 0.75,
+  alphaTest: 0.65,
   color: 'black',
   colorBlend: 2,
   resolution: 1024,
