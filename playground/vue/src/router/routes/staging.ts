@@ -45,6 +45,11 @@ export const stagingRoutes = [
     component: () => import('../../pages/staging/OceanDemo.vue'),
   },
   {
+    path: '/staging/bounds',
+    name: 'Bounds',
+    component: () => import('../../pages/staging/BoundsDemo.vue'),
+  },
+  {
     path: '/staging/fit',
     name: 'Fit',
     component: () => import('../../pages/staging/fit/index.vue'),
@@ -63,5 +68,15 @@ export const stagingRoutes = [
     path: '/staging/grid',
     name: 'Grid',
     component: () => import('../../pages/staging/GridDemo.vue'),
+  },
+  {
+    path: '/staging/accumulative-shadows',
+    name: 'Accumulative Shadows',
+    component: () => import('../../pages/staging/AccumulativeShadowsDemo.vue'),
+  },
+  {
+    path: '/staging/stage',
+    name: 'Stage',
+    component: () => import('../../pages/staging/StageDemo.vue'),
   },
 ]
