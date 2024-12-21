@@ -8,9 +8,6 @@ import { Box } from '../../index'
 import Item from './Item.vue'
 import { useControls } from '@tresjs/leches'
 
-// TODO: meshLineRef prop Color
-// TODO: Calculate the size of boxHelperRef, meshLineRef dynamically in relation to the size of the parent element of meshRef.
-
 export interface DecalProps {
   debug?: boolean
   debugLineColor?: string
@@ -44,6 +41,7 @@ const decalDebugPosition = reactive<Vector3>(new Vector3(0, 0, 0))
 const decalDebugOrientationZ = ref<number>(0)
 const decalDebugSizes = reactive<Vector3>(new Vector3(1, 1, 1))
 const decalDebugScale = ref<number>(scale.value)
+const textureMap = ref<{ [key: string]: Texture }>({})
 
 const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
@@ -52,7 +50,7 @@ const boxHelperRef = shallowRef<Mesh | null>(null)
 const boxHelperCurrentRef = shallowRef<Mesh | null>(null)
 const boxHelperSelectedRef = shallowRef<Mesh | null>(null)
 const boxHelpersRef = shallowRef<Group | null>(null)
-const currentIntersect = shallowReactive<Intersection | {}>({})
+const currentIntersect = shallowReactive<Intersection | object>({})
 const nodesDecalRefs = ref([])
 const decalItemsRef = ref([])
 const typeEdit = ref([{ text: 'scale', value: 'scale' }, { text: 'orientation', value: 'orientation' }, { text: 'position', value: 'position' }])
@@ -61,15 +59,34 @@ const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).len
 const meshLineColor = computed(() => new Color(debugLineColor.value))
 const nodesDecalRefsIsEmpty = computed(() => nodesDecalRefs.value.length === 0)
 
+const currentNodesDecalRefs = computed(() => {
+  return nodesDecalRefs.value.find((node, index) => `decal-${index}` === decalSelected.value.value) || null
+})
+
+const computedNodesDecal = computed(() => {
+  return [
+    { text: 'none', value: 'none' },
+    ...nodesDecalRefs.value.map((_, index) => ({
+      text: `decal-${index}`,
+      value: `decal-${index}`,
+    })),
+  ]
+})
+
+const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
+
 const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
+
+const selectedTextureComputed = computed(() => {
+  return textureMap.value[keyTextureSelected.value.value]
+})
 
 defineExpose({
   instance: meshRef,
 })
 
 const texture = await useTexture(map.value)
-const textureMap = ref<{ [key: string]: Texture }>({})
 
 if (texture && texture.length) {
   const result: { [key: string]: Texture } = {}
@@ -133,20 +150,6 @@ const onDeleteCurrentDecal = async () => {
 
   decalSelected.value.options = computedNodesDecal.value
 }
-
-const currentNodesDecalRefs = computed(() => {
-  return nodesDecalRefs.value.find((node, index) => `decal-${index}` === decalSelected.value.value) || null
-})
-
-const computedNodesDecal = computed(() => {
-  return [
-    { text: 'none', value: 'none' },
-    ...nodesDecalRefs.value.map((_, index) => ({
-      text: `decal-${index}`,
-      value: `decal-${index}`,
-    })),
-  ]
-})
 
 const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn, deleteBtn, typeEditControls } = useControls({
   keyTextureSelected: {
@@ -218,10 +221,10 @@ const printDebugDecal = () => {
   const localDecalPosition = intersectPosition.clone()
   decalDebugPosition.copy(localDecalPosition)
 
-  const aspectRatio = textureMap.value[keyTextureSelected.value.value].aspectRatio
+  const aspectRatio = selectedTextureComputed.value.aspectRatio
   const localDecalSize = decalDebugSizes.clone()
 
-  const selectedTexture = textureMap.value[keyTextureSelected.value.value]
+  const selectedTexture = selectedTextureComputed.value
 
   if (selectedTexture.isPortrait) {
     localDecalSize.y = localDecalSize.x / selectedTexture.aspectRatio
@@ -248,8 +251,22 @@ const printDebugDecal = () => {
   updateBoxHelper(boxHelperCurrentRef, meshRefDebug.value)
 }
 
-onLoop(({ delta, elapsed, clock }) => {
-  if (!meshLineRef.value || !meshRefDebug.value || !boxHelperRef?.value?.instance || !debug.value) { return }
+const clearCurrentIntersect = () => {
+  Object.keys(currentIntersect).forEach((key) => {
+    delete currentIntersect[key]
+  })
+}
+
+onLoop(() => {
+  if (!debug.value) { return }
+
+  if (
+    !meshLineRef.value
+    || !meshRefDebug.value
+    || !boxHelperRef.value?.instance
+  ) {
+    return
+  }
 
   const parent = mesh?.value || meshRefDebug.value.parent
 
@@ -257,47 +274,48 @@ onLoop(({ delta, elapsed, clock }) => {
 
   const intersects = raycaster.value.intersectObject(parent, false)
 
-  if (intersects.length > 0) {
-    intersectIsEmpty.value = false
-
-    const { point, face } = intersects[0]
-
-    if (!face || !point) { return }
-
-    Object.assign(currentIntersect, intersects[0])
-
-    const { depth } = boxHelperRef.value.instance.geometry.parameters
-
-    const parentMatrixWorld = parent.matrixWorld.clone().invert()
-    const p = point.clone().applyMatrix4(parentMatrixWorld)
-
-    boxHelperRef.value.instance.position.copy(p)
-
-    const nLookAt = face.normal.clone()
-    nLookAt.transformDirection(parent.matrixWorld)
-    nLookAt.multiplyScalar(depth)
-    nLookAt.add(point)
-
-    const nLineHelper = face.normal.clone()
-    nLineHelper.transformDirection(parent.matrixWorld)
-    nLineHelper.multiplyScalar(depth)
-    nLineHelper.add(point)
-    nLineHelper.applyMatrix4(parentMatrixWorld)
-
-    boxHelperRef.value.instance.lookAt(nLookAt)
-
-    const positions = meshLineRef.value.geometry.attributes.position
-    positions.setXYZ(0, p.x, p.y, p.z)
-    positions.setXYZ(1, nLineHelper.x, nLineHelper.y, nLineHelper.z)
-    positions.needsUpdate = true
-
-    printDebugDecal()
+  if (!intersects.length) {
+    // Intersection vide : on clear seulement si c’était non-vide avant
+    if (!intersectIsEmpty.value) {
+      intersectIsEmpty.value = true
+      clearCurrentIntersect() // fonction qui supprime les propriétés de currentIntersect
+    }
+    return
   }
-  else {
-    intersectIsEmpty.value = true
 
-    Object.keys(currentIntersect).forEach(key => delete currentIntersect[key])
-  }
+  intersectIsEmpty.value = false
+  const { point, face } = intersects[0]
+
+  if (!face || !point) { return }
+
+  Object.assign(currentIntersect, intersects[0])
+
+  const { depth } = boxHelperRef.value.instance.geometry.parameters
+
+  const parentMatrixWorld = parent.matrixWorld.clone().invert()
+  const p = point.clone().applyMatrix4(parentMatrixWorld)
+
+  boxHelperRef.value.instance.position.copy(p)
+
+  const nLookAt = face.normal.clone()
+  nLookAt.transformDirection(parent.matrixWorld)
+  nLookAt.multiplyScalar(depth)
+  nLookAt.add(point)
+
+  const nLineHelper = face.normal.clone()
+  nLineHelper.transformDirection(parent.matrixWorld)
+  nLineHelper.multiplyScalar(depth)
+  nLineHelper.add(point)
+  nLineHelper.applyMatrix4(parentMatrixWorld)
+
+  boxHelperRef.value.instance.lookAt(nLookAt)
+
+  const positions = meshLineRef.value.geometry.attributes.position
+  positions.setXYZ(0, p.x, p.y, p.z)
+  positions.setXYZ(1, nLineHelper.x, nLineHelper.y, nLineHelper.z)
+  positions.needsUpdate = true
+
+  printDebugDecal()
 })
 
 const onChangeOrbitControls = () => {
@@ -352,7 +370,7 @@ const printDecal = async () => {
   if (!currentIntersect || !meshRefDebug.value) { return }
 
   const orientation = boxHelperRef.value.instance.rotation.clone()
-  const selectedMap = textureMap.value[keyTextureSelected.value.value]
+  const selectedMap = selectedTextureComputed.value
   const { face: { normal: intersectNormal }, point } = currentIntersect
 
   const uid = `decal-${nodesDecalRefs.value.length}`
@@ -395,8 +413,6 @@ const onPointerUp = () => {
     }
   }
 }
-
-const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
 
 watch(() => decalSelected.value.value, async (newVal) => {
   if (!boxHelperCurrentRef.value || !boxHelperSelectedRef.value) { return }
@@ -460,28 +476,36 @@ watch(
   },
 )
 
-watch([scaleControls.value, orientationZControls.value], async () => {
-  if (!nodesDecalRefs.value.length || decalSelectedIsNone.value || !currentNodesDecalRefs.value || !boxHelperCurrentRef.value || typeEditControls.value.value === 'position') { return }
+watch(
+  [() => scaleControls.value.value, () => orientationZControls.value.value],
+  ([newScale, newOrientationZ]) => {
+    if (
+      !nodesDecalRefs.value.length
+      || decalSelectedIsNone.value
+      || !currentNodesDecalRefs.value
+      || typeEditControls.value.value === 'position'
+    ) {
+      return
+    }
 
-  currentNodesDecalRefs.value.scale = scaleControls.value.value
-  currentNodesDecalRefs.value.orientation = currentNodesDecalRefs.value.orientation.clone()
-  currentNodesDecalRefs.value.orientationZ = orientationZControls.value.value
+    currentNodesDecalRefs.value.scale = newScale
+    currentNodesDecalRefs.value.orientationZ = newOrientationZ
 
-  boxHelperSelectedRef.value.update()
-})
+    boxHelperSelectedRef.value?.update()
+  },
+)
 
 watchEffect(() => {
   if (!meshRefDebug.value || !boxHelpersRef.value) { return }
 
   const parent = mesh?.value || meshRefDebug.value.parent
-
-  const scaleArray = parent?.scale.clone().toArray().map(value => 1 / value)
-  const preventScale = new Vector3().fromArray(scaleArray)
-  boxHelpersRef.value?.scale.copy(preventScale)
-
   if (!(parent instanceof Mesh)) {
-    throw new TypeError('A Mesh parent is required for the decal or the "mesh" prop must be set.')
+    throw new TypeError('A Mesh parent is required ...')
   }
+
+  const scaleArray = parent.scale.clone().toArray().map(v => 1 / v)
+  const preventScale = new Vector3().fromArray(scaleArray)
+  boxHelpersRef.value.scale.copy(preventScale)
 })
 
 watch(nodesDecalRefsIsEmpty, (newVal) => {
@@ -556,7 +580,6 @@ onUnmounted(() => {
     ref="boxHelperRef"
     name="debugBox"
     :visible="false"
-    :args="[.01, .01, 1 * .1]"
   >
     <TresMeshNormalMaterial />
   </Box>
