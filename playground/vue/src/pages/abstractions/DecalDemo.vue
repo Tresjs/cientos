@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { TresCanvas, useTexture } from '@tresjs/core'
-import { Box, Decal, Environment, OrbitControls, Sphere, useGLTF } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+import { Decal, OrbitControls } from '@tresjs/cientos'
 import { shallowRef } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import { SRGBColorSpace } from 'three'
@@ -19,12 +19,6 @@ const gl = {
   antialias: pixelRatio.value < 2,
 }
 
-const modelRef = shallowRef(null)
-const boxRef = shallowRef(null)
-
-// const { nodes } = await useGLTF('https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/low-poly/cloud.gltf', { draco: true })
-// const model = nodes.Low_Poly_Cloud
-
 useControls({})
 </script>
 
@@ -35,7 +29,7 @@ useControls({})
     <TresPerspectiveCamera :position="[7.5, 5, 7.5]" />
     <OrbitControls make-default />
 
-    <TresMesh ref="boxRef" :scale="3">
+    <TresMesh :scale="3">
       <TresMeshStandardMaterial color="white" />
       <TresBoxGeometry :args="[1, 1, 1]" />
 

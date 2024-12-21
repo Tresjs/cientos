@@ -1,14 +1,14 @@
 [
   {
     "position": [
-      0.0043630129956708785,
-      -0.012207953796482096,
-      1.5
+      1.5,
+      0.007671804985131647,
+      -0.08567170179206496
     ],
     "normal": [
+      1,
       0,
-      0,
-      1
+      0
     ],
     "size": [
       1,
@@ -17,19 +17,45 @@
     ],
     "orientation": [
       0,
-      0,
+      1.5707963267948966,
       0
     ],
-    "orientationZ": 0,
-    "scale": 2,
+    "orientationZ": -53,
+    "scale": 1.522,
     "uid": "decal-0",
-    "textureFilename": "twemoji"
+    "textureFilename": "tres-logo"
   },
   {
     "position": [
-      -0.05281060533808457,
+      -1.5,
+      -0.018281705174620688,
+      -0.06456860223950867
+    ],
+    "normal": [
+      -1,
+      0,
+      0
+    ],
+    "size": [
+      1,
+      1,
+      1
+    ],
+    "orientation": [
+      0,
+      -1.5707963267948966,
+      0
+    ],
+    "orientationZ": -96,
+    "scale": 0.987,
+    "uid": "decal-1",
+    "textureFilename": "tres-logo"
+  },
+  {
+    "position": [
+      0.05078031120339466,
       1.5,
-      -0.10588593762657328
+      0.06511242545812523
     ],
     "normal": [
       0,
@@ -48,33 +74,7 @@
     ],
     "orientationZ": 0,
     "scale": 2,
-    "uid": "decal-1",
-    "textureFilename": "twemoji"
-  },
-  {
-    "position": [
-      0.0830439281561916,
-      -1.5,
-      0.023284385940949573
-    ],
-    "normal": [
-      0,
-      -1,
-      0
-    ],
-    "size": [
-      1,
-      1,
-      1
-    ],
-    "orientation": [
-      1.57069632679523,
-      0,
-      0
-    ],
-    "orientationZ": 0,
-    "scale": 2,
     "uid": "decal-2",
-    "textureFilename": "tres-logo"
+    "textureFilename": "twemoji"
   }
 ]

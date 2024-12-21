@@ -1,13 +1,14 @@
 <!-- eslint-disable ts/no-use-before-define -->
 
 <script setup lang="ts">
-import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import { computed, defineProps, nextTick, onUnmounted, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
 import type { BoxHelper, Group, Intersection, Texture } from 'three'
 import { Color, Euler, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import { Box } from '../../index'
 import Item from './Item.vue'
+import { createDecalData, generateDecalUID, parseTextureFilename, updateBoxHelper } from './utils.ts'
 import { useControls } from '@tresjs/leches'
 import { useClipboard } from '@vueuse/core'
 
@@ -86,8 +87,8 @@ const textures = await useTexture(map.value)
 if (textures && textures.length) {
   const result: { [key: string]: Texture } = {}
   for (const tex of textures) {
-    const src = tex.image?.src || ''
-    const fileName = src.split('/').pop()?.split('.')[0] || 'unknown'
+    const src = tex.image?.src
+    const fileName = parseTextureFilename(src)
 
     tex.flipY = true
     tex.colorSpace = SRGBColorSpace
@@ -121,6 +122,7 @@ const importDecals = async (decalsArray: any[]) => {
       parent: groupRef.value?.parent,
       map: selectedMap,
       uid,
+      textureFilename,
     }
 
     nodesDecalRefs.value.push(recreatedDecal)
@@ -412,13 +414,6 @@ const onPointerDown = () => {
   controlsInMoved.value = false
 }
 
-function updateBoxHelper(helperRef, object) {
-  if (!helperRef.value || !object) { return }
-
-  helperRef.value.setFromObject(object)
-  helperRef.value.update()
-}
-
 const updateControlsFromDecal = (scale, orientationZ) => {
   scaleControls.value.value = scale
   orientationZControls.value.value = orientationZ
@@ -471,6 +466,7 @@ const printDecal = async () => {
     parent: groupRef.value.parent,
     map: selectedMap,
     uid,
+    textureFilename: parseTextureFilename(selectedMap.image.src),
   }
 
   nodesDecalRefs.value.push(decalData)
@@ -520,6 +516,8 @@ watch(() => decalSelected.value.value, async (newVal) => {
     deleteBtn.value.value.label = `Delete ${currentNodesDecalRefs.value.uid}`
     clearBtn.value.visible = true
 
+    typeEditControls.value.value = 'scale'
+
     if (typeEditControls.value.value === 'scale') {
       scaleControls.value.visible = true
     }
@@ -532,6 +530,12 @@ watch(() => decalSelected.value.value, async (newVal) => {
     const selectedDecal = currentNodesDecalRefs.value
 
     updateControlsFromDecal(selectedDecal.scale, selectedDecal.orientationZ)
+
+    Object.values(decalItemsRef.value).forEach((item) => {
+      item.instance.material.opacity = 1
+    })
+
+    keyTextureSelected.value.value = currentNodesDecalRefs.value.textureFilename
 
     const targetMesh = decalItemsRef.value[newVal]
 
@@ -559,6 +563,7 @@ watch(
       orientationZControls.value.visible = false
       scaleControls.value.visible = false
       targetMesh.instance.material.opacity = 0.35
+      keyTextureSelected.value.value = currentNodesDecalRefs.value.textureFilename
     }
   },
 )
