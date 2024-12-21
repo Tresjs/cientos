@@ -68,22 +68,24 @@ defineExpose({
 })
 
 const texture = await useTexture(map.value)
+const textureMap = ref<{ [key: string]: Texture }>({})
 
-const textureMap = computed(() => {
-  return texture.reduce((acc, texture) => {
-    const src = texture.image?.src || ''
+if (texture && texture.length) {
+  const result: { [key: string]: Texture } = {}
+  for (const tex of texture) {
+    const src = tex.image?.src || ''
     const fileName = src.split('/').pop()?.split('.')[0] || 'unknown'
 
-    texture.flipY = true
-    texture.colorSpace = SRGBColorSpace
-    texture.aspectRatio = texture.image.width / texture.image.height
-    texture.isPortrait = texture.image.height > texture.image.width
-    texture.needsUpdate = true
+    tex.flipY = true
+    tex.colorSpace = SRGBColorSpace
+    tex.aspectRatio = tex.image.width / tex.image.height
+    tex.isPortrait = tex.image.height > tex.image.width
+    tex.needsUpdate = true
 
-    acc[fileName] = texture
-    return acc
-  }, {})
-})
+    result[fileName] = tex
+  }
+  textureMap.value = result
+}
 
 const onClearDecals = () => {
   nodesDecalRefs.value = []
@@ -92,6 +94,7 @@ const onClearDecals = () => {
   scaleControls.value.visible = false
   orientationZControls.value.visible = false
   boxHelperCurrentRef.value.visible = false
+  boxHelperSelectedRef.value.visible = false
 }
 
 const onDeleteCurrentDecal = async () => {
@@ -196,26 +199,6 @@ const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, 
 clearBtn.value.visible = false
 deleteBtn.value.visible = false
 
-watchEffect(() => {
-  if (!meshRefDebug.value) { return }
-
-  const parent = mesh?.value || meshRefDebug.value.parent
-
-  if (!(parent instanceof Mesh)) {
-    throw new TypeError('A Mesh parent is required for the decal or the "mesh" prop must be set.')
-  }
-})
-
-watch(nodesDecalRefsIsEmpty, (newVal) => {
-  clearBtn.value.visible = !newVal
-})
-
-watch(meshLineRef, () => {
-  if (!meshLineRef.value) { return }
-
-  meshLineRef.value.geometry.setFromPoints([new Vector3(), new Vector3()])
-})
-
 const printDebugDecal = () => {
   if (currentIntersectIsEmpty.value) { return }
 
@@ -259,8 +242,7 @@ const printDebugDecal = () => {
   target.geometry = new DecalGeometry(parent, localDecalPosition, localDecalOrientation, localDecalSize)
   target.geometry.applyMatrix4(parentMatrixWorld)
 
-  boxHelperCurrentRef.value.setFromObject(meshRefDebug.value)
-  boxHelperCurrentRef.value.update()
+  updateBoxHelper(boxHelperCurrentRef, meshRefDebug.value)
 }
 
 onLoop(({ delta, elapsed, clock }) => {
@@ -323,6 +305,12 @@ const onPointerDown = () => {
   controlsInMoved.value = false
 }
 
+function updateBoxHelper(helperRef, object) {
+  if (!helperRef.value || !object) { return }
+  helperRef.value.setFromObject(object)
+  helperRef.value.update()
+}
+
 const updateControlsFromDecal = (scale, orientationZ) => {
   scaleControls.value.value = scale
   orientationZControls.value.value = orientationZ
@@ -330,8 +318,6 @@ const updateControlsFromDecal = (scale, orientationZ) => {
 
 const rePrintDecal = async () => {
   if (!meshRefDebug.value) { return }
-
-  console.log('re print')
 
   const { face: { normal: intersectNormal }, point } = currentIntersect
   const orientation = boxHelperRef.value.instance.rotation.clone()
@@ -355,8 +341,7 @@ const rePrintDecal = async () => {
 
   await nextTick()
 
-  boxHelperSelectedRef.value.setFromObject(targetMesh.instance)
-  boxHelperSelectedRef.value.update()
+  updateBoxHelper(boxHelperSelectedRef, targetMesh.instance)
 }
 
 const printDecal = async () => {
@@ -390,8 +375,8 @@ const printDecal = async () => {
   decalSelected.value.value = uid
 
   const targetMesh = decalItemsRef.value[uid]
-  boxHelperSelectedRef.value.setFromObject(targetMesh.instance)
-  boxHelperSelectedRef.value.update()
+
+  updateBoxHelper(boxHelperSelectedRef, targetMesh.instance)
 }
 
 const onPointerUp = () => {
@@ -399,11 +384,9 @@ const onPointerUp = () => {
 
   if (!controlsInMoved.value) {
     if (typeEditControls.value.value === 'position') {
-      console.log('here 1')
       rePrintDecal()
     }
     else {
-      console.log('here 2')
       printDecal()
     }
   }
@@ -423,6 +406,7 @@ watch(() => decalSelected.value.value, async (newVal) => {
     clearBtn.value.visible = false
   }
   else {
+    boxHelperSelectedRef.value.visible = true
     boxHelperCurrentRef.value.visible = true
     typeEditControls.value.visible = true
     deleteBtn.value.visible = true
@@ -442,8 +426,8 @@ watch(() => decalSelected.value.value, async (newVal) => {
     updateControlsFromDecal(selectedDecal.scale, selectedDecal.orientationZ)
 
     const targetMesh = decalItemsRef.value[newVal]
-    boxHelperCurrentRef.value.setFromObject(targetMesh.instance)
-    boxHelperCurrentRef.value.update()
+
+    updateBoxHelper(boxHelperCurrentRef, targetMesh.instance)
   }
 })
 
@@ -481,6 +465,26 @@ watch([scaleControls.value, orientationZControls.value], async () => {
   boxHelperSelectedRef.value.update()
 })
 
+watchEffect(() => {
+  if (!meshRefDebug.value) { return }
+
+  const parent = mesh?.value || meshRefDebug.value.parent
+
+  if (!(parent instanceof Mesh)) {
+    throw new TypeError('A Mesh parent is required for the decal or the "mesh" prop must be set.')
+  }
+})
+
+watch(nodesDecalRefsIsEmpty, (newVal) => {
+  clearBtn.value.visible = !newVal
+})
+
+watch(meshLineRef, () => {
+  if (!meshLineRef.value) { return }
+
+  meshLineRef.value.geometry.setFromPoints([new Vector3(), new Vector3()])
+})
+
 watch(controls, () => {
   if (!controls.value) { return }
 
@@ -500,6 +504,8 @@ onUnmounted(() => {
   meshRef?.value?.geometry?.dispose()
   meshLineRef?.value?.geometry?.dispose()
   boxHelperRef?.value?.instance?.geometry?.dispose()
+  boxHelperCurrentRef?.value?.dispose()
+  boxHelperSelectedRef?.value?.dispose()
 })
 </script>
 
@@ -512,13 +518,10 @@ onUnmounted(() => {
     :material-polygonOffsetFactor="polygonOffsetFactor"
     :material-depthTest="depthTest"
     :material-depthWrite="depthWrite"
-    :material-opacity="typeEditControls.value === 'position' ? 1 : .5"
     :material-map="textureMap[keyTextureSelected.value]"
     name="debugDecal"
-    :visible="!!(!currentIntersectIsEmpty)"
-  >
-    <slot></slot>
-  </TresMesh>
+    :visible="!intersectIsEmpty"
+  />
 
   <Item
     v-for="(item, index) in nodesDecalRefs"
@@ -533,7 +536,7 @@ onUnmounted(() => {
     <slot></slot>
   </Item>
 
-  <TresLine v-if="debug" ref="meshLineRef" name="debugLine" :visible="!!(!currentIntersectIsEmpty)">
+  <TresLine v-if="debug" ref="meshLineRef" name="debugLine" :visible="!intersectIsEmpty">
     <TresBufferGeometry />
     <TresLineBasicMaterial :color="meshLineColor" />
   </TresLine>
@@ -542,7 +545,7 @@ onUnmounted(() => {
     v-if="debug"
     ref="boxHelperRef"
     name="debugBox"
-    :visible="!!(!currentIntersectIsEmpty)"
+    :visible="!intersectIsEmpty"
     :args="[.1, .1, 1]"
   >
     <TresMeshNormalMaterial />
@@ -551,7 +554,7 @@ onUnmounted(() => {
   <TresBoxHelper
     v-if="debug"
     ref="boxHelperCurrentRef"
-    :visible="!!(!currentIntersectIsEmpty)"
+    :visible="!intersectIsEmpty"
     :material-depthTest="false"
   />
   <TresBoxHelper v-if="debug" ref="boxHelperSelectedRef" material-color="#ff0000" :material-depthTest="false" />

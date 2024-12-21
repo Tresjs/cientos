@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas, useTexture } from '@tresjs/core'
-import { Box, Decal, OrbitControls, Sphere, useGLTF } from '@tresjs/cientos'
+import { Box, Decal, Environment, OrbitControls, Sphere, useGLTF } from '@tresjs/cientos'
 import { shallowRef } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import { SRGBColorSpace } from 'three'
@@ -37,10 +37,20 @@ useControls({})
 
     <TresMesh ref="boxRef" :scale="1">
       <Suspense>
-        <Decal debug :scale="1.5" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
+        <Decal debug :scale="1.5" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']">
+          <TresMeshPhysicalMaterial
+            :iridescence="1"
+            :iridescenceIOR="1"
+            :iridescenceThicknessRange="[0, 1400]"
+            :roughness="1"
+            :clearcoat="0.5"
+            :metalness="0.75"
+            :toneMapped="false"
+          />
+        </Decal>
       </Suspense>
 
-      <TresMeshPhysicalMaterial :roughness=".5" />
+      <TresMeshStandardMaterial color="white" />
       <TresBoxGeometry :args="[3, 3, 3]" />
     </TresMesh>
 
@@ -55,8 +65,9 @@ useControls({})
     <TresAmbientLight :intensity="1.25" />
     <TresDirectionalLight :intensity="1.5" :position="[2, 1.5, 2]" />
 
-    <!-- <TresPerspectiveCamera :position="[10, 10, 40]" />
-    <OrbitControls auto-rotate make-default /> -->
+    <Suspense>
+      <Environment preset="city" :blur="0.7" />
+    </Suspense>
 
     <!-- BASIC EXAMPLE -->
     <!-- <Sphere :position="[0, 0, 0]" :args="[10, 32, 16]">
