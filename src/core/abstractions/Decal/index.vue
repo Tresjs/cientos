@@ -1,6 +1,8 @@
+<!-- eslint-disable ts/no-use-before-define -->
+
 <script setup lang="ts">
 import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRefs, watch, watchEffect, withDefaults } from 'vue'
-import type { Group, Intersection, Texture } from 'three'
+import type { BoxHelper, Group, Intersection, Texture } from 'three'
 import { Color, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
@@ -45,10 +47,10 @@ const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
 const meshLineRef = shallowRef<Mesh | null>(null)
 const boxHelperRef = shallowRef<Mesh | null>(null)
-const boxHelperCurrentRef = shallowRef<Mesh | null>(null)
-const boxHelperSelectedRef = shallowRef<Mesh | null>(null)
+const boxHelperCurrentRef = shallowRef<BoxHelper | null>(null)
+const boxHelperSelectedRef = shallowRef<BoxHelper | null>(null)
 const boxHelpersRef = shallowRef<Group | null>(null)
-const currentIntersect = shallowReactive<Intersection | object>({})
+const currentIntersect = shallowReactive<Intersection>({} as Intersection)
 const nodesDecalRefs = ref([])
 const decalItemsRef = ref([])
 const typeEdit = ref([{ text: 'scale', value: 'scale' }, { text: 'orientation', value: 'orientation' }, { text: 'position', value: 'position' }])
@@ -99,6 +101,9 @@ const onClearDecals = () => {
   decalSelected.value.options = computedNodesDecal.value
   scaleControls.value.visible = false
   orientationZControls.value.visible = false
+
+  if (!boxHelperCurrentRef.value || !boxHelperSelectedRef.value) { return }
+
   boxHelperCurrentRef.value.visible = false
   boxHelperSelectedRef.value.visible = false
 }
@@ -143,7 +148,7 @@ const onDeleteCurrentDecal = async () => {
 
 const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn, deleteBtn, typeEditControls } = useControls({
   keyTextureSelected: {
-    options: Object.keys(textureMap.value).map((key, index) => ({
+    options: Object.keys(textureMap.value).map(key => ({
       text: key,
       value: key,
     })),
@@ -215,7 +220,7 @@ const printDebugDecal = () => {
 
   parent.updateMatrixWorld()
   const parentMatrixWorld = parent.matrixWorld.clone().invert()
-  const { face: { normal: intersectNormal }, point: intersectPosition } = currentIntersect
+  const { point: intersectPosition } = currentIntersect
 
   const localDecalPosition = intersectPosition.clone()
   decalDebugPosition.copy(localDecalPosition)
@@ -262,7 +267,7 @@ onLoop(() => {
   if (
     !meshLineRef.value
     || !meshRefDebug.value
-    || !boxHelperRef.value?.instance
+    || !boxHelperRef.value
   ) {
     return
   }
@@ -337,7 +342,7 @@ const updateControlsFromDecal = (scale, orientationZ) => {
 }
 
 const rePrintDecal = async () => {
-  if (!meshRefDebug.value) { return }
+  if (!meshRefDebug.value || !currentNodesDecalRefs.value) { return }
 
   const { face: { normal: intersectNormal }, point } = currentIntersect
   const orientation = boxHelperRef.value.instance.rotation.clone()
