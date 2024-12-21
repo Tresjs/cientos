@@ -46,7 +46,7 @@ useControls({})
 
     <!-- <Sphere :args="[1.75, 32, 32]">
       <Suspense>
-        <Decal debug :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png']" />
+        <Decal debug :scale="1.5" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
       </Suspense>
 
       <TresMeshPhysicalMaterial :roughness=".5" />

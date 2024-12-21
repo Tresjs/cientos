@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, onUnmounted, shallowRef, toRefs, watch, withDefaults } from 'vue'
 import type { Mesh } from 'three'
+import { MathUtils } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 
 export interface DecalProps {
@@ -28,7 +29,7 @@ defineExpose({
 })
 
 const makeGeometry = () => {
-  const { parent, normal, position, size, orientation, map, scale } = properties.value
+  const { parent, normal, position, size, orientation, map, scale, orientationZ } = properties.value
   const target = meshRef.value
 
   if (!parent || !target) { return }
@@ -51,13 +52,14 @@ const makeGeometry = () => {
   decalSize.multiplyScalar(scale)
 
   const decalOrientation = orientation.clone()
+  decalOrientation.z = decalOrientation.z + MathUtils.degToRad(orientationZ)
 
   target.position.copy(decalNormal).multiplyScalar(0.01)
   target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
 }
 
 watch(
-  () => [properties.value.orientation, properties.value.scale],
+  () => [properties.value.orientation, properties.value.scale, properties.value.orientationZ],
   () => {
     makeGeometry()
   },
