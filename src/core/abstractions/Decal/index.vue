@@ -1,17 +1,19 @@
 <!-- eslint-disable ts/no-use-before-define -->
 
 <script setup lang="ts">
-import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
 import type { BoxHelper, Group, Intersection, Texture } from 'three'
-import { Color, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
+import { Color, Euler, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import { Box } from '../../index'
 import Item from './Item.vue'
 import { useControls } from '@tresjs/leches'
+import { useClipboard } from '@vueuse/core'
 
 export interface DecalProps {
   debug?: boolean
+  data?: any[]
   debugLineColor?: string
   depthTest?: boolean
   depthWrite?: boolean
@@ -23,6 +25,7 @@ export interface DecalProps {
 
 const props = withDefaults(defineProps<DecalProps>(), {
   debug: false,
+  data: () => [],
   debugLineColor: '#0000ff',
   depthTest: true,
   depthWrite: false,
@@ -32,7 +35,7 @@ const props = withDefaults(defineProps<DecalProps>(), {
   mesh: () => shallowRef(null),
 })
 
-const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, debugLineColor, scale } = toRefs(props)
+const { debug, data, depthTest, depthWrite, polygonOffsetFactor, mesh, map, debugLineColor, scale } = toRefs(props)
 
 const controlsInMoved = ref<boolean>(false)
 const intersectIsEmpty = ref<boolean>(true)
@@ -45,6 +48,7 @@ const textureMap = ref<{ [key: string]: Texture }>({})
 
 const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
+const groupRef = shallowRef<Group | null>(null)
 const meshLineRef = shallowRef<Mesh | null>(null)
 const boxHelperRef = shallowRef<Mesh | null>(null)
 const boxHelperCurrentRef = shallowRef<BoxHelper | null>(null)
@@ -71,6 +75,7 @@ const computedNodesDecal = computed(() => {
 
 const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
+const { copy, isSupported } = useClipboard()
 
 defineExpose({
   instance: meshRef,
@@ -93,6 +98,38 @@ if (textures && textures.length) {
     result[fileName] = tex
   }
   textureMap.value = result
+}
+
+const importDecals = async (decalsArray: any[]) => {
+  for (const decalData of decalsArray) {
+    const { position, normal, size, orientation, orientationZ, scale, uid, textureFilename } = decalData
+
+    const selectedMap = textureMap.value[textureFilename]
+
+    if (!selectedMap) {
+      console.warn(`Texture "${textureFilename}" introuvable dans textureMap.`)
+      continue
+    }
+
+    const recreatedDecal = {
+      position: new Vector3(...position),
+      orientation: new Euler(...orientation),
+      orientationZ,
+      size: new Vector3(...size),
+      scale,
+      normal: new Vector3(...normal),
+      parent: groupRef.value?.parent,
+      map: selectedMap,
+      uid,
+    }
+
+    nodesDecalRefs.value.push(recreatedDecal)
+  }
+
+  await nextTick()
+
+  decalSelected.value.options = computedNodesDecal.value
+  decalSelected.value.value = 'none'
 }
 
 const onClearDecals = () => {
@@ -141,12 +178,50 @@ const onDeleteCurrentDecal = async () => {
     boxHelperCurrentRef.value.visible = false
     boxHelperSelectedRef.value.visible = false
     deleteBtn.value.visible = false
+    exportBtn.value.visible = false
   }
 
   decalSelected.value.options = computedNodesDecal.value
 }
 
-const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn, deleteBtn, typeEditControls } = useControls({
+const onExportDecals = async () => {
+  const decalsArr = toRaw(nodesDecalRefs.value)
+
+  const formattedDecals = decalsArr.map((item) => {
+    const src = item.map.image?.src || ''
+    const fileName = src.split('/').pop()?.split('.')[0]
+
+    return {
+      position: item.position.toArray(),
+      normal: item.normal.toArray(),
+      size: item.size.toArray(),
+      orientation: item.orientation.toArray().slice(0, 3),
+      orientationZ: item.orientationZ,
+      scale: item.scale,
+      uid: item.uid,
+      textureFilename: fileName,
+    }
+  })
+
+  const jsonString = JSON.stringify(formattedDecals, null, 2)
+
+  if (isSupported) {
+    try {
+      await copy(jsonString)
+      console.log('Data successfully copied to clipboard!')
+    }
+    catch (error) {
+      console.error('Copy to clipboard fails :', error)
+    }
+  }
+  else {
+    console.error('Copying to the clipboard is not supported on this browser.')
+  }
+
+  return jsonString
+}
+
+const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, clearBtn, deleteBtn, typeEditControls, exportBtn } = useControls({
   keyTextureSelected: {
     options: Object.keys(textureMap.value).map(key => ({
       text: key,
@@ -187,6 +262,13 @@ const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, 
     visible: false,
     size: 'md',
   },
+  exportBtn: {
+    label: 'Export decals',
+    type: 'button',
+    onClick: onExportDecals,
+    visible: false,
+    size: 'md',
+  },
   clearBtn: {
     label: 'Clear Decals',
     type: 'button',
@@ -197,6 +279,7 @@ const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, 
 
 clearBtn.value.visible = false
 deleteBtn.value.visible = false
+exportBtn.value.visible = false
 
 const selectedTextureComputed = computed(() => {
   return textureMap.value[keyTextureSelected.value.value]
@@ -211,7 +294,7 @@ const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
 const printDebugDecal = () => {
   if (currentIntersectIsEmpty.value || !boxHelperRef.value) { return }
 
-  const parent = mesh?.value || meshRefDebug.value?.parent
+  const parent = mesh?.value || groupRef.value?.parent
   const target = meshRefDebug.value
 
   if (!parent || !target) { return }
@@ -272,7 +355,7 @@ onLoop(() => {
     return
   }
 
-  const parent = mesh?.value || meshRefDebug.value.parent
+  const parent = mesh?.value || groupRef.value.parent
 
   if (!parent) { return }
 
@@ -370,7 +453,7 @@ const rePrintDecal = async () => {
 }
 
 const printDecal = async () => {
-  if (!currentIntersect || !meshRefDebug.value) { return }
+  if (!currentIntersect || !groupRef.value) { return }
 
   const orientation = boxHelperRef.value.instance.rotation.clone()
   const selectedMap = selectedTextureComputed.value
@@ -385,7 +468,7 @@ const printDecal = async () => {
     size: decalDebugSizes.clone(),
     scale: scaleControls.value.value,
     normal: intersectNormal.clone(),
-    parent: meshRefDebug.value.parent,
+    parent: groupRef.value.parent,
     map: selectedMap,
     uid,
   }
@@ -433,6 +516,7 @@ watch(() => decalSelected.value.value, async (newVal) => {
     boxHelperSelectedRef.value.visible = true
     typeEditControls.value.visible = true
     deleteBtn.value.visible = true
+    exportBtn.value.visible = true
     deleteBtn.value.value.label = `Delete ${currentNodesDecalRefs.value.uid}`
     clearBtn.value.visible = true
 
@@ -499,9 +583,10 @@ watch(
 )
 
 watchEffect(() => {
-  if (!meshRefDebug.value || !boxHelpersRef.value) { return }
+  if (!groupRef.value || !boxHelpersRef.value) { return }
 
-  const parent = mesh?.value || meshRefDebug.value.parent
+  const parent = mesh?.value || groupRef.value.parent
+
   if (!(parent instanceof Mesh)) {
     throw new TypeError('A Mesh parent is required ...')
   }
@@ -513,6 +598,7 @@ watchEffect(() => {
 
 watch(nodesDecalRefsIsEmpty, (newVal) => {
   clearBtn.value.visible = !newVal
+  exportBtn.value.visible = !newVal
 })
 
 watch(meshLineRef, () => {
@@ -521,8 +607,18 @@ watch(meshLineRef, () => {
   meshLineRef.value.geometry.setFromPoints([new Vector3(), new Vector3()])
 })
 
+watch([groupRef, textureMap], () => {
+  if (!groupRef.value || !textureMap.value) { return }
+
+  const parent = mesh?.value || groupRef.value.parent
+
+  if (!parent) { return }
+
+  importDecals(data.value)
+})
+
 watch(controls, () => {
-  if (!controls.value) { return }
+  if (!controls.value || !debug.value) { return }
 
   controls.value.addEventListener('change', onChangeOrbitControls)
   controls.value.enableDamping = !debug.value // Very important in debug mode
@@ -535,7 +631,10 @@ window.addEventListener('pointerup', onPointerUp)
 onUnmounted(() => {
   window.removeEventListener('pointerdown', onPointerDown)
   window.removeEventListener('pointerup', onPointerUp)
-  controls?.value?.removeEventListener('change', onChangeOrbitControls)
+
+  if (!debug.value) {
+    controls?.value?.removeEventListener('change', onChangeOrbitControls)
+  }
 
   meshRef?.value?.geometry?.dispose()
   meshLineRef?.value?.geometry?.dispose()
@@ -560,6 +659,8 @@ onUnmounted(() => {
     :visible="!intersectIsEmpty"
   />
 
+  <TresGroup ref="groupRef" />
+
   <Item
     v-for="(item, index) in nodesDecalRefs"
     :key="`nodes-decal-${index}`"
@@ -568,6 +669,7 @@ onUnmounted(() => {
         decalItemsRef[item.uid] = el
       }
     "
+    v-bind="$attrs"
     :properties="{ ...item, index }"
   >
     <slot></slot>

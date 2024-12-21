@@ -29,11 +29,12 @@ defineExpose({
 })
 
 const makeGeometry = () => {
-  const { parent, position, size, orientation, map, scale, orientationZ } = properties.value
+  const { parent, normal, position, size, orientation, map, scale, orientationZ } = properties.value
   const target = meshRef.value
 
   if (!parent || !target) { return }
 
+  const decalNormal = normal.clone()
   const decalPosition = position.clone()
 
   const aspectRatio = map.aspectRatio
@@ -53,7 +54,10 @@ const makeGeometry = () => {
   const decalOrientation = orientation.clone()
   decalOrientation.z = decalOrientation.z + MathUtils.degToRad(orientationZ)
 
+  target.position.copy(decalNormal).multiplyScalar(0.001)
   target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
+
+  console.log('here', aspectRatio)
 }
 
 watch(
@@ -75,7 +79,6 @@ onUnmounted(() => {
 <template>
   <TresMesh
     ref="meshRef"
-    v-bind="$attrs"
     material-transparent
     material-polygonOffset
     :material-polygonOffsetFactor="polygonOffsetFactor"

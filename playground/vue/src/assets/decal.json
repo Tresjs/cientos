@@ -1,0 +1,80 @@
+[
+  {
+    "position": [
+      0.0043630129956708785,
+      -0.012207953796482096,
+      1.5
+    ],
+    "normal": [
+      0,
+      0,
+      1
+    ],
+    "size": [
+      1,
+      1,
+      1
+    ],
+    "orientation": [
+      0,
+      0,
+      0
+    ],
+    "orientationZ": 0,
+    "scale": 2,
+    "uid": "decal-0",
+    "textureFilename": "twemoji"
+  },
+  {
+    "position": [
+      -0.05281060533808457,
+      1.5,
+      -0.10588593762657328
+    ],
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "size": [
+      1,
+      1,
+      1
+    ],
+    "orientation": [
+      -1.57069632679523,
+      0,
+      0
+    ],
+    "orientationZ": 0,
+    "scale": 2,
+    "uid": "decal-1",
+    "textureFilename": "twemoji"
+  },
+  {
+    "position": [
+      0.0830439281561916,
+      -1.5,
+      0.023284385940949573
+    ],
+    "normal": [
+      0,
+      -1,
+      0
+    ],
+    "size": [
+      1,
+      1,
+      1
+    ],
+    "orientation": [
+      1.57069632679523,
+      0,
+      0
+    ],
+    "orientationZ": 0,
+    "scale": 2,
+    "uid": "decal-2",
+    "textureFilename": "tres-logo"
+  }
+]
