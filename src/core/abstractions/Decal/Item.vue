@@ -54,7 +54,6 @@ const makeGeometry = () => {
   const decalOrientation = orientation.clone()
   decalOrientation.z = decalOrientation.z + MathUtils.degToRad(orientationZ)
 
-  target.position.copy(decalNormal).multiplyScalar(0.01)
   target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
 }
 
