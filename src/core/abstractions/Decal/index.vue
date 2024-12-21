@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import { computed, defineProps, nextTick, onUnmounted, provide, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRefs, watch, watchEffect, withDefaults } from 'vue'
 import type { Group, Intersection, Texture } from 'three'
-import { Color, Euler, MathUtils, Matrix3, Mesh, MultiplyBlending, SRGBColorSpace, Vector3 } from 'three'
+import { Color, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import { Box } from '../../index'
@@ -17,7 +17,6 @@ export interface DecalProps {
   polygonOffsetFactor?: number
   map?: string[] | null
   mesh?: ShallowRef<Mesh | null>
-  order?: number
 }
 
 const props = withDefaults(defineProps<DecalProps>(), {
@@ -29,10 +28,9 @@ const props = withDefaults(defineProps<DecalProps>(), {
   polygonOffsetFactor: -10,
   map: null,
   mesh: () => shallowRef(null),
-  order: () => Math.round(Math.random() * 100),
 })
 
-const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, order, debugLineColor, scale } = toRefs(props)
+const { debug, depthTest, depthWrite, polygonOffsetFactor, mesh, map, debugLineColor, scale } = toRefs(props)
 
 const controlsInMoved = ref<boolean>(false)
 const intersectIsEmpty = ref<boolean>(true)
@@ -59,10 +57,6 @@ const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).len
 const meshLineColor = computed(() => new Color(debugLineColor.value))
 const nodesDecalRefsIsEmpty = computed(() => nodesDecalRefs.value.length === 0)
 
-const currentNodesDecalRefs = computed(() => {
-  return nodesDecalRefs.value.find((node, index) => `decal-${index}` === decalSelected.value.value) || null
-})
-
 const computedNodesDecal = computed(() => {
   return [
     { text: 'none', value: 'none' },
@@ -73,24 +67,18 @@ const computedNodesDecal = computed(() => {
   ]
 })
 
-const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
-
 const { onLoop } = useRenderLoop()
 const { raycaster, controls } = useTresContext()
-
-const selectedTextureComputed = computed(() => {
-  return textureMap.value[keyTextureSelected.value.value]
-})
 
 defineExpose({
   instance: meshRef,
 })
 
-const texture = await useTexture(map.value)
+const textures = await useTexture(map.value)
 
-if (texture && texture.length) {
+if (textures && textures.length) {
   const result: { [key: string]: Texture } = {}
-  for (const tex of texture) {
+  for (const tex of textures) {
     const src = tex.image?.src || ''
     const fileName = src.split('/').pop()?.split('.')[0] || 'unknown'
 
@@ -116,6 +104,8 @@ const onClearDecals = () => {
 }
 
 const onDeleteCurrentDecal = async () => {
+  if (!boxHelperCurrentRef.value || !boxHelperSelectedRef.value) { return }
+
   const selectedUid = decalSelected.value.value
 
   if (selectedUid === 'none') {
@@ -181,11 +171,10 @@ const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, 
     label: 'Orientation Z',
     visible: false,
     value: decalDebugOrientationZ.value,
-    min: -360, // in degrees
-    max: 360, // in degrees
+    min: -360, // in Degrees
+    max: 360, // in Degrees
     step: 1,
   },
-
   deleteBtn: {
     label: 'Delete Decal',
     type: 'button',
@@ -204,8 +193,18 @@ const { scaleControls, orientationZControls, keyTextureSelected, decalSelected, 
 clearBtn.value.visible = false
 deleteBtn.value.visible = false
 
+const selectedTextureComputed = computed(() => {
+  return textureMap.value[keyTextureSelected.value.value]
+})
+
+const currentNodesDecalRefs = computed(() => {
+  return nodesDecalRefs.value.find((node, index) => `decal-${index}` === decalSelected.value.value) || null
+})
+
+const decalSelectedIsNone = computed(() => decalSelected.value.value === 'none')
+
 const printDebugDecal = () => {
-  if (currentIntersectIsEmpty.value) { return }
+  if (currentIntersectIsEmpty.value || !boxHelperRef.value) { return }
 
   const parent = mesh?.value || meshRefDebug.value?.parent
   const target = meshRefDebug.value
@@ -275,10 +274,9 @@ onLoop(() => {
   const intersects = raycaster.value.intersectObject(parent, false)
 
   if (!intersects.length) {
-    // Intersection vide : on clear seulement si c’était non-vide avant
     if (!intersectIsEmpty.value) {
       intersectIsEmpty.value = true
-      clearCurrentIntersect() // fonction qui supprime les propriétés de currentIntersect
+      clearCurrentIntersect()
     }
     return
   }
@@ -304,7 +302,7 @@ onLoop(() => {
 
   const nLineHelper = face.normal.clone()
   nLineHelper.transformDirection(parent.matrixWorld)
-  nLineHelper.multiplyScalar(depth)
+  nLineHelper.multiplyScalar(scale.value / 2)
   nLineHelper.add(point)
   nLineHelper.applyMatrix4(parentMatrixWorld)
 

@@ -29,12 +29,11 @@ defineExpose({
 })
 
 const makeGeometry = () => {
-  const { parent, normal, position, size, orientation, map, scale, orientationZ } = properties.value
+  const { parent, position, size, orientation, map, scale, orientationZ } = properties.value
   const target = meshRef.value
 
   if (!parent || !target) { return }
 
-  const decalNormal = normal.clone()
   const decalPosition = position.clone()
 
   const aspectRatio = map.aspectRatio

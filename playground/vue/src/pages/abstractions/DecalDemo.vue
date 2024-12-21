@@ -35,9 +35,9 @@ useControls({})
     <TresPerspectiveCamera :position="[7.5, 5, 7.5]" />
     <OrbitControls make-default />
 
-    <TresMesh ref="boxRef" :scale="3">
+    <TresMesh ref="boxRef" :scale="10">
       <Suspense>
-        <Decal debug :scale="1.5" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
+        <Decal debug :scale="5" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
       </Suspense>
 
       <TresMeshStandardMaterial color="white" />
