@@ -56,8 +56,6 @@ const makeGeometry = () => {
 
   target.position.copy(decalNormal).multiplyScalar(0.001)
   target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
-
-  console.log('here', aspectRatio)
 }
 
 watch(
