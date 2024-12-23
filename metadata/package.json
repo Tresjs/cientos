@@ -1,0 +1,43 @@
+{
+  "name": "@vueuse/metadata",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Metadata for Cientos components",
+  "author": "andretchen0 <https://github.com/andretchen0>",
+  "license": "MIT",
+  "homepage": "https://github.com/vueuse/vueuse/tree/main/packages/metadata#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tresjs/cientos.git",
+    "directory": "packages/metadata"
+  },
+  "bugs": {
+    "url": "https://github.com/vueuse/vueuse/issues"
+  },
+  "keywords": [
+    "vue",
+    "3d",
+    "threejs",
+    "three",
+    "threejs-vue",
+    "composables"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.cjs"
+    },
+    "./*": "./*"
+  },
+  "main": "./index.cjs",
+  "module": "./index.mjs",
+  "types": "./index.d.ts",
+  "files": [
+    "index.*"
+  ],
+  "scripts": {
+    "update": "esno scripts/update.ts",
+    "test": "echo 'ok'"
+  }
+}

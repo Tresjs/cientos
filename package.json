@@ -53,7 +53,8 @@
     "lint:fix": "eslint . --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "generate": "esno metadata/scripts/update.ts"
   },
   "peerDependencies": {
     "@tresjs/core": ">=4.2.1",
@@ -63,22 +64,23 @@
   "dependencies": {
     "@vueuse/core": "^12.0.0",
     "camera-controls": "^2.9.0",
-    "stats-gl": "^2.0.1",
+    "stats-gl": "^2.4.2",
     "stats.js": "^0.17.0",
     "three-custom-shader-material": "^5.4.0",
-    "three-stdlib": "^2.34.0"
+    "three-stdlib": "^2.35.2"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.3",
     "@tresjs/core": "^4.3.1",
     "@tresjs/eslint-config": "^1.4.0",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.2",
     "@types/three": "^0.170.0",
-    "@typescript-eslint/eslint-plugin": "^8.17.0",
-    "@typescript-eslint/parser": "^8.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
     "@vitejs/plugin-vue": "^5.2.1",
-    "eslint": "^9.16.0",
+    "eslint": "^9.17.0",
     "eslint-plugin-vue": "^9.32.0",
+    "esno": "^4.8.0",
     "gsap": "^3.12.5",
     "kolorist": "^1.8.0",
     "pathe": "^1.1.2",
@@ -87,8 +89,8 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "three": "^0.171.0",
     "typescript": "^5.7.2",
-    "unocss": "^0.65.1",
-    "vite": "^6.0.2",
+    "unocss": "^0.65.2",
+    "vite": "^6.0.5",
     "vite-plugin-banner": "^0.8.0",
     "vite-plugin-dts": "4.3.0",
     "vite-plugin-glsl": "^1.3.1",
