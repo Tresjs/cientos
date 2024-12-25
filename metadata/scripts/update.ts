@@ -23,16 +23,14 @@ type Input = ReturnType<typeof input>
 function canAccess(input: Input) {
   try {
     fs.accessSync(input.BASE_DIR, fs.constants.R_OK | fs.constants.W_OK)
-    console.log(`[OK] Source directory ${input.BASE_DIR} exists.`)
   }
-  catch (err) {
-    console.error(`[FAIL] Source directory ${input.BASE_DIR} does not exist.`)
-    return err
+  catch {
+    return new Error(`Cientos metadata: Source directory ${input.BASE_DIR} does not exist.`)
   }
   return input
 }
 
-function legacy(input: Input) {
+function getLegacyComponents(input: Input) {
   interface Data { files: string[], componentsByName: Record<string, CientosComponent> }
 
   const CATEGORIES = new Set(['abstractions', 'controls', 'loaders', 'materials', 'misc', 'shapes', 'staging'])
@@ -132,7 +130,7 @@ function legacy(input: Input) {
     return data
   }
 
-  function getComponentDemo(data: Data) {
+  function getComponentDocs(data: Data) {
     for (let file of data.files) {
       if (!file.startsWith('docs') || !file.endsWith('.md')) { continue }
 
@@ -165,7 +163,7 @@ function legacy(input: Input) {
 
       if (!maybeComponentName) { continue }
       if (maybeComponentName in data.componentsByName) {
-        data.componentsByName[maybeComponentName].demoPath = file
+        data.componentsByName[maybeComponentName].docsPath = file
         continue
       }
     }
@@ -186,10 +184,29 @@ function legacy(input: Input) {
     () => data,
     getComponentNameCategoryPathPackage,
     getComponentPlayground,
-    getComponentDemo,
+    getComponentDocs,
     () => input.components = Object.values(data.componentsByName),
     () => input,
   )
+}
+
+function getComponents(input: Input) {
+  const componentDirectories = fs.globSync('src/core/*').filter(
+    n => !(n.endsWith('abstractions') || n.endsWith('controls') || n.endsWith('loaders') || n.endsWith('materials') || n.endsWith('misc') || n.endsWith('shapes') || n.endsWith('staging') || n.endsWith('utils') || n.endsWith('index.ts'))
+  )
+
+  componentDirectories.sort()
+
+  for (const componentDirectory of componentDirectories) {
+    const mdPath = path.join(componentDirectory, 'index.md')
+    const tsPath = path.join(componentDirectory, 'index.ts')
+    fn.docs = `${DOCS_URL}/${pkg.name}/${fnName}/`
+    const mdRaw = await fs.readFile(mdPath, 'utf-8')
+
+    console.log(input)
+  }
+
+  return input
 }
 
 function write(input: Input) {
@@ -197,7 +214,6 @@ function write(input: Input) {
   const components = input.components.sort((a, b) => a.name.localeCompare(b.name))
   const fileName = path.join(input.PACKAGE_DIR, 'index.json')
   const data = `${JSON.stringify({ categories, components }, null, 2)}\n`
-  console.log(fileName)
   fs.writeFileSync(fileName, data)
 
   return input
@@ -215,4 +231,4 @@ function pipe(...fns) {
   }, {})
 }
 
-pipe(input, canAccess, legacy, write)
+pipe(input, canAccess, getLegacyComponents, getComponents, write)

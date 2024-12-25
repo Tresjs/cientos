@@ -8,22 +8,6 @@ import { shallowRef, toValue, watchEffect } from 'vue'
 // NOTE: Sources
 // https://github.com/pmndrs/drei/blob/master/src/core/Center.tsx
 
-export interface OnAlignCallbackProps {
-  /** The next parent above <Align /> */
-  parent: Object3D
-  /** The outmost container group of the <Align/> component */
-  container: Object3D
-  width: number
-  height: number
-  depth: number
-  boundingBox: Box3
-  boundingSphere: Sphere
-  center: Vector3
-  verticalAlignment: number
-  horizontalAlignment: number
-  depthAlignment: number
-}
-
 export interface AlignProps {
   top?: boolean
   right?: boolean
@@ -45,6 +29,22 @@ export interface AlignProps {
   onAlign?: (props: OnAlignCallbackProps) => void
   /** Optional cacheKey to keep the component from recalculating on every render */
   cacheKey?: MaybeRefOrGetter<any>
+}
+
+export interface OnAlignCallbackProps {
+  /** The next parent above <Align /> */
+  parent: Object3D
+  /** The outmost container group of the <Align/> component */
+  container: Object3D
+  width: number
+  height: number
+  depth: number
+  boundingBox: Box3
+  boundingSphere: Sphere
+  center: Vector3
+  verticalAlignment: number
+  horizontalAlignment: number
+  depthAlignment: number
 }
 
 const props = withDefaults(defineProps<AlignProps>(), {

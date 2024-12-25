@@ -3,6 +3,7 @@ export interface CientosComponent {
   category: string
   componentPath: string
   package: string
+  docsPath?: string
   demoPath?: string
   playgroundPath?: string
 }
