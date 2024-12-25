@@ -1,10 +1,13 @@
 # KeyboardControls
 
-KeyboardControls is a special type of controller that allows you to move through the scene using your keyboard, is based on the Unreal Engine Controls.
-
 <DocsDemo>
   <KeyboardControlsDemo />
 </DocsDemo>
+
+`<KeyboardControls />` is a simple keyboard controller for the camera. The camera's movements are bound to:
+
+* WASD on QWERTY keyboards or equivalent keys on non-QWERTY keyboards
+* Arrow keys
 
 ::: info
 :memo: KeyboardControls uses `PointerLockControls` under the hood, meaning you can use [all the props from `<PointerLockControls />`](pointer-lock-controls#props) as well as it events.
