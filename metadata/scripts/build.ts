@@ -1,20 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
-
-interface CientosComponent {
-  name: string
-  category: string
-  componentPath: string
-  package: string
-  demoPath?: string
-  playgroundPath?: string
-}
+import matter from 'gray-matter'
+import type { CientosComponent } from '../types'
 
 function input() {
   return {
     PACKAGE_DIR: path.resolve('metadata'),
     BASE_DIR: path.resolve('.'),
     components: [] as CientosComponent[],
+    categories: [] as string[],
   }
 }
 
@@ -163,7 +157,7 @@ function getLegacyComponents(input: Input) {
 
       if (!maybeComponentName) { continue }
       if (maybeComponentName in data.componentsByName) {
-        data.componentsByName[maybeComponentName].docsPath = file
+        data.componentsByName[maybeComponentName].docs = file
         continue
       }
     }
@@ -192,19 +186,72 @@ function getLegacyComponents(input: Input) {
 
 function getComponents(input: Input) {
   const componentDirectories = fs.globSync('src/core/*').filter(
-    n => !(n.endsWith('abstractions') || n.endsWith('controls') || n.endsWith('loaders') || n.endsWith('materials') || n.endsWith('misc') || n.endsWith('shapes') || n.endsWith('staging') || n.endsWith('utils') || n.endsWith('index.ts'))
+    // NOTE: Avoid legacy directories
+    n => !(n.endsWith('abstractions') || n.endsWith('controls') || n.endsWith('loaders') || n.endsWith('materials') || n.endsWith('misc') || n.endsWith('shapes') || n.endsWith('staging') || n.endsWith('utils') || n.endsWith('index.ts')),
   )
+
+  const componentFiles = new Set(fs.globSync('src/core/**'))
 
   componentDirectories.sort()
 
-  for (const componentDirectory of componentDirectories) {
-    const mdPath = path.join(componentDirectory, 'index.md')
-    const tsPath = path.join(componentDirectory, 'index.ts')
-    fn.docs = `${DOCS_URL}/${pkg.name}/${fnName}/`
-    const mdRaw = await fs.readFile(mdPath, 'utf-8')
+  const components = input.components
+  const categories = new Set(input.categories)
 
-    console.log(input)
+  for (const componentDirectory of componentDirectories) {
+    console.log(componentDirectory)
+
+    const mdPath = path.join(componentDirectory, 'index.md')
+    const mdRaw = fs.readFileSync(mdPath, 'utf-8')
+    const { data: frontmatter } = matter(mdRaw)
+
+    try {
+      fs.accessSync(input.BASE_DIR, fs.constants.R_OK | fs.constants.W_OK)
+    }
+    catch (e) {
+      throw new Error(`Expected \`component.vue\` in ${componentDirectories}\n${e.message}`)
+    }
+
+    const [componentPackage, name] = componentDirectory.split('/').slice(-2)
+
+    const component: CientosComponent = {
+      name,
+      package: componentPackage,
+      category: frontmatter.category ?? 'uncategorized',
+      component: `${componentDirectory}/component.vue`,
+    }
+
+    categories.add(component.category)
+
+    if (componentFiles.has(`${componentDirectory}/index.md`)) {
+      component.docs = `${componentDirectory}/index.md`
+    }
+    else {
+      component.internal = true
+    }
+
+    if (componentFiles.has(`${componentDirectory}/demo.vue`)) {
+      component.demo = `${componentDirectory}/demo.vue`
+    }
+
+    if (componentFiles.has(`${componentDirectory}/playground.vue`)) {
+      component.playground = `${componentDirectory}/playground.vue`
+    }
+
+    if (frontmatter.deprecated) {
+      component.deprecated = true
+    }
+
+    if (frontmatter.related) {
+      component.related = frontmatter.related
+    }
+
+    input.components.push(component)
+    console.log(component)
+
+    components.push(component)
   }
+
+  input.categories = Array.from(categories)
 
   return input
 }

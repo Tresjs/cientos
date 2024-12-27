@@ -1,5 +1,6 @@
 ---
 category: abstractions
+related: ['AccumulativeShadows', 'ContactShadows']
 ---
 
 # createReusableTemplate
