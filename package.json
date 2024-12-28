@@ -52,9 +52,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "metadata:build": "esno metadata/scripts/build.ts",
-    "docs:dev": "esno metadata/scripts/update.ts && vitepress dev docs",
-    "docs:build": "esno metadata/scripts/update.ts && vitepress build docs",
-    "docs:preview": "esno metadata/scripts/update.ts && vitepress preview docs"
+    "docs:dev": "esno metadata/scripts/build.ts && vitepress dev docs",
+    "docs:build": "esno metadata/scripts/build.ts && vitepress build docs",
+    "docs:preview": "esno metadata/scripts/build.ts && vitepress preview docs"
   },
   "peerDependencies": {
     "@tresjs/core": ">=4.2.1",
