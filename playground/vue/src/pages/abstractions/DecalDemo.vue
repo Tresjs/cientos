@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { Decal, OrbitControls } from '@tresjs/cientos'
-import { shallowRef } from 'vue'
 import { TresLeches, useControls } from '@tresjs/leches'
 import { SRGBColorSpace } from 'three'
 import '@tresjs/leches/styles'

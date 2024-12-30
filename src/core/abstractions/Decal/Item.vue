@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<DecalProps>(), {
   order: () => Math.round(Math.random() * 100),
 })
 
-const { properties, depthTest, depthWrite, polygonOffsetFactor, order } = toRefs(props)
+const { properties, depthTest, depthWrite, polygonOffsetFactor } = toRefs(props)
 
 const meshRef = shallowRef<Mesh | null>(null)
 
