@@ -12,9 +12,27 @@ import { createDecalData, generateDecalUID, parseTextureFilename, updateBoxHelpe
 import { useControls } from '@tresjs/leches'
 import { useClipboard } from '@vueuse/core'
 
+interface Decal {
+  uid: string
+  position: Vector3
+  orientation: Euler
+  orientationZ: number
+  size: Vector3
+  scale: number
+  normal: Vector3
+  parent: Group | null
+  map: Texture
+  textureFilename: string
+}
+
+interface CustomTexture extends Texture {
+  aspectRatio?: number
+  isPortrait?: boolean
+}
+
 export interface DecalProps {
   debug?: boolean
-  data?: any[]
+  data?: Decal[]
   debugLineColor?: string
   depthTest?: boolean
   depthWrite?: boolean
@@ -85,7 +103,7 @@ defineExpose({
 const textures = await useTexture(map.value)
 
 if (textures && textures.length) {
-  const result: { [key: string]: Texture } = {}
+  const result: { [key: string]: CustomTexture } = {}
   for (const tex of textures) {
     const src = tex.image?.src
     const fileName = parseTextureFilename(src)
@@ -145,6 +163,9 @@ const onClearDecals = () => {
 
   boxHelperCurrentRef.value.visible = false
   boxHelperSelectedRef.value.visible = false
+
+  // eslint-disable-next-line no-console
+  console.log('✅ Decals have just been removed')
 }
 
 const onDeleteCurrentDecal = async () => {
@@ -184,6 +205,8 @@ const onDeleteCurrentDecal = async () => {
   }
 
   decalSelected.value.options = computedNodesDecal.value
+
+  console.log(`✅ ${selectedUid} just been removed`)
 }
 
 const onExportDecals = async () => {
@@ -210,7 +233,8 @@ const onExportDecals = async () => {
   if (isSupported) {
     try {
       await copy(jsonString)
-      console.log('Data successfully copied to clipboard!')
+      // eslint-disable-next-line no-console
+      console.log('✅ Data successfully copied to clipboard!')
     }
     catch (error) {
       console.error('Copy to clipboard fails :', error)

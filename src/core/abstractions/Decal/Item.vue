@@ -77,6 +77,7 @@ onUnmounted(() => {
 <template>
   <TresMesh
     ref="meshRef"
+    v-bind="$attrs"
     material-transparent
     material-polygonOffset
     :material-polygonOffsetFactor="polygonOffsetFactor"
