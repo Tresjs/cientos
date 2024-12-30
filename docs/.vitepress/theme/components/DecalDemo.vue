@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { useGLTF, OrbitControls } from '@tresjs/cientos'
-
+import { OrbitControls } from '@tresjs/cientos'
 </script>
 
 <template>

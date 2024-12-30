@@ -4,7 +4,7 @@
   <DecalDemoMaterial />
 </DocsDemo>
 
-The `cientos` package provides an abstraction of the [Decal Geometry](https://threejs.org/docs/#examples/en/geometries/DecalGeometry), `<Decal>` is versatile, such as enhancing models with unique details, dynamically altering visual environments, or seamlessly covering seams. This geometry generates a decal mesh that seamlessly integrates into your scene. 
+The `cientos` package provides an abstraction of the [Decal Geometry](https://threejs.org/docs/#examples/en/geometries/DecalGeometry), `<Decal>` is versatile, such as enhancing models with unique details, dynamically altering visual environments, or seamlessly covering seams. This geometry generates a decal mesh that seamlessly integrates into your scene.
 
 Thanks to its debugging tool 🛠️, it's much easier to position and orientate Decals on objects, models and so on. It also offers a simple way of exporting the data from your `<Decal>` so you can see it permanently on an element.
 
@@ -84,10 +84,12 @@ When you use debug mode on one `<Decal>`, you cannot use it on another `<Decal>`
 ```vue
 // BAD ❌
 <Decal debug :map="texture1" />
+
 <Decal debug :map="texture2" />
 
 // GOOD ✅
 <Decal debug :map="texture1" />
+
 <Decal :map="texture2" />
 ```
 :::
@@ -97,7 +99,6 @@ Debug mode automatically disables the `enableDamping` and `autoRotate` propertie
 :::
 
 Dans notre cas, nous avons repris les examples précédents pour la positions des Decals du logo de Vue.js et Three.js, mais un nouveau `<Decal>` à été ajouté en debug mode avec en texture le logo de Nuxt.js. La ligne bleue lorsque vous survollez votre élement vous permez de savoir ou le `<Decal>` va être projeté, il vous suffit de cliquer et la texture que vous avez renseigné en prop de `<Decal debug>` sera projecté sur l'élement (La sphère dans notre cas).
-
 
 <DocsDemo>
   <DecalDemoDebug />
@@ -149,4 +150,3 @@ JSON object for example : [Model](#model)
 | **depthTest**         | `boolean` — Whether to have depth test enabled when rendering this material. | `true`                   |
 | **depthWrite**         | `boolean` — Whether rendering this material has any effect on the depth buffer. | `false`                   |
 | **order**         | `number` — This value allows the default rendering order of scene graph objects to be overridden although opaque and transparent objects remain sorted independently. <br /> **Sorting is from lowest to highest.** | `Math.round(Math.random() * 100)`                   |
-

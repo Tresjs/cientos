@@ -1,8 +1,8 @@
 <!-- eslint-disable ts/no-use-before-define -->
 
 <script setup lang="ts">
-import { computed, defineProps, nextTick, onUnmounted, reactive, ref, shallowReactive, shallowRef, type ShallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
-import type { BoxHelper, Group, Intersection, Texture } from 'three'
+import { computed, defineProps, nextTick, onUnmounted, reactive, ref, shallowReactive, shallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import type { BoxHelper, Group, Intersection } from 'three'
 import { Color, Euler, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
@@ -11,36 +11,7 @@ import Item from './Item.vue'
 import { parseTextureFilename, updateBoxHelper } from './utils'
 import { useControls } from '@tresjs/leches'
 import { useClipboard } from '@vueuse/core'
-
-interface Decal {
-  uid: string
-  position: Vector3
-  orientation: Euler
-  orientationZ: number
-  size: Vector3
-  scale: number
-  normal: Vector3
-  parent: Group | null
-  map: Texture
-  textureFilename: string
-}
-
-interface CustomTexture extends Texture {
-  aspectRatio?: number
-  isPortrait?: boolean
-}
-
-export interface DecalProps {
-  debug?: boolean
-  data?: Decal[]
-  debugLineColor?: string
-  depthTest?: boolean
-  depthWrite?: boolean
-  scale?: number
-  polygonOffsetFactor?: number
-  map?: string[] | null
-  mesh?: ShallowRef<Mesh | null>
-}
+import type { CustomTexture, Decal, DecalProps } from './types'
 
 const props = withDefaults(defineProps<DecalProps>(), {
   debug: false,
@@ -54,6 +25,10 @@ const props = withDefaults(defineProps<DecalProps>(), {
   mesh: () => shallowRef(null),
 })
 
+const nodesDecalRefs = ref<Decal[]>([])
+const decalItemsRef = ref<Array<{ instance: { properties: Decal } }>>([])
+const textureMap = ref<Record<string, CustomTexture>>({})
+
 const { debug, data, depthTest, depthWrite, polygonOffsetFactor, mesh, map, debugLineColor, scale } = toRefs(props)
 
 const controlsInMoved = ref<boolean>(false)
@@ -63,7 +38,6 @@ const decalDebugPosition = reactive<Vector3>(new Vector3(0, 0, 0))
 const decalDebugOrientationZ = ref<number>(0)
 const decalDebugSizes = reactive<Vector3>(new Vector3(1, 1, 1))
 const decalDebugScale = ref<number>(scale.value)
-const textureMap = ref<{ [key: string]: Texture }>({})
 
 const meshRef = shallowRef<Mesh | null>(null)
 const meshRefDebug = shallowRef<Mesh | null>(null)
@@ -74,9 +48,6 @@ const boxHelperCurrentRef = shallowRef<BoxHelper | null>(null)
 const boxHelperSelectedRef = shallowRef<BoxHelper | null>(null)
 const boxHelpersRef = shallowRef<Group | null>(null)
 const currentIntersect = shallowReactive<Intersection>({} as Intersection)
-const nodesDecalRefs = ref([])
-const decalItemsRef = ref<any[]>([])
-decalItemsRef.value = []
 const typeEdit = ref([{ text: 'scale', value: 'scale' }, { text: 'orientation', value: 'orientation' }, { text: 'position', value: 'position' }])
 
 const currentIntersectIsEmpty = computed(() => Object.keys(currentIntersect).length === 0)
@@ -101,9 +72,9 @@ defineExpose({
   instance: meshRef,
 })
 
-const textures = await useTexture(map.value)
+const textures = await useTexture(map.value as string[])
 
-if (textures && textures.length) {
+if (Array.isArray(textures) && textures.length) {
   const result: { [key: string]: CustomTexture } = {}
   for (const tex of textures) {
     const src = tex.image?.src
@@ -142,6 +113,7 @@ const importDecals = async (decalsArray: any[]) => {
       map: selectedMap,
       uid,
       textureFilename,
+      index: nodesDecalRefs.value.length,
     }
 
     nodesDecalRefs.value.push(recreatedDecal)
@@ -153,7 +125,7 @@ const importDecals = async (decalsArray: any[]) => {
   decalSelected.value.value = 'none'
 }
 
-const onClearDecals = () => {
+const onClearDecals = async () => {
   nodesDecalRefs.value = []
   decalSelected.value.value = 'none'
   decalSelected.value.options = computedNodesDecal.value
@@ -165,8 +137,9 @@ const onClearDecals = () => {
   boxHelperCurrentRef.value.visible = false
   boxHelperSelectedRef.value.visible = false
 
+  await nextTick()
+
   decalItemsRef.value = []
-  nodesDecalRefs.value = []
 
   // eslint-disable-next-line no-console
   console.log('✅ Decals have just been removed')
@@ -340,16 +313,16 @@ const printDebugDecal = () => {
   const localDecalPosition = intersectPosition.clone()
   decalDebugPosition.copy(localDecalPosition)
 
-  const aspectRatio = selectedTextureComputed.value.aspectRatio
+  const aspectRatio = selectedTextureComputed.value.aspectRatio ?? 1
   const localDecalSize = decalDebugSizes.clone()
 
   const selectedTexture = selectedTextureComputed.value
 
   if (selectedTexture.isPortrait) {
-    localDecalSize.y = localDecalSize.x / selectedTexture.aspectRatio
+    localDecalSize.y = localDecalSize.x / aspectRatio
   }
   else {
-    localDecalSize.x = localDecalSize.y * selectedTexture.aspectRatio
+    localDecalSize.x = localDecalSize.y * aspectRatio
   }
 
   localDecalSize.y = localDecalSize.x / aspectRatio
@@ -358,7 +331,7 @@ const printDebugDecal = () => {
     : decalDebugScale.value
   localDecalSize.multiplyScalar(scalar)
 
-  const localDecalOrientation = boxHelperRef.value.instance.rotation.clone()
+  const localDecalOrientation = boxHelperRef.value?.instance.rotation.clone()
 
   if (typeEditControls.value.value === 'position') {
     localDecalOrientation.z = localDecalOrientation.z + MathUtils.degToRad(orientationZControls.value.value)
@@ -408,12 +381,12 @@ onLoop(() => {
 
   Object.assign(currentIntersect, intersects[0])
 
-  const { depth } = boxHelperRef.value.instance.geometry.parameters
+  const { depth } = boxHelperRef.value?.instance.geometry.parameters
 
   const parentMatrixWorld = parent.matrixWorld.clone().invert()
   const p = point.clone().applyMatrix4(parentMatrixWorld)
 
-  boxHelperRef.value.instance.position.copy(p)
+  boxHelperRef.value?.instance.position.copy(p)
 
   const nLookAt = face.normal.clone()
   nLookAt.transformDirection(parent.matrixWorld)
@@ -426,7 +399,7 @@ onLoop(() => {
   nLineHelper.add(point)
   nLineHelper.applyMatrix4(parentMatrixWorld)
 
-  boxHelperRef.value.instance.lookAt(nLookAt)
+  boxHelperRef.value?.instance.lookAt(nLookAt)
 
   const positions = meshLineRef.value.geometry.attributes.position
   positions.setXYZ(0, p.x, p.y, p.z)
@@ -444,7 +417,7 @@ const onPointerDown = () => {
   controlsInMoved.value = false
 }
 
-const updateControlsFromDecal = (scale, orientationZ) => {
+const updateControlsFromDecal = (scale: number, orientationZ: number) => {
   scaleControls.value.value = scale
   orientationZControls.value.value = orientationZ
 }
@@ -453,7 +426,7 @@ const rePrintDecal = async () => {
   if (!meshRefDebug.value || !currentNodesDecalRefs.value) { return }
 
   const { face: { normal: intersectNormal }, point } = currentIntersect
-  const orientation = boxHelperRef.value.instance.rotation.clone()
+  const orientation = boxHelperRef.value?.instance.rotation.clone()
 
   currentNodesDecalRefs.value.position = point.clone()
   currentNodesDecalRefs.value.orientation = orientation.clone()
@@ -475,13 +448,13 @@ const rePrintDecal = async () => {
 
   await nextTick()
 
-  updateBoxHelper(boxHelperSelectedRef, targetMesh.instance)
+  updateBoxHelper(boxHelperSelectedRef, targetMesh?.instance)
 }
 
 const printDecal = async () => {
   if (!currentIntersect || !groupRef.value) { return }
 
-  const orientation = boxHelperRef.value.instance.rotation.clone()
+  const orientation = boxHelperRef.value?.instance.rotation.clone()
   const selectedMap = selectedTextureComputed.value
   const { face: { normal: intersectNormal }, point } = currentIntersect
 
@@ -494,10 +467,11 @@ const printDecal = async () => {
     size: decalDebugSizes.clone(),
     scale: scaleControls.value.value,
     normal: intersectNormal.clone(),
-    parent: groupRef.value.parent,
+    parent: groupRef.value?.parent,
     map: selectedMap,
     uid,
     textureFilename: parseTextureFilename(selectedMap.image.src),
+    index: nodesDecalRefs.value.length,
   }
 
   nodesDecalRefs.value.push(decalData)
@@ -511,7 +485,7 @@ const printDecal = async () => {
 
   const targetMesh = decalItemsRef.value.find(item => item.instance.properties.uid === uid)
 
-  updateBoxHelper(boxHelperSelectedRef, targetMesh.instance)
+  updateBoxHelper(boxHelperSelectedRef, targetMesh?.instance)
 }
 
 const onPointerUp = () => {
@@ -544,7 +518,7 @@ watch(() => decalSelected.value.value, async (newVal) => {
     typeEditControls.value.visible = true
     deleteBtn.value.visible = true
     exportBtn.value.visible = true
-    deleteBtn.value.value.label = `Delete ${currentNodesDecalRefs.value.uid}`
+    deleteBtn.value.value.label = `Delete ${currentNodesDecalRefs.value?.uid}`
     clearBtn.value.visible = true
 
     typeEditControls.value.value = 'scale'
@@ -560,17 +534,19 @@ watch(() => decalSelected.value.value, async (newVal) => {
 
     const selectedDecal = currentNodesDecalRefs.value
 
-    updateControlsFromDecal(selectedDecal.scale, selectedDecal.orientationZ)
+    updateControlsFromDecal(selectedDecal?.scale ?? 1, selectedDecal?.orientationZ ?? 0)
 
     decalItemsRef.value.forEach((item) => {
-      item.instance.material.opacity = 1
+      if (item) {
+        item.instance.material.opacity = 1
+      }
     })
 
     keyTextureSelected.value.value = currentNodesDecalRefs.value.textureFilename
 
     const targetMesh = decalItemsRef.value.find(item => item.instance.properties.uid === newVal)
 
-    updateBoxHelper(boxHelperSelectedRef, targetMesh.instance)
+    updateBoxHelper(boxHelperSelectedRef, targetMesh?.instance)
   }
 })
 
@@ -669,7 +645,7 @@ onUnmounted(() => {
   window.removeEventListener('pointerup', onPointerUp)
 
   if (!debug.value) {
-    controls?.value?.removeEventListener('change', onChangeOrbitControls)
+    controls.value.removeEventListener('change', onChangeOrbitControls)
   }
 
   meshRef?.value?.geometry?.dispose()
