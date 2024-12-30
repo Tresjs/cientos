@@ -12,6 +12,7 @@ export interface Decal {
   parent: Group | null
   map: Texture
   textureFilename: string
+  index: number
 }
 
 export interface CustomTexture extends Texture {

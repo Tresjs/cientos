@@ -3,9 +3,10 @@ import { defineProps, onUnmounted, shallowRef, toRefs, watch, withDefaults } fro
 import type { Mesh } from 'three'
 import { MathUtils } from 'three'
 import { DecalGeometry } from 'three-stdlib'
+import type { CustomTexture, Decal } from './types'
 
 export interface DecalProps {
-  properties: object
+  properties: Decal
   depthTest?: boolean
   depthWrite?: boolean
   polygonOffsetFactor?: number
@@ -13,7 +14,7 @@ export interface DecalProps {
 }
 
 const props = withDefaults(defineProps<DecalProps>(), {
-  properties: () => {},
+  properties: () => ({} as Decal),
   depthTest: true,
   depthWrite: false,
   polygonOffsetFactor: -10,
@@ -32,20 +33,20 @@ const makeGeometry = () => {
   const { parent, normal, position, size, orientation, map, scale, orientationZ } = properties.value
   const target = meshRef.value
 
-  if (!parent || !target) { return }
+  if (!parent || !target || !map) { return }
 
   const decalNormal = normal.clone()
   const decalPosition = position.clone()
 
-  const aspectRatio = map.aspectRatio
+  const aspectRatio = (map as CustomTexture).aspectRatio ?? 1
 
   const decalSize = size.clone()
 
-  if (map.isPortrait) {
-    decalSize.y = decalSize.x / map.aspectRatio
+  if ((map as CustomTexture).isPortrait) {
+    decalSize.y = decalSize.x / ((map as CustomTexture).aspectRatio ?? 1)
   }
   else {
-    decalSize.x = decalSize.y * map.aspectRatio
+    decalSize.x = decalSize.y * ((map as CustomTexture).aspectRatio ?? 1)
   }
 
   decalSize.y = decalSize.x / aspectRatio
@@ -55,7 +56,7 @@ const makeGeometry = () => {
   decalOrientation.z = decalOrientation.z + MathUtils.degToRad(orientationZ)
 
   target.position.copy(decalNormal).multiplyScalar(0.001)
-  target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
+  target.geometry = new DecalGeometry(parent as Mesh, decalPosition, decalOrientation, decalSize)
 }
 
 watch(
@@ -84,7 +85,8 @@ onUnmounted(() => {
     :material-depthTest="depthTest"
     :material-depthWrite="depthWrite"
     :material-map="properties.map"
-    :name="`decal-item decal-${properties.index}`"
+    :name="`decal-item decal-${properties.uid ?? 0}`"
+    :properties="properties"
   >
     <slot></slot>
   </TresMesh>
