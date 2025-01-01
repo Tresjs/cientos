@@ -9,7 +9,7 @@ import glsl from 'vite-plugin-glsl'
 import { qrcode } from 'vite-plugin-qrcode'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     glsl(),
     vue(templateCompilerOptions),
@@ -33,9 +33,11 @@ export default defineConfig({
     }),
     qrcode(),
   ],
-  resolve: {
-    alias: {
-      '@tresjs/cientos': resolve(__dirname, '../../src/'),
-    },
-  },
-})
+  resolve: command === 'build'
+    ? {}
+    : {
+        alias: {
+          '@tresjs/cientos': resolve(__dirname, '../../src/index.ts'),
+        },
+      },
+}))

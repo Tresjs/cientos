@@ -1,6 +1,6 @@
 import { resolve } from 'pathe'
 import { defineConfig } from 'vitepress'
-import { components as _components, categoryNames, components } from '../../metadata/metadata'
+import { categoryNames as _categoryNames, components as _components } from '../../metadata/metadata'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -45,7 +45,6 @@ export default defineConfig({
       },
     ],
   ],
-  rewrites: getRewrites(),
   themeConfig: {
     logo: '/logo.svg',
     search: {
@@ -105,29 +104,19 @@ function getSidebar() {
     },
   ]
 
+  const categoryNames = [..._categoryNames].sort((a, b) => a.localeCompare(b))
   for (const name of categoryNames) {
-    const components = _components.filter(c => c.category === name)
+    const components = _components.filter(c => c.category === name).sort()
 
     links.push({
-      text: name,
+      text: name.slice(0, 1).toUpperCase() + name.slice(1),
       items: components.map(c => ({
         text: c.name,
-        link: `/${c.package}/${c.name}`,
+        link: `/${c.package}/${c.name}/`,
       })),
       collapsed: true,
     })
   }
 
   return links
-}
-
-function getRewrites() {
-  return _components.reduce((acc, c) => {
-    if (c.docsPath) {
-      const relativePath = c.docsPath.substring('docs/'.length)
-      acc[relativePath] = `${c.package}/${c.name}.md`
-      acc[relativePath] = `${c.package}/${c.name}.md`
-    }
-    return acc
-  }, {})
 }

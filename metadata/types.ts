@@ -12,6 +12,14 @@ export interface CientosComponent {
 }
 
 export interface PackageIndexes {
+  packages: Record<string, CientosPackage>
+  categories: string[]
+  components: CientosComponent[]
+}
+
+export interface CientosPackage {
+  name: string
+  dir: string
   categories: string[]
   components: CientosComponent[]
 }

@@ -1,0 +1,4 @@
+## Ignore derived data
+## These directories contain derived .md files, generated in `/scripts`
+core
+composables

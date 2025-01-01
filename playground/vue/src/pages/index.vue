@@ -1,23 +1,7 @@
 <script setup lang="ts">
-import {
-  abstractionsRoutes,
-  controlsRoutes,
-  loadersRoutes,
-  materialsRoutes,
-  miscRoutes,
-  shapesRoutes,
-  stagingRoutes,
-} from '../router/routes'
+import { categories, components } from '../../../../metadata/index.json'
 
-const sections = [
-  { icon: '📦', title: 'Abstractions', routes: abstractionsRoutes },
-  { icon: '🕹️', title: 'Controls', routes: controlsRoutes },
-  { icon: '🎭', title: 'Staging', routes: stagingRoutes },
-  { icon: '⏳', title: 'Loaders', routes: loadersRoutes },
-  { icon: '👔', title: 'Materials', routes: materialsRoutes },
-  { icon: '🔷', title: 'Shapes', routes: shapesRoutes },
-  { icon: '🛠️', title: 'Misc', routes: miscRoutes },
-]
+const icons = { abstractions: '📦', controls: '🕹️', staging: '🎭', loaders: '⏳', materials: '👔', shapes: '🔷', misc: '🛠️' } as const
 </script>
 
 <template>
@@ -58,29 +42,29 @@ const sections = [
       </div>
       <div class="text-center sm:text-left sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div
-          v-for="{ title, routes, icon } in sections"
-          :key="title"
+          v-for="category in categories"
+          :key="category"
           class="
           p-4 my-4 leading-normal size-m weight-600 bg-zinc-50 rounded
           sm:my-0
           "
         >
           <div class="inline-block p-2 p-x-3 m-b-3 text-2xl bg-zinc-200 rounded">
-            {{ icon }}
+            {{ icons[category as keyof typeof icons] ?? '❓' }}
           </div>
           <h2 class="text-sm p-0 m-0 mb-1.5 font-semibold text-zinc-600">
-            {{ title }}
+            {{ category }}
           </h2>
           <div
-            v-for="route in routes"
-            :key="route.name"
+            v-for="component in components.filter(c => c.category === category && c.playground)"
+            :key="component.name"
             class="link-wrapper"
           >
             <router-link
               class="no-underline text-zinc-700 visited:text-zinc-400 hover:text-cientos-blue"
-              :to="route.path"
+              :to="`/${component.package}/${component.name}`"
             >
-              <span>{{ route.name }} </span>
+              <span>{{ component.name }}</span>
             </router-link>
           </div>
         </div>
