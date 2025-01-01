@@ -1,8 +1,8 @@
-# AnimatedSprite
+---
+category: abstractions
+---
 
-<DocsDemo>
-  <AnimatedSpriteDemo />
-</DocsDemo>
+# AnimatedSprite
 
 `<AnimatedSprite />` displays 2D animations defined in a [texture atlas](https://en.wikipedia.org/wiki/Texture_atlas). A typical `<AnimatedSprite />` will use:
 
@@ -11,7 +11,30 @@
 
 ## Usage
 
-<<< @/.vitepress/theme/components/AnimatedSpriteDemo.vue{3,12-20}
+```vue:demo
+<script setup lang="ts">
+import { AnimatedSprite } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+
+const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
+  + 'assets/main/textures/animated-sprite/'
+</script>
+
+<template>
+  <TresCanvas clear-color="#FBB03B">
+    <TresPerspectiveCamera :position="[0, 0, 15]" />
+    <Suspense>
+      <AnimatedSprite
+        :image="`${ASSETS_URL}cientosTexture.png`"
+        :atlas="`${ASSETS_URL}cientosAtlas.json`"
+        animation="cientosIdle"
+        :fps="15"
+        :loop="true"
+      />
+    </Suspense>
+  </TresCanvas>
+</template>
+```
 
 ::: warning Suspense
 `<AnimatedSprite />` loads resources asynchronously, so it must be wrapped in a `<Suspense />`.
@@ -131,11 +154,36 @@ For our Cientos heart cartoon character animation, here's how the filenames map 
 
 Try it out by clicking a few times on the character below:
 
-<DocsDemo>
-  <AnimatedSpriteNamedAnimationDemo />
-</DocsDemo>
+```vue:demo
+<script setup lang="ts">
+import { AnimatedSprite } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
+import { ref } from 'vue'
 
-<<< @/.vitepress/theme/components/AnimatedSpriteNamedAnimationDemo.vue
+const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
+  + 'assets/main/textures/animated-sprite/'
+
+const animations = ref(
+  ['cientosIdle', 'cientosIdleToWalkTransition', 'cientosWalk'],
+)
+</script>
+
+<template>
+  <TresCanvas clear-color="#82DBC5">
+    <TresPerspectiveCamera :position="[0, 0, 15]" />
+    <Suspense>
+      <AnimatedSprite
+        :image="`${ASSETS_URL}cientosTexture.png`"
+        :atlas="`${ASSETS_URL}cientosAtlas.json`"
+        :animation="animations[0]"
+        :fps="15"
+        :loop="true"
+        @click="() => { animations.push(animations.shift() as string) }"
+      />
+    </Suspense>
+  </TresCanvas>
+</template>
+```
 
 ## `definitions`
 
@@ -157,18 +205,30 @@ So, instead of playing images 0-5 sequentially, this animation will play instead
 * `0(10), 1-2, 3(20), 4-5` – Play all six images again with a delay of ten frames at the bottom of the bounce (`0(10)`) and a delay of twenty frames at the top of the bounce (`3(20)`).
 * `0-5(3)` – Finally, play all six images of the animation with a delay of three frames each.
 
-<DocsDemo>
-  <AnimatedSpriteDefinitionsDemo />
-</DocsDemo>
+```vue:demo
+<script setup lang="ts">
+import { AnimatedSprite } from '@tresjs/cientos'
+import { TresCanvas } from '@tresjs/core'
 
-<<< @/.vitepress/theme/components/AnimatedSpriteDefinitionsDemo.vue{17-19}
+const ASSETS_URL = 'https://raw.githubusercontent.com/Tresjs/'
+  + 'assets/main/textures/animated-sprite/'
+</script>
 
-## `center`
-
-In addition to being the sprite's anchor point, the `:center` prop also controls how differently sized source images will "grow" and "shrink". Namely, they "grow out from" and "shrink towards" the center.
-
-Below is a simple animation containing differently sized source images. The anchor is visible at world position `0, 0, 0`.
-
-<DocsDemo>
-  <AnimatedSpriteCenterDemo />
-</DocsDemo>
+<template>
+  <TresCanvas clear-color="#666">
+    <TresPerspectiveCamera :position="[0, 0, 15]" />
+    <Suspense>
+      <AnimatedSprite
+        :image="`${ASSETS_URL}cientosTexture.png`"
+        :atlas="`${ASSETS_URL}cientosAtlas.json`"
+        animation="cientosIdle"
+        :definitions="{
+          cientosIdle: '0-5, 0(10), 1-2, 3(20), 4-5, 0-5(3)',
+        }"
+        :fps="15"
+        :loop="true"
+      />
+    </Suspense>
+  </TresCanvas>
+</template>
+```
