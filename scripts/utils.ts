@@ -1,4 +1,4 @@
-import { join, normalize, relative, resolve } from 'node:path'
+import { join, normalize, relative, resolve, sep } from 'node:path'
 import * as fs from 'node:fs/promises'
 import * as fsSync from 'node:fs'
 import type { CientosComponent, CientosPackage, PackageIndexes } from '../metadata/types'
@@ -155,6 +155,7 @@ export async function updateDocs({ packages, components }: PackageIndexes) {
 /////////////////////////////////////////////////////
 
 export async function updateMetadata(): Promise<PackageIndexes> {
+  const ALLOWED_CATEGORIES = new Set(['abstractions', 'controls', 'loaders', 'materials', 'misc', 'shapes', 'staging'])
   const input = getInput()
   await canAccess(input)
   getComponents(input)
@@ -194,12 +195,9 @@ export async function updateMetadata(): Promise<PackageIndexes> {
       }
     }
 
-    const componentDirectories = fsSync.globSync('src/core/*').filter(
-    // NOTE: Avoid legacy directories
-      n => !(n.endsWith('abstractions') || n.endsWith('controls') || n.endsWith('loaders') || n.endsWith('materials') || n.endsWith('misc') || n.endsWith('shapes') || n.endsWith('staging') || n.endsWith('utils') || n.endsWith('index.ts')),
-    )
-
-    const componentFiles = new Set(fsSync.globSync('src/core/**'))
+    const componentMds = fsSync.globSync('src/core/*/index.md')
+    const componentDirectories = componentMds.map((p) => p.split(sep).slice(0, -1).join(sep))
+    const componentFiles = new Set(fsSync.globSync('src/core/*/*.*'))
 
     componentDirectories.sort()
 
@@ -215,7 +213,7 @@ export async function updateMetadata(): Promise<PackageIndexes> {
         fsSync.accessSync(input.BASE_DIR, fs.constants.R_OK | fs.constants.W_OK)
       }
       catch {
-        throw new Error(`Expected \`component.vue\` in ${componentDirectories}}`)
+        throw new Error(`Expected \`component.vue\` in ${componentDirectory}}`)
       }
 
       const [componentPackage, name] = componentDirectory.split('/').slice(-2)
@@ -225,6 +223,11 @@ export async function updateMetadata(): Promise<PackageIndexes> {
         package: componentPackage,
         category: frontmatter.category ?? 'uncategorized',
         component: `${componentDirectory}/component.vue`,
+      }
+
+      if (!ALLOWED_CATEGORIES.has(component.category)) {
+        const msg = `Category for <${component.name} /> ("${component.category}") is not in allowed categories. You probably made a typo.\nAllowed categories: ${Array.from(ALLOWED_CATEGORIES).map(s => `"${s}"`).join(', ')}`
+        throw new Error(msg)
       }
 
       categories.add(component.category)

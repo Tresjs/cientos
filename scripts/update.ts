@@ -2,7 +2,6 @@ import { updateDocs, updateImport, updateMetadata, updatePlaygroundRoutes } from
 
 async function run() {
   const metadata = await updateMetadata()
-  console.log(metadata)
   await Promise.all([
     updateImport(metadata),
     updatePlaygroundRoutes(metadata),
