@@ -71,6 +71,8 @@ export default [
       {
         text: 'PointMaterial',
         link: '/guide/materials/point-material',
+      },
+      {
         text: 'MeshDiscardMaterial',
         link: '/guide/materials/mesh-discard-material',
       },
@@ -120,6 +122,7 @@ export default [
       { text: 'Align', link: '/guide/staging/align' },
       { text: 'SoftShadows', link: '/guide/staging/soft-shadows' },
       { text: 'Grid', link: '/guide/staging/grid' },
+      { text: 'Bounds', link: '/guide/staging/bounds' },
       { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
     ],
   },
