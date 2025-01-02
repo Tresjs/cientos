@@ -10,6 +10,11 @@ export const shapesRoutes = [
     component: () => import('../../pages/shapes/QuadraticBezierLineDemo.vue'),
   },
   {
+    path: '/shapes/cubic-bezier-line',
+    name: 'CubicBezierLine',
+    component: () => import('../../pages/shapes/CubicBezierLineDemo.vue'),
+  },
+  {
     path: '/shapes/cylinder',
     name: 'Cylinder',
     component: () => import('../../pages/shapes/Cylinder.vue'),
@@ -28,6 +33,11 @@ export const shapesRoutes = [
     path: '/shapes/roundedbox',
     name: 'RoundedBox',
     component: () => import('../../pages/shapes/RoundedBoxDemo.vue'),
+  },
+  {
+    path: '/shapes/screenQuad',
+    name: 'ScreenQuad',
+    component: () => import('../../pages/shapes/ScreenQuadDemo.vue'),
   },
   {
     path: '/shapes/on-demand-shapes',
