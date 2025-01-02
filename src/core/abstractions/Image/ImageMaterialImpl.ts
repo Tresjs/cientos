@@ -1,4 +1,4 @@
-import { shaderMaterial } from './../../../utils/shaderMaterial'
+import { shaderMaterial } from './../../../utils/shaderMaterial.js'
 import { Color, Vector2 } from 'three'
 
 /**

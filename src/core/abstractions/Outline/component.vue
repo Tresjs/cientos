@@ -4,7 +4,7 @@ import { normalizeColor, useTres } from '@tresjs/core'
 import type { BufferGeometry, Group } from 'three'
 import { BackSide, InstancedMesh, Mesh, SkinnedMesh, Vector2 } from 'three'
 import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
-import OutlineMaterialImpl from './OutlineMaterialImpl'
+import OutlineMaterialImpl from './OutlineMaterialImpl.js'
 import { toCreasedNormals } from 'three-stdlib'
 
 // NOTE: Source

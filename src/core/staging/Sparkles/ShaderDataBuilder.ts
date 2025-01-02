@@ -9,11 +9,11 @@ import type {
   GradientScalar,
   GradientTresColor,
   GradientVectorFlexibleParams,
-} from './../../../utils/Gradient'
+} from './../../../utils/Gradient.js'
 import type {
   CanvasGradientRenderer,
   ShaderDataEntry,
-} from './ShaderData'
+} from './ShaderData.js'
 
 type rgbaSuffixes = ['r', 'rg', 'rgb', 'rgba']
 type xyzwSuffixes = ['x', 'xy', 'xyz', 'xyzw']

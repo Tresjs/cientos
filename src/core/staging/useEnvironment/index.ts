@@ -13,8 +13,8 @@ import type {
   WebGLCubeRenderTarget,
 } from 'three'
 import type { Ref } from 'vue'
-import { environmentPresets } from './const'
-import type { EnvironmentOptions } from './const'
+import { environmentPresets } from './const.js'
+import type { EnvironmentOptions } from './const.js'
 
 /**
  * Component that loads an environment map and sets it as the scene's background and environment.

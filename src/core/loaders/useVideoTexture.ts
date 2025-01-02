@@ -1,5 +1,5 @@
 import { VideoTexture } from 'three'
-import { useLogger } from '../../composables/useLogger'
+import { useLogger } from '../../composables/useLogger.js'
 
 interface VideoTextureProps extends HTMLVideoElement {
   unsuspend?: 'canplay' | 'canplaythrough' | 'loadstart' | 'loadedmetadata'

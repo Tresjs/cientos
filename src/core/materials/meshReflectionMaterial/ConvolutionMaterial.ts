@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 import { NoBlending, ShaderMaterial, Uniform, Vector2 } from 'three'
-import { version } from '../../../utils/constants'
+import { version } from '../../../utils/constants.js'
 
 export class ConvolutionMaterial extends ShaderMaterial {
   readonly kernel: Float32Array

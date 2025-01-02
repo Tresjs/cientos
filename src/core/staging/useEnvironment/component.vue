@@ -4,9 +4,9 @@ import { CubeCamera, HalfFloatType, WebGLCubeRenderTarget } from 'three'
 import { onUnmounted, ref, toRaw, useSlots, watch } from 'vue'
 import type { CubeTexture, Texture } from 'three'
 import type { Ref } from 'vue'
-import { useEnvironment } from '.'
-import EnvSence from './envSence'
-import type { EnvironmentOptions } from './const'
+import { useEnvironment } from './index.js'
+import EnvSence from './envSence.js'
+import type { EnvironmentOptions } from './const.js'
 
 const props = withDefaults(defineProps<EnvironmentOptions>(), {
   background: false,

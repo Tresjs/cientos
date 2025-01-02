@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import type { Group } from 'three'
-import type { CubeCameraOptions } from './useCubeCamera'
-import { useCubeCamera } from './useCubeCamera'
+import type { CubeCameraOptions } from './useCubeCamera.js'
+import { useCubeCamera } from './useCubeCamera.js'
 import type { MaybeRefOrGetter } from 'vue'
 import { shallowRef, toValue } from 'vue'
 
