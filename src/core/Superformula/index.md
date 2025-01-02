@@ -8,7 +8,7 @@ category: shapes
 
 ## Basic Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { OrbitControls, Superformula } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

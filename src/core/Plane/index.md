@@ -12,7 +12,7 @@ A convenient default rotation is applied to the _x-axis_ of the plane (`-Math.PI
 
 ## Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { Plane, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

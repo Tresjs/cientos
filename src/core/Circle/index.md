@@ -6,7 +6,7 @@ category: shapes
 
 `<Circle />` is a shortcut for a `Mesh` with a `CircleGeometry` and a `MeshBasicMaterial`.
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { Circle, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

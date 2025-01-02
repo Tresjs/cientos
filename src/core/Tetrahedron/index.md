@@ -8,7 +8,7 @@ category: shapes
 
 ## Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { OrbitControls, Tetrahedron } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

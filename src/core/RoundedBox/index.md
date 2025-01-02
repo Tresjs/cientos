@@ -8,7 +8,7 @@ category: shapes
 
 ## Basic Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { RoundedBox, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
@@ -26,7 +26,7 @@ import { TresCanvas } from '@tresjs/core'
 
 ## Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { Html, OrbitControls, RoundedBox } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

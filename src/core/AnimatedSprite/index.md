@@ -11,7 +11,7 @@ category: abstractions
 
 ## Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { AnimatedSprite } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
@@ -154,7 +154,7 @@ For our Cientos heart cartoon character animation, here's how the filenames map 
 
 Try it out by clicking a few times on the character below:
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { AnimatedSprite } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
@@ -205,7 +205,7 @@ So, instead of playing images 0-5 sequentially, this animation will play instead
 * `0(10), 1-2, 3(20), 4-5` – Play all six images again with a delay of ten frames at the bottom of the bounce (`0(10)`) and a delay of twenty frames at the top of the bounce (`3(20)`).
 * `0-5(3)` – Finally, play all six images of the animation with a delay of three frames each.
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { AnimatedSprite } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

@@ -9,7 +9,7 @@ This is a test component.
 
 ## Usage
 
-```vue:demo{5-8,10}
+```vue demo{5-8,10}
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 </script>
@@ -26,7 +26,7 @@ import { TresCanvas } from '@tresjs/core'
 
 ## Basic material
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 </script>

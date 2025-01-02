@@ -81,9 +81,6 @@ const DOCS_BASE_PATH = 'src'
 const DOCS_COMPONENTS_PATH = 'src/.vitepress/theme/components'
 
 export async function updateDocs({ packages, components }: PackageIndexes) {
-  // NOTE: Remove prior generated docs markdown
-  await Promise.all(Object.keys(packages).map(packageName => fs.rm(join(DOCS_BASE_PATH, packageName), { recursive: true, force: true })))
-
   // NOTE: Remove prior generated CodeSnippetDemos*
   const existingComponents = globSync(`${DOCS_COMPONENTS_PATH}/CodeSnippetDemo*.*`)
   await Promise.all(existingComponents.map(c => fs.rm(c)))
@@ -107,7 +104,7 @@ export async function updateDocs({ packages, components }: PackageIndexes) {
         .then(getCodeSnippetsFromMd)
         .then(writeCodeSnippetDemosToFile)
         .then(insertCodeSnippetDemosInMd)
-        .then(data => fs.writeFile(join(data.dir, 'index.md'), data.md, 'utf-8'))
+        // .then(data => fs.writeFile(join(data.dir, 'index.md'), data.md, 'utf-8'))
     }
     return () => {}
   }))
@@ -146,7 +143,7 @@ export async function updateDocs({ packages, components }: PackageIndexes) {
 
   function insertCodeSnippetDemosInMd(data: DocsMdInfo) {
     for (const codeSnippetDemo of data.codeSnippetDemoInfo) {
-      data.md = data.md.replace('```vue:demo', `<DocsDemo><${codeSnippetDemo.name} /></DocsDemo>\n\n\`\`\`vue`)
+      data.md = data.md.replace('```vue demo', `<DocsDemo><${codeSnippetDemo.name} /></DocsDemo>\n\n\`\`\`vue`)
     }
     return data
   }

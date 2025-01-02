@@ -18,7 +18,6 @@ export function MarkdownTransform(): Plugin {
     async transform(code, id) {
       if (!id.match(/\.md\b/)) { return null }
 
-      code = code.replaceAll('vue:demo', 'vue')
       // NOTE: linkify function names
       code = code.replace(
         new RegExp(`\`({${componentNames.join('|')}})\`(.)`, 'g'),

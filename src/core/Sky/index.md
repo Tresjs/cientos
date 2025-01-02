@@ -8,7 +8,7 @@ category: staging
 
 ## Usage
 
-```vue:demo
+```vue demo
 <script setup lang="ts">
 import { OrbitControls, Sky } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
