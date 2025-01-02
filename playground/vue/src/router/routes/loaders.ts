@@ -14,4 +14,9 @@ export const loadersRoutes = [
     name: 'useVideoTexture',
     component: () => import('../../pages/loaders/useVideoTextureDemo.vue'),
   },
+  {
+    path: '/loaders/use-progress',
+    name: 'useProgress',
+    component: () => import('../../pages/loaders/use-progress/index.vue'),
+  },
 ]
