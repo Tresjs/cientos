@@ -8,7 +8,7 @@ import { shallowRef, toValue, watchEffect } from 'vue'
 // NOTE: Sources
 // https://github.com/pmndrs/drei/blob/master/src/core/Center.tsx
 
-export interface OnAlignCallbackProps {
+export interface AlignCallbackOptions {
   /** The next parent above <Align /> */
   parent: Object3D
   /** The outmost container group of the <Align/> component */
@@ -41,8 +41,6 @@ export interface AlignProps {
   disableZ?: boolean
   /** See https://threejs.org/docs/index.html?q=box3#api/en/math/Box3.setFromObject */
   precise?: boolean
-  /** Callback, fires when updating, after measurement */
-  onAlign?: (props: OnAlignCallbackProps) => void
   /** Optional cacheKey to keep the component from recalculating on every render */
   cacheKey?: MaybeRefOrGetter<any>
 }
@@ -52,6 +50,11 @@ const props = withDefaults(defineProps<AlignProps>(), {
   cacheKey: undefined,
 })
 
+const emit = defineEmits<{
+  (e: 'update', props: AlignCallbackOptions): void
+  (e: 'change', props: AlignCallbackOptions): void
+}>()
+
 const ref = shallowRef<Group>()
 const outer = shallowRef<Group>()
 const inner = shallowRef<Group>()
@@ -59,6 +62,8 @@ const inner = shallowRef<Group>()
 const box3 = new Box3()
 const center = new Vector3()
 const sphere = new Sphere()
+
+const previous = { width: 0, height: 0, depth: 0, position: new Vector3() }
 
 function update() {
   if (!outer.value || !inner.value || !ref.value) { return }
@@ -79,9 +84,11 @@ function update() {
     props.disable || props.disableZ ? 0 : -center.z + zAlign,
   )
 
-  // Only fire onCentered if the bounding box has changed
-  if (typeof props.onAlign !== 'undefined') {
-    props.onAlign({
+  if (previous.width !== width
+    || previous.height !== height
+    || previous.depth !== depth
+    || !outer.value.position.equals(previous.position)) {
+    emit('change', {
       parent: ref.value.parent!,
       container: ref.value,
       width,
@@ -94,6 +101,10 @@ function update() {
       horizontalAlignment: xAlign,
       depthAlignment: zAlign,
     })
+    previous.width = width
+    previous.height = height
+    previous.depth = depth
+    previous.position.copy(outer.value.position)
   }
 }
 

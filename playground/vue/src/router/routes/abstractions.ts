@@ -65,6 +65,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/AnimatedSpriteDemo.vue'),
   },
   {
+    path: '/abstractions/marching-cubes',
+    name: 'MarchingCubes',
+    component: () => import('../../pages/abstractions/MarchingCubesDemo.vue'),
+  },
+  {
     path: '/abstractions/mask',
     name: 'Mask',
     component: () => import('../../pages/abstractions/MaskDemo.vue'),

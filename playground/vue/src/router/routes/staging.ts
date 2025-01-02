@@ -45,6 +45,11 @@ export const stagingRoutes = [
     component: () => import('../../pages/staging/OceanDemo.vue'),
   },
   {
+    path: '/staging/bounds',
+    name: 'Bounds',
+    component: () => import('../../pages/staging/BoundsDemo.vue'),
+  },
+  {
     path: '/staging/fit',
     name: 'Fit',
     component: () => import('../../pages/staging/fit/index.vue'),
@@ -68,5 +73,10 @@ export const stagingRoutes = [
     path: '/staging/circle-shadow',
     name: 'CircleShadow',
     component: () => import('../../pages/staging/CircleShadowDemo.vue'),
+  },
+  {
+    path: '/staging/accumulative-shadows',
+    name: 'Accumulative Shadows',
+    component: () => import('../../pages/staging/AccumulativeShadowsDemo.vue'),
   },
 ]
