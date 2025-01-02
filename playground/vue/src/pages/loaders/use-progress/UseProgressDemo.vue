@@ -1,26 +1,13 @@
 <script setup lang="ts">
 import { OrbitControls } from '@tresjs/cientos'
-import Model from './Model.vue'
+import TextureLoader from './TextureLoader.vue'
 </script>
 
 <template>
   <TresPerspectiveCamera :position="[5, 5, 5]" />
   <Suspense>
     <template v-if="true">
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
-      <Model />
+      <TextureLoader texturePath="https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg" />
     </template>
   </Suspense>
   <TresGridHelper />
