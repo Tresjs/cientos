@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-use-before-define -->
 
 <script setup lang="ts">
-import { computed, defineProps, nextTick, onUnmounted, reactive, ref, shallowReactive, shallowRef, toRaw, toRefs, watch, watchEffect, withDefaults } from 'vue'
+import { computed, nextTick, onUnmounted, reactive, ref, shallowReactive, shallowRef, toRaw, toRefs, watch, watchEffect } from 'vue'
 import type { BoxHelper, Group, Intersection } from 'three'
 import { Color, Euler, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
@@ -11,9 +11,9 @@ import Item from './Item.vue'
 import { parseTextureFilename, updateBoxHelper } from './utils'
 import { useControls } from '@tresjs/leches'
 import { useClipboard } from '@vueuse/core'
-import type { CustomTexture, Decal, DecalProps } from './types'
+import type { Decal, DecalAttributes, DecalElementProps, EnhancedTexture } from './types'
 
-const props = withDefaults(defineProps<DecalProps>(), {
+const props = withDefaults(defineProps<DecalAttributes>(), {
   debug: false,
   data: () => [],
   debugLineColor: '#0000ff',
@@ -26,8 +26,8 @@ const props = withDefaults(defineProps<DecalProps>(), {
 })
 
 const nodesDecalRefs = ref<Decal[]>([])
-const decalItemsRef = ref<Array<{ instance: { properties: Decal } }>>([])
-const textureMap = ref<Record<string, CustomTexture>>({})
+const decalItemsRef = ref<DecalElementProps[]>([])
+const textureMap = ref<Record<string, EnhancedTexture>>({})
 
 const { debug, data, depthTest, depthWrite, polygonOffsetFactor, mesh, map, debugLineColor, scale } = toRefs(props)
 
@@ -75,8 +75,8 @@ defineExpose({
 const textures = await useTexture(map.value as string[])
 
 if (Array.isArray(textures) && textures.length) {
-  const result: { [key: string]: CustomTexture } = {}
-  for (const tex of textures as CustomTexture[]) {
+  const result: { [key: string]: EnhancedTexture } = {}
+  for (const tex of textures as EnhancedTexture[]) {
     const src = tex.image?.src
     const fileName = parseTextureFilename(src)
 
@@ -92,6 +92,8 @@ if (Array.isArray(textures) && textures.length) {
 }
 
 const importDecals = async (decalsArray: any[]) => {
+  if (!groupRef.value) { return }
+
   for (const decalData of decalsArray) {
     const { position, normal, size, orientation, orientationZ, scale, uid, textureFilename } = decalData
 
@@ -109,7 +111,7 @@ const importDecals = async (decalsArray: any[]) => {
       size: new Vector3(...size),
       scale,
       normal: new Vector3(...normal),
-      parent: groupRef.value?.parent,
+      parent: groupRef.value?.parent as Group,
       map: selectedMap,
       uid,
       textureFilename,
@@ -345,7 +347,7 @@ const printDebugDecal = () => {
 
 const clearCurrentIntersect = () => {
   Object.keys(currentIntersect).forEach((key) => {
-    delete currentIntersect[key]
+    delete (currentIntersect as any)[key]
   })
 }
 
@@ -356,6 +358,7 @@ onLoop(() => {
     !meshLineRef.value
     || !meshRefDebug.value
     || !boxHelperRef.value
+    || !groupRef.value
   ) {
     return
   }
@@ -425,7 +428,11 @@ const updateControlsFromDecal = (scale: number, orientationZ: number) => {
 const rePrintDecal = async () => {
   if (!meshRefDebug.value || !currentNodesDecalRefs.value) { return }
 
-  const { face: { normal: intersectNormal }, point } = currentIntersect
+  const { face, point } = currentIntersect
+
+  if (!face) { return }
+
+  const intersectNormal = face.normal
   const orientation = boxHelperRef.value?.instance.rotation.clone()
 
   currentNodesDecalRefs.value.position = point.clone()
@@ -456,7 +463,11 @@ const printDecal = async () => {
 
   const orientation = boxHelperRef.value?.instance.rotation.clone()
   const selectedMap = selectedTextureComputed.value
-  const { face: { normal: intersectNormal }, point } = currentIntersect
+  const { face, point } = currentIntersect
+
+  if (!face) { return }
+
+  const intersectNormal = face.normal
 
   const uid = `decal-${nodesDecalRefs.value.length}`
 
@@ -502,7 +513,7 @@ const onPointerUp = () => {
 }
 
 watch(() => decalSelected.value.value, async (newVal) => {
-  if (!boxHelperCurrentRef.value || !boxHelperSelectedRef.value) { return }
+  if (!boxHelperCurrentRef.value || !boxHelperSelectedRef.value || !currentNodesDecalRefs.value) { return }
 
   if (decalSelectedIsNone.value) {
     scaleControls.value.visible = false
@@ -553,8 +564,12 @@ watch(() => decalSelected.value.value, async (newVal) => {
 watch(
   () => typeEditControls.value.value,
   (newVal) => {
+    if (!currentNodesDecalRefs.value) { return }
+
     const uid = currentNodesDecalRefs.value.uid
     const targetMesh = decalItemsRef.value.find(item => item.instance.properties.uid === uid)
+
+    if (!targetMesh) { return }
 
     if (newVal === 'scale') {
       scaleControls.value.visible = true

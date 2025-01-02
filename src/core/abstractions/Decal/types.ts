@@ -1,4 +1,4 @@
-import type { Euler, Group, Mesh, Texture, Vector3 } from 'three'
+import type { Euler, Group, Material, Mesh, Texture, Vector3 } from 'three'
 import type { ShallowRef } from 'vue'
 
 export interface Decal {
@@ -15,20 +15,21 @@ export interface Decal {
   index: number
 }
 
-export interface DecalItemProps {
+export interface DecalElementProps {
   properties: Decal
+  instance: Mesh & { material: Material }
   depthTest?: boolean
   depthWrite?: boolean
   polygonOffsetFactor?: number
   order?: number
 }
 
-export interface CustomTexture extends Texture {
+export interface EnhancedTexture extends Texture {
   aspectRatio?: number
   isPortrait?: boolean
 }
 
-export interface DecalProps {
+export interface DecalAttributes {
   debug?: boolean
   data?: Decal[]
   debugLineColor?: string
@@ -38,4 +39,12 @@ export interface DecalProps {
   polygonOffsetFactor?: number
   map?: string[] | null
   mesh?: ShallowRef<Mesh | null>
+}
+
+export interface DecalAttributesItem {
+  properties: Decal
+  depthTest?: boolean
+  depthWrite?: boolean
+  polygonOffsetFactor?: number
+  order?: number
 }

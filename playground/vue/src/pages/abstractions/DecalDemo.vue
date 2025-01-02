@@ -14,7 +14,7 @@ const gl = {
   shadows: true,
   alpha: false,
   outputColorSpace: SRGBColorSpace,
-  dpr: [1, 2],
+  dpr: [1, 2] as [number, number],
   antialias: pixelRatio.value < 2,
 }
 

@@ -1,19 +1,10 @@
 <script setup lang="ts">
-import { defineProps, onUnmounted, shallowRef, toRefs, watch, withDefaults } from 'vue'
-import type { Mesh } from 'three'
-import { MathUtils } from 'three'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { MathUtils, Mesh } from 'three'
 import { DecalGeometry } from 'three-stdlib'
-import type { CustomTexture, Decal } from './types'
+import type { Decal, DecalAttributesItem, EnhancedTexture } from './types'
 
-export interface DecalProps {
-  properties: Decal
-  depthTest?: boolean
-  depthWrite?: boolean
-  polygonOffsetFactor?: number
-  order?: number
-}
-
-const props = withDefaults(defineProps<DecalProps>(), {
+const props = withDefaults(defineProps<DecalAttributesItem>(), {
   properties: () => ({} as Decal),
   depthTest: true,
   depthWrite: false,
@@ -38,15 +29,15 @@ const makeGeometry = () => {
   const decalNormal = normal.clone()
   const decalPosition = position.clone()
 
-  const aspectRatio = (map as CustomTexture).aspectRatio ?? 1
+  const aspectRatio = (map as EnhancedTexture).aspectRatio ?? 1
 
   const decalSize = size.clone()
 
-  if ((map as CustomTexture).isPortrait) {
-    decalSize.y = decalSize.x / ((map as CustomTexture).aspectRatio ?? 1)
+  if ((map as EnhancedTexture).isPortrait) {
+    decalSize.y = decalSize.x / ((map as EnhancedTexture).aspectRatio ?? 1)
   }
   else {
-    decalSize.x = decalSize.y * ((map as CustomTexture).aspectRatio ?? 1)
+    decalSize.x = decalSize.y * ((map as EnhancedTexture).aspectRatio ?? 1)
   }
 
   decalSize.y = decalSize.x / aspectRatio
@@ -56,7 +47,10 @@ const makeGeometry = () => {
   decalOrientation.z = decalOrientation.z + MathUtils.degToRad(orientationZ)
 
   target.position.copy(decalNormal).multiplyScalar(0.001)
-  target.geometry = new DecalGeometry(parent as Mesh, decalPosition, decalOrientation, decalSize)
+
+  if (parent instanceof Mesh) {
+    target.geometry = new DecalGeometry(parent, decalPosition, decalOrientation, decalSize)
+  }
 }
 
 watch(
