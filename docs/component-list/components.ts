@@ -71,6 +71,8 @@ export default [
       {
         text: 'PointMaterial',
         link: '/guide/materials/point-material',
+      },
+      {
         text: 'MeshDiscardMaterial',
         link: '/guide/materials/mesh-discard-material',
       },
