@@ -76,7 +76,7 @@ const textures = await useTexture(map.value as string[])
 
 if (Array.isArray(textures) && textures.length) {
   const result: { [key: string]: CustomTexture } = {}
-  for (const tex of textures) {
+  for (const tex of textures as CustomTexture[]) {
     const src = tex.image?.src
     const fileName = parseTextureFilename(src)
 
@@ -337,7 +337,7 @@ const printDebugDecal = () => {
     localDecalOrientation.z = localDecalOrientation.z + MathUtils.degToRad(orientationZControls.value.value)
   }
 
-  target.geometry = new DecalGeometry(parent, localDecalPosition, localDecalOrientation, localDecalSize)
+  target.geometry = new DecalGeometry(parent as Mesh, localDecalPosition, localDecalOrientation, localDecalSize)
   target.geometry.applyMatrix4(parentMatrixWorld)
 
   updateBoxHelper(boxHelperCurrentRef, meshRefDebug.value)

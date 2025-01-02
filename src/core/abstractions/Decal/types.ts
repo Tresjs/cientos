@@ -15,6 +15,14 @@ export interface Decal {
   index: number
 }
 
+export interface DecalItemProps {
+  properties: Decal
+  depthTest?: boolean
+  depthWrite?: boolean
+  polygonOffsetFactor?: number
+  order?: number
+}
+
 export interface CustomTexture extends Texture {
   aspectRatio?: number
   isPortrait?: boolean
