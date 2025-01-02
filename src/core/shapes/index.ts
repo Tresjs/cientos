@@ -2,6 +2,7 @@ import Box from './Box.vue'
 import CatmullRomCurve3 from './CatmullRomCurve3.vue'
 import Circle from './Circle.vue'
 import Cone from './Cone.vue'
+import CubicBezierLine from './CubicBezierLine.vue'
 import Cylinder from './Cylinder.vue'
 import Dodecahedron from './Dodecahedron.vue'
 import Icosahedron from './Icosahedron.vue'
@@ -23,6 +24,7 @@ export {
   CatmullRomCurve3,
   Circle,
   Cone,
+  CubicBezierLine,
   Cylinder,
   Dodecahedron,
   Icosahedron,
