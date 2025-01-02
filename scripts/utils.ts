@@ -196,7 +196,7 @@ export async function updateMetadata(): Promise<PackageIndexes> {
     }
 
     const componentMds = fsSync.globSync('src/core/*/index.md')
-    const componentDirectories = componentMds.map((p) => p.split(sep).slice(0, -1).join(sep))
+    const componentDirectories = componentMds.map(p => p.split(sep).slice(0, -1).join(sep))
     const componentFiles = new Set(fsSync.globSync('src/core/*/*.*'))
 
     componentDirectories.sort()
