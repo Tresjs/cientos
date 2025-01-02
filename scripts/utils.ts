@@ -77,8 +77,8 @@ export const router = createRouter({
   await fs.writeFile(out, data)
 }
 
-const DOCS_BASE_PATH = 'docs'
-const DOCS_COMPONENTS_PATH = 'docs/.vitepress/theme/components'
+const DOCS_BASE_PATH = 'src'
+const DOCS_COMPONENTS_PATH = 'src/.vitepress/theme/components'
 
 export async function updateDocs({ packages, components }: PackageIndexes) {
   // NOTE: Remove prior generated docs markdown

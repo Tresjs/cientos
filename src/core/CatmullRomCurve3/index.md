@@ -10,7 +10,7 @@ It wraps [Three.js's `CatmullRomCurve3`](https://threejs.org/docs/index.html?q=c
 
 ## Usage
 
-```vue:demo
+```vue:line-numbers demo
 <script setup lang="ts">
 import { CatmullRomCurve3, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'

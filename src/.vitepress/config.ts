@@ -45,6 +45,9 @@ export default defineConfig({
       },
     ],
   ],
+  transformPageData(pageData) {
+    console.log(pageData)
+  },
   themeConfig: {
     logo: '/logo.svg',
     search: {
