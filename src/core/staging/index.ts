@@ -7,6 +7,7 @@ import Fit from './Fit.vue'
 import Grid from './Grid.vue'
 import Ocean from './Ocean.vue'
 import Precipitation from './Precipitation.vue'
+import CircleShadow from './CircleShadow.vue'
 import RandomizedLights from './RandomizedLights/component.vue'
 import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
@@ -22,6 +23,7 @@ export {
   Align,
   Backdrop,
   Bounds,
+  CircleShadow,
   ContactShadows,
   Environment,
   Fit,
