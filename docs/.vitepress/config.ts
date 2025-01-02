@@ -140,6 +140,7 @@ export default defineConfig({
           { text: 'Line2', link: '/guide/shapes/line2' },
           { text: 'Octahedron', link: '/guide/shapes/octahedron' },
           { text: 'Plane', link: '/guide/shapes/plane' },
+          { text: 'QuadraticBezierLine', link: '/guide/shapes/quadratic-bezier-line' },
           { text: 'Ring', link: '/guide/shapes/ring' },
           { text: 'RoundedBox', link: '/guide/shapes/rounded-box' },
           { text: 'ScreenQuad', link: '/guide/shapes/screen-quad' },
