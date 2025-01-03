@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTres } from '@tresjs/core'
 import type { ColorRepresentation } from 'three'
+// @ts-expect-error troika-three-text has no available types
 import { preloadFont, Text as TextMeshImpl } from 'troika-three-text'
 import { onUnmounted, shallowRef } from 'vue'
 
