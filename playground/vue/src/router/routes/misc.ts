@@ -1,5 +1,10 @@
 export const miscRoutes = [
   {
+    path: '/misc/lod',
+    name: 'LOD',
+    component: () => import('../../pages/misc/LODDemo.vue'),
+  },
+  {
     path: '/misc/html',
     name: 'HTML',
     component: () => import('../../pages/misc/HTMLDemo.vue'),
