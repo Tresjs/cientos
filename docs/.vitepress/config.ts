@@ -65,6 +65,7 @@ export default defineConfig({
         text: 'Abstractions',
         items: [
           { text: 'Text3D', link: '/guide/abstractions/text-3d' },
+          { text: 'TextTroika', link: '/guide/abstractions/text-troika' },
           { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
           { text: 'useAnimations', link: '/guide/abstractions/use-animations' },
           { text: 'MouseParallax', link: '/guide/abstractions/mouse-parallax' },

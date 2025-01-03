@@ -66,7 +66,8 @@
     "stats-gl": "^2.0.1",
     "stats.js": "^0.17.0",
     "three-custom-shader-material": "^5.4.0",
-    "three-stdlib": "^2.34.0"
+    "three-stdlib": "^2.34.0",
+    "troika-three-text": "^0.52.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.3",
