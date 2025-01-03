@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TresColor } from '@tresjs/core'
 import { normalizeColor, useTres } from '@tresjs/core'
-import type { BufferGeometry, Group } from 'three'
+import type { BufferGeometry, Color, Group, ShaderMaterial } from 'three'
 import { BackSide, InstancedMesh, Mesh, SkinnedMesh, Vector2 } from 'three'
 import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import OutlineMaterialImpl from './OutlineMaterialImpl'
@@ -46,7 +46,7 @@ const groupRef = shallowRef()
 
 defineExpose({ instance: groupRef })
 
-const material = new OutlineMaterialImpl({ ...props })
+const material = new OutlineMaterialImpl({ ...props }) as ShaderMaterial & { color: Color, screenspace: boolean, size: Vector2, thickness: number }
 const contextSize = new Vector2(1, 1)
 let oldAngle = 0
 let oldGeometry: BufferGeometry | null = null
