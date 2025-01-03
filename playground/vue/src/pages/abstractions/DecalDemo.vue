@@ -22,7 +22,7 @@ useControls({})
 </script>
 
 <template>
-  <TresLeches />
+  <TresLeches style="position:absolute; left:initial; right:20px; top:10px;" />
 
   <TresCanvas v-bind="gl" window-size>
     <TresPerspectiveCamera :position="[7.5, 5, 7.5]" />
