@@ -2,6 +2,7 @@
 import { CubeCamera, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import { Fog } from 'three'
+import { onMounted, onUnmounted, shallowRef } from 'vue'
 
 const visible = shallowRef(true)
 const y0 = shallowRef(1)

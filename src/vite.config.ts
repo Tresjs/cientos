@@ -3,11 +3,11 @@ import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import svgLoader from 'vite-svg-loader'
 import { MarkdownTransform } from './.vitepress/plugins/markdownTransform'
-import CodeSnippetDemos from './.vitepress/plugins/extractCodeSnippetDemos'
+import { CodeSnippetDemosBuildTransform } from './.vitepress/plugins/extractCodeSnippetDemos'
 
 export default defineConfig({
   plugins: [
-    CodeSnippetDemos(),
+    CodeSnippetDemosBuildTransform(),
     MarkdownTransform(),
     svgLoader(),
     Unocss(),

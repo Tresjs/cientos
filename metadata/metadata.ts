@@ -9,5 +9,7 @@ export const componentNames = components.map(f => f.name)
 export const categoryNames = Array.from(categories)
 
 export function getComponent(name: string) {
+  console.log(components)
+  console.log(name)
   return components.find(f => f.name === name)
 }

@@ -6,10 +6,12 @@ import CameraControls from './CameraControls/component.vue'
 import CatmullRomCurve3 from './CatmullRomCurve3/component.vue'
 import Circle from './Circle/component.vue'
 import Cone from './Cone/component.vue'
+import CubeCamera from './CubeCamera/component.vue'
 import Cylinder from './Cylinder/component.vue'
 import Dodecahedron from './Dodecahedron/component.vue'
 import ExampleComponent from './ExampleComponent/component.vue'
 import Grid from './Grid/component.vue'
+import Html from './Html/component.vue'
 import Icosahedron from './Icosahedron/component.vue'
 import KeyboardControls from './KeyboardControls/component.vue'
 import Line2 from './Line2/component.vue'
@@ -38,10 +40,12 @@ export {
   CatmullRomCurve3,
   Circle,
   Cone,
+  CubeCamera,
   Cylinder,
   Dodecahedron,
   ExampleComponent,
   Grid,
+  Html,
   Icosahedron,
   KeyboardControls,
   Line2,

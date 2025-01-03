@@ -5,8 +5,7 @@ import { TresLeches, useControls } from '@tresjs/leches'
 import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
 import { degToRad } from 'three/src/math/MathUtils.js'
 import { ref, watch } from 'vue'
-import { useState } from '../../composables/state'
-import type { Atlasish } from '../../../../../src/core/abstractions/AnimatedSprite/Atlas'
+import type { Atlasish } from './Atlas'
 import '@tresjs/leches/styles'
 
 const ASSETS_URL = 'https://raw.githubusercontent.com/andretchen0/tresjs_assets/'
@@ -120,12 +119,6 @@ const centerDemoImgData = (() => {
   canvas.parentElement?.removeChild(canvas)
   return imgData
 })()
-
-const { renderingTimes } = useState()
-
-function onRender() {
-  renderingTimes.value = 1
-}
 </script>
 
 <template>

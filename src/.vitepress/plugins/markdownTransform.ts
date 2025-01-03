@@ -1,8 +1,6 @@
 import type { Plugin } from 'vite'
-import { existsSync, readFile, readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { format } from 'prettier'
-import ts from 'typescript'
 // import { packages } from '../../../meta/packages'
 import { componentNames, components, getComponent } from '../../../metadata/metadata'
 
@@ -17,28 +15,9 @@ export function MarkdownTransform(): Plugin {
     enforce: 'pre',
     async transform(code, id) {
       if (!id.match(/\.md\b/)) { return null }
+      const [pkg, _name, _] = id.split('/').slice(-3)
 
-      // NOTE: linkify function names
-      code = code.replace(
-        new RegExp(`\`({${componentNames.join('|')}})\`(.)`, 'g'),
-        (_, name, ending) => {
-          if (ending === ']') {
-            // NOTE: already a link
-            return _
-          }
-          const fn = getComponent(name)!
-          return `[\`${fn.name}\`](${fn.docsPath}) `
-        },
-      )
-
-      // NOTE: Convert links to relative
-      code = code.replace(/https?:\/\/cientos\.tresjs\.org\//g, '/')
-
-      // NOTE: Format codeblocks
-      // First, find `CientosComponent`
-      const [pkg, _name, i] = id.split('/').slice(-3)
-
-      const maybeComponent = components.find(c => c.docsPath && id.endsWith(c.docsPath))
+      const maybeComponent = components.find(c => c.docs && id.endsWith(c.docs))
 
       const name = maybeComponent ? maybeComponent.name : ''
 
@@ -47,34 +26,7 @@ export function MarkdownTransform(): Plugin {
         const firstHeader = code.search(/\n#{2,6}\s.+/)
         const sliceIndex = firstHeader < 0 ? frontmatterEnds < 0 ? 0 : frontmatterEnds + 4 : firstHeader
 
-        // Insert JS/TS code blocks
-        code = await replaceAsync(code, /\n```ts( [^\n]+)?\n(.+?)\n```\n/gs, async (_, meta = '', snippet = '') => {
-          const formattedTS = (await format(snippet.replace(/\n+/g, '\n'), { semi: false, singleQuote: true, parser: 'typescript' })).trim()
-          const js = ts.transpileModule(formattedTS, {
-            compilerOptions: { target: 99 },
-          })
-          const formattedJS = (await format(js.outputText, { semi: false, singleQuote: true, parser: 'typescript' }))
-            .trim()
-          if (formattedJS === formattedTS) { return _ }
-          return `
-<CodeToggle>
-<div class="code-block-ts">
-
-\`\`\`ts ${meta}
-${snippet}
-\`\`\`
-
-</div>
-<div class="code-block-js">
-
-\`\`\`js
-${formattedJS}
-\`\`\`
-
-</div>
-</CodeToggle>\n`
-        })
-
+        const typeDefinition = getTypeDefinition(pkg, _name)
         const { footer, header } = await getComponentMarkdown(pkg, name)
 
         if (hasTypes) {
@@ -110,20 +62,19 @@ export async function getComponentMarkdown(pkg: string, name: string) {
 
   let typingSection = ''
 
+  const positiveNOrInfinity = n => n < 0 ? Number.POSITIVE_INFINITY : n
+
   if (types) {
-    const code = `\`\`\`typescript\n${types.trim()}\n\`\`\``
-    typingSection = types.length > 1000
-      ? `
-## Type Declarations
+    // NOTE: Types arrive with a lot of automatically generated cruft.
+    // Trim it off.
+    const trimFromHere = Math.min(
+      positiveNOrInfinity(types.indexOf('declare function __VLS_template(): {')),
+      positiveNOrInfinity(types.indexOf('declare const _default:')),
+    )
+    const trimmedTypes = types.trim().substring(0, trimFromHere)
 
-<details>
-<summary op50 italic cursor-pointer select-none>Show Type Declarations</summary>
-
-${code}
-
-</details>
-`
-      : `\n## Type Declarations\n\n${code}`
+    const code = `\`\`\`typescript\n${trimmedTypes}\n\`\`\``
+    typingSection = `\n## Type Declarations\n\n${code}`
   }
 
   const links = ([
@@ -136,60 +87,12 @@ ${code}
     .join(' • ')
 
   const sourceSection = `## Source\n\n${links}\n`
-  const ContributorsSection = `
-## Contributors
 
-<Contributors fn="${name}" />
-  `
-  const changelogSection = `
-## Changelog
-
-<Changelog fn="${name}" />
-`
-
-  const demoSection = demoPath
-    ? demoPath.endsWith('.client.vue')
-      ? `
-<script setup>
-import { defineAsyncComponent } from 'vue'
-const Demo = defineAsyncComponent(() => import('./${demoPath}'))
-</script>
-
-## Demo
-
-<DemoContainer>
-<p class="demo-source-link"><a href="${URL}/${demoPath}" target="_blank">source</a></p>
-<ClientOnly>
-  <Suspense>
-    <Demo/>
-    <template #fallback>
-      Loading demo...
-    </template>
-  </Suspense>
-</ClientOnly>
-</DemoContainer>
-`
-      : `
-<script setup>
-import Demo from \'./${demoPath}\'
-</script>
-
-## Demo
-
-<DemoContainer>
-<p class="demo-source-link"><a href="${URL}/${demoPath}" target="_blank">source</a></p>
-<Demo/>
-</DemoContainer>
-`
-    : ''
-
-  const footer = `${typingSection}\n\n${sourceSection}\n${ContributorsSection}\n${changelogSection}\n`
-
-  const header = demoSection
+  const footer = `${typingSection}\n\n${sourceSection}\n`
 
   return {
+    header: '',
     footer,
-    header,
   }
 }
 
@@ -221,10 +124,9 @@ function replacer(code: string, value: string, key: string, insert: 'head' | 'ta
 export async function getTypeDefinition(pkg: string, name: string): Promise<string | undefined> {
   const component = getComponent(name)
   if (!component) { return }
-  const componentPath = component.componentPath.split('/').slice(1).join('/')
 
   const DIR_TYPES = resolve(__dirname, '../../../dist')
-  const typingFilepath = join(DIR_TYPES, `${componentPath}.d.ts`)
+  const typingFilepath = join(DIR_TYPES, `${component.path}/component.vue.d.ts`)
 
   if (!existsSync(typingFilepath)) { return }
 

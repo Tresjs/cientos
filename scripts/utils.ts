@@ -1,10 +1,15 @@
-import { join, normalize, relative, resolve, sep } from 'node:path'
+import { basename, join, relative, resolve, sep } from 'node:path'
 import * as fs from 'node:fs/promises'
 import * as fsSync from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import type { CientosComponent, CientosPackage, PackageIndexes } from '../metadata/types'
-import MarkdownIt from 'markdown-it'
-import { globSync } from 'node:fs'
 import matter from 'gray-matter'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const DIR_ROOT = resolve(__dirname, '..')
+const DIR_PLAYGROUND = resolve(DIR_ROOT, 'playground/vue/src')
+const PATH_PLAYGROUND_ROUTER = resolve(DIR_PLAYGROUND, 'router.ts')
+const DIR_SRC = resolve(DIR_ROOT, 'src')
 
 export async function updateImport({ packages, components }: PackageIndexes) {
   for (const { name, dir } of Object.values(packages)) {
@@ -34,14 +39,11 @@ ${exports.map(s => `  ${s}`).join(',\n')},
 export async function updatePlaygroundRoutes({ components }: PackageIndexes) {
   const imports = [] as string[]
   const routes = [] as string[]
-  const outDir = normalize('playground/vue/src')
-  const out = join(outDir, 'router.ts')
-
   for (const c of components) {
     if (!c.playground) { continue }
     const playgroundName = `${c.name}Playground`
 
-    imports.push(`import ${playgroundName} from './${relative(outDir, c.playground)}'`)
+    imports.push(`import ${playgroundName} from './${relative(DIR_PLAYGROUND, c.playground)}'`)
 
     routes.push(
       `  {
@@ -74,79 +76,7 @@ export const router = createRouter({
 })
 `
 
-  await fs.writeFile(out, data)
-}
-
-const DOCS_BASE_PATH = 'src'
-const DOCS_COMPONENTS_PATH = 'src/.vitepress/theme/components'
-
-export async function updateDocs({ packages, components }: PackageIndexes) {
-  // NOTE: Remove prior generated CodeSnippetDemos*
-  const existingComponents = globSync(`${DOCS_COMPONENTS_PATH}/CodeSnippetDemo*.*`)
-  await Promise.all(existingComponents.map(c => fs.rm(c)))
-
-  const markdownit = MarkdownIt()
-
-  await Promise.all(components.map((component) => {
-    if (component.docs) {
-      const dirPath = join(DOCS_BASE_PATH, component.package, component.name)
-      const data: DocsMdInfo = {
-        dir: dirPath,
-        md: '',
-        component,
-        codeSnippetDemoInfo: [] as CodeSnippetDemoInfo[],
-        markdownit,
-      }
-
-      return new Promise<DocsMdInfo>(resolve => fs.readFile(component.docs!, 'utf-8')
-        .then((str) => { data.md = str; resolve(data) }))
-        .then(data => fs.mkdir(data.dir, { recursive: true }).then(() => data))
-        .then(getCodeSnippetsFromMd)
-        .then(writeCodeSnippetDemosToFile)
-        .then(insertCodeSnippetDemosInMd)
-        // .then(data => fs.writeFile(join(data.dir, 'index.md'), data.md, 'utf-8'))
-    }
-    return () => {}
-  }))
-
-  interface CodeSnippetDemoInfo {
-    content: string
-    name: string
-    extension: string
-    lineNumber: number
-  }
-
-  interface DocsMdInfo {
-    dir: string
-    md: string
-    component: CientosComponent
-    codeSnippetDemoInfo: CodeSnippetDemoInfo[]
-    markdownit: MarkdownIt
-  }
-
-  function getCodeSnippetsFromMd(data: DocsMdInfo) {
-    const tokens = data.markdownit.parse(data.md, {}).filter(token => token.tag === 'code' && token.info.includes(':demo'))
-    data.codeSnippetDemoInfo = tokens.map((t, i) => ({
-      content: t.content,
-      name: `CodeSnippetDemo${data.component.name}${i}`,
-      extension: t.info.split(':')[0] ?? 'vue',
-      lineNumber: t.map ? t.map[0] : 0,
-    }))
-    return data
-  }
-
-  function writeCodeSnippetDemosToFile(data: DocsMdInfo) {
-    return Promise.all(data.codeSnippetDemoInfo.map(
-      info => fs.writeFile(join(DOCS_COMPONENTS_PATH, `${info.name}.${info.extension}`), info.content, 'utf-8'),
-    )).then(() => data)
-  }
-
-  function insertCodeSnippetDemosInMd(data: DocsMdInfo) {
-    for (const codeSnippetDemo of data.codeSnippetDemoInfo) {
-      data.md = data.md.replace('```vue demo', `<DocsDemo><${codeSnippetDemo.name} /></DocsDemo>\n\n\`\`\`vue`)
-    }
-    return data
-  }
+  await fs.writeFile(PATH_PLAYGROUND_ROUTER, data)
 }
 
 /////////////////////////////////////////////////////
@@ -182,80 +112,67 @@ export async function updateMetadata(): Promise<PackageIndexes> {
   }
 
   function getComponents(input: Input) {
-    // TODO: loop through available packages.
-    if (!input.packages.core) {
-      input.packages.core = {
-        name: 'core',
-        dir: 'src/core',
-        categories: [],
-        components: [],
+    const packageDirs = fsSync.globSync(join(DIR_SRC, '*')).map(p => relative(DIR_ROOT, p))
+
+    for (const DIR_PACKAGE of packageDirs) {
+      if (DIR_PACKAGE.includes('.')) { continue }
+      const packageName = DIR_PACKAGE.split(sep).pop()!
+      const _package = {
+        name: packageName,
+        dir: relative(DIR_ROOT, DIR_PACKAGE),
+        categories: [] as string[],
+        components: [] as CientosComponent[],
       }
+
+      input.packages[packageName] = _package
+
+      const componentFiles = new Set(fsSync.globSync(join(DIR_PACKAGE, '*/*.*')))
+      const componentMds = fsSync.globSync(join(DIR_PACKAGE, '*/index.md'))
+      const componentDirectories = componentMds.map(p => p.split(sep).slice(0, -1).join(sep))
+      componentDirectories.sort()
+
+      _package.components = componentDirectories.map((componentDirectory) => {
+        const PATH_COMPONENT = join(componentDirectory, 'component.vue')
+        const PATH_PLAYGROUND = join(componentDirectory, 'playground.vue')
+        const PATH_MD = join(componentDirectory, 'index.md')
+
+        const mdRaw = fsSync.readFileSync(PATH_MD, 'utf-8')
+        const { data: frontmatter } = matter(mdRaw)
+
+        if (!componentFiles.has(PATH_COMPONENT)) {
+          const msg = `${componentDirectory} does not contain a 'component.vue'`
+          throw new Error(msg)
+        }
+
+        if (!frontmatter.category) {
+          const exampleCategory = Array.from(ALLOWED_CATEGORIES)[0]
+          const msg = `${PATH_MD} frontmatter must contain a category. E.g.\n---\ncategory: ${exampleCategory}\n---`
+          throw new Error(msg)
+        }
+
+        if (!ALLOWED_CATEGORIES.has(frontmatter.category)) {
+          const msg = `${PATH_MD}\nFrontmatter category '${frontmatter.category}' is not in allowed categories.\nThis is probably a typo.\nAllowed categories: ${Array.from(ALLOWED_CATEGORIES).map(s => `"${s}"`).join(', ')}`
+          throw new Error(msg)
+        }
+
+        const component: CientosComponent = {
+          name: basename(componentDirectory),
+          path: componentDirectory,
+          package: packageName,
+          category: frontmatter.category,
+          component: PATH_COMPONENT,
+          docs: PATH_MD,
+        }
+
+        if (componentFiles.has(PATH_PLAYGROUND)) { component.playground = PATH_PLAYGROUND }
+        if (frontmatter.deprecated) { component.deprecated = true }
+        if (frontmatter.related) { component.related = frontmatter.related }
+
+        return component
+      })
+
+      _package.categories = Array.from(_package.components.reduce((s, c) => { s.add(c.category); return s }, new Set<string>()))
     }
-
-    const componentMds = fsSync.globSync('src/core/*/index.md')
-    const componentDirectories = componentMds.map(p => p.split(sep).slice(0, -1).join(sep))
-    const componentFiles = new Set(fsSync.globSync('src/core/*/*.*'))
-
-    componentDirectories.sort()
-
-    const components = input.packages.core.components
-    const categories = new Set(input.packages.core.categories)
-
-    for (const componentDirectory of componentDirectories) {
-      const mdPath = join(componentDirectory, 'index.md')
-      const mdRaw = fsSync.readFileSync(mdPath, 'utf-8')
-      const { data: frontmatter } = matter(mdRaw)
-
-      try {
-        fsSync.accessSync(input.BASE_DIR, fs.constants.R_OK | fs.constants.W_OK)
-      }
-      catch {
-        throw new Error(`Expected \`component.vue\` in ${componentDirectory}}`)
-      }
-
-      const [componentPackage, name] = componentDirectory.split('/').slice(-2)
-
-      const component: CientosComponent = {
-        name,
-        package: componentPackage,
-        category: frontmatter.category ?? 'uncategorized',
-        component: `${componentDirectory}/component.vue`,
-      }
-
-      if (!ALLOWED_CATEGORIES.has(component.category)) {
-        const msg = `Category for <${component.name} /> ("${component.category}") is not in allowed categories. You probably made a typo.\nAllowed categories: ${Array.from(ALLOWED_CATEGORIES).map(s => `"${s}"`).join(', ')}`
-        throw new Error(msg)
-      }
-
-      categories.add(component.category)
-
-      if (componentFiles.has(`${componentDirectory}/index.md`)) {
-        component.docs = `${componentDirectory}/index.md`
-      }
-      else {
-        component.internal = true
-      }
-
-      if (componentFiles.has(`${componentDirectory}/demo.vue`)) {
-        component.demo = `${componentDirectory}/demo.vue`
-      }
-
-      if (componentFiles.has(`${componentDirectory}/playground.vue`)) {
-        component.playground = `${componentDirectory}/playground.vue`
-      }
-
-      if (frontmatter.deprecated) {
-        component.deprecated = true
-      }
-
-      if (frontmatter.related) {
-        component.related = frontmatter.related
-      }
-
-      components.push(component)
-    }
-
-    input.packages.core.categories = Array.from(categories)
 
     return input
   }

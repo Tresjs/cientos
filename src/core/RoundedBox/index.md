@@ -10,7 +10,7 @@ category: shapes
 
 ```vue demo
 <script setup lang="ts">
-import { RoundedBox, OrbitControls } from '@tresjs/cientos'
+import { OrbitControls, RoundedBox } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 </script>
 
@@ -33,9 +33,7 @@ import { TresCanvas } from '@tresjs/core'
 </script>
 
 <template>
-  <TresCanvas
-    clear-color="#111"
-  >
+  <TresCanvas clear-color="#111">
     <TresPerspectiveCamera
       :position="[0, 0, 7]"
       :fov="45"
