@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useLoop } from '@tresjs/core'
+import { useLoop, useTexture } from '@tresjs/core'
 import { shallowRef, toRefs, watchEffect } from 'vue'
 import type { TresColor } from '@tresjs/core'
+import type { Texture } from 'three'
 
 export interface PrecipitationProps {
   /**
@@ -36,7 +37,7 @@ export interface PrecipitationProps {
    * @memberof StarsProps
    * @default null
    */
-  map?: null
+  map?: string | null
   /**
    * texture of the alphaMap Drops.
    *
@@ -131,8 +132,8 @@ const {
   size,
   area,
   color,
-  alphaMap,
-  map,
+  alphaMap: alphaMapUrl,
+  map: mapUrl,
   opacity,
   alphaTest,
   depthWrite,
@@ -171,6 +172,21 @@ watchEffect(() => {
   setPosition()
 })
 
+// Load textures if URLs are provided
+const alphaMapTexture = shallowRef<Texture | null>(null)
+const mapTexture = shallowRef<Texture | null>(null)
+
+watchEffect(async () => {
+  if (alphaMapUrl.value) {
+    const textures = await useTexture({ alphaMap: alphaMapUrl.value })
+    alphaMapTexture.value = textures.alphaMap
+  }
+  if (mapUrl.value) {
+    const textures = await useTexture({ map: mapUrl.value })
+    mapTexture.value = textures.map
+  }
+})
+
 const { onBeforeRender } = useLoop()
 
 onBeforeRender(({ invalidate }) => {
@@ -201,8 +217,8 @@ defineExpose({ instance: pointsRef })
     <TresPointsMaterial
       :size="size"
       :color="color"
-      :alpha-map="alphaMap"
-      :map="map"
+      :alpha-map="alphaMapTexture"
+      :map="mapTexture"
       :opacity="opacity"
       :alpha-test="alphaTest"
       :depth-write="depthWrite"
