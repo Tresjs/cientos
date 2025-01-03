@@ -13,6 +13,7 @@ import Sky from './Sky.vue'
 import Smoke from './Smoke.vue'
 import SoftShadows from './SoftShadows.vue'
 import Sparkles from './Sparkles/component.vue'
+import Stage from './Stage.vue'
 import Stars from './Stars.vue'
 import Environment from './useEnvironment/component.vue'
 import Lightformer from './useEnvironment/lightformer/index.vue'
@@ -35,5 +36,6 @@ export {
   Smoke,
   SoftShadows,
   Sparkles,
+  Stage,
   Stars,
 }

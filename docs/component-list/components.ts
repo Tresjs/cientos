@@ -125,6 +125,8 @@ export default [
       { text: 'CircleShadow', link: '/guide/staging/circle-shadow' },
       { text: 'Bounds', link: '/guide/staging/bounds' },
       { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
+      { text: 'Bounds', link: '/guide/staging/bounds' },
+      { text: 'Stage', link: '/guide/staging/stage' },
     ],
   },
   {
