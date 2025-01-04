@@ -93,6 +93,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
     expose({ instance: statsGl })
 
     const node = document.body
+    // @ts-expect-error waiting for stats-gl update https://github.com/RenaudRohlinger/stats-gl/issues/16
     const statContainer = statsGl.dom || statsGl.container
 
     node?.appendChild(statContainer)
