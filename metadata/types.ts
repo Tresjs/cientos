@@ -2,11 +2,13 @@ export interface CientosComponent {
   name: string
   package: string
   category: string
-  component: string
+  component?: string
+  fn?: string
   path: string
   docs?: string
   demo?: string
-  playground?: string
+  playgrounds?: string[]
+  alias?: string[]
   related?: CientosComponent['name'][]
   deprecated?: boolean
   internal?: boolean

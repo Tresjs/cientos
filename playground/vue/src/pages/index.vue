@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { categories, components } from '../../../../metadata/index.json'
+import { categories } from '../../../../metadata/index.json'
+import { routes } from '../router'
 
 const icons = { abstractions: '📦', controls: '🕹️', staging: '🎭', loaders: '⏳', materials: '👔', shapes: '🔷', misc: '🛠️' } as const
 </script>
@@ -56,15 +57,15 @@ const icons = { abstractions: '📦', controls: '🕹️', staging: '🎭', load
             {{ category }}
           </h2>
           <div
-            v-for="component in components.filter(c => c.category === category && c.playground)"
-            :key="component.name"
+            v-for="route of routes.filter(r => r.category === category)"
+            :key="route.name"
             class="link-wrapper"
           >
             <router-link
               class="no-underline text-zinc-700 visited:text-zinc-400 hover:text-cientos-blue"
-              :to="`/${component.package}/${component.name}`"
+              :to="route.path"
             >
-              <span>{{ component.name }}</span>
+              <span>{{ route.name }}</span>
             </router-link>
           </div>
         </div>

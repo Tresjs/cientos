@@ -2,7 +2,7 @@ import type { Plugin } from 'vite'
 import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 // import { packages } from '../../../meta/packages'
-import { componentNames, components, getComponent } from '../../../metadata/metadata'
+import { components, getComponent } from '../../../metadata/metadata'
 
 export function MarkdownTransform(): Plugin {
   const DIR_TYPES = resolve(__dirname, '../../../dist')
@@ -26,7 +26,6 @@ export function MarkdownTransform(): Plugin {
         const firstHeader = code.search(/\n#{2,6}\s.+/)
         const sliceIndex = firstHeader < 0 ? frontmatterEnds < 0 ? 0 : frontmatterEnds + 4 : firstHeader
 
-        const typeDefinition = getTypeDefinition(pkg, _name)
         const { footer, header } = await getComponentMarkdown(pkg, name)
 
         if (hasTypes) {
@@ -62,7 +61,7 @@ export async function getComponentMarkdown(pkg: string, name: string) {
 
   let typingSection = ''
 
-  const positiveNOrInfinity = n => n < 0 ? Number.POSITIVE_INFINITY : n
+  const positiveNOrInfinity = (n: number) => n < 0 ? Number.POSITIVE_INFINITY : n
 
   if (types) {
     // NOTE: Types arrive with a lot of automatically generated cruft.
@@ -96,15 +95,6 @@ export async function getComponentMarkdown(pkg: string, name: string) {
   }
 }
 
-function replaceAsync(str: string, match: RegExp, replacer: (substring: string, ...args: any[]) => Promise<string>) {
-  const promises: Promise<string>[] = []
-  str.replace(match, (...args) => {
-    promises.push(replacer(...args))
-    return ''
-  })
-  return Promise.all(promises).then(replacements => str.replace(match, () => replacements.shift()!))
-}
-
 function replacer(code: string, value: string, key: string, insert: 'head' | 'tail' | 'none' = 'none') {
   const START = `<!--${key}_STARTS-->`
   const END = `<!--${key}_ENDS-->`
@@ -125,12 +115,12 @@ export async function getTypeDefinition(pkg: string, name: string): Promise<stri
   const component = getComponent(name)
   if (!component) { return }
 
-  const DIR_TYPES = resolve(__dirname, '../../../dist')
-  const typingFilepath = join(DIR_TYPES, `${component.path}/component.vue.d.ts`)
+  const DIR_DTS = resolve(__dirname, '../../../dist')
+  const FILE_DTS = join(DIR_DTS, `${component.path}/component.vue.d.ts`)
 
-  if (!existsSync(typingFilepath)) { return }
+  if (!existsSync(FILE_DTS)) { return }
 
-  let types = readFileSync(typingFilepath, 'utf-8')
+  let types = readFileSync(FILE_DTS, 'utf-8')
 
   // NOTE: clean up types
   types = types
