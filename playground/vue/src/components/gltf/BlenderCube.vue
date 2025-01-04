@@ -2,11 +2,11 @@
 import { useGLTF } from '@tresjs/cientos'
 
 const { nodes } = await useGLTF(
-  'https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/aku-aku/AkuAku.gltf',
+  'https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/blender-cube.glb',
   { draco: true },
 )
 
-const model = nodes.AkuAku
+const model = nodes.Cube
 </script>
 
 <template>

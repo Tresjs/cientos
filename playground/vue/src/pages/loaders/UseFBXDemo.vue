@@ -2,7 +2,7 @@
 import { OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
-import BlenderCube from '../../components/gltf/BlenderCube.vue'
+import Jeep from '../../components/fbx/Jeep.vue'
 
 const gl = {
   clearColor: '#82DBC5',
@@ -19,7 +19,7 @@ const gl = {
     <TresPerspectiveCamera :position="[5.3, 2.45, 9.3]" :look-at="[0, 0, 0]" />
     <OrbitControls />
     <Suspense>
-      <BlenderCube />
+      <Jeep />
     </Suspense>
     <TresMesh
       :rotate-x="Math.PI * -0.5"
