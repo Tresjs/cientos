@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowRef, toRefs, watch } from 'vue'
 import type { LineSegments } from 'three'
-import { EdgesGeometry, BufferGeometry } from 'three'
+import { BufferGeometry, EdgesGeometry } from 'three'
 import type { TresColor } from '@tresjs/core'
 
 export interface EdgesProps {
