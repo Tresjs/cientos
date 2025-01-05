@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
-import { PointerLockControls as ThreePointerLockControls } from 'three-stdlib'
+import { PointerLockControls } from 'three-stdlib'
 import { onUnmounted, shallowRef, watch } from 'vue'
 import type { Camera, EventDispatcher } from 'three'
 
@@ -12,7 +12,7 @@ interface PointerLockControlsEvents {
 }
 
 // Extend the PointerLockControls type to include enabled property
-type ExtendedPointerLockControls = ThreePointerLockControls & EventDispatcher<PointerLockControlsEvents> & { enabled: boolean }
+type ExtendedPointerLockControls = PointerLockControls & EventDispatcher<PointerLockControlsEvents> & { enabled: boolean }
 
 export interface PointerLockControlsProps {
   /**
@@ -66,7 +66,7 @@ watch(props, () => {
 const controlsRef = shallowRef<ExtendedPointerLockControls | null>(null)
 let triggerSelector: HTMLElement | undefined
 
-extend({ instance: ThreePointerLockControls })
+extend({ PointerLockControls })
 
 const isLockEmitter = (event: boolean) => {
   emit('isLock', event)
