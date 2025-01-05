@@ -46,7 +46,7 @@ class TresFBXLoaderClass extends Loader implements TresLoader<Group> {
   }
 }
 
-const TresFBXLoader = TresFBXLoaderClass as unknown as LoaderProto<Group>
+const TresFBXLoader = TresFBXLoaderClass as LoaderProto<Group>
 
 /**
  * Loads an FBX file and returns a THREE.Object3D.
@@ -55,7 +55,9 @@ const TresFBXLoader = TresFBXLoaderClass as unknown as LoaderProto<Group>
  * @param {(string | string[])} path
  * @return {*}  {Promise<Group>}
  */
-export async function useFBX(path: string | string[]): Promise<Group> {
+export async function useFBX<T extends string | string[]>(
+  path: T,
+): Promise<T extends string[] ? Group[] : Group> {
   const result = await useLoader(TresFBXLoader, path)
-  return Array.isArray(result) ? result[0] : result
+  return result as T extends string[] ? Group[] : Group
 }
