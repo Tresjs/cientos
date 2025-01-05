@@ -19,11 +19,12 @@ const gl = {
     <TresPerspectiveCamera :position="[5.3, 2.45, 9.3]" :look-at="[0, 0, 0]" />
     <OrbitControls />
     <Suspense>
-      <BlenderCube />
+      <TresGroup :position="[0, 1, 0]">
+        <BlenderCube />
+      </TresGroup>
     </Suspense>
     <TresMesh
       :rotate-x="Math.PI * -0.5"
-      :position-y="-2"
       receive-shadow
     >
       <TresPlaneGeometry :args="[40, 40]" />
@@ -33,7 +34,7 @@ const gl = {
     <TresDirectionalLight
       :intensity="1"
       cast-shadow
-      :position="[0, 10, 0]"
+      :position="[5, 10, 5]"
     />
   </TresCanvas>
 </template>

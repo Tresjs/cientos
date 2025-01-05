@@ -33,7 +33,7 @@ const gl = {
     <TresDirectionalLight
       :intensity="1"
       cast-shadow
-      :position="[0, 10, 0]"
+      :position="[5, 10, 5]"
     />
   </TresCanvas>
 </template>
