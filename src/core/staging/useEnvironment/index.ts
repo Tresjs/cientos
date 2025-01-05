@@ -114,7 +114,7 @@ export async function useEnvironment(
         const result = await useLoader(
           RGBELoader as unknown as LoaderProto<Texture>,
           _files,
-          (loader: any) => {
+          (loader) => {
             if (_path) { loader.setPath(_path) }
           },
         )
