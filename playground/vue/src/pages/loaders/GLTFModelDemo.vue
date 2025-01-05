@@ -18,7 +18,7 @@ const gl = {
     <TresPerspectiveCamera :position="[5.3, 2.45, 9.3]" :look-at="[0, 0, 0]" />
     <OrbitControls />
     <Suspense>
-      <GLTFModel 
+      <GLTFModel
         path="https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/blender-cube.glb"
         cast-shadow
         :position="[0, 1, 0]"

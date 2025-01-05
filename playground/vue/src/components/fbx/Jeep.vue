@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFBX } from '@tresjs/cientos'
-import { Mesh, type Group } from 'three'
+import { type Group, Mesh } from 'three'
 
 const model = await useFBX(
   'https://raw.githubusercontent.com/Tresjs/assets/main/models/fbx/low-poly-truck/Jeep_done.fbx',
@@ -21,6 +21,7 @@ watch(truckRef, (truck) => {
   }
 })
 </script>
+
 <template>
   <primitive ref="truckRef" :object="model" />
 </template>

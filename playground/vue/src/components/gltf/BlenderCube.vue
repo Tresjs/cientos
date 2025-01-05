@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGLTF } from '@tresjs/cientos'
-import { TresObject } from '@tresjs/core';
-import { Mesh } from 'three';
+import type { TresObject } from '@tresjs/core'
+import { Mesh } from 'three'
 
 const { nodes } = await useGLTF(
   'https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/blender-cube.glb',
