@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowRef, toRefs, watch } from 'vue'
-import type { BufferGeometry, LineSegments } from 'three'
-import { EdgesGeometry, Mesh } from 'three'
+import type { LineSegments } from 'three'
+import { EdgesGeometry, BufferGeometry } from 'three'
 import type { TresColor } from '@tresjs/core'
 
 export interface EdgesProps {
@@ -31,7 +31,7 @@ watch(
     if (lineSegmentsRef.value) {
       const parent = lineSegmentsRef.value.parent
 
-      if (parent && parent instanceof Mesh) {
+      if (parent && 'geometry' in parent && parent.geometry instanceof BufferGeometry) {
         const geometry = parent.geometry
 
         // Update geometry and threshold if necessary.
