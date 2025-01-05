@@ -1,8 +1,7 @@
 import type { VectorFlexibleParams } from '@tresjs/core'
 import { normalizeVectorFlexibleParam } from '@tresjs/core'
 import type { Camera, OrthographicCamera, PerspectiveCamera } from 'three'
-import { Box3, Matrix4, Object3D, Quaternion, Vector3 } from 'three'
-import { clamp } from 'three/src/math/MathUtils'
+import { Box3, MathUtils, Matrix4, Object3D, Quaternion, Vector3 } from 'three'
 
 interface SizeReturn {
   box: Box3
@@ -352,7 +351,7 @@ export class Bounds extends Object3D {
 
     if (this._animationState === AnimationState.ACTIVE) {
       this._t += delta / this.duration
-      this._t = clamp(this._t, 0, 1)
+      this._t = MathUtils.clamp(this._t, 0, 1)
 
       if (this._t >= 1) {
         this._goal.position && this.camera.position.copy(this._goal.position)
