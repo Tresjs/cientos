@@ -33,19 +33,19 @@ export interface PrecipitationProps {
   /**
    * Color texture of the drops.
    *
-   * @type {string}
+   * @type {Texture}
    * @memberof PrecipitationProps
    * @default null
    */
-  map?: string | null
+  map?: string | Texture | null
   /**
    * texture of the alphaMap Drops.
    *
-   * @type {string}
+   * @type {Texture}
    * @memberof PrecipitationProps
    * @default null
    */
-  alphaMap?: string
+  alphaMap?: string | Texture | null
   /**
    * enables the WebGL to know when not to render the pixel.
    *
@@ -177,14 +177,31 @@ const alphaMapTexture = shallowRef<Texture | null>(null)
 const mapTexture = shallowRef<Texture | null>(null)
 
 watchEffect(async () => {
-  if (alphaMapUrl.value) {
+  /* if (alphaMapUrl.value) {
     const textures = await useTexture({ alphaMap: alphaMapUrl.value })
     alphaMapTexture.value = textures.alphaMap
   }
   if (mapUrl.value) {
     const textures = await useTexture({ map: mapUrl.value })
     mapTexture.value = textures.map
-  }
+  } */
+  watchEffect(async () => {
+    if (typeof alphaMapUrl.value === 'string') {
+      const resolvedTexture = await useTexture({ alphaMap: alphaMapUrl.value })
+      alphaMapTexture.value = resolvedTexture.alphaMap
+    }
+    else {
+      alphaMapTexture.value = alphaMapUrl.value ?? null
+    }
+
+    if (typeof mapUrl.value === 'string') {
+      const resolvedTexture = await useTexture({ map: mapUrl.value })
+      mapTexture.value = resolvedTexture.map
+    }
+    else {
+      mapTexture.value = mapUrl.value ?? null
+    }
+  })
 })
 
 const { onBeforeRender } = useLoop()
