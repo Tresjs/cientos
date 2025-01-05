@@ -34,7 +34,7 @@ export interface PrecipitationProps {
    * Color texture of the drops.
    *
    * @type {string}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default null
    */
   map?: string | null
@@ -42,7 +42,7 @@ export interface PrecipitationProps {
    * texture of the alphaMap Drops.
    *
    * @type {string}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default null
    */
   alphaMap?: string
@@ -50,7 +50,7 @@ export interface PrecipitationProps {
    * enables the WebGL to know when not to render the pixel.
    *
    * @type {number}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default 0.01
    */
   alphaTest?: number
@@ -58,7 +58,7 @@ export interface PrecipitationProps {
    * Set the opacity of the drops.
    *
    * @type {number}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default 0.8
    */
   opacity?: number
@@ -66,7 +66,7 @@ export interface PrecipitationProps {
    * number of drops.
    *
    * @type {number}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default 5000
    */
   count?: number
@@ -74,7 +74,7 @@ export interface PrecipitationProps {
    * Speed of drops.
    *
    * @type {number}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default 5000
    */
   speed?: number
@@ -83,7 +83,7 @@ export interface PrecipitationProps {
    *
    * @default 0.5
    * @type {number}
-   * @memberof ContactShadowsProps
+   * @memberof PrecipitationProps
    *
    */
   randomness?: number
@@ -92,7 +92,7 @@ export interface PrecipitationProps {
    *
    * @default false
    * @type {boolean}
-   * @memberof ContactShadowsProps
+   * @memberof PrecipitationProps
    *
    */
   depthWrite?: boolean
@@ -100,7 +100,7 @@ export interface PrecipitationProps {
    * show transparency on the drops texture.
    *
    * @type {boolean}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default true
    */
   transparent?: boolean
@@ -108,7 +108,7 @@ export interface PrecipitationProps {
    * keep the same size regardless distance.
    *
    * @type {boolean}
-   * @memberof StarsProps
+   * @memberof PrecipitationProps
    * @default true
    */
   sizeAttenuation?: boolean
