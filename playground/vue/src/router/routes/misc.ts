@@ -34,4 +34,9 @@ export const miscRoutes = [
     name: 'GLTFExporter',
     component: () => import('../../pages/misc/GLTFExporterDemo.vue'),
   },
+  {
+    path: '/misc/useIntersect',
+    name: 'useIntersect',
+    component: () => import('../../pages/misc/useIntersect/index.vue'),
+  },
 ]
