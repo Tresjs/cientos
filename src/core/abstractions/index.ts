@@ -15,6 +15,7 @@ import Outline from './Outline/component.vue'
 import PositionalAudio from './PositionalAudio.vue'
 import Reflector from './Reflector.vue'
 import ScreenSpace from './ScreenSpace.vue'
+import TextTroika from './TextTroika.vue'
 import Text3D from './Text3D.vue'
 import { useAnimations } from './useAnimations'
 import { useMask } from './Mask/useMask'
@@ -49,6 +50,7 @@ export {
   ScreenSizer,
   ScreenSpace,
   Text3D,
+  TextTroika,
   useAnimations,
   useMask,
 }
