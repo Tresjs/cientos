@@ -137,6 +137,8 @@ export default [
       { text: 'StatsGl', link: '/guide/misc/stats-gl' },
       { text: 'useGLTFExporter', link: '/guide/misc/use-gltf-exporter' },
       { text: 'BakeShadows', link: '/guide/misc/bake-shadows' },
+      { text: 'useIntersect', link: '/guide/misc/use-intersect' },
+      { text: 'LOD', link: '/guide/misc/lod' },
     ],
   },
   {
