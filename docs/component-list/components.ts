@@ -57,6 +57,7 @@ export default [
   },
   {
     text: 'Materials',
+    collapsed: true,
     items: [
       { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
       { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
@@ -80,6 +81,7 @@ export default [
   },
   {
     text: 'Shapes',
+    collapsed: true,
     items: [
       { text: 'Box', link: '/guide/shapes/box' },
       { text: 'CatmullRomCurve3', link: '/guide/shapes/catmullromcurve3' },
@@ -131,6 +133,7 @@ export default [
   },
   {
     text: 'Misc',
+    collapsed: true,
     items: [
       { text: 'Stats', link: '/guide/misc/stats' },
       { text: 'Html', link: '/guide/misc/html-component' },
