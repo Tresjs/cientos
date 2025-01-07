@@ -2,6 +2,8 @@ export default [
   {
     text: 'Abstractions',
     items: [
+      { text: 'AnimatedSprite', link: '/guide/abstractions/animated-sprite' },
+      { text: 'Edges', link: '/guide/abstractions/edges' },
       { text: 'Text3D', link: '/guide/abstractions/text-3d' },
       { text: 'Levioso (Float)', link: '/guide/abstractions/levioso' },
       { text: 'useAnimations', link: '/guide/abstractions/use-animations' },
@@ -21,6 +23,7 @@ export default [
       { text: 'Mask', link: '/guide/abstractions/mask' },
       { text: 'CubeCamera', link: '/guide/abstractions/cube-camera' },
       { text: 'GradientTexture', link: '/guide/abstractions/gradient-texture' },
+      { text: 'ScreenSizer', link: '/guide/abstractions/screen-sizer' },
       { text: 'ScreenSpace', link: '/guide/abstractions/screen-space' },
       { text: 'Outline', link: '/guide/abstractions/outline' },
       { text: 'Image', link: '/guide/abstractions/image' },
@@ -59,6 +62,7 @@ export default [
     text: 'Materials',
     collapsed: true,
     items: [
+      { text: 'MeshReflectionMaterial', link: '/guide/materials/mesh-reflection-material' },
       { text: 'WobbleMaterial', link: '/guide/materials/wobble-material' },
       { text: 'MeshGlassMaterial', link: '/guide/materials/glass-material' },
       {
@@ -127,7 +131,6 @@ export default [
       { text: 'CircleShadow', link: '/guide/staging/circle-shadow' },
       { text: 'Bounds', link: '/guide/staging/bounds' },
       { text: 'RandomizedLights', link: '/guide/staging/randomized-lights' },
-      { text: 'Bounds', link: '/guide/staging/bounds' },
       { text: 'Stage', link: '/guide/staging/stage' },
     ],
   },
