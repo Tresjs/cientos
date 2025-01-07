@@ -147,15 +147,6 @@ export default [
       { text: 'LOD', link: '/guide/misc/lod' },
     ],
   },
-  {
-    text: 'Directives',
-    items: [
-      { text: 'v-log', link: '/guide/directives/v-log' },
-      { text: 'v-light-helper', link: '/guide/directives/v-light-helper' },
-      { text: 'v-always-look-at', link: '/guide/directives/v-always-look-at' },
-      { text: 'v-distance-to', link: '/guide/directives/v-distance-to' },
-    ],
-  },
 ] as { text: string, items: { text: string, link: string }[] }[]
 
 export const icons = {
