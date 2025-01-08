@@ -1,6 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
-import { Environment, Lightformer, OrbitControls, Sphere, TorusKnot, useProgress } from '@tresjs/cientos'
+import { Environment, Lightformer, OrbitControls, Sphere, useProgress } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import Lightformers from './Lightformers.vue'
 import { TresLeches, useControls } from '@tresjs/leches'

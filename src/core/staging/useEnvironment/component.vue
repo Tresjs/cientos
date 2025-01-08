@@ -2,7 +2,7 @@
 import { useLoop, useTresContext } from '@tresjs/core'
 import { BackSide, CubeCamera, HalfFloatType, Mesh, MeshBasicMaterial, SphereGeometry, WebGLCubeRenderTarget } from 'three'
 import { onUnmounted, ref, toRaw, useSlots, watch } from 'vue'
-import type { CubeTexture, Object3D, Texture } from 'three'
+import type { CubeTexture, Texture } from 'three'
 import type { Ref } from 'vue'
 import { useEnvironment } from '.'
 import EnvSence from './envSence'
