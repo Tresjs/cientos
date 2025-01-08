@@ -61,7 +61,8 @@ watch(useEnvironmentTexture, () => {
   }
 }, { immediate: true, deep: true })
 
-watch(() => useSlots().default, (value) => {
+const slotContent = useSlots().default;
+watch(() => slotContent && slotContent(), (value) => {
   if (value) {
     slots = value
     if (Array.isArray(slots) && slots.length > 0) {
