@@ -12,7 +12,7 @@ class EnvSence extends Object3D {
     return this
   }
 
-  destructor() {
+  dispose() {
     this.virtualScene.traverse((object) => {
       if (object instanceof Mesh) {
         object.geometry.dispose()
