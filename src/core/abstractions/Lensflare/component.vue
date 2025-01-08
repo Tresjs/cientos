@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { normalizeColor } from '@tresjs/core'
 import { TextureLoader } from 'three'
-import { Lensflare } from 'three-stdlib'
+// TODO: maybe we should open an issue on the three-stdlib repo to fix this to the library https://github.com/pmndrs/three-stdlib/issues/new?assignees=&labels=bug&projects=&template=---bug-report.md&title=
+import { Lensflare, type LensflareElement } from 'three/examples/jsm/objects/Lensflare.js'
 import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import type { Texture } from 'three'
-import type { LensflareElement } from 'three-stdlib'
 import { partialLensflarePropsArrayToLensflarePropsArray as fillInProps, filterLensflareElementProps } from '.'
 import type { LensflareElementProps, SeedProps } from '.'
 
