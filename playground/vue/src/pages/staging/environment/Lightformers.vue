@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import { Lightformer } from '@tresjs/cientos'
 
 const { lightformers } = useControls({
-  lightformers: true,
+  lightformers: false,
 })
 
 const lightformerRef = ref(null)
