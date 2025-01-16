@@ -3,7 +3,9 @@ import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import url from 'node:url'
 import MarkdownIt from 'markdown-it'
+import matter from 'gray-matter'
 import type { Plugin } from 'vite'
+import { parse } from 'vue/compiler-sfc'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
@@ -35,7 +37,14 @@ export function CodeSnippetDemosBuildTransform(): Plugin {
         return Promise.all(tokens.map((t) => {
           const demoName = `${COMPONENTS_PREFIX}${componentName}Snippet${i++}`
           const warning = '// NOTE: Automatically generated. Edits will be discarded.\n'
-          return fsPromises.writeFile(path.join(COMPONENTS_DIRECTORY, `${demoName}.vue`), warning + t.content)
+
+          if (t.content.includes('<!-- demo-control')) {
+            const content = getDemoWithController(t.content)
+            return fsPromises.writeFile(path.join(COMPONENTS_DIRECTORY, `${demoName}.vue`), warning + content)
+          }
+          else {
+            return fsPromises.writeFile(path.join(COMPONENTS_DIRECTORY, `${demoName}.vue`), warning + t.content)
+          }
         }))
       }))
     },
@@ -48,9 +57,119 @@ export function CodeSnippetDemosBuildTransform(): Plugin {
       const componentName = pieces[pieces.length - 2]
       for (let i = 0; i < codeSnippetDemos.length; i++) {
         const demoName = `${COMPONENTS_PREFIX}${componentName}Snippet${i}`
-        code = code.replace('```vue demo', `<DocsDemo><${demoName} /></DocsDemo>\n\`\`\`vue`)
+        code = code.replace('```vue demo', `<${demoName} />\n\`\`\`vue`)
       }
       return code
     },
   }
+}
+
+function getDemoWithController(srcText: string): string {
+  const { script, scriptSetup, template } = parse(srcText).descriptor
+  if (!template || !scriptSetup) { return srcText }
+
+  const CONTROLS_RE = /<!-- demo-control(.*?)-->/gs
+  let controlInfos = Array.from(srcText.matchAll(CONTROLS_RE)).map(match => matter(`---\n${match[1]}\n---`).data)
+
+  // NOTE: match the `selector`
+  for (const controlInfo of controlInfos) {
+    const path = controlInfo.selector.split(' ')
+    let currNode = template?.ast
+    while (path.length) {
+      const nextSelector = path.shift()
+      let nextNode = null as typeof currNode | null
+      for (const child of currNode?.children ?? []) {
+        if (child.tag === nextSelector) {
+          nextNode = child
+          continue
+        }
+      }
+      for (const prop of currNode?.props ?? []) {
+        if (prop.rawName === nextSelector || prop.name === nextSelector) {
+          nextNode = prop
+          continue
+        }
+      }
+
+      if (currNode === null) { controlInfo.node = null }
+      currNode = nextNode
+    }
+    controlInfo.node = controlInfo.node === null ? null : currNode
+  }
+
+  // NOTE: Remove any controlInfos we didn't find
+  controlInfos = controlInfos.filter(c => c.node !== null)
+
+  // NOTE: Sort the rest in descending order of char offset. Descending
+  // order allows us to replace 'abc' with 'abcde' or 'ab' without needing
+  // to recalculate the remaining offsets.
+  controlInfos.sort((a, b) => b.node.loc.start.offset - a.node.loc.start.offset)
+
+  controlInfos.forEach((c, i) => {
+    c.refName = `demoControlRef${i}`
+    // NOTE: Replace value in `template` with refName
+    const nodeValue = 'exp' in c.node ? c.node.exp : c.node.value
+    const isString = nodeValue.loc.source.startsWith('"')
+    const quote = isString ? '"' : ''
+    const start = nodeValue.loc.start.offset - template.loc.start.offset
+    const end = nodeValue.loc.end.offset - template.loc.start.offset
+    template.content = template.content.substring(0, start) + quote + c.refName + quote + template.content.substring(end)
+
+    if (isString) {
+      // NOTE: The prop was originally a string, but now we want
+      // to use a `ref` instead. So we need to prefix the prop
+      // name with a `:`.
+      const start = c.node.loc.start.offset - template.loc.start.offset
+      template.content = `${template.content.substring(0, start)}:${template.content.substring(start)}`
+    }
+  })
+
+  controlInfos.forEach((c) => {
+    // NOTE: Add ref to `script setup`
+    const val = typeof c.value === 'string' ? `'${c.value}'` : c.value
+    scriptSetup.content += `\nconst ${c.refName} = demoRef(${val})`
+  })
+
+  let controlsContent = ''
+  const controlTypes = {
+    boolean: 'checkbox',
+    number: 'range',
+  }
+  const CONTROL_START = '<div>'
+  const CONTROL_END = '</div>'
+  const LABEL_START = '<span>'
+  const LABEL_END = '</span>'
+  controlInfos.forEach((c) => {
+    const controlType = 'type' in c ? c.type : (controlTypes[typeof c.value as keyof typeof controlTypes] ?? 'undefined')
+    const label = c.label ?? c.selector.split(' ').pop()
+    let control = 'error'
+    console.log(controlType)
+    if (controlType === 'checkbox') {
+      control = `<input type="checkbox" onchange="(e) => { ${c.refName} = e.target.checked; console.log(e.target.checked); }" />`
+    }
+    controlsContent += `${CONTROL_START}${LABEL_START}${label}${LABEL_END}${control}${CONTROL_END}\n`
+  })
+
+  const scriptSetupOut = scriptSetup
+    ? `<script setup lang="${scriptSetup.lang}">
+import DocsDemo from './DocsDemo.vue'
+import { ref as demoRef } from 'vue'${scriptSetup.content}
+</script>\n\n`
+    : ''
+
+  const scriptOut = script
+    ? `<script setup lang="${script.lang}">
+${script.content}
+</script>\n\n`
+    : ''
+
+  const templateOut = template
+    ? `<template>
+<DocsDemo>${template.content}</DocsDemo>
+${controlsContent}
+</template>
+`
+    : ''
+
+  return `${scriptSetupOut}${scriptOut}${templateOut}`
 }

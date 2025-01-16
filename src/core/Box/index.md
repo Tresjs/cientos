@@ -9,6 +9,22 @@ category: shapes
 ## Usage
 
 ```vue demo
+<!-- demo-control
+value: true
+selector: TresCanvas Box v-if
+-->
+
+<!-- demo-control
+value: false
+selector: TresCanvas Box color
+-->
+
+<!-- demo-control
+label: 'Canvas clear-color'
+value: '#FFF'
+selector: TresCanvas clear-color
+-->
+
 <script setup lang="ts">
 import { Box, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
@@ -16,8 +32,8 @@ import { TresCanvas } from '@tresjs/core'
 
 <template>
   <TresCanvas clear-color="#fbb03b">
-    <OrbitControls />
-    <Box>
+    <OrbitControls v-if="false" />
+    <Box v-if="true" color="#F00">
       <TresMeshNormalMaterial />
     </Box>
   </TresCanvas>
