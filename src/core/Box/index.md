@@ -9,33 +9,23 @@ category: shapes
 ## Usage
 
 ```vue demo
-<!-- demo-control
-value: true
-selector: TresCanvas Box v-if
--->
-
-<!-- demo-control
-value: false
-selector: TresCanvas Box color
--->
-
-<!-- demo-control
-label: 'Canvas clear-color'
-value: '#FFF'
-selector: TresCanvas clear-color
--->
-
 <script setup lang="ts">
 import { Box, OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 </script>
 
 <template>
+  <!-- demo-control clear-color
+  value: blue
+  options: red blue green
+  -->
   <TresCanvas clear-color="#fbb03b">
-    <OrbitControls v-if="false" />
-    <Box v-if="true" color="#F00">
-      <TresMeshNormalMaterial />
-    </Box>
+    <OrbitControls />
+    <!-- demo-control color
+    value: blue
+    options: red blue green
+    -->
+    <Box v-if="true" color="#F00" />
   </TresCanvas>
 </template>
 ```

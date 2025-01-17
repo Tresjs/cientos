@@ -71,9 +71,16 @@ function getDemoWithController(srcText: string): string {
   const CONTROLS_RE = /<!-- demo-control(.*?)-->/gs
   let controlInfos = Array.from(srcText.matchAll(CONTROLS_RE)).map(match => matter(`---\n${match[1]}\n---`).data)
 
+  for (const controlInfo of controlInfos) {
+    controlInfo.selector = controlInfo.selector.split(' ')
+    if ('options' in controlInfo) {
+      controlInfo.options = controlInfo.options.split(' ')
+    }
+  }
+
   // NOTE: match the `selector`
   for (const controlInfo of controlInfos) {
-    const path = controlInfo.selector.split(' ')
+    const path = [...controlInfo.selector]
     let currNode = template?.ast
     while (path.length) {
       const nextSelector = path.shift()
@@ -131,28 +138,42 @@ function getDemoWithController(srcText: string): string {
   })
 
   let controlsContent = ''
-  const controlTypes = {
-    boolean: 'checkbox',
-    number: 'range',
-  }
-  const CONTROL_START = '<div>'
-  const CONTROL_END = '</div>'
-  const LABEL_START = '<span>'
-  const LABEL_END = '</span>'
   controlInfos.forEach((c) => {
-    const controlType = 'type' in c ? c.type : (controlTypes[typeof c.value as keyof typeof controlTypes] ?? 'undefined')
-    const label = c.label ?? c.selector.split(' ').pop()
+    const controlType = (() => {
+      if ('type' in c) { return c.type }
+      if (typeof c.value === 'string') { return 'select' }
+      if (typeof c.value === 'number') { return 'range' }
+      if (typeof c.value === 'boolean') { return 'checkbox' }
+      return null
+    })()
+
+    if (controlType === null) { return }
+
+    const label = c.label ?? c.selector[c.selector.length - 1]
     let control = 'error'
-    console.log(controlType)
     if (controlType === 'checkbox') {
       control = `<input type="checkbox" onchange="(e) => { ${c.refName} = e.target.checked; console.log(e.target.checked); }" />`
     }
-    controlsContent += `${CONTROL_START}${LABEL_START}${label}${LABEL_END}${control}${CONTROL_END}\n`
+    else if (controlType === 'select') {
+      control = `<DocsDemoControl label="${label}">
+      <DocsDemoSelect
+    :options="[${c.options?.map?.(s => `'${s}'`) ?? `'${c.value}'`}]"
+    :value="${c.refName}"
+    @change="(v)=>{ ${c.refName} = v }"
+  />
+  </DocsDemoControl>
+     `
+    }
+    controlsContent += `${control}\n\n`
   })
 
   const scriptSetupOut = scriptSetup
     ? `<script setup lang="${scriptSetup.lang}">
-import DocsDemo from './DocsDemo.vue'
+import DocsDemoWithControls from './DocsDemoWithControls.vue'
+import DocsDemoCheckbox from './DocsDemoCheckbox.vue'
+import DocsDemoColor from './DocsDemoColor.vue'
+import DocsDemoRange from './DocsDemoRange.vue'
+import DocsDemoSelect from './DocsDemoSelect.vue'
 import { ref as demoRef } from 'vue'${scriptSetup.content}
 </script>\n\n`
     : ''
@@ -165,8 +186,10 @@ ${script.content}
 
   const templateOut = template
     ? `<template>
-<DocsDemo>${template.content}</DocsDemo>
+<DocsDemoWithControls>${template.content}</DocsDemoWithControls>
+<div>
 ${controlsContent}
+</div>
 </template>
 `
     : ''
