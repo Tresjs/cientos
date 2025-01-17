@@ -53,22 +53,26 @@ onBeforeRender(() => {
 // Add environment map to virtual scene when available
 watch([useEnvironmentTexture, environmentScene], ([texture, scene]) => {
   if (texture && scene?.virtualScene) {
-    // Clear previous environment
     const rawScene = toRaw(scene).virtualScene
-    rawScene.children = rawScene.children.filter(
-      child => !(child instanceof Mesh && child.userData.isEnvironment),
-    )
 
-    // Add environment map as a large sphere
-    const envMesh = new Mesh(
-      new BoxGeometry(100, 100, 100),
-      new MeshBasicMaterial({
-        map: texture,
-        side: BackSide,
-      }),
-    )
-    envMesh.userData.isEnvironment = true
-    rawScene.add(envMesh)
+    // Find existing environment mesh or create a new one
+    let envMesh = rawScene.children.find(
+      child => child instanceof Mesh && child.userData.isEnvironment,
+    ) as Mesh | undefined
+
+    if (!envMesh) {
+      // Create new environment mesh if none exists
+      envMesh = new Mesh(
+        new BoxGeometry(1, 1, 1),
+        new MeshBasicMaterial({ side: BackSide }),
+      )
+      envMesh.userData.isEnvironment = true
+      rawScene.add(envMesh)
+    }
+
+    // Update the environment map
+    rawScene.background = texture
+    rawScene.backgroundBlurriness = props.blur
   }
 }, { immediate: true })
 
