@@ -1,6 +1,6 @@
 import { Mesh, Object3D, Scene } from 'three'
 
-class EnvSence extends Object3D {
+class EnvironmentScene extends Object3D {
   virtualScene = null as unknown as Scene
   constructor() {
     super()
@@ -25,4 +25,4 @@ class EnvSence extends Object3D {
   }
 }
 
-export default EnvSence
+export default EnvironmentScene

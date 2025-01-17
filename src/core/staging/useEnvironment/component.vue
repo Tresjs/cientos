@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useLoop, useTresContext } from '@tresjs/core'
-import { BackSide, CubeCamera, HalfFloatType, Mesh, MeshBasicMaterial, SphereGeometry, WebGLCubeRenderTarget } from 'three'
+import { BackSide, BoxGeometry, CubeCamera, HalfFloatType, Mesh, MeshBasicMaterial, WebGLCubeRenderTarget } from 'three'
 import { onUnmounted, ref, toRaw, useSlots, watch } from 'vue'
 import type { CubeTexture, Texture } from 'three'
 import type { Ref } from 'vue'
 import { useEnvironment } from '.'
-import EnvSence from './envSence'
+import EnvironmentScene from './EnvironmentScene'
 import type { EnvironmentOptions } from './const'
 
 const props = withDefaults(defineProps<EnvironmentOptions>(), {
@@ -24,25 +24,25 @@ const texture: Ref<Texture | CubeTexture | null> = ref(null)
 defineExpose({ texture })
 
 const { extend, renderer, scene } = useTresContext()
-extend({ EnvSence })
+extend({ EnvironmentScene })
 
 let slots = null as any
 const fbo = ref<WebGLCubeRenderTarget | null>(null)
 let cubeCamera: CubeCamera | null = null
-const envSence = ref<EnvSence | null>(null)
+const environmentScene = ref<EnvironmentScene | null>(null)
 
 const useEnvironmentTexture = await useEnvironment(props, fbo)
 
 const { onBeforeRender } = useLoop()
 let count = 1
 onBeforeRender(() => {
-  if (cubeCamera && envSence.value && fbo.value) {
+  if (cubeCamera && environmentScene.value && fbo.value) {
     if (props.frames === Number.POSITIVE_INFINITY || count < props.frames) {
       // Update cube camera
       const autoClear = renderer.value.autoClear
       renderer.value.autoClear = true
       // Use raw scene to avoid proxy issues
-      const rawScene = toRaw(envSence.value).virtualScene
+      const rawScene = toRaw(environmentScene.value).virtualScene
       cubeCamera.update(renderer.value, rawScene)
       renderer.value.autoClear = autoClear
       count++
@@ -51,7 +51,7 @@ onBeforeRender(() => {
 }, -1)
 
 // Add environment map to virtual scene when available
-watch([useEnvironmentTexture, envSence], ([texture, scene]) => {
+watch([useEnvironmentTexture, environmentScene], ([texture, scene]) => {
   if (texture && scene?.virtualScene) {
     // Clear previous environment
     const rawScene = toRaw(scene).virtualScene
@@ -61,7 +61,7 @@ watch([useEnvironmentTexture, envSence], ([texture, scene]) => {
 
     // Add environment map as a large sphere
     const envMesh = new Mesh(
-      new SphereGeometry(100, 32, 32),
+      new BoxGeometry(100, 100, 100),
       new MeshBasicMaterial({
         map: texture,
         side: BackSide,
@@ -99,7 +99,7 @@ watch(() => useSlots().default, (value) => {
   if (value) {
     slots = value()
     if (Array.isArray(slots) && slots.length > 0) {
-      extend({ EnvSence })
+      extend({ EnvironmentScene })
       fbo.value = new WebGLCubeRenderTarget(props.resolution)
       fbo.value.texture.type = HalfFloatType
       cubeCamera = new CubeCamera(props.near, props.far, fbo.value)
@@ -115,16 +115,16 @@ watch(() => useSlots().default, (value) => {
 texture.value = useEnvironmentTexture.value
 
 onUnmounted(() => {
-  envSence.value?.dispose()
+  environmentScene.value?.dispose()
   fbo.value?.dispose()
 })
 </script>
 
 <template>
-  <TresEnvSence
+  <TresEnvironmentScene
     v-if="fbo"
-    ref="envSence"
+    ref="environmentScene"
   >
     <slot></slot>
-  </TresEnvSence>
+  </TresEnvironmentScene>
 </template>
