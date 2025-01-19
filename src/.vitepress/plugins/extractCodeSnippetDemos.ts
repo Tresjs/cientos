@@ -39,7 +39,7 @@ export function CodeSnippetDemosBuildTransform(): Plugin {
           const warning = '// NOTE: Automatically generated. Edits will be discarded.\n'
 
           if (t.content.includes('<!-- demo-control')) {
-            const content = getDemoWithController(t.content)
+            const content = getDemoWithControls(t.content)
             return fsPromises.writeFile(path.join(COMPONENTS_DIRECTORY, `${demoName}.vue`), warning + content)
           }
           else {
@@ -64,71 +64,66 @@ export function CodeSnippetDemosBuildTransform(): Plugin {
   }
 }
 
-function getDemoWithController(srcText: string): string {
+function getDemoWithControls(srcText: string): string {
   const { script, scriptSetup, template } = parse(srcText).descriptor
   if (!template || !scriptSetup) { return srcText }
 
-  const CONTROLS_RE = /<!-- demo-control(.*?)-->/gs
-  let controlInfos = Array.from(srcText.matchAll(CONTROLS_RE)).map(match => matter(`---\n${match[1]}\n---`).data)
+  // NOTE: Descend through template AST to find control
+  // nodes and the nodes they should control
+  const openAstNodes = [template.ast] as { source: string, type: number, children: any[] }[]
+  let controlInfos = []
+  while (openAstNodes.length) {
+    const node = openAstNodes.pop()
+    if (!node?.children) { continue }
+    const children = node.children
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i]
+      if ('children' in child && child.children) {
+        openAstNodes.push(child)
+      }
+      if (child.loc?.source?.startsWith('<!-- demo-control')) {
+        for (let ii = i + 1; ii < children.length; ii++) {
+          // NOTE: Find the next sibling that isn't a comment (type 3)
+          if (children[ii].type !== 3) {
+            // NOTE: We have a control definition and a sibling to
+            // apply the control to.
+            const controlInfo = parseControlDefinition(child.loc.source)
+            const nextNonCommentSibling = children[ii]
 
-  for (const controlInfo of controlInfos) {
-    controlInfo.selector = controlInfo.selector.split(' ')
-    if ('options' in controlInfo) {
-      controlInfo.options = controlInfo.options.split(' ')
-    }
-  }
+            const propName = controlInfo.prop
+            const prop = (propName && nextNonCommentSibling.props) ? nextNonCommentSibling.props.filter(p => [p.rawName, p.name].includes(propName) || [p.rawName, p.name].includes(`:${propName}`))[0] : null
+            if (prop) {
+              controlInfo.node = nextNonCommentSibling
+              controlInfo.prop = prop
+              controlInfos.push(controlInfo)
+            }
 
-  // NOTE: match the `selector`
-  for (const controlInfo of controlInfos) {
-    const path = [...controlInfo.selector]
-    let currNode = template?.ast
-    while (path.length) {
-      const nextSelector = path.shift()
-      let nextNode = null as typeof currNode | null
-      for (const child of currNode?.children ?? []) {
-        if (child.tag === nextSelector) {
-          nextNode = child
-          continue
+            break
+          }
         }
       }
-      for (const prop of currNode?.props ?? []) {
-        if (prop.rawName === nextSelector || prop.name === nextSelector) {
-          nextNode = prop
-          continue
-        }
-      }
-
-      if (currNode === null) { controlInfo.node = null }
-      currNode = nextNode
     }
-    controlInfo.node = controlInfo.node === null ? null : currNode
   }
 
   // NOTE: Remove any controlInfos we didn't find
   controlInfos = controlInfos.filter(c => c.node !== null)
 
-  // NOTE: Sort the rest in descending order of char offset. Descending
+  // NOTE: Sort controlsInfos in descending order of char offset. Descending
   // order allows us to replace 'abc' with 'abcde' or 'ab' without needing
   // to recalculate the remaining offsets.
-  controlInfos.sort((a, b) => b.node.loc.start.offset - a.node.loc.start.offset)
+  controlInfos.sort((a, b) => b.prop.loc.start.offset - a.prop.loc.start.offset)
 
   controlInfos.forEach((c, i) => {
     c.refName = `demoControlRef${i}`
     // NOTE: Replace value in `template` with refName
-    const nodeValue = 'exp' in c.node ? c.node.exp : c.node.value
-    const isString = nodeValue.loc.source.startsWith('"')
-    const quote = isString ? '"' : ''
-    const start = nodeValue.loc.start.offset - template.loc.start.offset
-    const end = nodeValue.loc.end.offset - template.loc.start.offset
-    template.content = template.content.substring(0, start) + quote + c.refName + quote + template.content.substring(end)
-
-    if (isString) {
-      // NOTE: The prop was originally a string, but now we want
-      // to use a `ref` instead. So we need to prefix the prop
-      // name with a `:`.
-      const start = c.node.loc.start.offset - template.loc.start.offset
-      template.content = `${template.content.substring(0, start)}:${template.content.substring(start)}`
-    }
+    const startI = c.prop.loc.start.offset - template.loc.start.offset
+    const start = template.content.substring(0, startI)
+    const endI = c.prop.loc.end.offset - template.loc.start.offset
+    const end = template.content.substring(endI)
+    const propName = c.prop.rawName ?? c.prop.name
+    const colon = (propName.startsWith('v-') || propName.startsWith(':')) ? '' : ':'
+    const propString = `${colon}${propName}="${c.refName}"`
+    template.content = `${start}${propString}${end}`
   })
 
   controlInfos.forEach((c) => {
@@ -141,6 +136,7 @@ function getDemoWithController(srcText: string): string {
   controlInfos.forEach((c) => {
     const controlType = (() => {
       if ('type' in c) { return c.type }
+      if (typeof c.value === 'string' && c.value.startsWith('#') && !('options' in c)) { return 'color' }
       if (typeof c.value === 'string') { return 'select' }
       if (typeof c.value === 'number') { return 'range' }
       if (typeof c.value === 'boolean') { return 'checkbox' }
@@ -149,10 +145,20 @@ function getDemoWithController(srcText: string): string {
 
     if (controlType === null) { return }
 
-    const label = c.label ?? c.selector[c.selector.length - 1]
+    const label = c.label ?? c.prop.rawName ?? c.prop.name
     let control = 'error'
     if (controlType === 'checkbox') {
-      control = `<input type="checkbox" onchange="(e) => { ${c.refName} = e.target.checked; console.log(e.target.checked); }" />`
+      control = `<DocsDemoControl label="${label}">
+<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />
+</DocsDemoControl>
+      `
+    }
+    else if (controlType === 'color') {
+      control = `
+      <DocsDemoControl label="${label}">
+<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />
+</DocsDemoControl>
+      `
     }
     else if (controlType === 'select') {
       control = `<DocsDemoControl label="${label}">
@@ -163,6 +169,18 @@ function getDemoWithController(srcText: string): string {
   />
   </DocsDemoControl>
      `
+    }
+    else if (controlType === 'range') {
+      control = `<DocsDemoControl label="${label}">
+  <DocsDemoRange
+    :min="${c.min ?? Math.min(c.value, 0)}"
+    :max="${c.max ?? Math.max(c.value, 1)}"
+    :step="${c.step ?? 0.01}"
+    :value="${c.refName}"
+    @change="(v)=>{ ${c.refName} = v }"
+  />
+</DocsDemoControl>
+`
     }
     controlsContent += `${control}\n\n`
   })
@@ -195,4 +213,15 @@ ${controlsContent}
     : ''
 
   return `${scriptSetupOut}${scriptOut}${templateOut}`
+}
+
+function parseControlDefinition(definitionString: string) {
+  const childSourceAsFrontmatter = definitionString.split('\n').map((s: string) => s.trim()).join('\n').replace('<!-- demo-control', '---\nprop: ').replace('-->', '---')
+  const controlInfo = matter(childSourceAsFrontmatter).data
+  if ('options' in controlInfo) {
+    // NOTE: Split options by ',' if there's a comma, otherwise by ' '
+    const splitChar = controlInfo.options.includes(',') ? ',' : ' '
+    controlInfo.options = (controlInfo.options as string).split(splitChar).map(s => s.trim()).filter(s => !!s)
+  }
+  return controlInfo
 }

@@ -19,13 +19,21 @@ import { TresCanvas } from '@tresjs/core'
   value: blue
   options: red blue green
   -->
-  <TresCanvas clear-color="#fbb03b">
+  <TresCanvas :clear-color="0xFBB03B">
     <OrbitControls />
     <!-- demo-control color
-    value: blue
-    options: red blue green
+    value: '#F00'
     -->
-    <Box v-if="true" color="#F00" />
+    <!-- demo-control v-if
+    value: true
+    -->
+    <!-- demo-control rotation-x
+    value: 0
+    min: -Math.PI
+    max: Math.PI
+    step: 0.1
+    -->
+    <Box v-if="true" :rotation-x="0" color="#F00" />
   </TresCanvas>
 </template>
 ```

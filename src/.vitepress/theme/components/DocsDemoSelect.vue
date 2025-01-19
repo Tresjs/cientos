@@ -29,7 +29,7 @@ onClickOutside(target, close)
       <button
         id="menu-button"
         type="button"
-        class="flex place-content-end w-full gap-x-1.5 rounded-md px-3 py-2 bg-inherit shadow-sm"
+        class="flex place-content-end w-full text-base gap-x-1.5 rounded-md px-3 py-2 bg-inherit shadow-sm"
         aria-expanded="true"
         aria-haspopup="true"
         @click="active = !active"
@@ -43,7 +43,7 @@ onClickOutside(target, close)
     <div
       v-if="active"
       ref="target"
-      class="absolute right-4 z-10 mt-2 w-56 text-left origin-top-left rounded-md shadow-lg bg-inherit"
+      class="absolute right-0 z-10 mt-2 w-56 text-left origin-top-left rounded-md shadow-lg bg-inherit"
       style="background-color: var(--vp-c-bg); border: 1px solid var(--vp-c-divider)"
       role="menu"
       aria-orientation="vertical"
@@ -55,7 +55,7 @@ onClickOutside(target, close)
           v-for="option, i of options"
           :id="`menu-item-${i}`"
           :key="i"
-          class="block px-4 py-2 bg-inherit"
+          class="block px-4 py-2 bg-inherit !font-normal"
           role="menuitem"
           tabindex="-1"
           @click="() => { emit('change', option); close() }"

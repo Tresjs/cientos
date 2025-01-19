@@ -5,7 +5,7 @@ const props = defineProps<{ label: string }>()
 <template>
   <div class="control grid grid-cols-2 gap-4 p-y-1 p-x-4">
     <div class="p-t-2">{{ props.label }}</div>
-    <div><slot></slot></div>
+    <div class="relative block text-right w-full bg-inherit"><slot></slot></div>
   </div>
 </template>
 
