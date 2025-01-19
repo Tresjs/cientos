@@ -33,7 +33,10 @@ import { TresCanvas } from '@tresjs/core'
     max: Math.PI
     step: 0.1
     -->
-    <Box v-if="true" :rotation-x="0" color="#F00" />
+    <!-- demo-control name
+    value: hello, world
+    -->
+    <Box v-if="true" name="hi" :rotation-x="0" color="#F00" />
   </TresCanvas>
 </template>
 ```

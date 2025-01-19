@@ -137,7 +137,8 @@ function getDemoWithControls(srcText: string): string {
     const controlType = (() => {
       if ('type' in c) { return c.type }
       if (typeof c.value === 'string' && c.value.startsWith('#') && !('options' in c)) { return 'color' }
-      if (typeof c.value === 'string') { return 'select' }
+      if (typeof c.value === 'string' && 'options' in c) { return 'select' }
+      if (typeof c.value === 'string') { return 'text' }
       if (typeof c.value === 'number') { return 'range' }
       if (typeof c.value === 'boolean') { return 'checkbox' }
       return null
@@ -145,33 +146,26 @@ function getDemoWithControls(srcText: string): string {
 
     if (controlType === null) { return }
 
-    const label = c.label ?? c.prop.rawName ?? c.prop.name
     let control = 'error'
+
     if (controlType === 'checkbox') {
-      control = `<DocsDemoControl label="${label}">
-<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />
-</DocsDemoControl>
-      `
+      control = `<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+    }
+    else if (controlType === 'text') {
+      control = `<DocsDemoText :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
     }
     else if (controlType === 'color') {
-      control = `
-      <DocsDemoControl label="${label}">
-<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />
-</DocsDemoControl>
-      `
+      control = `<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
     }
     else if (controlType === 'select') {
-      control = `<DocsDemoControl label="${label}">
-      <DocsDemoSelect
+      control = `<DocsDemoSelect
     :options="[${c.options?.map?.(s => `'${s}'`) ?? `'${c.value}'`}]"
     :value="${c.refName}"
     @change="(v)=>{ ${c.refName} = v }"
-  />
-  </DocsDemoControl>
-     `
+  />`
     }
     else if (controlType === 'range') {
-      control = `<DocsDemoControl label="${label}">
+      control = `
   <DocsDemoRange
     :min="${c.min ?? Math.min(c.value, 0)}"
     :max="${c.max ?? Math.max(c.value, 1)}"
@@ -179,10 +173,15 @@ function getDemoWithControls(srcText: string): string {
     :value="${c.refName}"
     @change="(v)=>{ ${c.refName} = v }"
   />
-</DocsDemoControl>
 `
     }
-    controlsContent += `${control}\n\n`
+
+    let label = c.label ?? c.prop.rawName ?? c.prop.name
+    // NOTE: Normalize labels by removing initial ':'.
+    // Some labels start with ':', others don't.
+    if (label.startsWith(':')) { label = label.substring(1) }
+
+    controlsContent += `<DocsDemoControl label="${label}">${control}</DocsDemoControl>\n\n`
   })
 
   const scriptSetupOut = scriptSetup
@@ -192,6 +191,7 @@ import DocsDemoCheckbox from './DocsDemoCheckbox.vue'
 import DocsDemoColor from './DocsDemoColor.vue'
 import DocsDemoRange from './DocsDemoRange.vue'
 import DocsDemoSelect from './DocsDemoSelect.vue'
+import DocsDemoText from './DocsDemoText.vue'
 import { ref as demoRef } from 'vue'${scriptSetup.content}
 </script>\n\n`
     : ''

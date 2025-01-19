@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { clamp, useElementSize, useMouseInElement } from '@vueuse/core'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 
 interface Props {
   value: number
@@ -23,34 +23,34 @@ const emit = defineEmits<{
 const el = ref(null)
 const { elementX, elementWidth } = useMouseInElement(el)
 
-const v = ref(props.value)
-const displayV = computed(() => (props.step % 1) ? Math.trunc(v.value * 100) / 100 : Math.floor(v.value))
-const sliderV = computed(() => clamp((v.value - props.min) / (props.max - props.min) * elementWidth.value, 0, elementWidth.value))
+const displayV = computed(() => (props.step % 1) ? Math.trunc(props.value * 100) / 100 : Math.floor(props.value))
+const sliderV = computed(() => clamp((props.value - props.min) / (props.max - props.min) * elementWidth.value, 0, elementWidth.value))
 const active = ref(false)
 const hovered = ref(false)
 const visible = computed(() => active.value || hovered.value)
 
-watch(() => props.value, (value) => { v.value = value })
-
-function pointermove(e) {
+function pointermove() {
+  let nextValue = props.value
   if (elementX.value <= 0) {
-    v.value = props.min
+    nextValue = props.min
   }
   else if (elementX.value >= elementWidth.value) {
-    v.value = props.max
+    nextValue = props.max
   }
   else {
     const n = elementX.value / elementWidth.value
     const unstepped = (n * (props.max - props.min) + props.min)
     const unclamped = Math.floor(unstepped / props.step) * props.step
-    v.value = clamp(unclamped, props.min, props.max)
-    emit('change', v.value)
+    nextValue = clamp(unclamped, props.min, props.max)
+  }
+  if (nextValue !== props.value) {
+    emit('change', nextValue)
   }
 }
 
 const keyCallbacks = {
   ArrowUp: inc,
-  ArrowDown: inc,
+  ArrowDown: dec,
   ArrowLeft: dec,
   ArrowRight: inc,
   KeyW: inc,
@@ -58,11 +58,11 @@ const keyCallbacks = {
   KeyS: dec,
   KeyD: inc,
 }
-function inc() { v.value = clamp(v.value + props.step, props.min, props.max) }
-function dec() { v.value = clamp(v.value - props.step, props.min, props.max) }
+function inc() { const nextValue = clamp(props.value + props.step, props.min, props.max); if (nextValue !== props.value) { emit('change', nextValue) } }
+function dec() { const nextValue = clamp(props.value - props.step, props.min, props.max); if (nextValue !== props.value) { emit('change', nextValue) } }
 function keydown(e: KeyboardEvent) {
-  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation() }
-  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation() }
+  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
+  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
 }
 </script>
 
@@ -70,7 +70,7 @@ function keydown(e: KeyboardEvent) {
   <div>
     <button
       type="button"
-      class="flex place-content-end w-full text-base gap-x-1.5 rounded-md px-3 py-2 bg-inherit shadow-sm"
+      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit shadow-sm"
       @pointerenter="() => { hovered = true }"
       @pointerdown="() => { hovered = true }"
       @pointerleave="() => { hovered = false }"
@@ -78,28 +78,28 @@ function keydown(e: KeyboardEvent) {
     >
       <div
         ref="el"
-        class="slider-bar absolute overflow-hidden top-0 h-full w-full rounded-full "
-        style="border: 1px solid var(--vp-input-border-color); background-color: var(--vp-c-brand-1);"
-        @pointerdown="e => { e.target.setPointerCapture(e.pointerId); active = true }"
-        @pointerup="e => { e.target.releasePointerCapture(e.pointerId); active = false }"
-        @pointermove="e => { if (active) { pointermove(e) } }"
+        class="slider-bar absolute overflow-hidden top-0 m-r-4 h-full w-95% rounded-full"
+        style="border: 1px solid var(--vp-input-border-color); background-color: var(--vp-c-gray-soft);"
+        @pointerdown="e => { (e.target as HTMLDivElement)!.setPointerCapture(e.pointerId); active = true }"
+        @pointerup="e => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false }"
+        @pointermove="e => { if (active) { pointermove() } }"
       >
         <div
-          class="absolute top-0 h-full w-full"
-          :style="{ left: `${Math.max(sliderV, 0)}px` }"
-          style="background-color: var(--vp-input-bg-color);"
+          class="relative top-0 h-full w-full"
+          :style="{ right: `${Math.max(elementWidth - sliderV, 0)}px` }"
+          style="background-color: var(--vp-c-gray-1)"
         >
         </div>
       </div>
+      <svg :style="{ visibility: visible ? 'hidden' : 'visible' }" class="z-10 -mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+      </svg>
       <div
-        class="relative pointer-events-none px-2 left-2 rounded-full"
-        style="background-color: var(--vp-c-bg);"
+        class="relative pointer-events-none px-4 right-4 rounded-full"
+        style="background-color: var(--vp-c-bg)"
       >
         {{ displayV }}
       </div>
-      <svg :style="{ visibility: visible ? 'hidden' : 'visible' }" class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-      </svg>
     </button>
   </div>
 </template>

@@ -3,9 +3,9 @@ const props = defineProps<{ label: string }>()
 </script>
 
 <template>
-  <div class="control grid grid-cols-2 gap-4 p-y-1 p-x-4">
-    <div class="p-t-2">{{ props.label }}</div>
-    <div class="relative block text-right w-full bg-inherit"><slot></slot></div>
+  <div class="control grid grid-cols-5 gap-4 p-y-1 p-x-4 text-sm">
+    <div class="py-1 whitespace-nowrap">{{ props.label }}</div>
+    <div class="py-1 relative col-span-4 block text-left w-full bg-inherit"><slot></slot></div>
   </div>
 </template>
 
