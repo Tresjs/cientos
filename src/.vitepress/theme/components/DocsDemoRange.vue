@@ -91,15 +91,43 @@ function keydown(e: KeyboardEvent) {
         >
         </div>
       </div>
-      <svg :style="{ visibility: visible ? 'hidden' : 'visible' }" class="z-10 -mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+      <svg
+        class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
+        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          v-if="!active"
+          fill="none"
+          stroke-width="2"
+          d="M 14,5
+       L 14,5 8,12
+       L 8,12 14,19
+    "
+        />
       </svg>
       <div
-        class="relative pointer-events-none px-4 right-4 rounded-full"
+        class="relative pointer-events-none px-1 rounded-full"
         style="background-color: var(--vp-c-bg)"
       >
         {{ displayV }}
       </div>
+      <svg
+        class="size-4 text-gray-400 mt-0.5"
+        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          v-if="!active"
+          fill="none"
+          stroke-width="2"
+          d="M 9,5
+       L 9,5 15,12
+       L 15,12 9,19"
+        />
+      </svg>
     </button>
   </div>
 </template>

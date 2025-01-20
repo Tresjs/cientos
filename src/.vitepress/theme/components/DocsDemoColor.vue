@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useMouseInElement } from '@vueuse/core'
 
 interface Props {
   value: string
@@ -60,6 +61,52 @@ function keydown(e: KeyboardEvent) {
   if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
   if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
 }
+
+const canvas = ref()
+const { elementX: canvasX, elementY: canvasY, elementWidth: canvasW } = useMouseInElement(canvas)
+
+function pointermove(e: PointerEvent) {
+  const r = canvasW.value * 0.5
+  const x = (canvasX.value - r) / r
+  const y = (canvasY.value - r) / r
+  let rads = Math.atan2(y, x)
+  while (rads < 0) { rads += Math.PI * 2 }
+  const dist = Math.min(1, Math.sqrt(x * x + y * y))
+  const hex = hslToHex(rads / (2 * Math.PI), dist, 0.5)
+  emit('change', hex)
+}
+
+watch(canvas, (canvas) => {
+  if (canvas) {
+    const context = canvas.getContext('2d')
+    const x = canvas.width / 2
+    const y = canvas.height / 2
+    const radius = canvas.width * 0.5
+    const counterClockwise = false
+
+    context.beginPath()
+    context.arc(x, y, radius, 0, 2 * Math.PI, false)
+    context.fillStyle = 'white'
+    context.fill()
+
+    for (let angle = 0; angle <= 360; angle += 1) {
+      const startAngle = (angle - 2) * Math.PI / 180
+      const endAngle = angle * Math.PI / 180
+      context.beginPath()
+      context.moveTo(x, y)
+      context.arc(x, y, radius - 2, startAngle, endAngle, counterClockwise)
+      context.closePath()
+      const gradient = context.createRadialGradient(x, y, 0, x, y, radius)
+      gradient.addColorStop(0, hslToHex(angle / 360, 0, 0.5))
+      gradient.addColorStop(1, hslToHex(angle / 360, 1, 0.5))
+      context.fillStyle = gradient
+      context.fill()
+    }
+  }
+})
+
+function pointerdown(e: PointerEvent) { (e.target as HTMLElement).setPointerCapture(e.pointerId); active.value = true }
+function pointerup(e: PointerEvent) { active.value = false }
 </script>
 
 <script lang="ts">
@@ -94,15 +141,21 @@ function hslToHex(h: number, s: number, l: number): string {
 <template>
   <button
     type="button"
-    class="flex place-content-start w-full gap-x-1 rounded-md bg-inherit"
-    @pointerenter="active = true"
-    @pointerleave="active = false"
+    class="flex place-content-start w-full gap-x-1 rounded-md bg-inherit relative"
+    @pointerdown="pointerdown"
+    @pointerup="pointerup"
+    @pointermove="(e) => { if (active) { pointermove(e) } }"
     @keydown="keydown"
   >
     <div class="pl-1 block swatch" :style="{ color: hex }">&#9632;</div>
     <div v-if="!active">{{ hex }}</div>
-    <div v-if="active">
-      <div v-for="h, i of options" :key="i" class="swatch" :style="{ display: 'inline-block', color: h }" @pointerup="() => emit('change', h)">&#9632;</div>
+    <div v-if="active" class="absolute">
+      <canvas
+        ref="canvas"
+        class="relative -mt-100px -ml-100px z-100"
+        height="200"
+        width="200"
+      ></canvas>
     </div>
   </button>
 </template>

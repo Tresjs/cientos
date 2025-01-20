@@ -37,7 +37,7 @@ function keydown(e: KeyboardEvent) {
   >
     <svg
       class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
-      style="stroke: var(--vp-c-text-3)"
+      style="stroke: var(--vp-c-text-3); stroke-linecap: round"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
