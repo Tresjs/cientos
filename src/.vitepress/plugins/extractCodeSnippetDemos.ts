@@ -136,7 +136,7 @@ function getDemoWithControls(srcText: string): string {
   controlInfos.forEach((c) => {
     const controlType = (() => {
       if ('type' in c) { return c.type }
-      if (typeof c.value === 'string' && c.value.startsWith('#') && !('options' in c)) { return 'color' }
+      if (typeof c.value === 'string' && c.value.startsWith('#')) { return 'color' }
       if (typeof c.value === 'string' && 'options' in c) { return 'select' }
       if (typeof c.value === 'string') { return 'text' }
       if (typeof c.value === 'number') { return 'range' }
@@ -158,22 +158,13 @@ function getDemoWithControls(srcText: string): string {
       control = `<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
     }
     else if (controlType === 'select') {
-      control = `<DocsDemoSelect
-    :options="[${c.options?.map?.(s => `'${s}'`) ?? `'${c.value}'`}]"
-    :value="${c.refName}"
-    @change="(v)=>{ ${c.refName} = v }"
-  />`
+      const options = c.options?.map?.((s: string) => `'${s}'`) ?? `'${c.value}'`
+      control = `<DocsDemoSelect :options="[${options}]" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
     }
     else if (controlType === 'range') {
-      control = `
-  <DocsDemoRange
-    :min="${c.min ?? Math.min(c.value, 0)}"
-    :max="${c.max ?? Math.max(c.value, 1)}"
-    :step="${c.step ?? 0.01}"
-    :value="${c.refName}"
-    @change="(v)=>{ ${c.refName} = v }"
-  />
-`
+      const min = c.min ?? Math.min(c.value, 0)
+      const max = c.max ?? Math.max(c.value, 1)
+      control = `<DocsDemoRange :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
     }
 
     let label = c.label ?? c.prop.rawName ?? c.prop.name

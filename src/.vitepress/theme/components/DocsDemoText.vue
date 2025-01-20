@@ -43,7 +43,7 @@ function keyup(e: KeyboardEvent) {
     <button
       ref="button"
       type="button"
-      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit shadow-sm"
+      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
       tabindex="-1"
     >
       <svg v-if="!active" class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">

@@ -70,7 +70,7 @@ function keydown(e: KeyboardEvent) {
   <div>
     <button
       type="button"
-      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit shadow-sm"
+      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
       @pointerenter="() => { hovered = true }"
       @pointerdown="() => { hovered = true }"
       @pointerleave="() => { hovered = false }"
