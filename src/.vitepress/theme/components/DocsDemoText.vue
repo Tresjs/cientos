@@ -43,24 +43,17 @@ function keyup(e: KeyboardEvent) {
     <button
       ref="button"
       type="button"
-      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
+      class="relative flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
       tabindex="-1"
     >
-      <svg v-if="!active" class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-      </svg>
       <input
         ref="target"
         type="text"
         :value="value"
-        class="border rounded-full px-5.5 w-full"
-        style="background-color: var(--vp-c-gray-soft)"
-        :style="{ opacity: active ? 1 : 0, position: active ? 'relative' : 'absolute' }"
+        class="absolute -top-1 h-7 px-4.5 ml-1 w-full rounded-1"
+        style="border: 1px solid var(--vp-c-gray-1)"
         @keyup="keyup"
       />
-      <template v-if="!active">
-        {{ value }}
-      </template>
     </button>
   </div>
 </template>
