@@ -62,8 +62,20 @@ function keydown(e: KeyboardEvent) {
       @click="active = !active"
       @keydown="keydown"
     >
-      <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+      <svg
+        class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
+        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="none"
+          stroke-width="2"
+          d="M 6,9
+       L 6,9 12,16
+       L 12,16 18,9
+    "
+        />
       </svg>
       {{ value }}
     </button>
@@ -83,7 +95,7 @@ function keydown(e: KeyboardEvent) {
         v-for="option, i of options"
         :id="`menu-item-${i}`"
         :key="i"
-        class="block px-4 py-2 bg-inherit !font-normal"
+        class="menu-item block px-4 py-1 bg-inherit"
         role="menuitem"
         tabindex="-1"
         @click="() => { emit('change', option); close() }"
@@ -91,3 +103,9 @@ function keydown(e: KeyboardEvent) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.menu-item:hover {
+  background-color: var(--vp-c-gray-3);
+}
+</style>

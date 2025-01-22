@@ -148,7 +148,7 @@ function hslToHex(h: number, s: number, l: number): string {
     @keydown="keydown"
   >
     <div class="pl-1 block swatch" :style="{ color: hex }">&#9632;</div>
-    <div v-if="!active" class="px-1.25">{{ hex }}</div>
+    <div v-if="!active">{{ hex }}</div>
     <div v-if="active" class="absolute">
       <canvas
         ref="canvas"

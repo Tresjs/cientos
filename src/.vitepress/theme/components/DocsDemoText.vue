@@ -50,8 +50,8 @@ function keyup(e: KeyboardEvent) {
         ref="target"
         type="text"
         :value="value"
-        class="absolute -top-1 h-7 px-4.5 ml-1 w-full rounded-1"
-        style="border: 1px solid var(--vp-c-gray-1)"
+        class="absolute -top-1 h-7 px-4 ml-1 w-full rounded-1"
+        style="background: var(--vp-c-bg-alt)"
         @keyup="keyup"
       />
     </button>

@@ -41,6 +41,17 @@ function keydown(e: KeyboardEvent) {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <!-- Tick mark -->
+      <path
+        v-if="value"
+        fill="none"
+        stroke-width="2"
+        d="M 20,4
+       L 20,4 13,15
+       L 13,15 9,10
+    "
+      />
+      <!-- Ticked box -->
       <path
         v-if="value"
         fill="none"
@@ -52,15 +63,7 @@ function keydown(e: KeyboardEvent) {
        L 4,4 15,4
     "
       />
-      <path
-        v-if="value"
-        fill="none"
-        stroke-width="2"
-        d="M 20,4
-       L 20,4 13,15
-       L 13,15 8,9
-    "
-      />
+      <!-- Empty box -->
       <path
         v-if="!value"
         fill="none"
@@ -73,56 +76,6 @@ function keydown(e: KeyboardEvent) {
     "
       />
     </svg>
-
-    <span class="ml-1">{{ value }}</span>
-    <!--
-    <svg width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-  <path
-    fill="none"
-    stroke="red"
-    stroke-width="2"
-    d="M 1,1
-       L 1,1 23,1
-       L 23,23 1,23
-       L 1,23 1,1
-    " />
-  <path
-    fill="none"
-    stroke="blue"
-    stroke-width="2"
-    d="M 6,9
-       L 6,9 12,15
-       L 12,15 18,9
-    " />
-  <path
-    fill="none"
-    stroke="black"
-    stroke-width="2"
-    d="M 21,3
-       L 21,3 21,21
-       L 21,21 3,21
-       L 3,21 3,3
-       L 3,3 21,3
-    " />
-  <path
-    fill="none"
-    stroke="black"
-    stroke-width="2"
-    d="M 21,9
-       L 21,9 21,21
-       L 21,21 3,21
-       L 3,21 3,3
-       L 3,3 15,3
-    " />
-  <path
-    fill="none"
-    stroke="black"
-    stroke-width="2"
-    d="M 21,3
-       L 21,3 12,15
-       L 12,15 9,9
-    " />
-</svg>
--->
+    <span>{{ value }}</span>
   </button>
 </template>

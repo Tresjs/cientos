@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { clamp, useElementSize, useMouseInElement } from '@vueuse/core'
+import { clamp, useMouseInElement } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 interface Props {
   value: number
   min: number
   max: number
-  step: number
+  step?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,11 +23,13 @@ const emit = defineEmits<{
 const el = ref(null)
 const { elementX, elementWidth } = useMouseInElement(el)
 
-const displayV = computed(() => (props.step % 1) ? Math.trunc(props.value * 100) / 100 : Math.floor(props.value))
+const displayV = computed(() => {
+  const vPrec = props.value.toPrecision(5)
+  const vStr = `${Math.trunc(props.value * 100) / 100}`
+  return vPrec.length < vStr.length ? vPrec : vStr
+})
 const sliderV = computed(() => clamp((props.value - props.min) / (props.max - props.min) * elementWidth.value, 0, elementWidth.value))
 const active = ref(false)
-const hovered = ref(false)
-const visible = computed(() => active.value || hovered.value)
 
 function pointermove() {
   let nextValue = props.value
@@ -39,9 +41,9 @@ function pointermove() {
   }
   else {
     const n = elementX.value / elementWidth.value
-    const unstepped = (n * (props.max - props.min) + props.min)
-    const unclamped = Math.floor(unstepped / props.step) * props.step
-    nextValue = clamp(unclamped, props.min, props.max)
+    const lerped = (n * (props.max - props.min) + props.min)
+    const stepped = Math.round(lerped / props.step) * props.step
+    nextValue = clamp(stepped, props.min, props.max)
   }
   if (nextValue !== props.value) {
     emit('change', nextValue)
@@ -49,20 +51,25 @@ function pointermove() {
 }
 
 const keyCallbacks = {
-  ArrowUp: inc,
-  ArrowDown: dec,
-  ArrowLeft: dec,
-  ArrowRight: inc,
-  KeyW: inc,
-  KeyA: dec,
-  KeyS: dec,
-  KeyD: inc,
+  ArrowUp: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  ArrowDown: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  ArrowLeft: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  ArrowRight: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  KeyW: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  KeyA: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  KeyS: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  KeyD: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
 }
-function inc() { const nextValue = clamp(props.value + props.step, props.min, props.max); if (nextValue !== props.value) { emit('change', nextValue) } }
-function dec() { const nextValue = clamp(props.value - props.step, props.min, props.max); if (nextValue !== props.value) { emit('change', nextValue) } }
+
+function doStep(i: number) {
+  const currI = Math.round(props.value / props.step)
+  const nextValue = clamp(props.step * (currI + i), props.min, props.max)
+  if (nextValue !== props.value) { emit('change', nextValue) }
+}
+
 function keydown(e: KeyboardEvent) {
-  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
-  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
+  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](e); e.stopPropagation(); e.preventDefault() }
+  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](e); e.stopPropagation(); e.preventDefault() }
 }
 </script>
 
@@ -71,77 +78,45 @@ function keydown(e: KeyboardEvent) {
     <button
       type="button"
       class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
-      @pointerenter="() => { hovered = true }"
-      @pointerdown="() => { hovered = true }"
-      @pointerleave="() => { hovered = false }"
       @keydown="keydown"
     >
       <div
-        ref="el"
-        class="slider-bar absolute overflow-hidden top-0 m-r-4 h-full w-95% rounded-full"
-        style="border: 1px solid var(--vp-input-border-color); background-color: var(--vp-c-gray-soft);"
-        @pointerdown="e => { (e.target as HTMLDivElement)!.setPointerCapture(e.pointerId); active = true }"
-        @pointerup="e => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false }"
-        @pointermove="e => { if (active) { pointermove() } }"
-      >
-        <div
-          class="relative top-0 h-full w-full"
-          :style="{ right: `${Math.max(elementWidth - sliderV, 0)}px` }"
-          style="background-color: var(--vp-c-gray-1)"
-        >
-        </div>
-      </div>
-      <svg
-        class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
-        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          v-if="!active"
-          fill="none"
-          stroke-width="2"
-          d="M 14,5
-       L 14,5 8,12
-       L 8,12 14,19
-    "
-        />
-      </svg>
-      <div
-        class="relative pointer-events-none px-1 rounded-full"
+        class="relative pointer-events-none rounded-full w-36 text-left pl-5"
         style="background-color: var(--vp-c-bg)"
       >
         {{ displayV }}
       </div>
-      <svg
-        class="size-4 text-gray-400 mt-0.5"
-        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+
+      <div
+        class="relative w-full h-7 -my-1"
+        @pointerdown="e => { (e.target as HTMLDivElement)!.setPointerCapture(e.pointerId); active = true; pointermove() }"
+        @pointerup="e => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false }"
+        @pointermove="e => { if (active) { pointermove() } }"
       >
-        <path
-          v-if="!active"
-          fill="none"
-          stroke-width="2"
-          d="M 9,5
-       L 9,5 15,12
-       L 15,12 9,19"
-        />
-      </svg>
+        <div
+          ref="el"
+          class="slider-bar overflow-hidden top-0 mt-3 h-1 w-full rounded-full"
+          style="border: 1px solid var(--vp-input-border-color);"
+        >
+          <!-- Filled Bar -->
+          <div
+            class="relative top-0 h-full w-full"
+            :style="{ right: `${Math.max(elementWidth - sliderV, 0)}px` }"
+            style="background-color: var(--vp-c-gray-1)"
+          >
+          </div>
+        </div>
+        <!-- Knob -->
+        <div
+          class="relative w-4"
+          :style="{ left: `${Math.max(sliderV, 0)}px` }"
+        >
+          <div
+            class="relative rounded-full h-3 w-3 -ml-2 -mt-2"
+            style="background-color: var(--vp-c-gray-1); border: 1px solid var(--vp-input-border-color)"
+          ></div>
+        </div>
+      </div>
     </button>
   </div>
 </template>
-
-<style scoped>
-.slider-bar {
-  opacity: 0;
-  transition: opacity 400ms;
-}
-.slider-bar:hover {
-  opacity: 1;
-}
-
-button:hover {
-  cursor: ew-resize;
-}
-</style>
