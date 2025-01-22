@@ -83,23 +83,26 @@ function keydown(e: KeyboardEvent) {
   <div
     v-if="active"
     ref="target"
-    class="absolute left-0 z-10 mt-2 w-56 text-left origin-top-left rounded-md shadow-lg bg-inherit"
+    class="absolute left-0 z-10 mt-2 min-w-66 text-left origin-top-left rounded-md shadow-lg bg-inherit"
     style="background-color: var(--vp-c-bg); border: 1px solid var(--vp-c-divider)"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="menu-button"
     tabindex="-1"
   >
-    <div class="py-1" role="none">
-      <a
-        v-for="option, i of options"
-        :id="`menu-item-${i}`"
-        :key="i"
-        class="menu-item block px-4 py-1 bg-inherit"
-        role="menuitem"
-        tabindex="-1"
-        @click="() => { emit('change', option); close() }"
-      >{{ option }}</a>
+    <div class="-m-10 p-10" role="none" @pointerleave="active = false" @pointerup="active = false">
+      <div class="py-1" role="none">
+        <a
+          v-for="option, i of options"
+          :id="`menu-item-${i}`"
+          :key="i"
+          class="menu-item block px-4 py-1 bg-inherit"
+          style="font-weight: normal; color: var(--vp-gray-1)"
+          role="menuitem"
+          tabindex="-1"
+          @pointerup="() => { emit('change', option); close() }"
+        >{{ option }}</a>
+      </div>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useMouseInElement } from '@vueuse/core'
+import { onClickOutside, useMouseInElement } from '@vueuse/core'
 
 interface Props {
   value: string
@@ -15,9 +15,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'change', value: string): void
 }>()
-
-const hex = computed(() => normalizeHexString(props.value))
-const active = ref(false)
 
 function normalizeHexString(s: string) {
   if (!s.startsWith('#')) { s = `#${s}` }
@@ -34,6 +31,13 @@ function normalizeHexString(s: string) {
 
   return '#FF0000'
 }
+
+const hex = computed(() => normalizeHexString(props.value))
+const active = ref(false)
+const canvas = ref()
+const { elementX: canvasX, elementY: canvasY, elementWidth: canvasW } = useMouseInElement(canvas)
+
+onClickOutside(canvas, () => active.value = false)
 
 const keyCallbacks = {
   ArrowUp: prev,
@@ -61,9 +65,6 @@ function keydown(e: KeyboardEvent) {
   if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
   if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
 }
-
-const canvas = ref()
-const { elementX: canvasX, elementY: canvasY, elementWidth: canvasW } = useMouseInElement(canvas)
 
 function pointermove(e: PointerEvent) {
   const r = canvasW.value * 0.5
@@ -104,9 +105,6 @@ watch(canvas, (canvas) => {
     }
   }
 })
-
-function pointerdown(e: PointerEvent) { (e.target as HTMLElement).setPointerCapture(e.pointerId); active.value = true }
-function pointerup(e: PointerEvent) { active.value = false }
 </script>
 
 <script lang="ts">
@@ -142,17 +140,19 @@ function hslToHex(h: number, s: number, l: number): string {
   <button
     type="button"
     class="flex place-content-start w-full gap-x-1 rounded-md bg-inherit relative"
-    @pointerdown="pointerdown"
-    @pointerup="pointerup"
+
+    @pointerdown="(e: PointerEvent) => { (e.target as HTMLElement).setPointerCapture(e.pointerId); active = true }"
+    @pointerup="(e: PointerEvent) => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false }"
     @pointermove="(e) => { if (active) { pointermove(e) } }"
     @keydown="keydown"
   >
     <div class="pl-1 block swatch" :style="{ color: hex }">&#9632;</div>
-    <div v-if="!active">{{ hex }}</div>
-    <div v-if="active" class="absolute">
+    <div>{{ hex }}</div>
+    <div class="absolute">
       <canvas
         ref="canvas"
-        class="relative -mt-100px -ml-100px z-100"
+        class="relative -mt-100px -ml-100px z-100 transition-opacity"
+        :style="{ display: active ? 'block' : 'none' }"
         height="200"
         width="200"
       ></canvas>
