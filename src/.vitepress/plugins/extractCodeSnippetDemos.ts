@@ -68,7 +68,7 @@ function getDemoWithControls(srcText: string): string {
   const { script, scriptSetup, template } = parse(srcText).descriptor
   if (!template || !scriptSetup) { return srcText }
 
-  // NOTE: Descend through template AST to find control
+  // NOTE: Descend through template AST to find control definition
   // nodes and the nodes they should control
   const openAstNodes = [template.ast] as { source: string, type: number, children: any[] }[]
   let controlInfos = []
@@ -86,7 +86,8 @@ function getDemoWithControls(srcText: string): string {
           // NOTE: Find the next sibling that isn't a comment (type 3)
           if (children[ii].type !== 3) {
             // NOTE: We have a control definition and a sibling to
-            // apply the control to.
+            // apply the control to. So, we'll add a `controlInfo` to
+            // create a controlled prop.
             const controlInfo = parseControlDefinition(child.loc.source)
             const nextNonCommentSibling = children[ii]
 
@@ -114,6 +115,7 @@ function getDemoWithControls(srcText: string): string {
   controlInfos.sort((a, b) => b.prop.loc.start.offset - a.prop.loc.start.offset)
 
   controlInfos.forEach((c, i) => {
+    // NOTE: Replace controlled prop's value with a ref
     c.refName = `demoControlRef${i}`
     // NOTE: Replace value in `template` with refName
     const startI = c.prop.loc.start.offset - template.loc.start.offset
@@ -121,8 +123,8 @@ function getDemoWithControls(srcText: string): string {
     const endI = c.prop.loc.end.offset - template.loc.start.offset
     const end = template.content.substring(endI)
     const propName = c.prop.rawName ?? c.prop.name
-    const colon = (propName.startsWith('v-') || propName.startsWith(':')) ? '' : ':'
-    const propString = `${colon}${propName}="${c.refName}"`
+    const prefix = (propName.startsWith('v-') || propName.startsWith(':')) ? '' : ':'
+    const propString = `${prefix}${propName}="${c.refName}"`
     template.content = `${start}${propString}${end}`
   })
 
@@ -132,7 +134,8 @@ function getDemoWithControls(srcText: string): string {
     scriptSetup.content += `\nconst ${c.refName} = demoRef(${val})`
   })
 
-  let controlsContent = ''
+  const controlsComponents: string[] = []
+  const controlsImportsSet = new Set<string>()
   controlInfos.forEach((c) => {
     const controlType = (() => {
       if ('type' in c) { return c.type }
@@ -146,44 +149,42 @@ function getDemoWithControls(srcText: string): string {
 
     if (controlType === null) { return }
 
-    let control = 'error'
+    const rawLabel = c.label ?? c.prop.rawName ?? c.prop.name
+    // NOTE: Normalize labels for UI by removing initial ':', if one exists.
+    const label = rawLabel.startsWith(':') ? rawLabel.substring(1) : rawLabel
+    const start = `<DocsDemoControl label="${label}">\n`
+    const end = `\n</DocsDemoControl>`
 
     if (controlType === 'checkbox') {
-      control = `<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+      controlsImportsSet.add('import DocsDemoCheckbox from \'./DocsDemoCheckbox.vue\'')
+      controlsComponents.push(`${start}<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
     else if (controlType === 'text') {
-      control = `<DocsDemoText :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+      controlsImportsSet.add('import DocsDemoText from \'./DocsDemoText.vue\'')
+      controlsComponents.push(`${start}<DocsDemoText :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
     else if (controlType === 'color') {
-      control = `<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+      controlsImportsSet.add('import DocsDemoColor from \'./DocsDemoColor.vue\'')
+      controlsComponents.push(`${start}<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
     else if (controlType === 'select') {
+      controlsImportsSet.add('import DocsDemoSelect from \'./DocsDemoSelect.vue\'')
       const options = c.options?.map?.((s: string) => `'${s}'`) ?? `'${c.value}'`
-      control = `<DocsDemoSelect :options="[${options}]" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+      controlsComponents.push(`${start}<DocsDemoSelect :options="[${options}]" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
     else if (controlType === 'range') {
+      controlsImportsSet.add('import DocsDemoRange from \'./DocsDemoRange.vue\'')
       const min = c.min ?? Math.min(c.value, 0)
       const max = c.max ?? Math.max(c.value, 1)
-      control = `<DocsDemoRange :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />`
+      controlsComponents.push(`${start}<DocsDemoRange :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
-
-    let label = c.label ?? c.prop.rawName ?? c.prop.name
-    // NOTE: Normalize labels by removing initial ':'.
-    // Some labels start with ':', others don't.
-    if (label.startsWith(':')) { label = label.substring(1) }
-
-    controlsContent += `<DocsDemoControl label="${label}">${control}</DocsDemoControl>\n\n`
   })
 
   const scriptSetupOut = scriptSetup
     ? `<script setup lang="${scriptSetup.lang}">
-import DocsDemoWithControls from './DocsDemoWithControls.vue'
-import DocsDemoCheckbox from './DocsDemoCheckbox.vue'
-import DocsDemoColor from './DocsDemoColor.vue'
-import DocsDemoRange from './DocsDemoRange.vue'
-import DocsDemoSelect from './DocsDemoSelect.vue'
-import DocsDemoText from './DocsDemoText.vue'
 import { ref as demoRef } from 'vue'${scriptSetup.content}
+import DocsDemoWithControls from './DocsDemoWithControls.vue'
+${Array.from(controlsImportsSet).join('\n')}
 </script>\n\n`
     : ''
 
@@ -197,7 +198,7 @@ ${script.content}
     ? `<template>
 <DocsDemoWithControls>${template.content}</DocsDemoWithControls>
 <div>
-${controlsContent}
+${controlsComponents.join('\n')}
 </div>
 </template>
 `

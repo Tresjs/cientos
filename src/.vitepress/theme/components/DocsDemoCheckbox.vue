@@ -28,6 +28,18 @@ function keydown(e: KeyboardEvent) {
 }
 </script>
 
+<script lang="ts">
+export function getWeight() { return 10 }
+
+export function isComponentFor(data: Record<string, any> & { refName: string }) {
+  return 'value' in data && typeof data.value === 'boolean'
+}
+
+export function getComponentStringFor(data: { refName: string }) {
+  return `<DocsDemoCheckbox :value="${data.refName}" @change="(v)=>{ ${data.refName} = v }" />`
+}
+</script>
+
 <template>
   <button
     type="button"
