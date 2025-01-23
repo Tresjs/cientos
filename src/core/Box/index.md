@@ -27,14 +27,17 @@ import { TresCanvas } from '@tresjs/core'
     <!-- demo-control v-if
     value: true
     -->
-    <!-- demo-control rotation-x
+    <!-- demo-control position-x
     value: 0
-    min: -Math.PI
-    max: Math.PI
+    min: -5
+    max: 5
     step: 0.1
     -->
-    <!-- demo-control position
-    value: 0
+    <!-- demo-control args
+    value:
+    - 1
+    - 1
+    - 1
     min: -Math.PI
     max: Math.PI
     step: 0.1
@@ -42,7 +45,7 @@ import { TresCanvas } from '@tresjs/core'
     <!-- demo-control name
     value: hello, world
     -->
-    <Box v-if="true" name="hi" :rotation-x="0" color="#F00" />
+    <Box v-if="true" :position-x="0" name="hi" :args="[1, 1, 1]" color="#F00" />
   </TresCanvas>
 </template>
 ```

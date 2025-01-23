@@ -3,14 +3,14 @@ import { clamp, useMouseInElement } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 interface Props {
-  value: number
+  value: [number, number, number]
   min: number
   max: number
   step?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  value: 0,
+  value: () => [0, 0, 0],
   min: 0,
   max: 1,
   step: 0.01,

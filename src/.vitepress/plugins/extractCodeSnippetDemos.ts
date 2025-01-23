@@ -137,13 +137,14 @@ function getDemoWithControls(srcText: string): string {
   const controlsComponents: string[] = []
   const controlsImportsSet = new Set<string>()
   controlInfos.forEach((c) => {
-    const controlType = (() => {
+    const controlType: 'color' | 'select' | 'text' | 'range' | 'checkbox' | 'vector3' = (() => {
       if ('type' in c) { return c.type }
       if (typeof c.value === 'string' && c.value.startsWith('#')) { return 'color' }
       if (typeof c.value === 'string' && 'options' in c) { return 'select' }
       if (typeof c.value === 'string') { return 'text' }
       if (typeof c.value === 'number') { return 'range' }
       if (typeof c.value === 'boolean') { return 'checkbox' }
+      if (Array.isArray(c.value) && c.value.length === 3 && c.value.every(n => typeof n === 'number')) { return 'vector3' }
       return null
     })()
 
@@ -177,6 +178,12 @@ function getDemoWithControls(srcText: string): string {
       const min = c.min ?? Math.min(c.value, 0)
       const max = c.max ?? Math.max(c.value, 1)
       controlsComponents.push(`${start}<DocsDemoRange :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+    }
+    else if (controlType === 'vector3') {
+      controlsImportsSet.add('import DocsDemoRangeVector3 from \'./DocsDemoRangeVector3.vue\'')
+      const min = c.min ?? Math.min(c.value, 0)
+      const max = c.max ?? Math.max(c.value, 1)
+      controlsComponents.push(`${start}<DocsDemoRangeVector3 :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
     }
   })
 
