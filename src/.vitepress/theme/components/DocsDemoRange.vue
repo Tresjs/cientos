@@ -61,9 +61,9 @@ const keyCallbacks = {
   KeyD: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
 }
 
-function doStep(i: number) {
+function doStep(n: number) {
   const currI = Math.round(props.value / props.step)
-  const nextValue = clamp(props.step * (currI + i), props.min, props.max)
+  const nextValue = clamp(props.step * (currI + n), props.min, props.max)
   if (nextValue !== props.value) { emit('change', nextValue) }
 }
 

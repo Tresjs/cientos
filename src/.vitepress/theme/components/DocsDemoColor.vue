@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { onClickOutside, useMouseInElement } from '@vueuse/core'
+import { clamp, lerp } from 'three/src/math/MathUtils'
 
 interface Props {
   value: string
@@ -9,7 +10,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   value: '#FF0000',
-  options: () => getNOptions(24),
+  options: () => getNOptions(12 * 12),
 })
 
 const emit = defineEmits<{
@@ -40,68 +41,50 @@ const { elementX: canvasX, elementY: canvasY, elementWidth: canvasW } = useMouse
 onClickOutside(canvas, () => active.value = false)
 
 const keyCallbacks = {
-  ArrowUp: prev,
-  ArrowDown: next,
-  ArrowLeft: prev,
-  ArrowRight: next,
-  KeyW: prev,
-  KeyA: prev,
-  KeyS: next,
-  KeyD: next,
+  ArrowUp: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  ArrowDown: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  ArrowLeft: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  ArrowRight: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  KeyW: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
+  KeyA: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  KeyS: (e: KeyboardEvent) => doStep(e.shiftKey ? -10 : -1),
+  KeyD: (e: KeyboardEvent) => doStep(e.shiftKey ? 10 : 1),
 }
 
-function next() {
-  const next = props.options[props.options.indexOf(props.value) + 1]
-  if (next && next !== props.value) { emit('change', next) }
-}
-
-function prev() {
-  const prev = props.options[props.options.indexOf(props.value) - 1]
-  if (prev && prev !== props.value) { emit('change', prev) }
+function doStep(n: number) {
+  const i = clamp(props.options.indexOf(props.value) + n, 0, props.options.length - 1)
+  const nextValue = props.options[i]
+  if (nextValue !== props.value) { emit('change', nextValue) }
 }
 
 function keydown(e: KeyboardEvent) {
   active.value = false
-  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
-  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
+  if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](e); e.stopPropagation(); e.preventDefault() }
+  if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](e); e.stopPropagation(); e.preventDefault() }
 }
 
 function pointermove(e: PointerEvent) {
-  const r = canvasW.value * 0.5
-  const x = (canvasX.value - r) / r
-  const y = (canvasY.value - r) / r
-  let rads = Math.atan2(y, x)
-  while (rads < 0) { rads += Math.PI * 2 }
-  const dist = Math.min(1, Math.sqrt(x * x + y * y))
-  const hex = hslToHex(rads / (2 * Math.PI), dist, 0.5)
-  emit('change', hex)
+  const swatchesPerSide = Math.ceil(Math.sqrt(props.options.length))
+  const swatchSize = Math.floor(canvasW.value / swatchesPerSide)
+  const col = clamp(Math.floor(canvasX.value / swatchSize), 0, swatchesPerSide - 1)
+  const row = clamp(Math.floor(canvasY.value / swatchSize), 0, swatchesPerSide - 1)
+  const i = clamp(row * swatchesPerSide + col, 0, props.options.length - 1)
+  const hex = props.options[i]
+  if (hex !== props.value) { emit('change', hex) }
 }
 
-watch(canvas, (canvas) => {
-  if (canvas) {
+watch([canvas, props.options], ([canvas]) => {
+  if (canvas && props.options?.length) {
     const context = canvas.getContext('2d')
-    const x = canvas.width / 2
-    const y = canvas.height / 2
-    const radius = canvas.width * 0.5
-    const counterClockwise = false
+    const w = canvas.width
+    const swatchesPerSide = Math.ceil(Math.sqrt(props.options.length))
+    const stride = w / swatchesPerSide
 
-    context.beginPath()
-    context.arc(x, y, radius, 0, 2 * Math.PI, false)
-    context.fillStyle = 'white'
-    context.fill()
-
-    for (let angle = 0; angle <= 360; angle += 1) {
-      const startAngle = (angle - 2) * Math.PI / 180
-      const endAngle = angle * Math.PI / 180
-      context.beginPath()
-      context.moveTo(x, y)
-      context.arc(x, y, radius - 2, startAngle, endAngle, counterClockwise)
-      context.closePath()
-      const gradient = context.createRadialGradient(x, y, 0, x, y, radius)
-      gradient.addColorStop(0, hslToHex(angle / 360, 0, 0.5))
-      gradient.addColorStop(1, hslToHex(angle / 360, 1, 0.5))
-      context.fillStyle = gradient
-      context.fill()
+    for (let i = 0; i < props.options.length; i++) {
+      const row = Math.floor(i / swatchesPerSide)
+      const col = Math.floor(i % swatchesPerSide)
+      context.fillStyle = props.options[i]
+      context.fillRect(col * stride + 1, row * stride + 1, stride - 1, stride - 1)
     }
   }
 })
@@ -109,12 +92,28 @@ watch(canvas, (canvas) => {
 
 <script lang="ts">
 function getNOptions(n: number) {
-  const result = ['#FFFFFF', '#000000']
-  if (result.length >= n) { return result.slice(0, n) }
+  const swatchesPerSide = Math.ceil(Math.sqrt(n))
+  const result: string[] = []
 
-  const stride = 1 / n
-  for (let i = 0; result.length < n; i++) {
-    result.push(hslToHex(i * stride, 1, i % 2 ? 0.25 : 0.5))
+  // NOTE: First row: fully saturated colors
+  for (let i = swatchesPerSide; i < swatchesPerSide * 2; i++) {
+    const h = (i / swatchesPerSide) % 1
+    result.push(hslToHex(h, 1, 0.5))
+  }
+
+  // NOTE: Second row: grayscale
+  for (let i = 0; i < swatchesPerSide; i++) {
+    result.push(hslToHex(0, 0, 1 - i / (swatchesPerSide - 1)))
+  }
+
+  // NOTE: Remaining rows: increasing luminosity by row
+  const numRemainingRows = swatchesPerSide - 2
+  for (let i = 0; i < numRemainingRows * swatchesPerSide; i++) {
+    const row = Math.floor(i / swatchesPerSide)
+    const h = (0.5 + i / swatchesPerSide) % 1
+    const l = lerp(0.1, 1.0, row / numRemainingRows)
+
+    result.push(hslToHex(h, 0.75, l))
   }
   return result
 }
@@ -148,11 +147,13 @@ function hslToHex(h: number, s: number, l: number): string {
   >
     <div class="pl-1 block swatch" :style="{ color: hex }">&#9632;</div>
     <div>{{ hex }}</div>
-    <div class="absolute">
+    <div
+      class="absolute z-100 -left-100px -top-100px shadow-2xl"
+      style="padding: 5px; background-color: var(--vp-input-bg-color)"
+      :style="{ display: active ? 'block' : 'none' }"
+    >
       <canvas
         ref="canvas"
-        class="relative -mt-100px -ml-100px z-100 transition-opacity"
-        :style="{ display: active ? 'block' : 'none' }"
         height="200"
         width="200"
       ></canvas>

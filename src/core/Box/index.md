@@ -33,6 +33,12 @@ import { TresCanvas } from '@tresjs/core'
     max: Math.PI
     step: 0.1
     -->
+    <!-- demo-control position
+    value: 0
+    min: -Math.PI
+    max: Math.PI
+    step: 0.1
+    -->
     <!-- demo-control name
     value: hello, world
     -->
