@@ -16,11 +16,10 @@ const emit = defineEmits<{
   (e: 'change', value: string): void
 }>()
 
-const active = ref(false)
-function close() { active.value = false }
-
+const expanded = ref(false)
 const target = ref(null)
-onClickOutside(target, close)
+
+onClickOutside(target, () => expanded.value = false)
 
 const keyCallbacks = {
   ArrowUp: inc,
@@ -46,7 +45,6 @@ function dec() {
 }
 
 function keydown(e: KeyboardEvent) {
-  active.value = false
   if (e.key in keyCallbacks) { keyCallbacks[e.key as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
   if (e.code in keyCallbacks) { keyCallbacks[e.code as keyof typeof keyCallbacks](); e.stopPropagation(); e.preventDefault() }
 }
@@ -56,15 +54,14 @@ function keydown(e: KeyboardEvent) {
   <div>
     <button
       type="button"
-      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
-      aria-expanded="true"
+      class="flex gap-x-2 place-content-start w-full py-2 rounded-md bg-inherit"
+      :aria-expanded="expanded"
       aria-haspopup="true"
-      @click="active = !active"
       @keydown="keydown"
+      @pointerup="expanded = true"
     >
       <svg
-        class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
-        style="stroke: var(--vp-c-text-3); stroke-linecap: round"
+        class="-mr-1 size-4 text-gray-400 mt-0.5"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -81,26 +78,30 @@ function keydown(e: KeyboardEvent) {
     </button>
   </div>
   <div
-    v-if="active"
+    v-if="expanded"
     ref="target"
-    class="absolute left-0 z-10 mt-2 min-w-66 text-left origin-top-left rounded-md shadow-lg bg-inherit"
+    class="absolute left-0 top-6 z-10 mt-2 min-w-66 text-left origin-top-left rounded-md shadow-lg bg-inherit"
     style="background-color: var(--vp-c-bg); border: 1px solid var(--vp-c-divider)"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="menu-button"
     tabindex="-1"
   >
-    <div class="-m-10 p-10" role="none" @pointerleave="active = false" @pointerup="active = false">
+    <div
+      class="-m-10 p-10 select-none"
+      role="none"
+      @pointerleave="expanded = false"
+    >
       <div class="py-1" role="none">
         <a
           v-for="option, i of options"
           :id="`menu-item-${i}`"
           :key="i"
-          class="menu-item block px-4 py-1 bg-inherit"
-          style="font-weight: normal; color: var(--vp-gray-1)"
+          class="menu-item block px-5 py-1 bg-inherit"
+          style="font-weight: normal; color: var(--vp-gray-1); cursor: pointer"
           role="menuitem"
           tabindex="-1"
-          @pointerup="() => { emit('change', option); close() }"
+          @pointerup="() => { emit('change', option); expanded = false }"
         >{{ option }}</a>
       </div>
     </div>
@@ -110,5 +111,18 @@ function keydown(e: KeyboardEvent) {
 <style scoped>
 .menu-item:hover {
   background-color: var(--vp-c-gray-3);
+}
+
+svg {
+  stroke: var(--vp-c-text-3);
+  stroke-linecap: round;
+}
+
+button:hover svg {
+  stroke: var(--vp-c-brand-1);
+}
+
+button:hover {
+  color: var(--vp-c-brand-1);
 }
 </style>

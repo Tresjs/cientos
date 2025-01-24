@@ -74,49 +74,87 @@ function keydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <div>
+  <div class="w-full py-2">
     <button
       type="button"
-      class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
+      class="w-full relative"
       @keydown="keydown"
+      @pointerdown="e => { (e.target as HTMLDivElement)!.setPointerCapture(e.pointerId); active = true; pointermove() }"
+      @pointerup="e => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false; e.stopPropagation() }"
+      @pointermove="e => { if (active) { pointermove() } }"
     >
-      <div
-        class="relative pointer-events-none rounded-full w-36 text-left pl-5"
-        style="background-color: var(--vp-c-bg)"
-      >
+      <div class="value relative pointer-events-none rounded-full w-full text-left -top-0.5">
         {{ displayV }}
       </div>
 
-      <div
-        class="relative w-full h-7 -my-1"
-        @pointerdown="e => { (e.target as HTMLDivElement)!.setPointerCapture(e.pointerId); active = true; pointermove() }"
-        @pointerup="e => { (e.target as HTMLDivElement)!.releasePointerCapture(e.pointerId); active = false }"
-        @pointermove="e => { if (active) { pointermove() } }"
-      >
-        <div
-          ref="el"
-          class="slider-bar overflow-hidden top-0 mt-3 h-1 w-full rounded-full"
-          style="border: 1px solid var(--vp-input-border-color);"
-        >
+      <div class="absolute w-full h-7 -my-3">
+        <div class="slider-bar overflow-hidden top-0 mt-2.5 h-0.5 w-full rounded-full">
           <!-- Filled Bar -->
           <div
-            class="relative top-0 h-full w-full"
+            class="slider-bar-filled relative top-0 h-full w-full"
             :style="{ right: `${Math.max(elementWidth - sliderV, 0)}px` }"
-            style="background-color: var(--vp-c-gray-1)"
           >
           </div>
         </div>
-        <!-- Knob -->
-        <div
-          class="relative w-4"
-          :style="{ left: `${Math.max(sliderV, 0)}px` }"
-        >
+        <div ref="el" class="mr-2">
           <div
-            class="relative rounded-full h-3 w-3 -ml-2 -mt-2"
-            style="background-color: var(--vp-c-gray-1); border: 1px solid var(--vp-input-border-color)"
-          ></div>
+            class="knob relative w-3"
+            :class="(sliderV === 0) ? 'is-empty' : 'is-not-empty'"
+            :style="{ left: `${Math.max(sliderV, 0)}px` }"
+          >
+            <div
+              class="relative rounded-full h-2 w-2 -mt-1.25"
+            ></div>
+          </div>
         </div>
       </div>
     </button>
   </div>
 </template>
+
+<style scoped>
+.slider-bar {
+  background-color: var(--vp-c-gray-2);
+}
+
+.slider-bar-filled {
+  background-color: var(--vp-c-brand-1);
+}
+
+button:hover .slider-bar-filled {
+  background-color: var(--vp-c-brand-1);
+}
+
+.knob > div {
+  background-color: var(--vp-c-brand-1);
+}
+
+.knob.is-empty > div {
+  background-color: var(--vp-c-gray-1);
+}
+
+button:hover .knob > div {
+  box-shadow: 0px 0px 0px 5px color-mix(in srgb, var(--vp-c-brand-1) 20%, transparent);
+}
+
+button:hover .knob.is-empty > div {
+  box-shadow: 0px 0px 0px 5px color-mix(in srgb, var(--vp-c-gray-1) 20%, transparent);
+}
+
+button:active .knob > div {
+  z-index: 100;
+  box-shadow: 0px 0px 0px 10px color-mix(in srgb, var(--vp-c-brand-1) 20%, transparent);
+}
+
+button:active .knob.is-empty > div {
+  box-shadow: 0px 0px 0px 10px color-mix(in srgb, var(--vp-c-gray-1) 20%, transparent);
+}
+
+button {
+  cursor: grab;
+}
+
+button:active {
+  cursor: grabbing;
+}
+</style>

@@ -33,19 +33,19 @@ import { TresCanvas } from '@tresjs/core'
     max: 5
     step: 0.1
     -->
-    <!-- demo-control args
+    <!-- demo-control scale
     value:
     - 1
     - 1
     - 1
-    min: -Math.PI
-    max: Math.PI
+    min: -2
+    max: 2
     step: 0.1
     -->
     <!-- demo-control name
     value: hello, world
     -->
-    <Box v-if="true" :position-x="0" name="hi" :args="[1, 1, 1]" color="#F00" />
+    <Box v-if="true" :position-x="0" name="hi" :scale="[1, 1, 1]" color="#F00" />
   </TresCanvas>
 </template>
 ```

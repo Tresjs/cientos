@@ -112,9 +112,8 @@ function getDemoWithControls(srcText: string): string {
   // NOTE: Sort controlsInfos in descending order of char offset. Descending
   // order allows us to replace 'abc' with 'abcde' or 'ab' without needing
   // to recalculate the remaining offsets.
-  controlInfos.sort((a, b) => b.prop.loc.start.offset - a.prop.loc.start.offset)
-
-  controlInfos.forEach((c, i) => {
+  const controlInfosByCharOffsetDec = [...controlInfos].sort((a, b) => b.prop.loc.start.offset - a.prop.loc.start.offset)
+  controlInfosByCharOffsetDec.forEach((c, i) => {
     // NOTE: Replace controlled prop's value with a ref
     c.refName = `demoControlRef${i}`
     // NOTE: Replace value in `template` with refName
@@ -128,13 +127,8 @@ function getDemoWithControls(srcText: string): string {
     template.content = `${start}${propString}${end}`
   })
 
-  controlInfos.forEach((c) => {
-    // NOTE: Add ref to `script setup`
-    const val = typeof c.value === 'string' ? `'${c.value}'` : c.value
-    scriptSetup.content += `\nconst ${c.refName} = demoRef(${val})`
-  })
-
   const controlsComponents: string[] = []
+  const controlsRefs: string[] = []
   const controlsImportsSet = new Set<string>()
   controlInfos.forEach((c) => {
     const controlType: 'color' | 'select' | 'text' | 'range' | 'checkbox' | 'vector3' = (() => {
@@ -159,31 +153,37 @@ function getDemoWithControls(srcText: string): string {
     if (controlType === 'checkbox') {
       controlsImportsSet.add('import DocsDemoCheckbox from \'./DocsDemoCheckbox.vue\'')
       controlsComponents.push(`${start}<DocsDemoCheckbox :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef(${c.value})`)
     }
     else if (controlType === 'text') {
       controlsImportsSet.add('import DocsDemoText from \'./DocsDemoText.vue\'')
       controlsComponents.push(`${start}<DocsDemoText :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef('${c.value}')`)
     }
     else if (controlType === 'color') {
       controlsImportsSet.add('import DocsDemoColor from \'./DocsDemoColor.vue\'')
       controlsComponents.push(`${start}<DocsDemoColor :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef('${c.value}')`)
     }
     else if (controlType === 'select') {
       controlsImportsSet.add('import DocsDemoSelect from \'./DocsDemoSelect.vue\'')
       const options = c.options?.map?.((s: string) => `'${s}'`) ?? `'${c.value}'`
       controlsComponents.push(`${start}<DocsDemoSelect :options="[${options}]" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef('${c.value}')`)
     }
     else if (controlType === 'range') {
       controlsImportsSet.add('import DocsDemoRange from \'./DocsDemoRange.vue\'')
-      const min = c.min ?? Math.min(c.value, 0)
-      const max = c.max ?? Math.max(c.value, 1)
-      controlsComponents.push(`${start}<DocsDemoRange :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      const min = typeof c.min === 'undefined' ? '' : `:min="${c.min}" `
+      const max = typeof c.max === 'undefined' ? '' : `:max="${c.max}" `
+      controlsComponents.push(`${start}<DocsDemoRange ${min}${max}:step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef(${c.value})`)
     }
     else if (controlType === 'vector3') {
       controlsImportsSet.add('import DocsDemoRangeVector3 from \'./DocsDemoRangeVector3.vue\'')
-      const min = c.min ?? Math.min(c.value, 0)
-      const max = c.max ?? Math.max(c.value, 1)
-      controlsComponents.push(`${start}<DocsDemoRangeVector3 :min="${min}" :max="${max}" :step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      const min = typeof c.min === 'undefined' ? '' : `:min="${c.min}" `
+      const max = typeof c.max === 'undefined' ? '' : `:max="${c.max}" `
+      controlsComponents.push(`${start}<DocsDemoRangeVector3 ${min}${max}:step="${c.step ?? 0.01}" :value="${c.refName}" @change="(v)=>{ ${c.refName} = v }" />${end}`)
+      controlsRefs.push(`const ${c.refName} = demoRef<[number, number, number]>([${c.value}])`)
     }
   })
 
@@ -192,6 +192,8 @@ function getDemoWithControls(srcText: string): string {
 import { ref as demoRef } from 'vue'${scriptSetup.content}
 import DocsDemoWithControls from './DocsDemoWithControls.vue'
 ${Array.from(controlsImportsSet).join('\n')}
+
+${controlsRefs.join('\n')}
 </script>\n\n`
     : ''
 

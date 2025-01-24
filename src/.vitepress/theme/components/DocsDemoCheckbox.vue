@@ -12,6 +12,8 @@ const emit = defineEmits<{
 }>()
 
 const keyCallbacks = {
+  Enter: toggle,
+  Space: toggle,
   ArrowUp: toggle,
   ArrowDown: toggle,
   ArrowLeft: toggle,
@@ -43,13 +45,12 @@ export function getComponentStringFor(data: { refName: string }) {
 <template>
   <button
     type="button"
-    class="flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
-    @click="toggle"
+    class="flex gap-x-2 place-content-start w-full py-2 rounded-md bg-inherit"
+    @pointerup="toggle"
     @keydown="keydown"
   >
     <svg
-      class="-mr-1 size-4 text-gray-400 ml-0.5 mt-0.5"
-      style="stroke: var(--vp-c-text-3); stroke-linecap: round"
+      class="-mr-1 size-4 text-gray-400 mt-0.5"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -57,7 +58,8 @@ export function getComponentStringFor(data: { refName: string }) {
       <path
         v-if="value"
         fill="none"
-        stroke-width="2"
+        stroke-width="3"
+        stroke="var(--vp-c-brand-1)"
         d="M 20,4
        L 20,4 13,15
        L 13,15 9,10
@@ -67,6 +69,7 @@ export function getComponentStringFor(data: { refName: string }) {
       <path
         v-if="value"
         fill="none"
+        stroke="var(--vp-c-gray-1)"
         stroke-width="2"
         d="M 20,11
        L 20,11 20,20
@@ -88,6 +91,25 @@ export function getComponentStringFor(data: { refName: string }) {
     "
       />
     </svg>
-    <span>{{ value }}</span>
+    <span class="value">{{ value }}</span>
   </button>
 </template>
+
+<style scoped>
+button:hover .value {
+  color: var(--vp-c-brand-1);
+}
+
+svg {
+  stroke: var(--vp-c-text-3);
+  stroke-linecap: round;
+}
+
+button:hover svg {
+  stroke: var(--vp-c-brand-1);
+}
+
+button:hover {
+  color: var(--vp-c-brand-1);
+}
+</style>

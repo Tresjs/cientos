@@ -39,21 +39,26 @@ function keyup(e: KeyboardEvent) {
 </script>
 
 <template>
-  <div>
-    <button
-      ref="button"
-      type="button"
-      class="relative flex place-content-start w-full gap-x-1.5 rounded-md bg-inherit"
-      tabindex="-1"
-    >
-      <input
-        ref="target"
-        type="text"
-        :value="value"
-        class="absolute -top-1 h-7 px-4 ml-1 w-full rounded-1"
-        style="background: var(--vp-c-bg-alt)"
-        @keyup="keyup"
-      />
-    </button>
+  <div
+    class="relative w-full bg-inherit py-1"
+    tabindex="-1"
+  >
+    <input
+      ref="target"
+      type="text"
+      :value="value"
+      class="w-full h-full px-5 py-1 rounded-1"
+      @keyup="keyup"
+    />
   </div>
 </template>
+
+<style scoped>
+input {
+  background: var(--vp-input-bg-color);
+}
+
+input:hover {
+  color: var(--vp-c-brand-1);
+}
+</style>
