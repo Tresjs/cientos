@@ -36,10 +36,8 @@ export function MarkdownTransform(): Plugin {
           code = code.slice(0, sliceIndex) + header + code.slice(sliceIndex)
         }
 
-        code = code
-          .replace(/(# \w+)\n/, `$1\n\n<FunctionInfo fn="${name}"/>\n`)
-          .replace(/## (Components?(?:\sUsage)?)/i, '## $1\n<LearnMoreComponents />\n\n')
-          .replace(/## (Directives?(?:\sUsage)?)/i, '## $1\n<LearnMoreDirectives />\n\n')
+        // NOTE: Replace demo-controls markup and leading/trailing whitespace
+        code = code.replace(/\s*<!-- demo-control([\s\S]*?)-->\S*/gi, '')
       }
 
       return code
