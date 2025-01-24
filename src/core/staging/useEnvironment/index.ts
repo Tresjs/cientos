@@ -3,6 +3,8 @@ import {
   CubeReflectionMapping,
   CubeTextureLoader,
   EquirectangularReflectionMapping,
+  Euler,
+  Vector3,
 } from 'three'
 import { RGBELoader } from 'three-stdlib'
 import { computed, ref, toRefs, unref, watch } from 'vue'
@@ -28,7 +30,11 @@ const PRESET_ROOT = 'https://raw.githubusercontent.com/Tresjs/assets/main/textur
  *   background = false,
  *   path = undefined,
  *   preset = undefined,
- *   colorSpace = undefined,
+ *   colorSpace = 'srgb',
+ *   backgroundIntensity = 1,
+ *   environmentIntensity = 1,
+ *   backgroundRotation = [0, 0, 0],
+ *   environmentRotation = [0, 0, 0],
  * @param {Ref<WebGLCubeRenderTarget | null>} fbo - The framebuffer object
  * @return {Promise<Ref<Texture | CubeTexture | null>>} The loaded texture
  */
@@ -44,6 +50,10 @@ export async function useEnvironment(
     files = ref([]),
     path = ref(''),
     background,
+    backgroundIntensity = ref(1),
+    environmentIntensity = ref(1),
+    backgroundRotation = ref([0, 0, 0]),
+    environmentRotation = ref([0, 0, 0]),
   } = toRefs(options)
 
   watch(options, () => {
@@ -100,6 +110,67 @@ export async function useEnvironment(
   watch(() => blur?.value, (value) => {
     if (scene.value && value) {
       scene.value.backgroundBlurriness = value
+    }
+  }, {
+    immediate: true,
+  })
+
+  watch(() => backgroundIntensity?.value, (value) => {
+    if (scene.value && value) {
+      scene.value.backgroundIntensity = value
+    }
+  }, {
+    immediate: true,
+  })
+
+  watch(() => environmentIntensity?.value, (value) => {
+    if (scene.value && value) {
+      scene.value.environmentIntensity = value
+    }
+  }, {
+    immediate: true,
+  })
+
+  watch(() => backgroundRotation?.value, (value) => {
+    if (scene.value && value) {
+      // TODO: would be nice to abstract this to a function on @tresjs/core
+      if (value instanceof Euler) {
+        scene.value.backgroundRotation = value
+      }
+      else if (Array.isArray(value)) {
+        scene.value.backgroundRotation = new Euler(value[0], value[1], value[2])
+      }
+      else if (typeof value === 'number') {
+        scene.value.backgroundRotation = new Euler(value, value, value)
+      }
+      else if (value instanceof Vector3) {
+        scene.value.backgroundRotation = new Euler(value.x, value.y, value.z)
+      }
+      else if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
+        scene.value.backgroundRotation = new Euler(value.x, value.y, value.z)
+      }
+    }
+  }, {
+    immediate: true,
+  })
+
+  watch(() => environmentRotation?.value, (value) => {
+    if (scene.value && value) {
+      if (value instanceof Euler) {
+        scene.value.environmentRotation = value
+      }
+      else if (Array.isArray(value)) {
+        scene.value.environmentRotation = new Euler(value[0], value[1], value[2])
+      }
+      else if (typeof value === 'number') {
+        scene.value.environmentRotation = new Euler(value, value, value)
+      }
+      else if (value instanceof Vector3) {
+        scene.value.environmentRotation = new Euler(value.x, value.y, value.z)
+      }
+      else if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
+        scene.value.environmentRotation = new Euler(value.x, value.y, value.z)
+      }
     }
   }, {
     immediate: true,
