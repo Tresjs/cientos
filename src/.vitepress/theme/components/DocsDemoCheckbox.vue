@@ -50,7 +50,7 @@ export function getComponentStringFor(data: { refName: string }) {
     @keydown="keydown"
   >
     <svg
-      class="-mr-1 size-4 text-gray-400 mt-0.5"
+      class="-mx-0.5 size-4 text-gray-400 mt-0.5"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >

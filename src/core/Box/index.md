@@ -17,7 +17,10 @@ import { TresCanvas } from '@tresjs/core'
 <template>
   <!-- demo-control clear-color
   value: blue
-  options: red blue green
+  options:
+  - red
+  - blue
+  - green
   -->
   <TresCanvas :clear-color="0xFBB03B">
     <OrbitControls />

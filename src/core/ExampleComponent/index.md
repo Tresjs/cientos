@@ -1,6 +1,6 @@
 ---
 category: abstractions
-related: ['AccumulativeShadows', 'ContactShadows']
+related: AccumulativeShadows, ContactShadows
 ---
 
 # ExampleComponent
