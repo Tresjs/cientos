@@ -38,4 +38,3 @@ category: shapes
 
 * alias: string – Component and `use` function will also be exported using this name.
 * related: string or string[] – Related components, displayed on the docs page.
-* deprecated: true – Whether this component should be marked as deprecated.
