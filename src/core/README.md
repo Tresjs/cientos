@@ -11,12 +11,12 @@ Each directory must contain at least:
 
 ## Optional files
 
-* `playground{optionalName}.vue` – Vue SFC playground for testing component functionality. Viewable locally with `$ pnpm run dev`
+* `playground{optionalName}.vue` – Vue SFC playground for testing component functionality. Viewable locally with `pnpm run dev`
 * `index.ts` – composable related to the component functionality. E.g. `CubeCamera` can be used as a composable in `<script setup>` with `useCubeCamera`. Exported as use[directory name].
 
-### Docs `index.md`
+### `index.md`
 
-Docs are viewable locally with `$ pnpm run docs:dev` and publically at https://cientos.tresjs.org/
+Docs are viewable locally with `pnpm run docs:dev` and publically at https://cientos.tresjs.org/
 
 `index.md` contains the docs page for a particular component. This is a markdown file and *must* begin with markdown front-matter.
 

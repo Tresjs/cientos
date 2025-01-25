@@ -62,6 +62,7 @@
     "vue": ">=3.3"
   },
   "dependencies": {
+    "@tresjs/cientos": "workspace:^",
     "@vueuse/core": "^12.0.0",
     "camera-controls": "^2.9.0",
     "stats-gl": "^2.4.2",
@@ -71,7 +72,6 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.3",
-    "@tresjs/cientos": "workspace:*",
     "@tresjs/core": "^4.3.1",
     "@tresjs/eslint-config": "^1.4.0",
     "@tresjs/leches": "^0.14.0",
@@ -102,8 +102,5 @@
     "vite-svg-loader": "^5.1.0",
     "vitepress": "1.5.0",
     "vue-router": "^4.5.0"
-  },
-  "resolutions": {
-    "@tresjs/cientos": "workspace:*"
   }
 }
