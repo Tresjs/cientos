@@ -4,13 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@tresjs/cientos': workspace:*
-
 importers:
 
   .:
     dependencies:
+      '@tresjs/cientos':
+        specifier: workspace:^
+        version: 'link:'
       '@vueuse/core':
         specifier: ^12.0.0
         version: 12.0.0(typescript@5.7.2)
@@ -133,7 +133,7 @@ importers:
   docs:
     dependencies:
       '@tresjs/cientos':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:..
     devDependencies:
       '@tresjs/leches':
