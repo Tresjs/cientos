@@ -80,6 +80,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "eslint": "^9.16.0",
     "eslint-plugin-vue": "^9.32.0",
+    "gray-matter": "4.0.3",
     "gsap": "^3.12.5",
     "kolorist": "^1.8.0",
     "pathe": "^1.1.2",
