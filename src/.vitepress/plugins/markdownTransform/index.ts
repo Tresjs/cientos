@@ -283,8 +283,8 @@ function getDemoWithControls(srcText: string): string {
     const rawLabel = c.label ?? c.prop.rawName ?? c.prop.name
     // NOTE: Normalize labels for UI by removing initial ':', if one exists.
     const label = rawLabel.startsWith(':') ? rawLabel.substring(1) : rawLabel
-    const start = `<DocsDemoControl label="${label}">\n`
-    const end = `\n</DocsDemoControl>`
+    const start = `<DocsDemoControl label="${label}">`
+    const end = `</DocsDemoControl>`
 
     if (controlType === 'checkbox') {
       controlsImportsSet.add('import DocsDemoCheckbox from \'./DocsDemoCheckbox.vue\'')
@@ -340,9 +340,9 @@ ${script.content}
   const templateOut = template
     ? `<template>
 <DocsDemoWithControls>${templateStr}</DocsDemoWithControls>
-  <div>
-${controlsComponents.join('\n    ')}
-  </div>
+<div>
+${controlsComponents.map(s => `  ${s}`).join('\n')}
+</div>
 </template>
 `
     : ''
