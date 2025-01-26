@@ -37,7 +37,7 @@ export async function updateImport({ components }: PackageIndexes) {
 ${imports.sort().join('\n')}
 
 export {
-${exports.sort().map(s => `  ${s},`).join('\n')}
+${exports.map(s => s.trim()).filter(s => !!s).sort().map(s => `  ${s},`).join('\n')}
 }
 `
 
