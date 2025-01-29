@@ -15,8 +15,8 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0(three@0.172.0)
       stats-gl:
-        specifier: ^2.0.1
-        version: 2.4.2(@types/three@0.171.0)(three@0.172.0)
+        specifier: ^3.6.0
+        version: 3.6.0(three@0.172.0)
       stats.js:
         specifier: ^0.17.0
         version: 0.17.0
@@ -4128,11 +4128,13 @@ packages:
   stable-hash@0.0.4:
     resolution: {integrity: sha512-LjdcbuBeLcdETCrPn9i8AYAZ1eCtu4ECAWtP7UleOiZ9LzVxRzzUZEoZ8zB24nhkQnDWyET0I+3sWokSDS3E7g==}
 
-  stats-gl@2.4.2:
-    resolution: {integrity: sha512-g5O9B0hm9CvnM36+v7SFl39T7hmAlv541tU81ME8YeSb3i1CIP5/QdDeSB3A0la0bKNHpxpwxOVRo2wFTYEosQ==}
+  stats-gl@3.6.0:
+    resolution: {integrity: sha512-Bpi5nwvC2pls9lcI5sGqAcUqB/2kMYfsR4KoAglXFtY3YUdm7lJFg8FqS7eKKNgg3ruDMNCuwU+uRwPOwJiGnw==}
     peerDependencies:
-      '@types/three': '*'
       three: '*'
+    peerDependenciesMeta:
+      three:
+        optional: true
 
   stats.js@0.17.0:
     resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==}
@@ -9222,9 +9224,8 @@ snapshots:
 
   stable-hash@0.0.4: {}
 
-  stats-gl@2.4.2(@types/three@0.171.0)(three@0.172.0):
-    dependencies:
-      '@types/three': 0.171.0
+  stats-gl@3.6.0(three@0.172.0):
+    optionalDependencies:
       three: 0.172.0
 
   stats.js@0.17.0: {}
