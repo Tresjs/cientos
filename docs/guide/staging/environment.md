@@ -88,16 +88,6 @@ You can incorporate `Lightformer` into the environment just like a slot.
 </template>
 ```
 
-### Props for Lightformer
-
-Lightformer inherits from mesh, and its extension parameters include:
-| Prop | Description | Default |
-| :----------- | :------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `from` | 'circle' , 'ring' , 'rect' , any:other Mesh.The type of Lightformer | `rect` |
-| `intensity` | number : the intensity of the light. | 1 |
-| `color` | the color of the light. | `0xffffff` |
-| `args` | the arguments of the Geometry | When using other geometries, set the corresponding arguments. |
-
 ## Props
 
 | Prop         | Description                                                                 | Default                                                                          |
@@ -112,3 +102,17 @@ Lightformer inherits from mesh, and its extension parameters include:
 | `near`       | The near of the CubeCamera.                                                 | 1                                                                                |
 | `far`        | The far of the CubeCamera.                                                  | 1000                                                                             |
 | `frames`     | The frames of the cubeCamera.update.                                        | Infinity                                                                         |
+| `backgroundIntensity`  | Intensity of the background. | 1 |
+| `environmentIntensity`  | Intensity of the environment. | 1 |
+| `backgroundRotation` | Rotation of the background. | [0, 0, 0] |
+| `environmentRotation` | Rotation of the environment. | [0, 0, 0] |
+
+### Props for Lightformer
+
+Lightformer inherits from mesh, and its extension parameters include:
+| Prop | Description | Default |
+| :----------- | :------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `from` | 'circle' , 'ring' , 'rect' , any:other Mesh.The type of Lightformer | `rect` |
+| `intensity` | number : the intensity of the light. | 1 |
+| `color` | the color of the light. | `0xffffff` |
+| `args` | the arguments of the Geometry | When using other geometries, set the corresponding arguments. |
