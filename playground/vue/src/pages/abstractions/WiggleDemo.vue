@@ -27,7 +27,7 @@ const testRef = ref(null)
 const testRefBis = ref(null)
 const testRefOpposite = ref(null)
 
-const areaLimit = 3.5
+const areaLimit = 3
 
 const { velocity, stiffness, damping } = useControls({
   debug: { value: false, type: 'boolean', label: 'Debug' },
