@@ -34,7 +34,7 @@ const { velocity, stiffness, damping } = useControls({
   velocity: {
     label: 'Velocity',
     value: 0.3,
-    min: 0.01,
+    min: 0.1,
     max: 1,
     step: 0.01,
   },
@@ -48,7 +48,7 @@ const { velocity, stiffness, damping } = useControls({
   damping: {
     label: 'Damping',
     value: 25,
-    min: 1,
+    min: 15,
     max: 50,
     step: 1,
   },

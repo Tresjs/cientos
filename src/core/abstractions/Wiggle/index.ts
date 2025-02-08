@@ -30,8 +30,6 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
     return
   }
 
-  console.log(model)
-
   const { scene } = useTresContext()
   const { onLoop } = useRenderLoop()
 
@@ -105,7 +103,7 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
     wiggleBones.forEach(wb => wb.update())
   })
 
-  if (isBasicMode) {
+  if (isBasicMode && typeof basicRef.value === 'object') {
     watch(basicRef, () => {
       if (!basicRef) { return }
 

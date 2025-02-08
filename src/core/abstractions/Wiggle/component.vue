@@ -4,7 +4,7 @@ import type { Group } from 'three'
 import { useWiggle } from '.'
 
 export interface WiggleProps {
-  debug: boolean
+  debug?: boolean
   basic?: boolean | { velocity?: number }
   spring?: boolean | { stiffness?: number, damping?: number }
 }
