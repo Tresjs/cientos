@@ -5,8 +5,8 @@ import { useWiggle } from '.'
 
 export interface WiggleProps {
   debug?: boolean
-  basic?: boolean | { velocity?: number }
-  spring?: boolean | { stiffness?: number, damping?: number }
+  basic?: boolean | object
+  spring?: boolean | object
 }
 
 const props = withDefaults(defineProps<WiggleProps>(), {

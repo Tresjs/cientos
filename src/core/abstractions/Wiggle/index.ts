@@ -19,8 +19,8 @@ import { isRef, ref, watch } from 'vue'
 
 interface UseWiggleProps {
   debug?: boolean
-  basic?: boolean | { velocity?: number }
-  spring?: boolean | { stiffness?: number, damping?: number }
+  basic?: boolean | object
+  spring?: boolean | object
   helper?: object
 }
 
