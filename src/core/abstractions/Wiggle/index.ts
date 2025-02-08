@@ -6,12 +6,14 @@ import { useRenderLoop, useTresContext } from '@tresjs/core'
 import { isRef, ref, watch } from 'vue'
 
 /**
- * Hook useWiggle : applique l'effet wiggle aux bones du modèle.
+ * Hook useWiggle: applies the wiggle effect to the bones of the model.
  *
- * @param {Object3D} model - Le modèle 3D auquel appliquer l'effet wiggle.
- * @param {object} options - Les options pour useWiggle.
- * @param {boolean} [options.debug] - Activer ou désactiver le mode debug.
- * @param {boolean|object} [options.basic] - Activer ou désactiver le mode basic avec options.
+ * @param {Object3D} model - The 3D model to apply the wiggle effect to.
+ * @param {object} options - The options for useWiggle.
+ * @param {boolean} [options.debug] - Enable or disable debug mode.
+ * @param {boolean|object} [options.basic] - Enable or disable basic mode with options.
+ * @param {boolean|object} [options.spring] - Enable or disable spring mode with options.
+ * @param {object} [options.helper] - The parameters for WiggleRigHelper.
  *
  */
 
@@ -27,8 +29,6 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
     console.error('No model provided')
     return
   }
-
-  console.log('ehlper', helper)
 
   const { scene } = useTresContext()
   const { onLoop } = useRenderLoop()
@@ -97,11 +97,8 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
     }
   })
 
-  onLoop(({ elapsed }) => {
-    if (!wiggleBones.length || !rootBone) { return }
-
-    rootBone.position.x = 2 * Math.sin(3 * elapsed)
-    rootBone.position.y = 1 * Math.sin(3 * elapsed)
+  onLoop(() => {
+    if (!wiggleBones.length) { return }
 
     wiggleBones.forEach(wb => wb.update())
   })
@@ -128,7 +125,7 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
   }
 
   return {
-    // wiggleHelper,
+    wiggleHelper,
     wiggleBones,
     rootBone,
   }

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import { TresCanvas, useRenderLoop } from '@tresjs/core'
-import { Box, Environment, OrbitControls, TransformControls, useGLTF, Wiggle } from '@tresjs/cientos'
+import { ContactShadows, Environment, OrbitControls, TransformControls, useGLTF, Wiggle } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
+import type { TresObject } from '@tresjs/core'
 
 const gl = {
   powerPreference: 'high-performance',
@@ -21,55 +22,60 @@ const modelFlower = await useGLTF(
   { draco: true },
 )
 
-console.log('demo — useGLTF', model)
+// console.log('demo — useGLTF', model)
 
 const modelRef = ref<TresObject | null>(null)
 const modelRefBis = ref<TresObject | null>(null)
 const testRef = ref(null)
 const testRefBis = ref(null)
 
-const { debug, velocity, stiffness, damping } = useControls({
+const areaLimit = 2.5
+
+const { velocity, stiffness, damping } = useControls({
   debug: { value: false, type: 'boolean', label: 'Debug' },
   velocity: {
     label: 'Velocity',
-    value: 0.1,
+    value: 0.2,
     min: 0.01,
     max: 1,
     step: 0.01,
   },
   stiffness: {
     label: 'Stiffness',
-    value: 500,
+    value: 600,
     min: 100,
     max: 1000,
     step: 10,
   },
   damping: {
     label: 'Damping',
-    value: 17,
+    value: 30,
     min: 1,
-    max: 30,
+    max: 50,
     step: 1,
   },
 })
 
-// watch(testRef, () => {
-//   if (!testRef.value) { return }
+watch(testRef, () => {
+  if (!testRef.value) { return }
 
-//   // gsap.to(testRef.value.root.position, {
-//   //   z: 5,
-//   //   repeat: -1,
-//   //   ease: 'elastic.out(1,0.3)',
-//   //   duration: 2,
-//   // })
-//   console.log(testRef.value.root)
-// })
+  gsap.to(testRef.value.root.position, {
+    keyframes: {
+      x: [areaLimit, -areaLimit, -areaLimit, areaLimit, areaLimit],
+      z: [areaLimit, areaLimit, -areaLimit, -areaLimit, areaLimit],
+      easeEach: 'elastic.inOut(0.85,0.6)',
+    },
+    ease: 'none',
+    repeat: -1,
+    duration: 6.5,
+  })
+})
 
 const { onLoop } = useRenderLoop()
 
-onLoop(({ delta, elapsed, clock }) => {
-  // testRef.value.root.position.x = 0.35 * Math.sin(3 * elapsed)
-  // rootBone.position.y = 1 * Math.sin(3 * elapsed)
+onLoop(({ elapsed }) => {
+  testRef.value.root.rotation.y = Math.PI / 2 * Math.sin(elapsed)
+  testRef.value.root.rotation.x = Math.PI / 6 * Math.sin(elapsed)
 })
 </script>
 
@@ -80,17 +86,12 @@ onLoop(({ delta, elapsed, clock }) => {
     v-bind="gl"
   >
     <TresPerspectiveCamera
-      :position="[5, 2.5, 5]"
+      :position="[5, 2.5, 7.5]"
     />
 
     <OrbitControls
       make-default
       :target="[0, 0, 0]"
-    />
-
-    <TresGridHelper
-      :args="[10, 10]"
-      :position-y="0.25"
     />
 
     <Suspense>
@@ -100,16 +101,22 @@ onLoop(({ delta, elapsed, clock }) => {
     </Suspense>
 
     <Suspense>
-      <Wiggle ref="testRef" :scale="15" :debug="true" :basic="{ velocity: velocity.value }">
+      <Wiggle ref="testRef" :position-z="areaLimit" :position-x="areaLimit" :scale="15" :debug="true" :basic="{ velocity: velocity.value }">
         <primitive ref="modelRef" :object="model.scene" />
       </Wiggle>
     </Suspense>
 
     <Suspense>
-      <Wiggle ref="testRefBis" :position-z="-2" :scale="15" :debug="true" :spring="{ stiffness: stiffness.value, damping: damping.value }">
+      <Wiggle ref="testRefBis" :scale="15" :debug="false" :spring="{ stiffness: stiffness.value, damping: damping.value }">
         <primitive ref="modelRefBis" :object="modelFlower.scene" />
       </Wiggle>
     </Suspense>
+
+    <ContactShadows
+      :blur="2"
+      :opacity="1"
+      :position-y="-2"
+    />
 
     <TransformControls :object="modelRefBis" />
   </TresCanvas>
