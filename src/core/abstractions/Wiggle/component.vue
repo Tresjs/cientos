@@ -1,0 +1,34 @@
+<script setup lang="ts">
+import { shallowRef, toRefs, useSlots, watch } from 'vue'
+import type { TresGroup } from '@tresjs/core'
+import { useWiggle } from '.'
+
+export interface WiggleProps {
+  debug: boolean
+  basic?: boolean | { velocity?: number }
+  spring?: boolean | { stiffness?: number, damping?: number }
+}
+
+const props = withDefaults(defineProps<WiggleProps>(), {
+  debug: false,
+})
+
+const { debug, basic, spring } = toRefs(props)
+
+const mainRef = shallowRef<TresGroup>()
+const slots = useSlots()
+
+const model = slots.default?.({})[0].props.object
+
+useWiggle(model, { debug: debug.value, ...(basic.value ? { basic } : { spring }) })
+
+defineExpose({
+  root: mainRef,
+})
+</script>
+
+<template>
+  <TresGroup ref="mainRef">
+    <slot></slot>
+  </TresGroup>
+</template>

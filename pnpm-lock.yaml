@@ -29,6 +29,9 @@ importers:
       vue:
         specifier: '>=3.3'
         version: 3.5.13(typescript@5.7.2)
+      wiggle:
+        specifier: ^0.0.17
+        version: 0.0.17(three@0.173.0)
     devDependencies:
       '@release-it/conventional-changelog':
         specifier: ^10.0.0
@@ -4524,6 +4527,11 @@ packages:
   widest-line@5.0.0:
     resolution: {integrity: sha512-c9bZp7b5YtRj2wOe6dlj32MK+Bx/M/d+9VB2SHM1OtsUHR0aV0tdP6DWh/iMt0kWi1t5g1Iudu6hQRNd1A4PVA==}
     engines: {node: '>=18'}
+
+  wiggle@0.0.17:
+    resolution: {integrity: sha512-vF4Kx9a+lHVWia3ZLhZcMnam9VhFGND0+9WYnHq0rcnYDLlbL4iFzYUXJk2cx5reDolwt+EN5mhUP3uHGhWtRQ==}
+    peerDependencies:
+      three: '>= 0.152.0'
 
   wildcard-match@5.1.4:
     resolution: {integrity: sha512-wldeCaczs8XXq7hj+5d/F38JE2r7EXgb6WQDM84RVwxy81T/sxB5e9+uZLK9Q9oNz1mlvjut+QtvgaOQFPVq/g==}
@@ -9403,6 +9411,10 @@ snapshots:
   widest-line@5.0.0:
     dependencies:
       string-width: 7.2.0
+
+  wiggle@0.0.17(three@0.173.0):
+    dependencies:
+      three: 0.173.0
 
   wildcard-match@5.1.4: {}
 

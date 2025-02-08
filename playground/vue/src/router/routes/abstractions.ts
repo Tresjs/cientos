@@ -55,6 +55,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/EdgesDemo.vue'),
   },
   {
+    path: '/abstractions/wiggle',
+    name: 'Wiggle',
+    component: () => import('../../pages/abstractions/WiggleDemo.vue'),
+  },
+  {
     path: '/abstractions/positional-audio',
     name: 'PositionalAudio',
     component: () => import('../../pages/abstractions/PositionalAudioDemo.vue'),
