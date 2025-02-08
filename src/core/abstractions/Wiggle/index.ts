@@ -30,6 +30,8 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
     return
   }
 
+  console.log(model)
+
   const { scene } = useTresContext()
   const { onLoop } = useRenderLoop()
 
