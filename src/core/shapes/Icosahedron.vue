@@ -35,10 +35,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="icosahedronRef"
-    v-bind="$attrs"
-  >
+  <TresMesh ref="icosahedronRef">
     <TresIcosahedronGeometry :args="args" />
     <slot>
       <TresMeshBasicMaterial :color="color" />
