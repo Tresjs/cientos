@@ -45,7 +45,8 @@ export function useWiggle(model: Object3D, { debug = false, basic = true, spring
 
   const wiggleHelper = new WiggleRigHelper({
     skeleton,
-    ...helper,
+    dotSize: 0.2,
+    lineWidth: 0.02,
   })
 
   if (debug) {

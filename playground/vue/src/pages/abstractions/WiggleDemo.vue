@@ -25,6 +25,7 @@ const modelRef = ref<TresObject | null>(null)
 const modelRefBis = ref<TresObject | null>(null)
 const testRef = ref(null)
 const testRefBis = ref(null)
+const testRefBisBis = ref(null)
 const testRefOpposite = ref(null)
 
 const areaLimit = 3
@@ -87,12 +88,12 @@ watch(testRefOpposite, () => {
 const { onLoop } = useRenderLoop()
 
 onLoop(({ elapsed }) => {
-  if (!testRef.value || !testRefBis.value) { return }
+  if (!testRef.value || !testRefBis.value) { }
 
-  testRef.value.root.rotation.y = Math.PI / 2 * Math.sin(elapsed)
-  testRef.value.root.rotation.x = Math.PI / 6 * Math.sin(elapsed)
+  // testRef.value.root.rotation.y = Math.PI / 2 * Math.sin(elapsed)
+  // testRef.value.root.rotation.x = Math.PI / 6 * Math.sin(elapsed)
 
-  testRefBis.value.root.position.y = 0.15 * Math.sin(elapsed)
+  // testRefBis.value.root.position.y = 0.15 * Math.sin(elapsed)
 })
 </script>
 
@@ -102,14 +103,9 @@ onLoop(({ elapsed }) => {
   <TresCanvas
     v-bind="gl"
   >
-    <TresPerspectiveCamera
-      :position="[5, 2.5, 7.5]"
-    />
+    <TresPerspectiveCamera :position="[5, 2.5, 7.5]" />
 
-    <OrbitControls
-      make-default
-      :target="[0, 0, 0]"
-    />
+    <OrbitControls make-default />
 
     <Suspense>
       <Environment
@@ -117,7 +113,7 @@ onLoop(({ elapsed }) => {
       />
     </Suspense>
 
-    <Suspense>
+    <!-- <Suspense>
       <Wiggle ref="testRef" :position-z="areaLimit" :position-x="areaLimit" :scale="15" :debug="true" :basic="{ velocity: velocity.value }">
         <primitive ref="modelRef" :object="model.scene" />
       </Wiggle>
@@ -127,20 +123,22 @@ onLoop(({ elapsed }) => {
       <Wiggle ref="testRefOpposite" :position-z="-areaLimit" :position-x="-areaLimit" :scale="15" :debug="true" :basic="{ velocity: velocity.value }">
         <primitive ref="modelRef" :object="model1" />
       </Wiggle>
-    </Suspense>
+    </Suspense> -->
 
     <Suspense>
-      <Wiggle ref="testRefBis" :scale="15" :debug="false" :spring="{ stiffness: stiffness.value, damping: damping.value }">
-        <primitive ref="modelRefBis" :object="model2" />
+      <Wiggle ref="testRefBis" :position-x="2" :scale="15" :debug="true" :spring="{ stiffness: stiffness.value, damping: damping.value }">
+        <primitive ref="modelRefBis" :object="model.scene" />
       </Wiggle>
     </Suspense>
 
-    <ContactShadows
-      :blur="2"
-      :opacity="1"
-      :position-y="-2"
-    />
-
     <TransformControls :object="modelRefBis" />
+
+    <Suspense>
+      <Wiggle ref="testRefBisBis" :position-x="-2" :scale="15" :debug="true" :basic="{ velocity: velocity.value }">
+        <primitive ref="modelRef" :object="model1" />
+      </Wiggle>
+    </Suspense>
+
+    <TransformControls :object="modelRef" />
   </TresCanvas>
 </template>
