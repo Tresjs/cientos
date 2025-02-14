@@ -67,10 +67,6 @@ You can use one of the available presets by passing the `preset` prop:
 <Environment preset="city" />
 ```
 
-<DocsDemo>
-  <EnvironmentPresetsDemo/>
-</DocsDemo>
-
 ## Lightformer
 
 You can incorporate `Lightformer` into the environment just like a slot.
