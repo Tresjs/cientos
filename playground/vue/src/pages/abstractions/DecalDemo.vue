@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
-import { Decal, OrbitControls } from '@tresjs/cientos'
+import { Decal, Html, OrbitControls } from '@tresjs/cientos'
 import { TresLeches, useControls } from '@tresjs/leches'
 import { SRGBColorSpace } from 'three'
 import '@tresjs/leches/styles'
@@ -18,24 +18,54 @@ const gl = {
   antialias: pixelRatio.value < 2,
 }
 
+const paragraphRef = ref<HTMLElement | null>(null)
+const paragraphRefBis = ref<HTMLElement | null>(null)
+const paragraphRefBisBis = ref<HTMLElement | null>(null)
+const paragraphRefBisBisBis = ref<HTMLElement | null>(null)
+const paragraphRefBisBisBisBis = ref<HTMLElement | null>(null)
+const paragraphRefBisBisBisBisBis = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  console.log('mounted', paragraphRefBis.value)
+})
+
+watch(paragraphRefBis, () => {
+  console.log('watch', paragraphRefBis.value)
+})
+
 useControls({})
 </script>
 
 <template>
   <TresLeches style="position:absolute; left:initial; right:20px; top:10px;" />
+  <div id="late-div"></div>
 
   <TresCanvas v-bind="gl" window-size>
     <TresPerspectiveCamera :position="[7.5, 5, 7.5]" />
     <OrbitControls make-default />
 
-    <TresMesh :scale="3">
+    <!-- <TresMesh :scale="3">
       <TresMeshStandardMaterial color="white" />
       <TresBoxGeometry :args="[1, 1, 1]" />
 
       <Suspense>
         <Decal :data="decalsData" debug :scale="2" :map="['/decal/tres-logo.png', '/decal/vuejs-logo.png', '/decal/twemoji.png', '/decal/tres-logo-rotate.png']" />
       </Suspense>
-    </TresMesh>
+    </TresMesh> -->
+
+    <Html center>
+      <p ref="paragraphRef">Decal Demo</p>
+    </Html>
+
+    <Html center>
+      <p ref="paragraphRefBis">Decal Demo</p>
+      <p ref="paragraphRefBisBis">Decal Demo</p>
+
+      <div ref="paragraphRefBisBisBis">
+        <p ref="paragraphRefBisBisBisBis">Decal Demo</p>
+        <p ref="paragraphRefBisBisBisBisBis">Decal Demo 2</p>
+      </div>
+    </Html>
 
     <!-- <Sphere :args="[1.75, 32, 32]">
       <Suspense>

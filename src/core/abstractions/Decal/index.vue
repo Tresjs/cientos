@@ -6,8 +6,9 @@ import type { BoxHelper, Group, Intersection } from 'three'
 import { Color, Euler, MathUtils, Mesh, SRGBColorSpace, Vector3 } from 'three'
 import { DecalGeometry } from 'three-stdlib'
 import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
-import { Box } from '../../index'
+import { Box, Html } from '../../index'
 import Item from './Item.vue'
+import Resizer from './Resizer.vue'
 import { parseTextureFilename, updateBoxHelper } from './utils'
 import { useControls } from '@tresjs/leches'
 import { useClipboard } from '@vueuse/core'
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<DecalAttributes>(), {
   mesh: () => shallowRef(null),
 })
 
+const resizerRef = ref(null)
 const nodesDecalRefs = ref<Decal[]>([])
 const decalItemsRef = ref<DecalElementProps[]>([])
 const textureMap = ref<Record<string, EnhancedTexture>>({})
@@ -489,6 +491,8 @@ const printDecal = async () => {
 
   await nextTick()
 
+  console.log(point, resizerRef.value)
+
   updateControlsFromDecal(decalDebugScale.value, decalDebugOrientationZ.value)
 
   decalSelected.value.options = computedNodesDecal.value
@@ -498,6 +502,14 @@ const printDecal = async () => {
 
   updateBoxHelper(boxHelperSelectedRef, targetMesh?.instance)
 }
+
+watch(resizerRef, (newVal) => {
+  console.log('resizerRef:', newVal)
+  if (newVal) {
+    console.log('updatePosition:', newVal.updatePosition)
+    console.log('root:', newVal.root)
+  }
+})
 
 const onPointerUp = () => {
   if (currentIntersectIsEmpty.value || intersectIsEmpty.value) { return }
@@ -510,6 +522,10 @@ const onPointerUp = () => {
       printDecal()
     }
   }
+}
+
+function onUpdateResizer({ scale, rotation, position }) {
+  console.log('onUpdateResizer:', position, scale, rotation)
 }
 
 watch(() => decalSelected.value.value, async (newVal) => {
@@ -706,6 +722,8 @@ onUnmounted(() => {
     <TresBufferGeometry />
     <TresLineBasicMaterial :color="meshLineColor" />
   </TresLine>
+
+  <Resizer ref="resizerRef" @update-transform="onUpdateResizer" />
 
   <Box
     v-if="debug"
