@@ -30,6 +30,11 @@ export const controlsRoutes = [
     component: () => import('../../pages/controls/PointerLockControlsDemo.vue'),
   },
   {
+    path: '/controls/presentation-controls',
+    name: 'PresentationControls',
+    component: () => import('../../pages/controls/PresentationControlsDemo.vue'),
+  },
+  {
     path: '/controls/scroll-controls',
     name: 'ScrollControls',
     component: () => import('../../pages/controls/ScrollControlsDemo.vue'),
