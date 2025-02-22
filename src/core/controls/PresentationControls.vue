@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, reactive, ref, toRefs, watch } from 'vue'
+import { computed, onUnmounted, reactive, ref, toRefs, watch } from 'vue'
 import { MathUtils } from 'three'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import gsap from 'gsap'
@@ -51,24 +51,24 @@ console.log('easeOutExpo', easeOutExpo)
 
 const { onLoop } = useRenderLoop()
 
-const rPolar: [number, number] = [
+const rPolar = computed<[number, number]>(() => [
   props.rotation[0] + props.polar[0],
   props.rotation[0] + props.polar[1],
-]
+])
 
-const rAzimuth: [number, number] = [
+const rAzimuth = computed<[number, number]>(() => [
   props.rotation[1] + props.azimuth[0],
   props.rotation[1] + props.azimuth[1],
-]
+])
 
-const rInitial: [number, number, number] = [
-  MathUtils.clamp(props.rotation[0], rPolar[0], rPolar[1]),
-  MathUtils.clamp(props.rotation[1], rAzimuth[0], rAzimuth[1]),
+const rInitial = computed<[number, number, number]>(() => [
+  MathUtils.clamp(props.rotation[0], rPolar.value[0], rPolar.value[1]),
+  MathUtils.clamp(props.rotation[1], rAzimuth.value[0], rAzimuth.value[1]),
   props.rotation[2],
-]
+])
 
 const animation = reactive({
-  rotation: [...rInitial] as [number, number, number],
+  rotation: [...rInitial.value] as [number, number, number],
   scale: 1,
   damping: damping.value,
 })
@@ -90,22 +90,22 @@ const gestureHandler = useGesture(
       // (Future feature of useGesture?)
       if (!hovering) {
         animation.scale = 1
-        animation.rotation = rInitial
+        animation.rotation = rInitial.value
         gestureHandler.reset()
       }
     },
     onDrag: ({ down, delta: [dx, dy], memo }) => {
-      const [oldX, oldY] = memo || [...animation.rotation] || rInitial
+      const [oldX, oldY] = memo || [...animation.rotation] || rInitial.value
 
       if (!enabled.value) { return [dy, dx] }
 
       if (cursor.value) { explDomElement.style.cursor = down ? 'grabbing' : 'grab' }
 
-      const newX = MathUtils.clamp(oldX + (dx / sizes.width.value) * Math.PI * speed.value, ...rAzimuth)
-      const newY = MathUtils.clamp(oldY + (dy / sizes.height.value) * Math.PI * speed.value, ...rPolar)
+      const newX = MathUtils.clamp(oldX + (dx / sizes.width.value) * Math.PI * speed.value, ...rAzimuth.value)
+      const newY = MathUtils.clamp(oldY + (dy / sizes.height.value) * Math.PI * speed.value, ...rPolar.value)
 
-      animation.rotation = snap.value && !down ? rInitial : [newY, newX, 0]
-      animation.scale = down && newY > rPolar[1] / 2 ? zoom.value : 1
+      animation.rotation = snap.value && !down ? rInitial.value : [newY, newX, 0]
+      animation.scale = down && newY > rPolar.value[1] / 2 ? zoom.value : 1
       animation.damping = snap.value && !down && typeof snap.value !== 'boolean' ? (snap.value as number) : damping.value
 
       return [newX, newY]
