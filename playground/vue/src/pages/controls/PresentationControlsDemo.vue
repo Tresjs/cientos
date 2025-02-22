@@ -39,13 +39,13 @@ const { cursor, enabled, snap, speed, damping, zoom } = useControls({
   },
 })
 
-const paragraphRef = ref(null)
+const controllerRef = ref(null)
 </script>
 
 <template>
   <TresLeches />
 
-  <h1 ref="paragraphRef" style="padding: 30px; background-color: blue; position: fixed;z-index: 1;">Coucou à tous</h1>
+  <div ref="controllerRef" class="controller"></div>
 
   <TresCanvas
     v-bind="gl"
@@ -62,3 +62,19 @@ const paragraphRef = ref(null)
     </PresentationControls>
   </TresCanvas>
 </template>
+
+<style scoped>
+.controller {
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 8.5vw;
+  height: 8.5vw;
+  border-radius: 50%;
+  transform: translate(-50%, 0);
+  display: none;
+}
+</style>

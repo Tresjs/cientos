@@ -7,7 +7,7 @@ import CustomEase from 'gsap/CustomEase'
 import { easing } from 'maath'
 import { useGesture } from '@vueuse/gesture'
 
-// TODO: Add the ability (Add props) to change the easing of the return animation (elastic, bounce, etc.).
+// TODO: Add (props) the ability to change the easing of the return animation (elastic, bounce, etc.).
 
 const props = withDefaults(
   defineProps<{
@@ -87,7 +87,7 @@ const gestureHandler = useGesture(
       }
 
       // Prevent the onDrag canceling when `global` value is `false` and the mouse leaves the model.
-      // Future feature of useGesture?
+      // (Future feature of useGesture?)
       if (!hovering) {
         animation.scale = 1
         animation.rotation = rInitial
@@ -112,7 +112,7 @@ const gestureHandler = useGesture(
     },
   },
   {
-    domTarget: domElement.value || global.value ? explDomElement : undefined,
+    domTarget: global.value ? explDomElement : undefined,
   },
 )
 
