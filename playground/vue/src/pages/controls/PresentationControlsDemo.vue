@@ -4,6 +4,7 @@ import { TresCanvas } from '@tresjs/core'
 import { NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
+import { gsap } from 'gsap'
 
 const gl = {
   clearColor: '#ff0000',
@@ -15,7 +16,7 @@ const gl = {
 const { cursor, enabled, snap, speed, damping, zoom } = useControls({
   enabled: { value: true, type: 'boolean', label: 'Enabled' },
   cursor: { value: true, type: 'boolean', label: 'Cursor' },
-  snap: { value: true, type: 'boolean', label: 'Snap' },
+  snap: { value: false, type: 'boolean', label: 'Snap' },
   damping: {
     label: 'Damping',
     value: 0.15,
@@ -40,6 +41,14 @@ const { cursor, enabled, snap, speed, damping, zoom } = useControls({
 })
 
 const controllerRef = ref(null)
+
+const easeOutExpoGSAP = gsap.parseEase('expo.out')
+console.log('easeOutExpoGSAP', easeOutExpoGSAP, typeof easeOutExpoGSAP)
+
+const easeOutExpo = (x: number): number => {
+  return x === 1 ? 1 : 1 - 2 ** (-10 * x)
+}
+console.log('easeOutExpo', easeOutExpo)
 </script>
 
 <template>
@@ -53,7 +62,7 @@ const controllerRef = ref(null)
   >
     <TresPerspectiveCamera :position="[0, 0, 10]" />
 
-    <PresentationControls :enabled="enabled.value" :cursor="cursor.value" :global="false" :snap="snap.value" :damping="damping.value" :zoom="zoom.value" :speed="speed.value">
+    <PresentationControls :enabled="enabled.value" :customEase="easeOutExpo" :cursor="cursor.value" :global="true" :snap="snap.value" :damping="damping.value" :zoom="zoom.value" :speed="speed.value">
       <TresMesh>
         <TresBoxGeometry :args="[2.5, 2.5, 2.5]" />
         <TresMeshStandardMaterial :color="0x00FF00" wireframe />
