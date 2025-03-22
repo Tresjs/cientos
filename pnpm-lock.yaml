@@ -34,8 +34,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.0.0)(release-it@18.1.1(@types/node@22.13.11)(typescript@5.7.2))
       '@tresjs/core':
-        specifier: ^4.3.2
-        version: 4.3.3(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
+        specifier: https://pkg.pr.new/@tresjs/core@bb0b9e2
+        version: https://pkg.pr.new/@tresjs/core@bb0b9e2(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       '@tresjs/eslint-config':
         specifier: ^1.4.0
         version: 1.4.0(@typescript-eslint/utils@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.7.2))(@vue/compiler-sfc@3.5.13)(eslint@9.23.0(jiti@2.4.2))(typescript@5.7.2)
@@ -1543,8 +1543,9 @@ packages:
       three: '>=0.133'
       vue: '>=3.4'
 
-  '@tresjs/core@4.3.3':
-    resolution: {integrity: sha512-AIFP0u5Hp/9LjifndcFEQWkucWYI72vpUAvJzeOArMdrGN/slKXf8XYP/GKm0BMbPQCu6/eg/LqghZO5tOQ81A==}
+  '@tresjs/core@https://pkg.pr.new/@tresjs/core@bb0b9e2':
+    resolution: {tarball: https://pkg.pr.new/@tresjs/core@bb0b9e2}
+    version: 4.3.3
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'
@@ -6128,7 +6129,7 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@tresjs/core@4.3.3(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
+  '@tresjs/core@https://pkg.pr.new/@tresjs/core@bb0b9e2(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
       '@vue/devtools-api': 6.6.4

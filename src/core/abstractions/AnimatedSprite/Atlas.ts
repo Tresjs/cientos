@@ -1,4 +1,4 @@
-import { useLoader, useLogger } from '@tresjs/core'
+import { logError, useLoader } from '@tresjs/core'
 import { type Texture, TextureLoader } from 'three'
 import type { LoaderProto } from '@tresjs/core'
 import { expand } from './AtlasAnimationDefinitionParser'
@@ -17,7 +17,7 @@ export async function getTextureAndAtlasAsync(
       ? new Promise(resolve => resolve(atlasPathOrAtlasish as Atlasish))
       : fetch(atlasPathOrAtlasish)
         .then(response => response.json())
-        .catch(e => useLogger().logError(`Cientos Atlas - ${e}`))
+        .catch(e => logError(`Cientos Atlas - ${e}`))
   return Promise.all([texturePromise, atlasishPromise]).then(
     ([texture, atlasish]) => {
       const atlas = getAtlas(
@@ -211,7 +211,7 @@ export function setAtlasDefinitions(atlas: Atlas, definitions: Record<string, st
     const expandedFrameIndices = expand(definitionStr)
     for (const frameIndex of expandedFrameIndices) {
       if (frameIndex < 0 || frames.length <= frameIndex) {
-        useLogger().logError(
+        logError(
           'Cientos Atlas: Attempting to access frame index '
           + `${frameIndex} in animation ${animationName}, but it does not exist.`,
         )
@@ -230,7 +230,7 @@ function getAtlasFramesByAnimationName(
     const animationsMsg = Object.keys(atlas.animations)
       .map(n => `* ${n}\n`)
       .join('')
-    useLogger().logError(
+    logError(
       `Cientos Atlas: getAtlasFramesByAnimationName
 The animation name "${name}" does not exist in this atlas.
 Available names:
@@ -252,7 +252,7 @@ function getAtlasFramesByIndices(
     || endI < 0
     || atlas.frames.length <= endI
   ) {
-    useLogger().logError(
+    logError(
       `Cientos Atlas: getFramesByIndex – [${startI}, ${endI}] is out of bounds.`,
     )
     return [getNullAtlasFrame()]

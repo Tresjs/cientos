@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLogger, useLoop, useTresContext } from '@tresjs/core'
+import { logWarning, useLoop, useTresContext } from '@tresjs/core'
 import { useScroll, useWindowScroll, useWindowSize } from '@vueuse/core'
 import { ref, shallowRef, watch } from 'vue'
 
@@ -64,8 +64,6 @@ const props = withDefaults(
 )
 
 const emit = defineEmits(['update:modelValue'])
-
-const { logWarning } = useLogger()
 
 if (props.smoothScroll < 0) { logWarning('SmoothControl must be greater than zero') }
 if (props.pages < 0) { logWarning('Pages must be greater than zero') }

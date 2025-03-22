@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
-import { useLogger, useLoop, useTresContext } from '@tresjs/core'
+import { logWarning, useLoop, useTresContext } from '@tresjs/core'
 import {
   Color,
   DepthTexture,
@@ -324,31 +324,31 @@ watch(() => [
 //
 // TODO: This code can be removed when #615 is resolved
 watch(() => [hasBlur.value], () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Setting blurMixRough or blurMixSmooth to 0, then non-zero triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDepth, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Setting depthScale to 0, then non-zero triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDistortion, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling distortionMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasRoughness, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling roughnessMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(() => [props.normalMap], () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling normalMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
