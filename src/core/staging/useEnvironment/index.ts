@@ -4,6 +4,7 @@ import {
   CubeTextureLoader,
   EquirectangularReflectionMapping,
   Euler,
+  Mesh,
   Vector3,
 } from 'three'
 import { RGBELoader } from 'three-stdlib'
@@ -35,6 +36,7 @@ const PRESET_ROOT = 'https://raw.githubusercontent.com/Tresjs/assets/main/textur
  *   environmentIntensity = 1,
  *   backgroundRotation = [0, 0, 0],
  *   environmentRotation = [0, 0, 0],
+ *   syncMaterials = false,
  * @param {Ref<WebGLCubeRenderTarget | null>} fbo - The framebuffer object
  * @return {Promise<Ref<Texture | CubeTexture | null>>} The loaded texture
  */
@@ -54,6 +56,7 @@ export async function useEnvironment(
     environmentIntensity = ref(1),
     backgroundRotation = ref([0, 0, 0]),
     environmentRotation = ref([0, 0, 0]),
+    syncMaterials = ref(false),
   } = toRefs(options)
 
   watch(options, () => {
@@ -116,23 +119,23 @@ export async function useEnvironment(
   })
 
   watch(() => backgroundIntensity?.value, (value) => {
-    if (scene.value && value) {
-      scene.value.backgroundIntensity = value
+    if (scene.value) {
+      scene.value.backgroundIntensity = value ?? 1
     }
   }, {
     immediate: true,
   })
 
   watch(() => environmentIntensity?.value, (value) => {
-    if (scene.value && value) {
-      scene.value.environmentIntensity = value
+    if (scene.value) {
+      scene.value.environmentIntensity = value ?? 1
     }
   }, {
     immediate: true,
   })
 
   watch(() => backgroundRotation?.value, (value) => {
-    if (scene.value && value) {
+    if (scene.value) {
       // TODO: would be nice to abstract this to a function on @tresjs/core
       if (value instanceof Euler) {
         scene.value.backgroundRotation = value
@@ -155,7 +158,7 @@ export async function useEnvironment(
   })
 
   watch(() => environmentRotation?.value, (value) => {
-    if (scene.value && value) {
+    if (scene.value && !syncMaterials?.value) {
       if (value instanceof Euler) {
         scene.value.environmentRotation = value
       }
@@ -171,6 +174,12 @@ export async function useEnvironment(
       else if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
         scene.value.environmentRotation = new Euler(value.x, value.y, value.z)
       }
+
+      scene.value.traverse((child) => {
+        if (child instanceof Mesh && child.material) {
+          child.material.needsUpdate = true
+        }
+      })
     }
   }, {
     immediate: true,
@@ -201,6 +210,44 @@ export async function useEnvironment(
     }
     else if (value && !(value in environmentPresets)) {
       throw new Error(`Preset must be one of: ${Object.keys(environmentPresets).join(', ')}`)
+    }
+  }, {
+    immediate: true,
+  })
+
+  // Add sync materials watch effect
+  watch([syncMaterials, backgroundRotation], ([sync, bgRotation]) => {
+    if (sync && scene.value) {
+      // Convert background rotation to Euler if needed
+      let euler: Euler
+      if (bgRotation instanceof Euler) {
+        euler = bgRotation
+      }
+      else if (Array.isArray(bgRotation)) {
+        euler = new Euler(bgRotation[0], bgRotation[1], bgRotation[2])
+      }
+      else if (typeof bgRotation === 'number') {
+        euler = new Euler(bgRotation, bgRotation, bgRotation)
+      }
+      else if (bgRotation instanceof Vector3) {
+        euler = new Euler(bgRotation.x, bgRotation.y, bgRotation.z)
+      }
+      else if (typeof bgRotation === 'object' && 'x' in bgRotation && 'y' in bgRotation && 'z' in bgRotation) {
+        euler = new Euler(bgRotation.x, bgRotation.y, bgRotation.z)
+      }
+      else {
+        return
+      }
+
+      // Apply the same rotation to environment
+      scene.value.environmentRotation = euler
+
+      // Update materials
+      scene.value.traverse((child) => {
+        if (child instanceof Mesh && child.material) {
+          child.material.needsUpdate = true
+        }
+      })
     }
   }, {
     immediate: true,

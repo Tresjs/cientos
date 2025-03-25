@@ -91,6 +91,14 @@ export interface EnvironmentOptions {
    * @default [0, 0, 0]
    */
   environmentRotation?: VectorFlexibleParams
+  /**
+   * If true, the environment rotation will be synced with the background rotation.
+   * This means when backgroundRotation changes, environmentRotation will be updated to match.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  syncMaterials?: boolean
 }
 
 export const environmentPresets = {

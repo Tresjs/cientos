@@ -18,7 +18,7 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const { background, blur, preset, backgroundIntensity, environmentIntensity, backgroundRotation, environmentRotation } = useControls({
+const { background, blur, preset, backgroundIntensity, environmentIntensity, backgroundRotation, environmentRotation, syncMaterials } = useControls({
   background: true,
   blur: {
     value: 0,
@@ -61,6 +61,7 @@ const { background, blur, preset, backgroundIntensity, environmentIntensity, bac
   environmentRotation: {
     value: new Vector3(0, 0, 0),
   },
+  syncMaterials: false,
 })
 
 const environmentRef = ref(null)
@@ -113,6 +114,7 @@ const { progress, hasFinishLoading } = await useProgress()
         :environment-intensity="environmentIntensity.value"
         :background-rotation="[backgroundRotation.value.x, backgroundRotation.value.y, backgroundRotation.value.z]"
         :environment-rotation="[environmentRotation.value.x, environmentRotation.value.y, environmentRotation.value.z]"
+        :sync-materials="syncMaterials.value"
       >
         <Lightformer
           :intensity="0.75"
