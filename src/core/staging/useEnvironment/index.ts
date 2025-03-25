@@ -12,6 +12,7 @@ import { computed, ref, toRefs, unref, watch } from 'vue'
 import type { LoaderProto } from '@tresjs/core'
 import type {
   CubeTexture,
+  Scene,
   Texture,
   WebGLCubeRenderTarget,
 } from 'three'
@@ -20,6 +21,42 @@ import { environmentPresets } from './const'
 import type { EnvironmentOptions } from './const'
 
 const PRESET_ROOT = 'https://raw.githubusercontent.com/Tresjs/assets/main/textures/hdr/'
+
+/**
+ * Converts various rotation formats to an Euler instance
+ * @param value - The rotation value to convert
+ * @returns An Euler instance or null if conversion fails
+ */
+function toEuler(value: any): Euler | null {
+  if (value instanceof Euler) {
+    return value
+  }
+  if (Array.isArray(value)) {
+    return new Euler(value[0], value[1], value[2])
+  }
+  if (typeof value === 'number') {
+    return new Euler(value, value, value)
+  }
+  if (value instanceof Vector3) {
+    return new Euler(value.x, value.y, value.z)
+  }
+  if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
+    return new Euler(value.x, value.y, value.z)
+  }
+  return null
+}
+
+/**
+ * Updates all materials in the scene
+ * @param scene - The scene to update
+ */
+function updateMaterials(scene: Scene) {
+  scene.traverse((child) => {
+    if (child instanceof Mesh && child.material) {
+      child.material.needsUpdate = true
+    }
+  })
+}
 
 /**
  * Component that loads an environment map and sets it as the scene's background and environment.
@@ -67,6 +104,7 @@ export async function useEnvironment(
   const isCubeMap = computed(() => Array.isArray((files as Ref<string[]>).value))
   const loader = computed(() => isCubeMap.value ? CubeTextureLoader : RGBELoader)
 
+  // Watch for texture loading
   watch([files, path], async ([files, path]) => {
     if (!files) { return }
     if (files.length > 0 && !preset?.value) {
@@ -91,6 +129,7 @@ export async function useEnvironment(
     immediate: true,
   })
 
+  // Watch for texture changes
   watch(texture, (value) => {
     if (scene.value && value) {
       scene.value.environment = value
@@ -99,6 +138,7 @@ export async function useEnvironment(
     immediate: true,
   })
 
+  // Watch for background changes
   watch([background, texture], ([background, texture]) => {
     if (scene.value) {
       const bTexture = fbo?.value ? fbo.value.texture : texture
@@ -110,6 +150,7 @@ export async function useEnvironment(
     immediate: true,
   })
 
+  // Watch for blur changes
   watch(() => blur?.value, (value) => {
     if (scene.value && value) {
       scene.value.backgroundBlurriness = value
@@ -118,6 +159,7 @@ export async function useEnvironment(
     immediate: true,
   })
 
+  // Watch for intensity changes
   watch(() => backgroundIntensity?.value, (value) => {
     if (scene.value) {
       scene.value.backgroundIntensity = value ?? 1
@@ -134,57 +176,32 @@ export async function useEnvironment(
     immediate: true,
   })
 
+  // Watch for background rotation changes
   watch(() => backgroundRotation?.value, (value) => {
     if (scene.value) {
-      // TODO: would be nice to abstract this to a function on @tresjs/core
-      if (value instanceof Euler) {
-        scene.value.backgroundRotation = value
-      }
-      else if (Array.isArray(value)) {
-        scene.value.backgroundRotation = new Euler(value[0], value[1], value[2])
-      }
-      else if (typeof value === 'number') {
-        scene.value.backgroundRotation = new Euler(value, value, value)
-      }
-      else if (value instanceof Vector3) {
-        scene.value.backgroundRotation = new Euler(value.x, value.y, value.z)
-      }
-      else if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
-        scene.value.backgroundRotation = new Euler(value.x, value.y, value.z)
+      const euler = toEuler(value)
+      if (euler) {
+        scene.value.backgroundRotation = euler
       }
     }
   }, {
     immediate: true,
   })
 
+  // Watch for environment rotation changes
   watch(() => environmentRotation?.value, (value) => {
     if (scene.value && !syncMaterials?.value) {
-      if (value instanceof Euler) {
-        scene.value.environmentRotation = value
+      const euler = toEuler(value)
+      if (euler) {
+        scene.value.environmentRotation = euler
+        updateMaterials(scene.value)
       }
-      else if (Array.isArray(value)) {
-        scene.value.environmentRotation = new Euler(value[0], value[1], value[2])
-      }
-      else if (typeof value === 'number') {
-        scene.value.environmentRotation = new Euler(value, value, value)
-      }
-      else if (value instanceof Vector3) {
-        scene.value.environmentRotation = new Euler(value.x, value.y, value.z)
-      }
-      else if (typeof value === 'object' && 'x' in value && 'y' in value && 'z' in value) {
-        scene.value.environmentRotation = new Euler(value.x, value.y, value.z)
-      }
-
-      scene.value.traverse((child) => {
-        if (child instanceof Mesh && child.material) {
-          child.material.needsUpdate = true
-        }
-      })
     }
   }, {
     immediate: true,
   })
 
+  // Watch for preset changes
   watch(() => preset?.value, async (value) => {
     if (value && value in environmentPresets) {
       const _path = PRESET_ROOT
@@ -215,39 +232,14 @@ export async function useEnvironment(
     immediate: true,
   })
 
-  // Add sync materials watch effect
+  // Watch for sync materials changes
   watch([syncMaterials, backgroundRotation], ([sync, bgRotation]) => {
     if (sync && scene.value) {
-      // Convert background rotation to Euler if needed
-      let euler: Euler
-      if (bgRotation instanceof Euler) {
-        euler = bgRotation
+      const euler = toEuler(bgRotation)
+      if (euler) {
+        scene.value.environmentRotation = euler
+        updateMaterials(scene.value)
       }
-      else if (Array.isArray(bgRotation)) {
-        euler = new Euler(bgRotation[0], bgRotation[1], bgRotation[2])
-      }
-      else if (typeof bgRotation === 'number') {
-        euler = new Euler(bgRotation, bgRotation, bgRotation)
-      }
-      else if (bgRotation instanceof Vector3) {
-        euler = new Euler(bgRotation.x, bgRotation.y, bgRotation.z)
-      }
-      else if (typeof bgRotation === 'object' && 'x' in bgRotation && 'y' in bgRotation && 'z' in bgRotation) {
-        euler = new Euler(bgRotation.x, bgRotation.y, bgRotation.z)
-      }
-      else {
-        return
-      }
-
-      // Apply the same rotation to environment
-      scene.value.environmentRotation = euler
-
-      // Update materials
-      scene.value.traverse((child) => {
-        if (child instanceof Mesh && child.material) {
-          child.material.needsUpdate = true
-        }
-      })
     }
   }, {
     immediate: true,
