@@ -78,8 +78,7 @@ const gestureHandler = useGesture(
       // Prevent the onDrag canceling when `global.value` value is `false` and the mouse leaves the model (also in the case when `snap.value` is `false`).
       // (Future feature of useGesture? | In-depth re-reading of the documentation to find a solution?)
       if (!hovering && snap.value) {
-        animation.scale = 1
-        animation.rotation = rInitial.value
+        resetAnimation()
         gestureHandler.reset()
       }
     },
@@ -107,6 +106,17 @@ const gestureHandler = useGesture(
     },
   },
 )
+
+function resetAnimation() {
+  animation.rotation = rInitial.value
+  animation.scale = 1
+}
+
+watch(snap, () => {
+  if (snap.value) {
+    resetAnimation()
+  }
+})
 
 watch([global, enabled, cursor], () => {
   if (enabled.value && cursor.value) {

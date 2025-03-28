@@ -96,6 +96,7 @@ export default defineConfig({
           { text: 'PointerLockControls', link: '/guide/controls/pointer-lock-controls' },
           { text: 'KeyboardControls', link: '/guide/controls/keyboard-controls' },
           { text: 'ScrollControls', link: '/guide/controls/scroll-controls' },
+          { text: 'PresentationControls', link: '/guide/controls/presentation-controls' },
           { text: 'MapControls', link: '/guide/controls/map-controls' },
         ],
       },

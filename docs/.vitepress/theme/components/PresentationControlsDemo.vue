@@ -4,7 +4,7 @@ import { TresCanvas } from '@tresjs/core'
 import { NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
-import { gsap } from 'gsap'
+import { ref } from 'vue'
 
 const gl = {
   clearColor: '#ff0000',
@@ -16,7 +16,7 @@ const gl = {
 const { cursor, enabled, snap, speed, damping, zoom } = useControls({
   enabled: { value: true, type: 'boolean', label: 'Enabled' },
   cursor: { value: true, type: 'boolean', label: 'Cursor' },
-  snap: { value: false, type: 'boolean', label: 'Snap' },
+  snap: { value: true, type: 'boolean', label: 'Snap' },
   damping: {
     label: 'Damping',
     value: 0.15,
@@ -52,11 +52,10 @@ const easeOutExpo = (x: number): number => {
 <template>
   <TresLeches />
 
-  <div ref="controllerRef" class="controller"></div>
+  <!-- <div ref="controllerRef" class="controller"></div> -->
 
   <TresCanvas
     v-bind="gl"
-    window-size
   >
     <TresPerspectiveCamera :position="[0, 0, 10]" />
 
