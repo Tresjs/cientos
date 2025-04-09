@@ -18,12 +18,12 @@ const { debug, basic, spring } = toRefs(props)
 const mainRef = shallowRef<Group>()
 const slots = useSlots()
 
-const model = slots.default?.({})[0].props.object
+const model = slots.default?.({})?.[0]?.props?.object
 
 useWiggle(model, { debug: debug.value, ...(basic.value ? { basic } : { spring }) })
 
 defineExpose({
-  root: mainRef,
+  instance: mainRef,
 })
 </script>
 
