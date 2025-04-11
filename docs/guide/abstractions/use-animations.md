@@ -7,11 +7,11 @@
 ## Usage
 
 ```ts
-import { useAnimations } from '@tresjs/cientos'
+import { useAnimations, useGLTF } from '@tresjs/cientos'
 
-const { scene: model, animations } = await useGLTF('/models/ugly-naked-bunny.gltf')
+const { state } = useGLTF('/models/ugly-naked-bunny.gltf')
 
-const { actions, mixer } = useAnimations(animations, model)
+const { actions, mixer } = useAnimations(state?.animations, state?.scene)
 
 const currentAction = actions.Greeting
 
