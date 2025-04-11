@@ -16,7 +16,7 @@ You can access the model reference by passing a `ref` to the `model` prop and th
 
 ```vue
 <script setup lang="ts">
-import { type TresObject } from 'tresjs'
+import type { TresObject } from 'tresjs'
 import { GLTFModel, OrbitControls } from '@tresjs/cientos'
 
 const modelRef = shallowRef<TresObject>()

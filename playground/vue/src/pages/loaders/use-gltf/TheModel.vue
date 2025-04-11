@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable no-console */
 import { useGLTF } from '@tresjs/cientos'
 
 const { state: model } = useGLTF(

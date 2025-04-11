@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
-import TheModel from './TheModel.vue'
 import BlenderCube from '../../../components/gltf/BlenderCube.vue'
 
 const gl = {
