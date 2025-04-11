@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { watch } from 'vue'
 import type { TresObject } from '@tresjs/core'
 import { useGLTF } from '.'
 
@@ -71,30 +71,33 @@ const props = withDefaults(
     decoderPath: 'https://www.gstatic.com/draco/versioned/decoders/1.4.1/',
   },
 )
-const modelRef = ref()
 
-defineExpose({
-  instance: modelRef,
-})
-
-const { scene: model } = await useGLTF(props.path as string, {
+const { state, isLoading } = useGLTF(props.path as string, {
   draco: props.draco,
   decoderPath: props.decoderPath,
 })
-if (props.castShadow || props.receiveShadow) {
-  model.traverse((child: TresObject) => {
-    if (child.isMesh) {
-      child.castShadow = props.castShadow
-      child.receiveShadow = props.receiveShadow
+
+let modelObject: TresObject | null = null
+
+watch(state, (newVal) => {
+  if (newVal?.scene) {
+    modelObject = newVal.scene
+    if (props.castShadow || props.receiveShadow) {
+      modelObject.traverse((child: TresObject) => {
+        if (child.isMesh) {
+          child.castShadow = props.castShadow
+          child.receiveShadow = props.receiveShadow
+        }
+      })
     }
-  })
-}
+  }
+})
 </script>
 
 <template>
   <primitive
-    ref="modelRef"
-    :object="model"
+    v-if="!isLoading && modelObject"
+    :object="modelObject"
     v-bind="$attrs"
   />
 </template>

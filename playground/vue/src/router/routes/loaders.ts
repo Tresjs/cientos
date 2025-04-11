@@ -7,12 +7,12 @@ export const loadersRoutes = [
   {
     path: '/loaders/use-gltf',
     name: 'useGLTF',
-    component: () => import('../../pages/loaders/UseGLTFDemo.vue'),
+    component: () => import('../../pages/loaders/use-gltf/index.vue'),
   },
   {
     path: '/loaders/gltf-model',
     name: 'GLTFModel',
-    component: () => import('../../pages/loaders/GLTFModelDemo.vue'),
+    component: () => import('../../pages/loaders/use-gltf/GLTFModelDemo.vue'),
   },
   {
     path: '/loaders/use-fbx',
