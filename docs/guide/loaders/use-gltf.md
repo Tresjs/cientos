@@ -4,11 +4,23 @@
   <UseGLTFDemo />
 </DocsDemo>
 
-A composable that allows you to easily load glTF models into your **TresJS** scene.
+A composable that allows you to easily load glb/glTF models into your **TresJS** scene.
 
 ## Usage
 
 ::: code-group
+```vue{2,6} [TheModel.vue]
+<script setup lang="ts">
+import { useGLTF } from '@tresjs/cientos'
+
+const path = './blender-cube.glb'
+const { state } = useGLTF(path, { draco: true })
+</script>
+
+<template>
+  <primitive v-if="state" :object="state?.scene" />
+</template>
+```
 ```vue [app.vue]
 <script setup lang="ts">
 import { OrbitControls } from '@tresjs/cientos'
@@ -20,9 +32,7 @@ import TheModel from './TheModel.vue'
   <TresCanvas clear-color="#F78B3D">
     <TresPerspectiveCamera :position="[3, 2, 5]" />
     <OrbitControls />
-    <Suspense>
-      <TheModel />
-    </Suspense>
+    <TheModel />
     <TresDirectionalLight
       :intensity="2"
       :position="[3, 3, 3]"
@@ -31,19 +41,7 @@ import TheModel from './TheModel.vue'
   </TresCanvas>
 </template>
 ```
-```vue{2,6} [TheModel.vue]
-<script setup lang="ts">
-import { useGLTF } from '@tresjs/cientos'
 
-const path = 'https://raw.githubusercontent.com/'
-  + 'Tresjs/assets/main/models/gltf/blender-cube.glb'
-const { scene } = await useGLTF(path, { draco: true })
-</script>
-
-<template>
-  <primitive :object="scene" />
-</template>
-```
 :::
 
 An advantage of using `useGLTF`is that you can pass a `draco` prop to enable [Draco compression](https://threejs.org/docs/index.html?q=drac#examples/en/loaders/DRACOLoader) for the model. This will reduce the size of the model and improve performance.
@@ -51,7 +49,7 @@ An advantage of using `useGLTF`is that you can pass a `draco` prop to enable [Dr
 ```ts
 import { useGLTF } from '@tresjs/cientos'
 
-const { scene } = await useGLTF('/models/AkuAku.gltf', { draco: true })
+const { state } = useGLTF('/models/AkuAku.gltf', { draco: true })
 ```
 
 ## Options
