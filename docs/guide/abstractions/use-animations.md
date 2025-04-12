@@ -11,9 +11,14 @@ import { useAnimations, useGLTF } from '@tresjs/cientos'
 
 const { state } = useGLTF('/models/ugly-naked-bunny.gltf')
 
-const { actions, mixer } = useAnimations(state?.animations, state?.scene)
+const animations = computed(() => state.value?.animations || [])
+const model = computed(() => state?.value?.scene)
+const { actions } = useAnimations(animations, model)
 
-const currentAction = actions.Greeting
+const currentAction = ref()
 
-currentAction.play()
+watch(actions, (newActions) => {
+  currentAction.value = newActions.Greeting
+  currentAction.value.play()
+})
 ```

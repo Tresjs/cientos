@@ -109,4 +109,9 @@ export const abstractionsRoutes = [
     name: 'ScreenSizer',
     component: () => import('../../pages/abstractions/ScreenSizerDemo.vue'),
   },
+  {
+    path: '/abstractions/use-animations',
+    name: 'useAnimations',
+    component: () => import('../../pages/abstractions/use-animations/index.vue'),
+  },
 ]
