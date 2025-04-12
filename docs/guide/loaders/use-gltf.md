@@ -49,7 +49,7 @@ An advantage of using `useGLTF`is that you can pass a `draco` prop to enable [Dr
 ```ts
 import { useGLTF } from '@tresjs/cientos'
 
-const { scene } = useGLTF('/models/AkuAku.gltf', { draco: true })
+const { state } = useGLTF('/models/AkuAku.gltf', { draco: true })
 ```
 
 ## Options

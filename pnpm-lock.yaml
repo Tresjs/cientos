@@ -34,8 +34,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.0.0)(release-it@18.1.1(@types/node@22.13.11)(typescript@5.7.2))
       '@tresjs/core':
-        specifier: https://pkg.pr.new/@tresjs/core@a9c3e98
-        version: https://pkg.pr.new/@tresjs/core@a9c3e98(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
+        specifier: 5.0.0-next.0
+        version: 5.0.0-next.0(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       '@tresjs/eslint-config':
         specifier: ^1.4.0
         version: 1.4.0(@typescript-eslint/utils@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.7.2))(@vue/compiler-sfc@3.5.13)(eslint@9.23.0(jiti@2.4.2))(typescript@5.7.2)
@@ -128,8 +128,8 @@ importers:
   playground/vue:
     dependencies:
       '@tresjs/core':
-        specifier: https://pkg.pr.new/@tresjs/core@1938351
-        version: https://pkg.pr.new/@tresjs/core@1938351(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
+        specifier: 5.0.0-next.0
+        version: 5.0.0-next.0(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.8.2))
@@ -1537,16 +1537,8 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@tresjs/core@https://pkg.pr.new/@tresjs/core@1938351':
-    resolution: {tarball: https://pkg.pr.new/@tresjs/core@1938351}
-    version: 4.3.3
-    peerDependencies:
-      three: '>=0.133'
-      vue: '>=3.4'
-
-  '@tresjs/core@https://pkg.pr.new/@tresjs/core@a9c3e98':
-    resolution: {tarball: https://pkg.pr.new/@tresjs/core@a9c3e98}
-    version: 4.3.3
+  '@tresjs/core@5.0.0-next.0':
+    resolution: {integrity: sha512-AQom0UlFudxhlVpKaSjivF+8OpgZUdHsy/LxQ4VwUMJyGhqaVQfkb/og/5PLG45tdu8bNiklk8noQfEGL6ba9g==}
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'
@@ -6129,23 +6121,23 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@tresjs/core@https://pkg.pr.new/@tresjs/core@1938351(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      '@alvarosabu/utils': 3.2.0
-      '@vue/devtools-api': 7.7.2
-      '@vueuse/core': 12.8.2(typescript@5.8.2)
-      three: 0.173.0
-      vue: 3.5.13(typescript@5.8.2)
-    transitivePeerDependencies:
-      - typescript
-
-  '@tresjs/core@https://pkg.pr.new/@tresjs/core@a9c3e98(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
+  '@tresjs/core@5.0.0-next.0(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
       '@vue/devtools-api': 7.7.2
       '@vueuse/core': 12.8.2(typescript@5.7.2)
       three: 0.173.0
       vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
+
+  '@tresjs/core@5.0.0-next.0(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))':
+    dependencies:
+      '@alvarosabu/utils': 3.2.0
+      '@vue/devtools-api': 7.7.2
+      '@vueuse/core': 12.8.2(typescript@5.8.2)
+      three: 0.173.0
+      vue: 3.5.13(typescript@5.8.2)
     transitivePeerDependencies:
       - typescript
 
