@@ -15,6 +15,16 @@ export const loadersRoutes = [
     component: () => import('../../pages/loaders/use-gltf/GLTFModelDemo.vue'),
   },
   {
+    path: '/loaders/use-texture',
+    name: 'useTexture',
+    component: () => import('../../pages/loaders/use-texture/index.vue'),
+  },
+  {
+    path: '/loaders/use-texture-component',
+    name: 'UseTexture',
+    component: () => import('../../pages/loaders/use-texture/UseTextureComponent.vue'),
+  },
+  {
     path: '/loaders/use-fbx',
     name: 'useFBX',
     component: () => import('../../pages/loaders/UseFBXDemo.vue'),
