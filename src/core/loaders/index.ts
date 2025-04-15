@@ -8,4 +8,5 @@ import { useVideoTexture } from './useVideoTexture'
 export * from './useFBX'
 export * from './useGLTF'
 export * from './useTexture'
+export * from './useTextures'
 export { FBXModel, GLTFModel, SVG, useProgress, UseTexture, useVideoTexture }
