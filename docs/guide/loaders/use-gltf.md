@@ -60,7 +60,8 @@ const { state, nodes, materials } = useGLTF('/models/AkuAku.gltf', { draco: true
 | **nodes**    | `object`  | Computed object containing all nodes in the scene |
 | **materials**| `object`  | Computed object containing all materials in the scene |
 | **isLoading**| `boolean` | Whether the model is currently loading         |
-| **execute**  | `() => Promise<void>` | Function to reload the model |
+| **progress** | `number`  | The progress of the model loading         |
+| **load**     | `() => Promise<void>` | Function to reload the model |
 
 ## Options
 
@@ -77,10 +78,10 @@ The composable provides computed properties to easily access nodes and materials
 const { nodes, materials } = useGLTF('/model.glb')
 
 // Access a specific node
-const mesh = nodes.value['MeshName']
+const mesh = nodes.value.MeshName
 
 // Access a specific material
-const material = materials.value['MaterialName']
+const material = materials.value.MaterialName
 ```
 
 This makes it easier to manipulate specific parts of your model or apply materials programmatically.
