@@ -7,10 +7,18 @@ const state = inject<{
   progress: number
 }>('gltf-loader-state')!
 
-const { state: model, progress } = useGLTF(
+const { state: model, progress, nodes, materials } = useGLTF(
   '/blender-cube-draco.glb',
   { draco: true },
 )
+
+watch(nodes, (newNodes) => {
+  console.log('nodes', newNodes)
+})
+
+watch(materials, (newMaterials) => {
+  console.log('materials', newMaterials)
+})
 
 watch(model, (newModel) => {
   console.log('model', newModel)
@@ -26,5 +34,5 @@ watch(progress, (newProgress) => {
 </script>
 
 <template>
-  <primitive v-if="model?.scene" :object="model.scene" />
+  <primitive v-if="nodes.BlenderCube" :object="nodes.BlenderCube" />
 </template>
