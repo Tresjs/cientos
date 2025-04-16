@@ -1,12 +1,10 @@
-import type { TresLoader, TresLoaderOptions, TresObjectMap } from '@tresjs/core'
+import type { TresLoader, TresLoaderOptions } from '@tresjs/core'
 import { buildGraph, useLoader } from '@tresjs/core'
 
-import type { MaybeRef } from 'vue'
-import { computed } from 'vue'
+import { computed, type MaybeRef } from 'vue'
 
 import type { GLTF } from 'three-stdlib'
 import { DRACOLoader, GLTFLoader } from 'three-stdlib'
-import type { UseAsyncStateReturn } from '@vueuse/core'
 
 export interface UseGLTFOptions {
   /**
@@ -54,18 +52,17 @@ export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
 
   const result = useLoader(GLTFLoader, path, useLoaderOptions)
 
-  const state = computed(() => {
-    if (result.state.value) {
-      return {
-        ...result.state.value,
-        ...result.state.value?.scene ? buildGraph(result.state.value?.scene) : {},
-      }
-    }
-    return null
+  const nodes = computed(() => {
+    return result.state.value?.scene ? buildGraph(result.state.value?.scene).nodes : {}
+  })
+
+  const materials = computed(() => {
+    return result.state.value?.scene ? buildGraph(result.state.value?.scene).materials : {}
   })
 
   return {
     ...result,
-    state,
-  } as Omit<UseAsyncStateReturn<GLTF & TresObjectMap, [string], true>, 'state'> & { state: typeof state }
+    nodes,
+    materials,
+  }
 }
