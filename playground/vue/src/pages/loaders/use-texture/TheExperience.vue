@@ -16,14 +16,14 @@ watch(isLoading, (newIsLoading) => {
   if (newIsLoading) {
     state.hasFinishLoading = false
   }
-})
+}, { immediate: true })
 
 watch(texture, (newTexture) => {
   console.log('texture', newTexture)
   setTimeout(() => {
     state.hasFinishLoading = true
   }, 1000)
-})
+}, { immediate: true })
 </script>
 
 <template>
