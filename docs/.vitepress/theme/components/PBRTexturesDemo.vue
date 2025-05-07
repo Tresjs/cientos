@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable no-console */
 import { computed, watch } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { Environment, OrbitControls, useGLTF, useTextures } from '@tresjs/cientos'
@@ -43,7 +44,6 @@ watch([material, textures], ([modelMaterial, textures]) => {
 
 // Log loading state and errors
 watch(isLoading, (_loading) => {
-  // Only log errors, not loading state
   console.log('isLoading', _loading)
 }, { immediate: true })
 

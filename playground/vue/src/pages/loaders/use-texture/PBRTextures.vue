@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TresCanvas, vLightHelper } from '@tresjs/core'
+import { TresCanvas } from '@tresjs/core'
 import { Environment, OrbitControls, useGLTF, useTextures } from '@tresjs/cientos'
 import type { MeshStandardMaterial } from 'three'
 

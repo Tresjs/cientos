@@ -26,10 +26,10 @@ const { textures, isLoading, error } = useTextures(texturePaths)
 <template>
   <TresMesh>
     <TresSphereGeometry />
-    <TresMeshStandardMaterial 
-      :map="textures[0]" 
-      :normal-map="textures[1]" 
-      :roughness-map="textures[2]" 
+    <TresMeshStandardMaterial
+      :map="textures[0]"
+      :normal-map="textures[1]"
+      :roughness-map="textures[2]"
     />
   </TresMesh>
 </template>
@@ -67,14 +67,14 @@ watch([material, textures], ([modelMaterial, textures]) => {
   if (modelMaterial && textures && textures.length === texturePaths.length) {
     // Cast to MeshStandardMaterial to access PBR properties
     const pbrMaterial = modelMaterial as MeshStandardMaterial
-    
+
     // Apply textures
     pbrMaterial.map = textures[0]
     pbrMaterial.normalMap = textures[1]
     pbrMaterial.roughnessMap = textures[2]
     pbrMaterial.metalnessMap = textures[3]
     pbrMaterial.displacementMap = textures[4]
-    
+
     // Set material properties
     pbrMaterial.displacementScale = 0
     pbrMaterial.metalness = 0.8
@@ -133,4 +133,4 @@ watch(error, (errs) => {
 - **Simplified API**: Load multiple textures with a single function call
 - **Consolidated loading state**: Track loading state for all textures at once
 - **Unified error handling**: Collect and report errors from all texture loads
-- **Type safety**: Proper TypeScript typing throughout the implementation 
+- **Type safety**: Proper TypeScript typing throughout the implementation
