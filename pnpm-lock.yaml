@@ -128,8 +128,8 @@ importers:
   playground/vue:
     dependencies:
       '@tresjs/core':
-        specifier: 5.0.0-next.0
-        version: 5.0.0-next.0(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
+        specifier: https://pkg.pr.new/@tresjs/core@be3280b
+        version: https://pkg.pr.new/@tresjs/core@be3280b(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.8.2))
@@ -1536,12 +1536,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@tresjs/core@5.0.0-next.0':
-    resolution: {integrity: sha512-AQom0UlFudxhlVpKaSjivF+8OpgZUdHsy/LxQ4VwUMJyGhqaVQfkb/og/5PLG45tdu8bNiklk8noQfEGL6ba9g==}
-    peerDependencies:
-      three: '>=0.133'
-      vue: '>=3.4'
 
   '@tresjs/core@https://pkg.pr.new/@tresjs/core@be3280b':
     resolution: {tarball: https://pkg.pr.new/@tresjs/core@be3280b}
@@ -6128,16 +6122,6 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@tresjs/core@5.0.0-next.0(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      '@alvarosabu/utils': 3.2.0
-      '@vue/devtools-api': 7.7.2
-      '@vueuse/core': 12.8.2(typescript@5.8.2)
-      three: 0.173.0
-      vue: 3.5.13(typescript@5.8.2)
-    transitivePeerDependencies:
-      - typescript
-
   '@tresjs/core@https://pkg.pr.new/@tresjs/core@be3280b(three@0.173.0)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
@@ -6145,6 +6129,16 @@ snapshots:
       '@vueuse/core': 12.8.2(typescript@5.7.2)
       three: 0.173.0
       vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
+
+  '@tresjs/core@https://pkg.pr.new/@tresjs/core@be3280b(three@0.173.0)(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))':
+    dependencies:
+      '@alvarosabu/utils': 3.2.0
+      '@vue/devtools-api': 7.7.2
+      '@vueuse/core': 12.8.2(typescript@5.8.2)
+      three: 0.173.0
+      vue: 3.5.13(typescript@5.8.2)
     transitivePeerDependencies:
       - typescript
 

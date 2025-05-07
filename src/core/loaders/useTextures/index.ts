@@ -1,8 +1,7 @@
 import { useLoader } from '@tresjs/core'
-import { TextureLoader } from 'three'
+import { Texture, TextureLoader } from 'three'
 import { computed, ref, unref } from 'vue'
 import type { MaybeRef } from 'vue'
-import type { Texture } from 'three'
 
 /**
  * Composable that loads multiple textures at once
@@ -20,7 +19,9 @@ export function useTextures(paths: MaybeRef<string[]>) {
   // Load all textures
   const results = pathsArray.map((path: string) => {
     try {
-      const result = useLoader(TextureLoader, path)
+      const result = useLoader(TextureLoader, path, {
+        initialValue: new Texture(),
+      })
       return result
     }
     catch (err) {
