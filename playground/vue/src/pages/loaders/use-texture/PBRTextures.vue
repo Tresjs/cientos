@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable no-console */
 import { TresCanvas } from '@tresjs/core'
 import { Environment, OrbitControls, useGLTF, useTextures } from '@tresjs/cientos'
 import type { MeshStandardMaterial } from 'three'
