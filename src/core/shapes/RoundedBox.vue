@@ -29,10 +29,13 @@ export interface BoxProps {
 const props = withDefaults(defineProps<BoxProps>(), { args: () => [1, 1, 1, 2, 0.1], color: '#ffffff' })
 
 const { args, color } = toRefs(props)
-const { invalidate, extend } = useTresContext()
+const { renderer, extend } = useTresContext()
 extend({ RoundedBoxGeometry })
-watch(args, () => invalidate())
-
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 const roundedBoxRef = shallowRef()
 
 defineExpose({ instance: roundedBoxRef })

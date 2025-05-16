@@ -8,8 +8,8 @@ export const BakeShadows = defineComponent({
     const { renderer } = useTresContext()
 
     watchEffect(() => {
-      renderer.value.shadowMap.autoUpdate = false
-      renderer.value.shadowMap.needsUpdate = true
+      renderer.instance.value.shadowMap.autoUpdate = false
+      renderer.instance.value.shadowMap.needsUpdate = true
     })
   },
 })

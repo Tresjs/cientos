@@ -24,8 +24,12 @@ export interface OctahedronProps {
 
 const props = withDefaults(defineProps<OctahedronProps>(), { args: () => [1, 0], color: '#ffffff' })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const octahedronRef = shallowRef()
 

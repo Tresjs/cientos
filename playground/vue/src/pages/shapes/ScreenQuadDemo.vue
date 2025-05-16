@@ -40,8 +40,8 @@ const mat = new RawShaderMaterial({
 
 let r: WebGLRenderer
 function onReady({ renderer }) {
-  r = renderer.value
-  renderer.value.getDrawingBufferSize(resolution)
+  r = renderer.instance.value
+  renderer.instance.value.getDrawingBufferSize(resolution)
   target.setSize(resolution.x, resolution.y)
   mat.uniforms.uResolution.value = resolution
 }

@@ -47,9 +47,13 @@ const props = withDefaults(defineProps<SkyProps>(), {
   distance: 450000,
 })
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const skyRef = shallowRef<SkyImpl>()
 const skyImpl = new SkyImpl()

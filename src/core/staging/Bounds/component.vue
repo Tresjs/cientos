@@ -47,7 +47,7 @@ const emit = defineEmits<{
   (e: 'end', sizeProps: OnLookAtCallbackArg): void
 }>()
 
-const { invalidate, camera, controls, sizes: size } = useTres()
+const { renderer, camera, controls, sizes: size } = useTres()
 const defaultEasing = (t: number) => 1 - (1 - t) ** 3
 
 const bounds = new Bounds(camera.value ?? new PerspectiveCamera())
@@ -61,12 +61,16 @@ const refresh = () => {
   bounds.duration = props.duration
   bounds.clip = props.clip
   bounds.lookAt()
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 }
 
 useLoop().onBeforeRender(({ delta }) => {
   if (bounds.animate(delta)) {
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   }
 })
 

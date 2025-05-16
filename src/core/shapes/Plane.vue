@@ -25,8 +25,12 @@ export interface PlaneProps {
 const props = withDefaults(defineProps<PlaneProps>(), { args: () => [1, 1], color: '#ffffff' })
 
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const planeRef = shallowRef()
 

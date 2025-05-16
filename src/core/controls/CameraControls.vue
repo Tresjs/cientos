@@ -387,10 +387,14 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const mouseButtons = computed(() => getMouseButtons(
@@ -418,7 +422,9 @@ watchEffect(() => {
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'update', () => {
     emit('change', controlsRef.value)
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   })
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
@@ -426,10 +432,11 @@ function addEventListeners() {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta, invalidate }) => {
+onBeforeRender(({ delta /* invalidate */ }) => {
   if (controlsRef.value?.enabled) {
     controlsRef.value?.update(delta)
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 
@@ -483,7 +490,7 @@ export { default as BaseCameraControls } from 'camera-controls'
 
 <template>
   <TresCameraControls
-    v-if="(camera || activeCamera) && (domElement || renderer)"
+    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
     ref="controlsRef"
     :min-polar-angle="minPolarAngle"
     :max-polar-angle="maxPolarAngle"
@@ -509,7 +516,7 @@ export { default as BaseCameraControls } from 'camera-controls'
     :boundary-friction="boundaryFriction"
     :rest-threshold="restThreshold"
     :collider-meshes="colliderMeshes"
-    :args="[camera || activeCamera, domElement || renderer.domElement]"
+    :args="[camera || activeCamera, domElement || contextDomElement]"
     :mouse-buttons="mouseButtons"
     :touches="touches"
   />

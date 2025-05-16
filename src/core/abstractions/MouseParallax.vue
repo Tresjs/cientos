@@ -54,13 +54,13 @@ const { disabled, factor, ease, local } = toRefs(props)
 const mouseOptions: UseMouseOptions = {}
 
 if (local.value) {
-  mouseOptions.target = renderer.value.domElement
+  mouseOptions.target = renderer.instance.value.domElement
   mouseOptions.type = 'client'
 }
 
 const { x, y } = useMouse(mouseOptions)
 const { width, height } = local.value
-  ? useElementSize(renderer.value.domElement)
+  ? useElementSize(renderer.instance.value.domElement)
   : useWindowSize()
 
 const cameraGroupRef = shallowRef<Group>()
@@ -81,7 +81,7 @@ const cursorY = computed(() => -(y.value / height.value - 0.5) * _factor.value[1
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta, invalidate }) => {
+onBeforeRender(({ delta /* invalidate */ }) => {
   if (
     disabled.value
     || !cameraGroupRef.value
@@ -95,7 +95,8 @@ onBeforeRender(({ delta, invalidate }) => {
   cameraGroupRef.value.position.y
     += (cursorY.value - cameraGroupRef.value.position.y) * _ease.value[1] * delta
 
-  invalidate()
+  // TODO: comment this until invalidate is back in the loop callback on v5
+  // invalidate()
 })
 
 watch(

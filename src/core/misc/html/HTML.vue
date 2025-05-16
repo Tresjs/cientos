@@ -166,7 +166,7 @@ watch(
 )
 
 watch(
-  () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value, slots.default?.()],
+  () => [groupRef.value, renderer.instance.value, sizes.width.value, sizes.height.value, slots.default?.()],
   ([group, renderer]): void => {
     if (group && renderer) {
       const target = portal?.value || renderer.domElement
@@ -222,10 +222,11 @@ const visible = ref(true)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
-  invalidate()
+onBeforeRender(() => {
+  // TODO: comment this until invalidate is back in the loop callback on v5
+  // invalidate()
 
-  if (groupRef.value && camera.value && renderer.value) {
+  if (groupRef.value && camera.value && renderer.instance.value) {
     camera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)
 

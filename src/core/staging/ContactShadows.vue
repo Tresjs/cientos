@@ -324,11 +324,12 @@ const pool = init(props)
 let count = 0
 const updateOnNextRender = () => count = count >= props.frames ? props.frames - 1 : count
 onBeforeRender(
-  ({ renderer, scene, invalidate }) => {
+  ({ renderer, scene /* invalidate */ }) => {
     if (count < props.frames) {
       count++
       update(props, scene, renderer, pool)
-      invalidate()
+      // TODO: comment this until invalidate is back in the loop callback on v5
+      // invalidate()
     }
   },
 )

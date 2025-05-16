@@ -26,9 +26,12 @@ const props = withDefaults(defineProps<DodecahedronProps>(), { args: () => [1, 0
 const { args, color } = toRefs(props)
 
 const dodecahedronRef = shallowRef()
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
-
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 defineExpose({
   instance: dodecahedronRef,
 })

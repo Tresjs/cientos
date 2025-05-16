@@ -68,10 +68,12 @@ const emit = defineEmits(['update:modelValue'])
 if (props.smoothScroll < 0) { logWarning('SmoothControl must be greater than zero') }
 if (props.pages < 0) { logWarning('Pages must be greater than zero') }
 
-const { camera, controls, renderer, invalidate } = useTresContext()
+const { camera, controls, renderer } = useTresContext()
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')
@@ -132,7 +134,7 @@ watch(containerX, (value) => {
 })
 
 watch(
-  renderer,
+  renderer.instance,
   (value) => {
     const canvas = value?.domElement
     if (props.htmlScroll && value?.domElement) {
@@ -190,7 +192,7 @@ watch(
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
+onBeforeRender(() => {
   if (camera.value?.position) {
     const delta
       = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
@@ -200,7 +202,8 @@ onBeforeRender(({ invalidate }) => {
       wrapperRef.value.position[direction] += delta
     }
 
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 
