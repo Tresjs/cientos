@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useLoop, useTexture } from '@tresjs/core'
+import { useLoop } from '@tresjs/core'
+import { useTexture } from '../loaders/useTexture'
 import { shallowRef, toRefs, watchEffect } from 'vue'
 import type { TresColor } from '@tresjs/core'
 import type { Texture } from 'three'
@@ -177,31 +178,21 @@ const alphaMapTexture = shallowRef<Texture | null>(null)
 const mapTexture = shallowRef<Texture | null>(null)
 
 watchEffect(async () => {
-  /* if (alphaMapUrl.value) {
-    const textures = await useTexture({ alphaMap: alphaMapUrl.value })
-    alphaMapTexture.value = textures.alphaMap
+  if (typeof alphaMapUrl.value === 'string') {
+    const { state: resolvedTexture } = useTexture({ alphaMap: alphaMapUrl.value })
+    alphaMapTexture.value = resolvedTexture.value
   }
-  if (mapUrl.value) {
-    const textures = await useTexture({ map: mapUrl.value })
-    mapTexture.value = textures.map
-  } */
-  watchEffect(async () => {
-    if (typeof alphaMapUrl.value === 'string') {
-      const resolvedTexture = await useTexture({ alphaMap: alphaMapUrl.value })
-      alphaMapTexture.value = resolvedTexture.alphaMap
-    }
-    else {
-      alphaMapTexture.value = alphaMapUrl.value ?? null
-    }
+  else {
+    alphaMapTexture.value = alphaMapUrl.value ?? null
+  }
 
-    if (typeof mapUrl.value === 'string') {
-      const resolvedTexture = await useTexture({ map: mapUrl.value })
-      mapTexture.value = resolvedTexture.map
-    }
-    else {
-      mapTexture.value = mapUrl.value ?? null
-    }
-  })
+  if (typeof mapUrl.value === 'string') {
+    const { state: resolvedTexture } = useTexture({ map: mapUrl.value })
+    mapTexture.value = resolvedTexture.value
+  }
+  else {
+    mapTexture.value = mapUrl.value ?? null
+  }
 })
 
 const { onBeforeRender } = useLoop()

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useLoop, useTexture, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
+import { useTexture } from '../loaders/useTexture'
 import { FrontSide, RepeatWrapping, Vector3 } from 'three'
 import { Water } from 'three-stdlib'
 import { nextTick, onMounted, shallowRef, toRefs } from 'vue'
 import type { TresColor, TresVector3 } from '@tresjs/core'
-import type { Texture } from 'three'
 import type { Sky } from 'three-stdlib'
 
 export interface OceanProps {
@@ -147,7 +147,7 @@ onMounted(async () => {
   }
 })
 
-const { normalMap } = (await useTexture({ normalMap: waterNormals.value })) as { normalMap: Texture }
+const { state: normalMap } = useTexture(waterNormals.value)
 
 normalMap.wrapS = normalMap.wrapT = RepeatWrapping
 

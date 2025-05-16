@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useLoop, useTexture, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import {
   AdditiveBlending,
   IcosahedronGeometry,
@@ -17,6 +17,7 @@ import type { Blending, BufferGeometry, IUniform, ShaderMaterialParameters, Text
 import type { Ref } from 'vue'
 import ShaderDataBuilder from './ShaderDataBuilder'
 import useEmptyDataTexture from './useEmptyDataTexture'
+import { useTexture } from '../../loaders/useTexture'
 import type { Gradient } from '../../../utils/Gradient'
 
 interface SparkleProps {
@@ -358,7 +359,8 @@ watch([refs.lifetimeSec, refs.cooldownSec], () => { u.uCooldownRatio.value = ref
 
 watch(refs.map, () => {
   if (typeof refs.map.value === 'string') {
-    useTexture([refs.map.value]).then(texture => mat.uniforms.uMap.value = texture)
+    const { state: texture } = useTexture(refs.map.value)
+    mat.uniforms.uMap.value = texture
   }
   else {
     mat.uniforms.uMap.value = refs.map.value
@@ -401,7 +403,8 @@ onMounted(() => {
   }
 
   if (typeof props.map === 'string') {
-    useTexture([props.map]).then(texture => mat.uniforms.uMap.value = texture)
+    const { state: texture } = useTexture(props.map)
+    mat.uniforms.uMap.value = texture
   }
 })
 
