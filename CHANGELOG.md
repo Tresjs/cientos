@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.3.1](https://github.com/Tresjs/cientos/compare/4.3.0...4.3.1) (2025-05-16)
+
+### Bug Fixes
+
+* **deps:** update @tresjs/core and @types/three to latest versions ([#619](https://github.com/Tresjs/cientos/issues/619)) ([9a94785](https://github.com/Tresjs/cientos/commit/9a94785f8242b10df3a1c579e54f04814716552a))
+
+## [4.3.0](https://github.com/Tresjs/cientos/compare/4.2.0...4.3.0) (2025-03-25)
+
+### Features
+
+* **environment:** enhance environment and background props ([#590](https://github.com/Tresjs/cientos/issues/590)) ([7e96136](https://github.com/Tresjs/cientos/commit/7e96136ad4f9da046ad14eb31a69a7ff67649010))
+
 ## [4.2.0](https://github.com/Tresjs/cientos/compare/4.1.1...4.2.0) (2025-03-07)
 
 ### Features
