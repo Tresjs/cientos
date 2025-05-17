@@ -50,7 +50,7 @@ const emit = defineEmits<{
 const { renderer, camera, controls, sizes: size } = useTres()
 const defaultEasing = (t: number) => 1 - (1 - t) ** 3
 
-const bounds = new Bounds(camera.value ?? new PerspectiveCamera())
+const bounds = new Bounds(camera.activeCamera.value ?? new PerspectiveCamera())
 bounds.easing = props.easing ?? defaultEasing
 bounds.onStart = (arg: OnLookAtCallbackArg) => emit('start', arg)
 bounds.onCancel = (arg: OnLookAtCallbackArg) => emit('cancel', arg)
@@ -78,9 +78,9 @@ watchEffect(() => {
   if (controls.value) { bounds.controls = controls.value as unknown as BoundsControlsProto }
 })
 
-const shallowCam = computed(() => camera.value?.uuid)
+const shallowCam = computed(() => camera.activeCamera.value?.uuid)
 watch(shallowCam, () => {
-  if (camera.value) { bounds.camera = camera.value }
+  if (camera.activeCamera.value) { bounds.camera = camera.activeCamera.value }
 }, { immediate: true, deep: false })
 
 const refreshDebounce = useDebounceFn(refresh, 250, { maxWait: 2000 })

@@ -57,7 +57,10 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
 
 const emit = defineEmits(['isLock', 'change'])
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
+
 const contextDomElement = computed(() => renderer.instance.value.domElement)
 watch(props, () => {
   if (renderer.canBeInvalidated.value) {

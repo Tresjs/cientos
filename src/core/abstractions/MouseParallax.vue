@@ -101,7 +101,7 @@ onBeforeRender(({ delta /* invalidate */ }) => {
 
 watch(
   () => cameraGroupRef.value,
-  value => value?.add(camera.value as Object3D),
+  value => value?.add(camera.activeCamera.value as Object3D),
 )
 </script>
 

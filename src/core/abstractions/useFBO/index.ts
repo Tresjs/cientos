@@ -1,7 +1,7 @@
 import { useLoop, useTresContext } from '@tresjs/core'
 import { DepthTexture, FloatType, HalfFloatType, LinearFilter, WebGLRenderTarget } from 'three'
 import { isReactive, onBeforeUnmount, reactive, ref, toRefs, watch } from 'vue'
-import type { Camera, RenderTargetOptions } from 'three'
+import type { RenderTargetOptions } from 'three'
 import type { Ref } from 'vue'
 
 export interface FboOptions {
@@ -85,7 +85,7 @@ export function useFBO(options: FboOptions) {
     if (autoRender.value) {
       renderer.instance.value.setRenderTarget(target.value)
       renderer.instance.value.clear()
-      renderer.instance.value.render(scene.value, camera.value as Camera)
+      renderer.instance.value.render(scene.value, camera.activeCamera.value)
 
       renderer.instance.value.setRenderTarget(null)
     }

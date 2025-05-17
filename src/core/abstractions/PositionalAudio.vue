@@ -119,7 +119,7 @@ const createHelper = () => {
 }
 
 const dispose = () => {
-  camera?.value?.remove(listener)
+  camera.activeCamera.value?.remove(listener)
 
   disposeAudio()
   disposeHelper()

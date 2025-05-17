@@ -69,7 +69,7 @@ export const GlobalAudio = defineComponent<AudioProps>({
     const { camera, renderer } = useTresContext()
 
     const listener = new AudioListener()
-    camera.value?.add(listener)
+    camera.activeCamera.value?.add(listener)
 
     const sound = new Audio(listener)
     const audioLoader = new AudioLoader()

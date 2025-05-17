@@ -111,9 +111,9 @@ function update(frames = 1) {
         light.update()
       }
     })
-    if (camera.value) {
+    if (camera.activeCamera.value) {
       const blend = Math.max(2, props.accumulate ? props.blend : props.frames)
-      progressiveLightMap.value.update(camera.value, blend)
+      progressiveLightMap.value.update(camera.activeCamera.value, blend)
     }
   }
 
