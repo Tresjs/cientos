@@ -3,7 +3,7 @@ import { useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
 import { TransformControls } from 'three-stdlib'
-import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { Camera, Event, Object3D } from 'three'
 
 export interface TransformControlsProps {
@@ -40,16 +40,22 @@ const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, s
 
 const controlsRef = shallowRef<TransformControls | null>(null)
 
-const { controls, camera: activeCamera, renderer, extend, invalidate } = useTresContext()
+const { controls, camera: activeCamera, renderer, extend } = useTresContext()
+
+const domElement = computed(() => renderer.instance.value.domElement)
 
 watch([object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ], () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 extend({ TransformControls })
 
 const onChange = () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('change')
 }
 
@@ -59,22 +65,30 @@ interface DraggingEvent extends Event {
 
 const onDragingChange = (e: DraggingEvent) => {
   if (controls.value) { controls.value.enabled = !(e).value }
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('dragging', e.value)
 }
 
 const onMouseDown = () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('mouseDown')
 }
 
 const onMouseUp = () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('mouseDown')
 }
 
 const onObjectChange = () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('objectChange')
 }
 
@@ -105,11 +119,11 @@ defineExpose({
 
 <template>
   <TresTransformControls
-    v-if="(camera || activeCamera) && renderer"
+    v-if="(camera || activeCamera) && domElement"
     ref="controlsRef"
     :key="(camera || activeCamera)?.uuid"
     :object="object"
-    :args="[camera || activeCamera, renderer.domElement]"
+    :args="[camera || activeCamera, domElement]"
     :mode="mode"
     :enabled="enabled"
     :axis="axis"

@@ -24,8 +24,12 @@ export interface CircleProps {
 
 const props = withDefaults(defineProps<CircleProps>(), { args: () => [1, 32, 0, Math.PI * 2], color: '#ffffff' })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const circleRef = shallowRef()
 

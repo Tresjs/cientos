@@ -28,7 +28,7 @@ const props = withDefaults(
   },
 )
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
 const middle = shallowRef<Group>(new Group())
 const inner = shallowRef<Group>(new Group())
@@ -85,7 +85,9 @@ function fit(container: typeof props.into, precise: typeof props.precise) {
     middle.value.position.copy(childBoxCenter.sub(childBoxCenter.multiplyScalar(scale)))
   }
 
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 }
 
 function normalizeContainer(container: typeof props.into, precise: typeof props.precise): IntoPropNormalized {

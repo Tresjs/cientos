@@ -11,9 +11,13 @@ const samplerRef = ref()
 const instancedRef = ref()
 const meshToSampleRef = ref()
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 // TODO: refactor to use watch instead.
 watchEffect(() => {

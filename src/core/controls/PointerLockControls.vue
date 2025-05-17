@@ -2,7 +2,7 @@
 import { useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { PointerLockControls } from 'three-stdlib'
-import { onUnmounted, shallowRef, watch } from 'vue'
+import { computed, onUnmounted, shallowRef, watch } from 'vue'
 import type { Camera, EventDispatcher } from 'three'
 
 // Define the event types for PointerLockControls
@@ -57,10 +57,12 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
 
 const emit = defineEmits(['isLock', 'change'])
 
-const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
-
+const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const controlsRef = shallowRef<ExtendedPointerLockControls | null>(null)
@@ -80,14 +82,16 @@ watch(controlsRef, (value) => {
     controls.value = null
   }
   const selector = document.getElementById(props.selector || '')
-  triggerSelector = selector || renderer.value.domElement
+  triggerSelector = selector || renderer.instance.value.domElement
 
   useEventListener(triggerSelector, 'click', () => {
     if (controlsRef.value) {
       controlsRef.value.lock()
       controlsRef.value.addEventListener('lock', () => isLockEmitter(true))
       controlsRef.value.addEventListener('unlock', () => isLockEmitter(false))
-      invalidate()
+      if (renderer.canBeInvalidated.value) {
+        renderer.invalidate()
+      }
     }
   })
 })
@@ -108,8 +112,8 @@ defineExpose({
 
 <template>
   <TresPointerLockControls
-    v-if="(camera || activeCamera) && (domElement || renderer)"
+    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
     ref="controlsRef"
-    :args="[camera || activeCamera, domElement || renderer.domElement]"
+    :args="[camera || activeCamera, domElement || contextDomElement]"
   />
 </template>

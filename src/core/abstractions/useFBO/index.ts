@@ -56,7 +56,7 @@ export function useFBO(options: FboOptions) {
   const { height, width, settings, depth, autoRender = ref(true) } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
 
   const { onBeforeRender } = useLoop()
-  const { camera, renderer, scene, sizes, invalidate } = useTresContext()
+  const { camera, renderer, scene, sizes } = useTresContext()
 
   watch(() => [width?.value, sizes.width.value, height?.value, sizes.height.value], () => {
     target.value?.dispose()
@@ -76,16 +76,18 @@ export function useFBO(options: FboOptions) {
       )
     }
 
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   }, { immediate: true })
 
   onBeforeRender(() => {
     if (autoRender.value) {
-      renderer.value.setRenderTarget(target.value)
-      renderer.value.clear()
-      renderer.value.render(scene.value, camera.value as Camera)
+      renderer.instance.value.setRenderTarget(target.value)
+      renderer.instance.value.clear()
+      renderer.instance.value.render(scene.value, camera.value as Camera)
 
-      renderer.value.setRenderTarget(null)
+      renderer.instance.value.setRenderTarget(null)
     }
   }, Number.POSITIVE_INFINITY)
 

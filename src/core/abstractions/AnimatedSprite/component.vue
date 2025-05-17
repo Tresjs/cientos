@@ -76,10 +76,12 @@ const emit = defineEmits<{
   (e: 'loop', frameName: string): void
 }>()
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const positionX = ref(0)

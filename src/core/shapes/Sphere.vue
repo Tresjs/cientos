@@ -25,9 +25,12 @@ export interface SphereProps {
 
 const props = withDefaults(defineProps<SphereProps>(), { args: () => [2, 32, 16], color: '#ffffff' })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
-
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 const sphereRef = shallowRef()
 
 defineExpose({

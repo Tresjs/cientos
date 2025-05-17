@@ -81,7 +81,7 @@ export async function useEnvironment(
   options: Partial<EnvironmentOptions>,
   fbo: Ref<WebGLCubeRenderTarget | null>,
 ): Promise<Ref<Texture | CubeTexture | null>> {
-  const { scene, invalidate } = useTresContext()
+  const { scene, renderer } = useTresContext()
 
   const {
     preset,
@@ -97,7 +97,9 @@ export async function useEnvironment(
   } = toRefs(options)
 
   watch(options, () => {
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   })
 
   const texture: Ref<Texture | CubeTexture | null> = ref(null)
@@ -223,7 +225,9 @@ export async function useEnvironment(
       if (texture.value) {
         texture.value.mapping = EquirectangularReflectionMapping
       }
-      invalidate()
+      if (renderer.canBeInvalidated.value) {
+        renderer.invalidate()
+      }
     }
     else if (value && !(value in environmentPresets)) {
       throw new Error(`Preset must be one of: ${Object.keys(environmentPresets).join(', ')}`)

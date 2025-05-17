@@ -367,13 +367,14 @@ watch(refs.map, () => {
 
 const rotation = new Quaternion()
 const normal = new Vector3()
-useLoop().onBeforeRender(({ elapsed, invalidate }) => {
+useLoop().onBeforeRender(({ elapsed /* invalidate */ }) => {
   sparkles.getWorldQuaternion(rotation)
   normal.copy(props.directionalLight ? props.directionalLight.position : Object3D.DEFAULT_UP).normalize()
   normal.applyQuaternion(rotation.invert())
   mat.uniforms.uNormal.value = normal
   mat.uniforms.uTime.value = elapsed / (props.cooldownSec + props.lifetimeSec)
-  invalidate()
+  // TODO: comment this until invalidate is back in the loop callback on v5
+  // invalidate()
 })
 
 function isObject3D(o: any): o is Object3D {

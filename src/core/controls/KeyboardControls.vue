@@ -3,7 +3,7 @@ import { useLoop, useTresContext } from '@tresjs/core'
 import { useMagicKeys } from '@vueuse/core'
 import { Quaternion, Vector3 } from 'three'
 import { PointerLockControls as PointerLockControlsType } from 'three-stdlib'
-import { ref, toRefs, watch, watchEffect } from 'vue'
+import { computed, ref, toRefs, watch, watchEffect } from 'vue'
 import type { Camera } from 'three'
 import { PointerLockControls } from './index'
 
@@ -61,10 +61,14 @@ const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
-const { camera: activeCamera, controls, renderer, invalidate } = useTresContext()
+const { camera: activeCamera, controls, renderer } = useTresContext()
+
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const sidewardMove = ref(0)
@@ -106,22 +110,24 @@ const moveForward = (delta: number, movementSpeed: number) => {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta, invalidate }) => {
+onBeforeRender(({ delta /* invalidate */ }) => {
   if (controls.value instanceof PointerLockControlsType && controls.value?.isLocked) {
     moveForward(delta, forwardMove.value)
     controls.value.moveRight(sidewardMove.value)
 
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 </script>
 
 <template>
   <PointerLockControls
+    v-if="renderer.instance"
     :selector="selector"
     :make-default="makeDefault"
     :camera="camera || activeCamera"
-    :dom-element="domElement || renderer.domElement"
+    :dom-element="domElement || contextDomElement"
     @is-lock="isActive"
     @change="hasChange"
   />
