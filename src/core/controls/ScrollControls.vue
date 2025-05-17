@@ -92,7 +92,7 @@ const scrollNodeY = ref(0)
 const direction = props.horizontal ? 'x' : 'y'
 
 const unWatch = watch(
-  camera,
+  camera.activeCamera,
   (value) => {
     if (initialized.value) {
       unWatch()
@@ -193,11 +193,11 @@ watch(
 const { onBeforeRender } = useLoop()
 
 onBeforeRender(() => {
-  if (camera.value?.position) {
+  if (camera.activeCamera.value?.position) {
     const delta
-      = (progress.value * props.distance - camera.value.position[direction] + initCameraPos) * props.smoothScroll
+      = (progress.value * props.distance - camera.activeCamera.value.position[direction] + initCameraPos) * props.smoothScroll
 
-    camera.value.position[direction] += delta
+    camera.activeCamera.value.position[direction] += delta
     if (wrapperRef.value.children.length > 0) {
       wrapperRef.value.position[direction] += delta
     }

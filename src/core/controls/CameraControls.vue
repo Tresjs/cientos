@@ -316,7 +316,7 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   maxPolarAngle: Math.PI,
   minAzimuthAngle: Number.NEGATIVE_INFINITY,
   maxAzimuthAngle: Number.POSITIVE_INFINITY,
-  distance: () => useTresContext().camera.value!.position.z,
+  distance: () => useTresContext().camera.activeCamera.value!.position.z,
   minDistance: Number.EPSILON,
   maxDistance: Number.POSITIVE_INFINITY,
   infinityDolly: false,
@@ -336,8 +336,8 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   boundaryFriction: 0.0,
   restThreshold: 0.01,
   colliderMeshes: () => [],
-  mouseButtons: () => getMouseButtons(useTresContext().camera.value),
-  touches: () => getTouches(useTresContext().camera.value),
+  mouseButtons: () => getMouseButtons(useTresContext().camera.activeCamera.value),
+  touches: () => getTouches(useTresContext().camera.activeCamera.value),
 })
 
 const emit = defineEmits(['change', 'start', 'end'])
@@ -387,7 +387,9 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
 
 const contextDomElement = computed(() => renderer.instance.value.domElement)
 

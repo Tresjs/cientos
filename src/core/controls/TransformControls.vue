@@ -40,7 +40,9 @@ const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, s
 
 const controlsRef = shallowRef<TransformControls | null>(null)
 
-const { controls, camera: activeCamera, renderer, extend } = useTresContext()
+const { controls, camera: ctxCamera, renderer, extend } = useTresContext()
+
+const { activeCamera } = ctxCamera
 
 const domElement = computed(() => renderer.instance.value.domElement)
 

@@ -109,11 +109,11 @@ const colorSpace = computed(() => renderer.instance.value?.outputColorSpace)
 const { onBeforeRender } = useLoop()
 
 onBeforeRender(() => {
-  if (smokeRef.value && camera.value && groupRef.value) {
+  if (smokeRef.value && camera.activeCamera.value && groupRef.value) {
     groupRef.value?.children.forEach((child: Object3D, index: number) => {
       child.rotation.z += smoke[index].rotation
     })
-    smokeRef.value.lookAt(camera.value?.position)
+    smokeRef.value.lookAt(camera.activeCamera.value?.position)
     // TODO: comment this until invalidate is back in the loop callback on v5
     // invalidate()
   }

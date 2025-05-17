@@ -275,7 +275,9 @@ const {
   rotateSpeed,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
 
 const contextDomElement = computed(() => renderer.instance.value.domElement)
 

@@ -85,7 +85,7 @@ export function useFBO(options: FboOptions) {
     if (autoRender.value) {
       renderer.instance.value.setRenderTarget(target.value)
       renderer.instance.value.clear()
-      renderer.instance.value.render(scene.value, camera.value as Camera)
+      renderer.instance.value.render(scene.value, camera.activeCamera.value)
 
       renderer.instance.value.setRenderTarget(null)
     }

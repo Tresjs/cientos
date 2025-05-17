@@ -61,7 +61,9 @@ const emit = defineEmits(['isLock', 'change'])
 
 const { moveSpeed } = toRefs(props)
 
-const { camera: activeCamera, controls, renderer } = useTresContext()
+const { camera: ctxCamera, controls, renderer } = useTresContext()
+
+const { activeCamera } = ctxCamera
 
 const contextDomElement = computed(() => renderer.instance.value.domElement)
 
