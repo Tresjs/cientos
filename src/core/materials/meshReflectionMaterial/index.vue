@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
-import { useLogger, useLoop, useTresContext } from '@tresjs/core'
+import { logWarning, useLoop, useTresContext } from '@tresjs/core'
 import {
   Color,
   DepthTexture,
@@ -151,7 +151,7 @@ const props = withDefaults(
   },
 )
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer: tresRenderer } = useTresContext()
 extend({ MeshReflectionMaterial })
 
 const blurWidth = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[0] : props.blurSize))
@@ -205,7 +205,9 @@ const fboBlur = new WebGLRenderTarget(
 )
 
 function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, object: Object3D) {
-  invalidate()
+  if (tresRenderer.canBeInvalidated.value) {
+    tresRenderer.invalidate()
+  }
 
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
@@ -324,31 +326,31 @@ watch(() => [
 //
 // TODO: This code can be removed when #615 is resolved
 watch(() => [hasBlur.value], () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Setting blurMixRough or blurMixSmooth to 0, then non-zero triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDepth, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Setting depthScale to 0, then non-zero triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasDistortion, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling distortionMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(hasRoughness, () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling roughnessMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
 })
 watch(() => [props.normalMap], () => {
-  useLogger().logWarning(
+  logWarning(
     'MeshReflectionMaterial: Toggling normalMap triggers a recompile.'
     + 'The TresJS core cannot currently handle recompiled materials.',
   )
@@ -361,11 +363,13 @@ onBeforeUnmount(() => {
   blurpass.dispose()
 })
 
-useLoop().onBeforeRender(({ renderer, scene, camera, invalidate }) => {
+useLoop().onBeforeRender(({ renderer, scene, camera }) => {
   const parent = (materialRef.value as any)?.__tres?.parent
   if (!parent) { return }
   onBeforeRender(renderer, scene, camera, parent)
-  invalidate()
+  if (tresRenderer.canBeInvalidated.value) {
+    tresRenderer.invalidate()
+  }
 })
 defineExpose({ instance: materialRef })
 </script>

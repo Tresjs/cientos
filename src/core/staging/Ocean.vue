@@ -153,9 +153,10 @@ normalMap.wrapS = normalMap.wrapT = RepeatWrapping
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta, invalidate }) => {
+onBeforeRender(({ delta /* invalidate */ }) => {
   waterRef.value.material.uniforms.time.value += delta
-  invalidate()
+  // TODO: comment this until invalidate is back in the loop callback on v5
+  // invalidate()
 })
 </script>
 

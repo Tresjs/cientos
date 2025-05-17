@@ -166,7 +166,7 @@ watch(
 )
 
 watch(
-  () => [groupRef.value, renderer.value, sizes.width.value, sizes.height.value, slots.default?.()],
+  () => [groupRef.value, renderer.instance.value, sizes.width.value, sizes.height.value, slots.default?.()],
   ([group, renderer]): void => {
     if (group && renderer) {
       const target = portal?.value || renderer.domElement
@@ -176,7 +176,7 @@ watch(
         el.value.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;overflow:hidden;'
       }
       else {
-        const vector = calculatePosition(group, camera.value as TresCamera, {
+        const vector = calculatePosition(group, camera.activeCamera.value as TresCamera, {
           width: sizes.width.value,
           height: sizes.height.value,
         })
@@ -222,28 +222,29 @@ const visible = ref(true)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
-  invalidate()
+onBeforeRender(() => {
+  // TODO: comment this until invalidate is back in the loop callback on v5
+  // invalidate()
 
-  if (groupRef.value && camera.value && renderer.value) {
-    camera.value?.updateMatrixWorld()
+  if (groupRef.value && camera.activeCamera.value && renderer.instance.value) {
+    camera.activeCamera.value?.updateMatrixWorld()
     groupRef.value.updateWorldMatrix(true, false)
 
     const vector = transform.value
       ? previousPosition.value
-      : calculatePosition(groupRef.value, camera.value as TresCamera, {
+      : calculatePosition(groupRef.value, camera.activeCamera.value as TresCamera, {
         width: sizes.width.value || 0,
         height: sizes.height.value || 0,
       })
 
     if (
       transform.value
-      || Math.abs(previousZoom.value - (camera.value as TresCamera).zoom) > eps.value
+      || Math.abs(previousZoom.value - (camera.activeCamera.value as TresCamera).zoom) > eps.value
       || Math.abs(previousPosition.value[0] - vector[0]) > eps.value
       || Math.abs(previousPosition.value[1] - vector[1]) > eps.value
       || Math.abs(previousPosition.value[2] - vector[2]) > eps.value
     ) {
-      const isBehindCamera = isObjectBehindCamera(groupRef.value, camera.value as TresCamera)
+      const isBehindCamera = isObjectBehindCamera(groupRef.value, camera.activeCamera.value as TresCamera)
       let raytraceTarget: null | undefined | boolean | TresObject3D[] = false
 
       if (isRayCastOcclusion.value) {
@@ -260,7 +261,7 @@ onBeforeRender(({ invalidate }) => {
       if (raytraceTarget) {
         const isVisible = isObjectVisible(
           groupRef.value,
-          camera.value as TresCamera,
+          camera.activeCamera.value as TresCamera,
           raycaster.value,
           raytraceTarget as TresObject3D[],
         )
@@ -282,21 +283,21 @@ onBeforeRender(({ invalidate }) => {
           : [halfRange - 1, 0]
         : zIndexRange.value
 
-      el.value.style.zIndex = `${objectZIndex(groupRef.value, camera.value as TresCamera, zRange)}`
+      el.value.style.zIndex = `${objectZIndex(groupRef.value, camera.activeCamera.value as TresCamera, zRange)}`
       if (transform.value) {
         const [widthHalf, heightHalf] = [
           (sizes.width.value) / 2,
           (sizes.height.value) / 2,
         ]
-        const fov = camera.value.projectionMatrix.elements[5] * heightHalf
-        const { isOrthographicCamera, top, left, bottom, right } = camera.value as OrthographicCamera
-        const cameraMatrix = getCameraCSSMatrix(camera.value.matrixWorldInverse)
+        const fov = camera.activeCamera.value.projectionMatrix.elements[5] * heightHalf
+        const { isOrthographicCamera, top, left, bottom, right } = camera.activeCamera.value as OrthographicCamera
+        const cameraMatrix = getCameraCSSMatrix(camera.activeCamera.value.matrixWorldInverse)
         const cameraTransform = isOrthographicCamera
           ? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
           : `translateZ(${fov}px)`
         let matrix = groupRef.value.matrixWorld
         if (sprite.value) {
-          matrix = camera.value.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(groupRef.value.scale)
+          matrix = camera.activeCamera.value.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(groupRef.value.scale)
           matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0
           matrix.elements[15] = 1
         }
@@ -320,13 +321,13 @@ onBeforeRender(({ invalidate }) => {
         const scale
           = distanceFactor?.value === undefined
             ? 1
-            : objectScale(groupRef.value, camera.value as TresCamera) * distanceFactor?.value
+            : objectScale(groupRef.value, camera.activeCamera.value as TresCamera) * distanceFactor?.value
         el.value.style.transform = `translate3d(${vector[0]}px,${vector[1]}px,0) scale(${scale})`
       }
     }
 
     previousPosition.value = vector
-    previousZoom.value = (camera.value as TresCamera).zoom
+    previousZoom.value = (camera.activeCamera.value as TresCamera).zoom
   }
 
   if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
@@ -335,7 +336,7 @@ onBeforeRender(({ invalidate }) => {
         const el = (vnode.value?.children as unknown as Array<HTMLElement>)[0]
 
         if (el?.clientWidth && el?.clientHeight) {
-          const { isOrthographicCamera } = camera.value as OrthographicCamera
+          const { isOrthographicCamera } = camera.activeCamera.value as OrthographicCamera
 
           if (isOrthographicCamera || geometry) {
             if (attrs.scale) {
@@ -375,7 +376,7 @@ onBeforeRender(({ invalidate }) => {
         isMeshSizeSet.value = true
       }
 
-      occlusionMeshRef.value.lookAt(camera.value?.position)
+      occlusionMeshRef.value.lookAt(camera.activeCamera.value?.position)
     }
   }
 })

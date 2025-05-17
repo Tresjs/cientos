@@ -72,7 +72,7 @@ const props = withDefaults(defineProps<ReflectorProps>(), {
   shader: Reflector.ReflectorShader,
 })
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer } = useTresContext()
 
 const reflectorRef = shallowRef<Reflector>()
 
@@ -81,7 +81,11 @@ extend({ Reflector })
 const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
 
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 defineExpose({
   instance: reflectorRef,

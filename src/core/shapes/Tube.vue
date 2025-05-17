@@ -35,8 +35,12 @@ const props = withDefaults(defineProps<TubeProps>(), {
   color: '#ffffff',
 })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const tubeRef = shallowRef()
 

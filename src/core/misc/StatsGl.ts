@@ -101,7 +101,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
 
     const { onAfterRender } = useLoop()
 
-    statsGl.init(renderer.value)
+    statsGl.init(renderer.instance.value)
 
     onAfterRender(() => statsGl.update(), Number.POSITIVE_INFINITY)
 

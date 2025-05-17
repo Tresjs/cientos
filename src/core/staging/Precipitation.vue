@@ -206,7 +206,7 @@ watchEffect(async () => {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
+onBeforeRender(() => {
   if (geometryRef.value?.attributes.position.array && geometryRef.value?.attributes.position.count) {
     const positionArray = geometryRef.value.attributes.position.array
     for (let i = 0; i < geometryRef.value.attributes.position.count; i++) {
@@ -221,7 +221,8 @@ onBeforeRender(({ invalidate }) => {
     }
     geometryRef.value.attributes.position.needsUpdate = true
 
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 
