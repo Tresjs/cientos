@@ -3,7 +3,7 @@ import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { MOUSE, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
 import type { Camera } from 'three'
 
@@ -298,7 +298,11 @@ const {
   mouseButtons,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
+
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 
 const controlsRef = shallowRef<OrbitControls | null>(null)
 
@@ -317,7 +321,9 @@ watch(controlsRef, (value) => {
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'change', () => {
     emit('change', controlsRef.value)
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   })
   useEventListener(controlsRef.value as any, 'start', () => emit('start', controlsRef.value))
   useEventListener(controlsRef.value as any, 'end', () => emit('end', controlsRef.value))
@@ -325,12 +331,13 @@ function addEventListeners() {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
+onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
 
     if (autoRotate.value) {
-      invalidate()
+      // TODO: comment this until invalidate is back in the loop callback on v5
+      // invalidate()
     }
   }
 })
@@ -346,7 +353,7 @@ defineExpose({ instance: controlsRef })
 
 <template>
   <TresOrbitControls
-    v-if="(camera || activeCamera) && (domElement || renderer)"
+    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
     ref="controlsRef"
     :target="target"
     :auto-rotate="autoRotate"
@@ -370,6 +377,6 @@ defineExpose({ instance: controlsRef })
     :enable-rotate="enableRotate"
     :rotate-speed="rotateSpeed"
     :mouse-buttons="mouseButtons"
-    :args="[camera || activeCamera, domElement || renderer.domElement]"
+    :args="[camera || activeCamera, domElement || contextDomElement]"
   />
 </template>

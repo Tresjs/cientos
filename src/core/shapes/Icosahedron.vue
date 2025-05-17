@@ -24,9 +24,12 @@ export interface IcosahedronProps {
 
 const props = withDefaults(defineProps<IcosahedronProps>(), { args: () => [1, 0], color: '#ffffff' })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
-
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 const icosahedronRef = shallowRef()
 
 defineExpose({

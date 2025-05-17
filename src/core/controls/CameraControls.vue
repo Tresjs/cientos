@@ -316,7 +316,7 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   maxPolarAngle: Math.PI,
   minAzimuthAngle: Number.NEGATIVE_INFINITY,
   maxAzimuthAngle: Number.POSITIVE_INFINITY,
-  distance: () => useTresContext().camera.value!.position.z,
+  distance: () => useTresContext().camera.activeCamera.value!.position.z,
   minDistance: Number.EPSILON,
   maxDistance: Number.POSITIVE_INFINITY,
   infinityDolly: false,
@@ -336,8 +336,8 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   boundaryFriction: 0.0,
   restThreshold: 0.01,
   colliderMeshes: () => [],
-  mouseButtons: () => getMouseButtons(useTresContext().camera.value),
-  touches: () => getTouches(useTresContext().camera.value),
+  mouseButtons: () => getMouseButtons(useTresContext().camera.activeCamera.value),
+  touches: () => getTouches(useTresContext().camera.activeCamera.value),
 })
 
 const emit = defineEmits(['change', 'start', 'end'])
@@ -387,10 +387,16 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
+
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const mouseButtons = computed(() => getMouseButtons(
@@ -418,7 +424,9 @@ watchEffect(() => {
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'update', () => {
     emit('change', controlsRef.value)
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   })
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
@@ -426,10 +434,11 @@ function addEventListeners() {
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ delta, invalidate }) => {
+onBeforeRender(({ delta /* invalidate */ }) => {
   if (controlsRef.value?.enabled) {
     controlsRef.value?.update(delta)
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 
@@ -483,7 +492,7 @@ export { default as BaseCameraControls } from 'camera-controls'
 
 <template>
   <TresCameraControls
-    v-if="(camera || activeCamera) && (domElement || renderer)"
+    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
     ref="controlsRef"
     :min-polar-angle="minPolarAngle"
     :max-polar-angle="maxPolarAngle"
@@ -509,7 +518,7 @@ export { default as BaseCameraControls } from 'camera-controls'
     :boundary-friction="boundaryFriction"
     :rest-threshold="restThreshold"
     :collider-meshes="colliderMeshes"
-    :args="[camera || activeCamera, domElement || renderer.domElement]"
+    :args="[camera || activeCamera, domElement || contextDomElement]"
     :mouse-buttons="mouseButtons"
     :touches="touches"
   />

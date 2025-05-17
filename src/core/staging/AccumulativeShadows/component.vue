@@ -63,11 +63,11 @@ const props = withDefaults(defineProps<AccumulativeShadowsProps>(), {
 
 extend({ SoftShadowMaterial })
 
-const { renderer: gl, scene, camera, invalidate } = useTres()
+const { renderer, scene, camera } = useTres()
 const gOuter = shallowRef<Group>()
 const gPlane = shallowRef<Mesh<PlaneGeometry, SoftShadowMaterialProps & ShaderMaterial>>(null!)
 const gLights = shallowRef<Group>(new Group())
-const progressiveLightMap = computed(() => new ProgressiveLightMap(gl.value, scene.value, props.resolution))
+const progressiveLightMap = computed(() => new ProgressiveLightMap(renderer.instance.value, scene.value, props.resolution))
 const shadowMapTexture = shallowRef<Texture>()
 
 let frameCount = 0
@@ -111,9 +111,9 @@ function update(frames = 1) {
         light.update()
       }
     })
-    if (camera.value) {
+    if (camera.activeCamera.value) {
       const blend = Math.max(2, props.accumulate ? props.blend : props.frames)
-      progressiveLightMap.value.update(camera.value, blend)
+      progressiveLightMap.value.update(camera.activeCamera.value, blend)
     }
   }
 
@@ -141,13 +141,17 @@ useLoop().onBeforeRender(() => {
 
   if (props.accumulate && props.once) {
     if (frameCount < props.frames || frameCount < props.blend) {
-      invalidate()
+      if (renderer.canBeInvalidated.value) {
+        renderer.invalidate()
+      }
       update()
       frameCount++
     }
   }
   else {
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
     if (frameCount < props.frames) {
       update(props.frames - frameCount)
       frameCount = props.frames

@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<SuperFormulaProps>(), {
   color: 'white',
 })
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
 const { cos, sin, abs } = Math
 
@@ -127,7 +127,9 @@ watch(() => [props.widthSegments, props.heightSegments], () => {
     geometry.value.dispose()
   }
   geometry.value = makeGeometry(props.widthSegments, props.heightSegments)
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 }, { immediate: true })
 
 watch(() => [
@@ -141,7 +143,9 @@ watch(() => [
   props.expB[2],
 ], () => {
   updateGeometry(geometry.value, props.numArmsA, props.expA[0], props.expA[1], props.expA[2], props.numArmsB, props.expB[0], props.expB[1], props.expB[2], props.widthSegments, props.heightSegments)
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 }, { immediate: true })
 
 onUnmounted(() => {

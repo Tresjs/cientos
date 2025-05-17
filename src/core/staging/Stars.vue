@@ -86,10 +86,12 @@ const scale = ref()
 
 const { radius, depth, count, size, sizeAttenuation, transparent, alphaMap, alphaTest } = toRefs(props)
 
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const setStars = () => {

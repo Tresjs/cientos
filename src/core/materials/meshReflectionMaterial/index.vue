@@ -151,7 +151,7 @@ const props = withDefaults(
   },
 )
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer: tresRenderer } = useTresContext()
 extend({ MeshReflectionMaterial })
 
 const blurWidth = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[0] : props.blurSize))
@@ -205,7 +205,9 @@ const fboBlur = new WebGLRenderTarget(
 )
 
 function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, object: Object3D) {
-  invalidate()
+  if (tresRenderer.canBeInvalidated.value) {
+    tresRenderer.invalidate()
+  }
 
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
@@ -361,11 +363,13 @@ onBeforeUnmount(() => {
   blurpass.dispose()
 })
 
-useLoop().onBeforeRender(({ renderer, scene, camera, invalidate }) => {
+useLoop().onBeforeRender(({ renderer, scene, camera }) => {
   const parent = (materialRef.value as any)?.__tres?.parent
   if (!parent) { return }
   onBeforeRender(renderer, scene, camera, parent)
-  invalidate()
+  if (tresRenderer.canBeInvalidated.value) {
+    tresRenderer.invalidate()
+  }
 })
 defineExpose({ instance: materialRef })
 </script>

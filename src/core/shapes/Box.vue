@@ -25,10 +25,14 @@ export interface BoxProps {
 }
 
 const props = withDefaults(defineProps<BoxProps>(), { args: () => [1, 1, 1], color: '#ffffff' })
-const { invalidate } = useTresContext()
+const { renderer } = useTresContext()
 
 const { args, color } = toRefs(props)
-watch(args, () => invalidate())
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const boxRef = shallowRef()
 

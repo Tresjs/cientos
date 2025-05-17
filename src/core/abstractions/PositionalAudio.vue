@@ -119,7 +119,7 @@ const createHelper = () => {
 }
 
 const dispose = () => {
-  camera?.value?.remove(listener)
+  camera.activeCamera.value?.remove(listener)
 
   disposeAudio()
   disposeHelper()
@@ -163,7 +163,7 @@ watch([distance, loop, buffer, innerAngle, outerAngle, outerGain, autoplay], () 
 })
 
 onMounted(() => {
-  camera?.value?.add(listener)
+  camera.activeCamera.value?.add(listener)
 })
 
 onBeforeUnmount(() => {

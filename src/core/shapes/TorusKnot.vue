@@ -24,8 +24,12 @@ export interface TorusKnotProps {
 
 const props = withDefaults(defineProps<TorusKnotProps>(), { args: () => [1, 0.4, 64, 8], color: '#ffffff' })
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const torusKnotRef = shallowRef()
 
