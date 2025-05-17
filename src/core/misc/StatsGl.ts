@@ -93,7 +93,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
     expose({ instance: statsGl })
 
     const node = document.body
-    const statContainer = statsGl.dom || statsGl.container
+    const statContainer = statsGl.container
 
     node?.appendChild(statContainer)
 
