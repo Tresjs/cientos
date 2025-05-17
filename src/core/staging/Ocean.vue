@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useTexture } from '../loaders/useTexture'
-import { FrontSide, RepeatWrapping, Vector3 } from 'three'
+import { FrontSide, RepeatWrapping, TextureLoader, Vector3 } from 'three'
 import { Water } from 'three-stdlib'
 import { nextTick, onMounted, shallowRef, toRefs } from 'vue'
 import type { TresColor, TresVector3 } from '@tresjs/core'
@@ -147,16 +147,18 @@ onMounted(async () => {
   }
 })
 
-const { state: normalMap } = useTexture(waterNormals.value)
+const normalMap = new TextureLoader().load(waterNormals.value)
 
 normalMap.wrapS = normalMap.wrapT = RepeatWrapping
 
 const { onBeforeRender } = useLoop()
 
 onBeforeRender(({ delta /* invalidate */ }) => {
-  waterRef.value.material.uniforms.time.value += delta
-  // TODO: comment this until invalidate is back in the loop callback on v5
-  // invalidate()
+  if (waterRef.value) {
+    waterRef.value.material.uniforms.time.value += delta
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
+  }
 })
 </script>
 

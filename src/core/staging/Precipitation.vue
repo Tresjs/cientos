@@ -179,16 +179,16 @@ const mapTexture = shallowRef<Texture | null>(null)
 
 watchEffect(async () => {
   if (typeof alphaMapUrl.value === 'string') {
-    const { state: resolvedTexture } = useTexture({ alphaMap: alphaMapUrl.value })
-    alphaMapTexture.value = resolvedTexture.value
+    const { state: alphaMap } = useTexture(alphaMapUrl.value)
+    alphaMapTexture.value = alphaMap.value
   }
   else {
     alphaMapTexture.value = alphaMapUrl.value ?? null
   }
 
   if (typeof mapUrl.value === 'string') {
-    const { state: resolvedTexture } = useTexture({ map: mapUrl.value })
-    mapTexture.value = resolvedTexture.value
+    const { state: map } = useTexture(mapUrl.value)
+    mapTexture.value = map.value
   }
   else {
     mapTexture.value = mapUrl.value ?? null
