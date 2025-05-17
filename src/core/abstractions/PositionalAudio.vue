@@ -163,7 +163,7 @@ watch([distance, loop, buffer, innerAngle, outerAngle, outerGain, autoplay], () 
 })
 
 onMounted(() => {
-  camera?.value?.add(listener)
+  camera.activeCamera.value?.add(listener)
 })
 
 onBeforeUnmount(() => {

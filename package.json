@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^10.0.1",
-    "@tresjs/core": "https://pkg.pr.new/@tresjs/core@b630003",
+    "@tresjs/core": "https://pkg.pr.new/@tresjs/core@965",
     "@tresjs/eslint-config": "^1.4.0",
     "@types/node": "^22.10.5",
     "@types/three": "^0.176.0",
