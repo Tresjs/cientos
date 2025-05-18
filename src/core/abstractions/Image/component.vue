@@ -2,9 +2,10 @@
 import type { Side, Texture } from 'three'
 import { Color, FrontSide } from 'three'
 import type { TresColor } from '@tresjs/core'
-import { useTexture, useTres } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { computed, shallowRef, watchEffect } from 'vue'
 import ImageMaterial from './ImageMaterial.vue'
+import { useTexture } from '../../loaders/useTexture'
 
 export type ImageProps = {
   /**
@@ -86,7 +87,8 @@ watchEffect(() => {
     texture.value = props.texture
   }
   else {
-    useTexture([props.url!]).then(t => texture.value = t)
+    const { state: t } = useTexture(props.url!)
+    texture.value = t
   }
 })
 

@@ -52,6 +52,8 @@ export default [
       { text: 'useProgress', link: '/guide/loaders/use-progress' },
       { text: 'useGLTF', link: '/guide/loaders/use-gltf' },
       { text: 'GLTFModel', link: '/guide/loaders/gltf-model' },
+      { text: 'useTexture', link: '/guide/loaders/use-texture' },
+      { text: 'useTextures', link: '/guide/loaders/use-textures' },
       { text: 'useFBX', link: '/guide/loaders/use-fbx' },
       { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
       { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
