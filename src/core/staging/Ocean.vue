@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useLoop, useTresContext } from '@tresjs/core'
-import { useTexture } from '../loaders/useTexture'
 import { FrontSide, RepeatWrapping, TextureLoader, Vector3 } from 'three'
 import { Water } from 'three-stdlib'
 import { nextTick, onMounted, shallowRef, toRefs } from 'vue'
