@@ -17,13 +17,11 @@ const gl = {
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[5.3, 2.45, 9.3]" :look-at="[0, 0, 0]" />
     <OrbitControls />
-    <Suspense>
-      <GLTFModel
-        path="https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/blender-cube.glb"
-        cast-shadow
-        :position="[0, 1, 0]"
-      />
-    </Suspense>
+    <GLTFModel
+      path="https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/blender-cube.glb"
+      cast-shadow
+      :position="[0, 1, 0]"
+    />
     <TresMesh
       :rotate-x="Math.PI * -0.5"
       receive-shadow

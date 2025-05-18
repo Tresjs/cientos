@@ -2,7 +2,7 @@
 import { useLoop, useTresContext } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { MapControls } from 'three-stdlib'
-import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
 import type { Camera } from 'three'
 
@@ -275,10 +275,16 @@ const {
   rotateSpeed,
 } = toRefs(props)
 
-const { camera: activeCamera, renderer, extend, controls, invalidate } = useTresContext()
+const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+
+const { activeCamera } = ctxCamera
+
+const contextDomElement = computed(() => renderer.instance.value.domElement)
 
 watch(props, () => {
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
 })
 
 const controlsRef = shallowRef<MapControls | null>(null)
@@ -296,7 +302,9 @@ watch(controls, (value) => {
 
 function onChange() {
   addEventListeners()
-  invalidate()
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
   emit('change', controlsRef.value)
 }
 function addEventListeners() {
@@ -306,11 +314,12 @@ function addEventListeners() {
 }
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
+onBeforeRender(() => {
   if (controlsRef.value && (enableDamping.value || autoRotate.value)) {
     controlsRef.value.update()
 
-    invalidate()
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 
@@ -327,9 +336,9 @@ defineExpose({
 
 <template>
   <TresMapControls
-    v-if="(camera || activeCamera) && (domElement || renderer)"
+    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
     ref="controlsRef"
-    :args="[camera || activeCamera, domElement || renderer.domElement]"
+    :args="[camera || activeCamera, domElement || contextDomElement]"
     :auto-rotate="autoRotate"
     :auto-rotate-speed="autoRotateSpeed"
     :enable-damping="enableDamping"

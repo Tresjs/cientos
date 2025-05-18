@@ -17,18 +17,24 @@ const props = withDefaults(
 
 const materialRef = shallowRef()
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer } = useTresContext()
 
 extend({ MeshWobbleMaterial })
 
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ elapsed, invalidate }) => {
+onBeforeRender(({ elapsed }) => {
   if (materialRef.value) {
     materialRef.value.time = elapsed * props?.speed
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   }
 })
 

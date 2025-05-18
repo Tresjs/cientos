@@ -1,7 +1,7 @@
 import { useLoop, useTresContext } from '@tresjs/core'
 import { DepthTexture, FloatType, HalfFloatType, LinearFilter, WebGLRenderTarget } from 'three'
 import { isReactive, onBeforeUnmount, reactive, ref, toRefs, watch } from 'vue'
-import type { Camera, RenderTargetOptions } from 'three'
+import type { RenderTargetOptions } from 'three'
 import type { Ref } from 'vue'
 
 export interface FboOptions {
@@ -56,7 +56,7 @@ export function useFBO(options: FboOptions) {
   const { height, width, settings, depth, autoRender = ref(true) } = isReactive(options) ? toRefs(options) : toRefs(reactive(options))
 
   const { onBeforeRender } = useLoop()
-  const { camera, renderer, scene, sizes, invalidate } = useTresContext()
+  const { camera, renderer, scene, sizes } = useTresContext()
 
   watch(() => [width?.value, sizes.width.value, height?.value, sizes.height.value], () => {
     target.value?.dispose()
@@ -76,16 +76,20 @@ export function useFBO(options: FboOptions) {
       )
     }
 
-    invalidate()
+    if (renderer.canBeInvalidated.value) {
+      renderer.invalidate()
+    }
   }, { immediate: true })
 
   onBeforeRender(() => {
     if (autoRender.value) {
-      renderer.value.setRenderTarget(target.value)
-      renderer.value.clear()
-      renderer.value.render(scene.value, camera.value as Camera)
+      renderer.instance.value.setRenderTarget(target.value)
+      renderer.instance.value.clear()
+      if (camera.activeCamera.value) {
+        renderer.instance.value.render(scene.value, camera.activeCamera.value)
+      }
 
-      renderer.value.setRenderTarget(null)
+      renderer.instance.value.setRenderTarget(null)
     }
   }, Number.POSITIVE_INFINITY)
 

@@ -16,9 +16,13 @@ const props = defineProps<CustomShaderMaterialProps>()
 
 const customShaderMaterialClass = shallowRef(null)
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer } = useTresContext()
 extend({ CustomShaderMaterial })
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 defineExpose({ instance: customShaderMaterialClass })
 </script>

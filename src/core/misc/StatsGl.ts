@@ -93,7 +93,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
     expose({ instance: statsGl })
 
     const node = document.body
-    const statContainer = statsGl.dom || statsGl.container
+    const statContainer = statsGl.container
 
     node?.appendChild(statContainer)
 
@@ -101,7 +101,7 @@ export const StatsGl = defineComponent<StatsGlProps>({
 
     const { onAfterRender } = useLoop()
 
-    statsGl.init(renderer.value)
+    statsGl.init(renderer.instance.value)
 
     onAfterRender(() => statsGl.update(), Number.POSITIVE_INFINITY)
 

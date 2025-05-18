@@ -25,9 +25,12 @@ export interface RingProps {
 const props = withDefaults(defineProps<RingProps>(), { args: () => [0.5, 1, 32], color: '#ffffff' })
 
 const { args, color } = toRefs(props)
-const { invalidate } = useTresContext()
-watch(args, () => invalidate())
-
+const { renderer } = useTresContext()
+watch(args, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 const ringRef = shallowRef()
 
 defineExpose({

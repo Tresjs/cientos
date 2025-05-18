@@ -151,9 +151,13 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend, invalidate } = useTresContext()
+const { extend, renderer } = useTresContext()
 
-watch(props, () => invalidate())
+watch(props, () => {
+  if (renderer.canBeInvalidated.value) {
+    renderer.invalidate()
+  }
+})
 
 extend({ TextGeometry })
 
