@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { IcosahedronGeometry } from 'three'
 
@@ -23,13 +23,13 @@ export interface IcosahedronProps {
 }
 
 const props = withDefaults(defineProps<IcosahedronProps>(), { args: () => [1, 0], color: '#ffffff' })
+const { invalidate } = useTres()
+
 const { args, color } = toRefs(props)
-const { renderer } = useTresContext()
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
+
 const icosahedronRef = shallowRef()
 
 defineExpose({

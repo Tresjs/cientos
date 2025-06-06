@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { useLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTres } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { MapControls } from 'three-stdlib'
-import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
 import type { Camera } from 'three'
 
@@ -275,16 +275,10 @@ const {
   rotateSpeed,
 } = toRefs(props)
 
-const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
-
-const { activeCamera } = ctxCamera
-
-const contextDomElement = computed(() => renderer.instance.value.domElement)
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTres()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const controlsRef = shallowRef<MapControls | null>(null)
@@ -302,9 +296,7 @@ watch(controls, (value) => {
 
 function onChange() {
   addEventListeners()
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('change', controlsRef.value)
 }
 function addEventListeners() {
@@ -336,9 +328,9 @@ defineExpose({
 
 <template>
   <TresMapControls
-    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
+    v-if="(camera || activeCamera) && (domElement || renderer.domElement)"
     ref="controlsRef"
-    :args="[camera || activeCamera, domElement || contextDomElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
     :auto-rotate="autoRotate"
     :auto-rotate-speed="autoRotateSpeed"
     :enable-damping="enableDamping"

@@ -16,8 +16,8 @@ export async function getTextureAndAtlasAsync(
     = typeof atlasPathOrAtlasish !== 'string'
       ? new Promise(resolve => resolve(atlasPathOrAtlasish as Atlasish))
       : fetch(atlasPathOrAtlasish)
-        .then(response => response.json())
-        .catch(e => logError(`Cientos Atlas - ${e}`))
+          .then(response => response.json())
+          .catch(e => logError(`Cientos Atlas - ${e}`))
   return Promise.all([texturePromise, atlasishPromise]).then(
     ([texture, atlasish]) => {
       const atlas = getAtlas(
@@ -54,10 +54,10 @@ export function getAtlas(
     = typeof atlasish === 'number' || Array.isArray(atlasish)
       ? getAtlasFramesFromNumColsNumRows(atlasish, textureWidth, textureHeight)
       : getAtlasFramesFromTexturePackerData(
-        atlasish,
-        textureWidth,
-        textureHeight,
-      )
+          atlasish,
+          textureWidth,
+          textureHeight,
+        )
 
   return { frames, animations: groupAtlasFramesByKey(frames) }
 }
@@ -123,15 +123,15 @@ function getAtlasFramesFromTexturePackerData(
 ) {
   return Array.isArray(data.frames)
     ? getAtlasFramesFromTexturePackerDataArray(
-      data as TexturePackerFrameDataArray,
-      width,
-      height,
-    )
+        data as TexturePackerFrameDataArray,
+        width,
+        height,
+      )
     : getAtlasFramesFromTexturePackerDataObject(
-      data as TexturePackerFrameDataObject,
-      width,
-      height,
-    )
+        data as TexturePackerFrameDataObject,
+        width,
+        height,
+      )
 }
 
 function getAtlasFramesFromTexturePackerDataArray(

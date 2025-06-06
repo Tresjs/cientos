@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { normalizeColor, useTresContext } from '@tresjs/core'
+import { normalizeColor, useTres } from '@tresjs/core'
 import { Vector2, Vector3 } from 'three'
 import { Line2, LineGeometry, LineMaterial } from 'three-stdlib'
 import { computed, onUnmounted, shallowRef, watch } from 'vue'
@@ -67,7 +67,7 @@ function getInterpolatedVertexColors(vertexColors: VertexColors | null, numPoint
 const lineMaterial = new LineMaterial()
 const lineGeometry = new LineGeometry()
 const line = new Line2(lineGeometry, lineMaterial)
-const { sizes, renderer } = useTresContext()
+const { sizes, invalidate } = useTres()
 const hasVertexColors = computed(() => Array.isArray(props.vertexColors))
 
 function updateLineMaterial(material: LineMaterial, props: PropsType) {
@@ -123,21 +123,15 @@ watch(() => [
   props.dashOffset,
 ], () => {
   updateLineMaterial(lineMaterial, props)
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 watch(() => [props.points, props.vertexColors], () => {
   updateLineGeometry(lineGeometry, props.points, props.vertexColors)
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 watch(() => [sizes.height, sizes.width], () => {
   lineMaterial.resolution = new Vector2(sizes.width.value, sizes.height.value)
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 onUnmounted(() => {

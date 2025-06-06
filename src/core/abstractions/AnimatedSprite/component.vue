@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { normalizeVectorFlexibleParam, useLoop, useTresContext } from '@tresjs/core'
+import { normalizeVectorFlexibleParam, useLoop, useTres } from '@tresjs/core'
 import { DoubleSide } from 'three'
 import { onUnmounted, ref, shallowRef, watch } from 'vue'
 import type { TresVector2 } from '@tresjs/core'
@@ -76,12 +76,10 @@ const emit = defineEmits<{
   (e: 'loop', frameName: string): void
 }>()
 
-const { renderer } = useTresContext()
+const { invalidate } = useTres()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const positionX = ref(0)

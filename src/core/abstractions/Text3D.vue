@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { FontLoader, TextGeometry } from 'three-stdlib'
 import { computed, shallowRef, toRefs, toValue, useSlots, watch, watchEffect } from 'vue'
 import type { TextGeometryParameters } from 'three-stdlib'
@@ -151,12 +151,10 @@ const {
   bevelSegments,
 } = toRefs(props)
 
-const { extend, renderer } = useTresContext()
+const { extend, invalidate } = useTres()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 extend({ TextGeometry })

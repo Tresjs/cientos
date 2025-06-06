@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 // eslint-disable-file vue/attribute-hyphenation
 import { MathUtils, Vector3 } from 'three'
 import { Sky as SkyImpl } from 'three-stdlib'
@@ -47,12 +47,10 @@ const props = withDefaults(defineProps<SkyProps>(), {
   distance: 450000,
 })
 
-const { renderer } = useTresContext()
+const { invalidate } = useTres()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const skyRef = shallowRef<SkyImpl>()

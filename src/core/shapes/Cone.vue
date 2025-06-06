@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { ConeGeometry } from 'three'
 
@@ -26,13 +26,13 @@ const props = withDefaults(defineProps<ConeProps>(), {
   args: () => [1, 1, 12, 12, false, 0, Math.PI * 2],
   color: '#ffffff',
 })
+const { invalidate } = useTres()
+
 const { args, color } = toRefs(props)
-const { renderer } = useTresContext()
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
+
 const coneRef = shallowRef()
 
 defineExpose({

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 
 import { TransformControls } from 'three-stdlib'
-import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { Camera, Event, Object3D } from 'three'
 
 export interface TransformControlsProps {
@@ -40,24 +40,16 @@ const { object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, s
 
 const controlsRef = shallowRef<TransformControls | null>(null)
 
-const { controls, camera: ctxCamera, renderer, extend } = useTresContext()
-
-const { activeCamera } = ctxCamera
-
-const domElement = computed(() => renderer.instance.value.domElement)
+const { controls, camera: activeCamera, renderer, extend, invalidate } = useTres()
 
 watch([object, mode, enabled, axis, translationSnap, rotationSnap, scaleSnap, space, size, showX, showY, showZ], () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 extend({ TransformControls })
 
 const onChange = () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('change')
 }
 
@@ -67,30 +59,22 @@ interface DraggingEvent extends Event {
 
 const onDragingChange = (e: DraggingEvent) => {
   if (controls.value) { controls.value.enabled = !(e).value }
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('dragging', e.value)
 }
 
 const onMouseDown = () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('mouseDown')
 }
 
 const onMouseUp = () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('mouseDown')
 }
 
 const onObjectChange = () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
   emit('objectChange')
 }
 
@@ -121,11 +105,11 @@ defineExpose({
 
 <template>
   <TresTransformControls
-    v-if="(camera || activeCamera) && domElement"
+    v-if="(camera || activeCamera) && renderer.domElement"
     ref="controlsRef"
     :key="(camera || activeCamera)?.uuid"
     :object="object"
-    :args="[camera || activeCamera, domElement]"
+    :args="[camera || activeCamera, renderer.domElement]"
     :mode="mode"
     :enabled="enabled"
     :axis="axis"

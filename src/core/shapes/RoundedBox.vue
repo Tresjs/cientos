@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { RoundedBoxGeometry } from 'three-stdlib'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
@@ -29,12 +29,11 @@ export interface BoxProps {
 const props = withDefaults(defineProps<BoxProps>(), { args: () => [1, 1, 1, 2, 0.1], color: '#ffffff' })
 
 const { args, color } = toRefs(props)
-const { renderer, extend } = useTresContext()
+const { invalidate, extend } = useTres()
+
 extend({ RoundedBoxGeometry })
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 const roundedBoxRef = shallowRef()
 

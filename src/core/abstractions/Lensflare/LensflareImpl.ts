@@ -167,7 +167,7 @@ class Lensflare extends Mesh {
     const validArea = new Box2()
     const viewport = new Vector4()
 
-    this.onBeforeRender = function (renderer, scene, camera) {
+    this.onBeforeRender = function (renderer, _scene, camera) {
       renderer.getCurrentViewport(viewport)
 
       const renderTarget = renderer.getRenderTarget()

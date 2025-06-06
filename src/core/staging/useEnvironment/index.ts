@@ -1,4 +1,4 @@
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import {
   CubeReflectionMapping,
   CubeTextureLoader,
@@ -80,7 +80,7 @@ export async function useEnvironment(
   options: Partial<EnvironmentOptions>,
   fbo: Ref<WebGLCubeRenderTarget | null>,
 ): Promise<Ref<Texture | CubeTexture | null>> {
-  const { scene, renderer } = useTresContext()
+  const { scene, invalidate } = useTres()
 
   const {
     preset,
@@ -96,9 +96,7 @@ export async function useEnvironment(
   } = toRefs(options)
 
   watch(options, () => {
-    if (renderer.canBeInvalidated.value) {
-      renderer.invalidate()
-    }
+    invalidate()
   })
 
   const texture: Ref<Texture | CubeTexture | null> = ref(null)
@@ -254,9 +252,7 @@ export async function useEnvironment(
         })
 
         texture.value = loadedTexture
-        if (renderer.canBeInvalidated.value) {
-          renderer.invalidate()
-        }
+        invalidate()
       }
       catch (error) {
         throw new Error(`Failed to load environment map: ${error}`)
@@ -264,9 +260,7 @@ export async function useEnvironment(
       if (texture.value) {
         texture.value.mapping = EquirectangularReflectionMapping
       }
-      if (renderer.canBeInvalidated.value) {
-        renderer.invalidate()
-      }
+      invalidate()
     }
     else if (value && !(value in environmentPresets)) {
       throw new Error(`Preset must be one of: ${Object.keys(environmentPresets).join(', ')}`)
