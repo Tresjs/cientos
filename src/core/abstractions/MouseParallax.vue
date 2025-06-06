@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTres } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
 import { computed, ref, shallowRef, toRefs, watch } from 'vue'
 import type { UseMouseOptions } from '@vueuse/core'
@@ -47,20 +47,20 @@ const props = withDefaults(defineProps<MouseParallaxProps>(), {
   local: false,
 })
 
-const { camera, renderer } = useTresContext()
+const { camera, renderer } = useTres()
 
 const { disabled, factor, ease, local } = toRefs(props)
 
 const mouseOptions: UseMouseOptions = {}
 
 if (local.value) {
-  mouseOptions.target = renderer.instance.value.domElement
+  mouseOptions.target = renderer.domElement
   mouseOptions.type = 'client'
 }
 
 const { x, y } = useMouse(mouseOptions)
 const { width, height } = local.value
-  ? useElementSize(renderer.instance.value.domElement)
+  ? useElementSize(renderer.domElement)
   : useWindowSize()
 
 const cameraGroupRef = shallowRef<Group>()
@@ -101,7 +101,7 @@ onBeforeRender(({ delta /* invalidate */ }) => {
 
 watch(
   () => cameraGroupRef.value,
-  value => value?.add(camera.activeCamera.value as Object3D),
+  value => value?.add(camera.value as Object3D),
 )
 </script>
 
