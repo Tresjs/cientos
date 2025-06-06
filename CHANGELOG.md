@@ -1,5 +1,71 @@
 # Changelog
 
+## [5.0.0-next.0](https://github.com/Tresjs/cientos/compare/4.3.1...5.0.0-next.0) (2025-06-06)
+
+### ⚠ BREAKING CHANGES
+
+* cientos  is now ESM only
+
+- Added 'es' format to the Vite configuration for better module compatibility.
+- Removed the UMD globals section from the output configuration as it is no longer necessary, streamlining the build process.
+* useGLTF no longer returns the plain obj, it now returns an object with reactive data (state, isLoading, error) and a load method.
+
+- Refactored GLTF loading in components to use the updated `useGLTF` composable, improving state management and performance.
+- Removed unnecessary `Suspense` wrappers in demo components for cleaner rendering.
+- Added new demo components for showcasing GLTF model loading with DRACO compression.
+- Updated documentation to reflect changes in GLTF model usage.
+
+* fix: update import syntax and clean up unused code
+
+- Changed import statement for `TresObject` in `gltf-model.md` to use the correct TypeScript syntax.
+- Removed unused imports in `use-gltf/index.vue` for cleaner code.
+- Added ESLint directive to disable console warnings in `TheModel.vue` for development purposes.
+
+* docs: update useGLTF implementation and clean up components
+
+- Refactored components to utilize the new `useGLTF` structure, replacing direct access to nodes with reactive state management.
+- Removed unused imports and commented-out code for improved clarity and maintainability.
+- Updated documentation references to reflect changes in component usage and structure.
+
+* feat: adapt useAnimations to new useAsyncState loader's model
+
+- Added a new demo page for `use-animations` showcasing the animated GLTF model.
+- Refactored the `useAnimations` composable to support reactive animations using `MaybeRef`.
+- Updated the `TheModel.vue` component to utilize the new reactive state for animations.
+- Enhanced the main demo layout with `TresCanvas`, `OrbitControls`, and lighting for improved visualization.
+
+* chore: update @tresjs/core dependency to version 5.0.0-next.0
+
+- Changed the dependency for @tresjs/core in package.json and playground/vue/package.json to the stable version 5.0.0-next.0 from a previous URL reference.
+- Updated pnpm-lock.yaml to reflect the new version of @tresjs/core across all relevant sections.
+- Adjusted the useGLTF implementation in documentation to align with the new state management approach.
+
+### Features
+
+* 608 drop umd support ([#622](https://github.com/Tresjs/cientos/issues/622)) ([14afe95](https://github.com/Tresjs/cientos/commit/14afe95c3f0c1ae5fb5b6cc4b57d3f86b46f0f4b))
+* 609-refactor-usegltf ([#610](https://github.com/Tresjs/cientos/issues/610)) ([13943b0](https://github.com/Tresjs/cientos/commit/13943b0401a7f1d10723ae01659c6d8b50f04310))
+* 611 move cores usetexture to cientos ([#617](https://github.com/Tresjs/cientos/issues/617)) ([430377d](https://github.com/Tresjs/cientos/commit/430377d8d8a1b5e902167bc210e4f48b1141c300))
+* 615-adapt-camera-dependant-abstractions-to-core-v5-camera-changes ([#621](https://github.com/Tresjs/cientos/issues/621)) ([682d38f](https://github.com/Tresjs/cientos/commit/682d38f2a6366918a77aa7e8c312484582c62b8c))
+* 616-adapt-code-to-core-ctx-renderer-state-breaking-change ([#620](https://github.com/Tresjs/cientos/issues/620)) ([2ae981f](https://github.com/Tresjs/cientos/commit/2ae981f42fa6a76fad2202236b49c28f395dfb29))
+* **AccumulativeShadows:** add component, demo, docs ([#558](https://github.com/Tresjs/cientos/issues/558)) ([7e6b8d0](https://github.com/Tresjs/cientos/commit/7e6b8d0dbbe2f1f0500072815c86c2cf0c559a58))
+* **Bounds:** add component, demo, docs ([#408](https://github.com/Tresjs/cientos/issues/408)) ([#568](https://github.com/Tresjs/cientos/issues/568)) ([592ec68](https://github.com/Tresjs/cientos/commit/592ec68de83fcd5a62523b32b96ade825437ea68))
+* **CircleShadow:** add component, demo, docs ([#549](https://github.com/Tresjs/cientos/issues/549)) ([c0c1bcc](https://github.com/Tresjs/cientos/commit/c0c1bcc15743f0c93f8908b9e29d2555a4c79c85))
+* **CubicBezierLine:** add component, demo, docs ([#546](https://github.com/Tresjs/cientos/issues/546)) ([99c3a60](https://github.com/Tresjs/cientos/commit/99c3a60d5e99d25dcb65da1f04ccd4ce0499d919))
+* **Helper:** add component, demo, docs ([#543](https://github.com/Tresjs/cientos/issues/543)) ([63535a2](https://github.com/Tresjs/cientos/commit/63535a24689c5fb1353b26d2add7f899a74ada37))
+* **LOD:** add component, playground, docs ([#524](https://github.com/Tresjs/cientos/issues/524)) ([ef6438c](https://github.com/Tresjs/cientos/commit/ef6438c46d43d83ee6bf5d1b4e36a9a7e69c8297))
+* **MarchingCubes:** add component, demo, docs ([#553](https://github.com/Tresjs/cientos/issues/553)) ([2ebc1e6](https://github.com/Tresjs/cientos/commit/2ebc1e6c75107d6914b4ad3b7e8488b06f5db2f6))
+* **PointMaterial:** add component, demo, docs ([#545](https://github.com/Tresjs/cientos/issues/545)) ([4528f64](https://github.com/Tresjs/cientos/commit/4528f64063d2f9cc903cc9f21c8c09ef792b919a))
+* **QuadraticBezierLine:** add component, demo, docs ([#548](https://github.com/Tresjs/cientos/issues/548)) ([4a9f006](https://github.com/Tresjs/cientos/commit/4a9f006d5c318781d52f6e943b7c4f342a077667))
+* **ScreenQuad:** add component, playground, docs ([#530](https://github.com/Tresjs/cientos/issues/530)) ([34a3db5](https://github.com/Tresjs/cientos/commit/34a3db5162d084f9fc3db82885a271a1a8c31424))
+* **Stage:** add component, demo, docs ([#572](https://github.com/Tresjs/cientos/issues/572)) ([9db8c78](https://github.com/Tresjs/cientos/commit/9db8c782d434a33c64663f313bc289199281f4eb))
+* **useIntersect:** add function, demo, docs ([#550](https://github.com/Tresjs/cientos/issues/550)) ([b0ba621](https://github.com/Tresjs/cientos/commit/b0ba62159c4ae9b2e51f85dcad5c9fe8d03ff6e8))
+
+### Bug Fixes
+
+* fixes to next components and docs ([#586](https://github.com/Tresjs/cientos/issues/586)) ([bc54a1d](https://github.com/Tresjs/cientos/commit/bc54a1da5aa8e0f7c9852713c01d405b9f5eff29))
+* return nodes and materials computed directly ([#612](https://github.com/Tresjs/cientos/issues/612)) ([4fe342a](https://github.com/Tresjs/cientos/commit/4fe342aeb34741ce828ba1bed26279d00f9be9e7))
+* rollback to previous use tres usage ([#623](https://github.com/Tresjs/cientos/issues/623)) ([cfa38b1](https://github.com/Tresjs/cientos/commit/cfa38b1c88421430ab5204ae943443cc50e44dfe))
+
 ## [4.3.1](https://github.com/Tresjs/cientos/compare/4.3.0...4.3.1) (2025-05-16)
 
 ### Bug Fixes
