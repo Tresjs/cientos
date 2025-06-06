@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { BufferAttribute, BufferGeometry } from 'three'
 import { onUnmounted, shallowRef, watch } from 'vue'
 
@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<SuperFormulaProps>(), {
   color: 'white',
 })
 
-const { renderer } = useTresContext()
+const { invalidate } = useTres()
 
 const { cos, sin, abs } = Math
 
@@ -127,9 +127,7 @@ watch(() => [props.widthSegments, props.heightSegments], () => {
     geometry.value.dispose()
   }
   geometry.value = makeGeometry(props.widthSegments, props.heightSegments)
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 }, { immediate: true })
 
 watch(() => [
@@ -143,9 +141,7 @@ watch(() => [
   props.expB[2],
 ], () => {
   updateGeometry(geometry.value, props.numArmsA, props.expA[0], props.expA[1], props.expA[2], props.numArmsB, props.expB[0], props.expB[1], props.expB[2], props.widthSegments, props.heightSegments)
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 }, { immediate: true })
 
 onUnmounted(() => {
