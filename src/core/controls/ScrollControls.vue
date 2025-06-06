@@ -71,9 +71,7 @@ if (props.pages < 0) { logWarning('Pages must be greater than zero') }
 const { camera, controls, renderer } = useTresContext()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  renderer.invalidate()
 })
 const wrapperRef = shallowRef()
 const scrollContainer = document.createElement('div')

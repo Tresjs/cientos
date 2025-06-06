@@ -22,9 +22,8 @@ const hasChange = (state: any) => {
 </script>
 
 <template>
-  <TresCanvas v-bind="gl" render-mode="on-demand">
+  <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[0, 3, 10]" />
-    <StatsGl />
     <!-- <Sky /> -->
     <KeyboardControls
       @change="state => hasChange(state)"

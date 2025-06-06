@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useLoop, useTresContext } from '@tresjs/core'
+import { useLoop, useTres } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import CameraControls from 'camera-controls'
 import {
@@ -316,7 +316,7 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   maxPolarAngle: Math.PI,
   minAzimuthAngle: Number.NEGATIVE_INFINITY,
   maxAzimuthAngle: Number.POSITIVE_INFINITY,
-  distance: () => useTresContext().camera.activeCamera.value!.position.z,
+  distance: () => useTres().camera.value!.position.z,
   minDistance: Number.EPSILON,
   maxDistance: Number.POSITIVE_INFINITY,
   infinityDolly: false,
@@ -336,8 +336,8 @@ const props = withDefaults(defineProps<CameraControlsProps>(), {
   boundaryFriction: 0.0,
   restThreshold: 0.01,
   colliderMeshes: () => [],
-  mouseButtons: () => getMouseButtons(useTresContext().camera.activeCamera.value),
-  touches: () => getTouches(useTresContext().camera.activeCamera.value),
+  mouseButtons: () => getMouseButtons(useTres().camera.value),
+  touches: () => getTouches(useTres().camera.value),
 })
 
 const emit = defineEmits(['change', 'start', 'end'])
@@ -387,16 +387,10 @@ const subsetOfTHREE = {
 }
 CameraControls.install({ THREE: subsetOfTHREE })
 
-const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
-
-const { activeCamera } = ctxCamera
-
-const contextDomElement = computed(() => renderer.instance.value.domElement)
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTres()
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const mouseButtons = computed(() => getMouseButtons(
@@ -424,9 +418,7 @@ watchEffect(() => {
 function addEventListeners() {
   useEventListener(controlsRef.value as any, 'update', () => {
     emit('change', controlsRef.value)
-    if (renderer.canBeInvalidated.value) {
-      renderer.invalidate()
-    }
+    invalidate()
   })
   useEventListener(controlsRef.value as any, 'controlend', () => emit('end', controlsRef.value))
   useEventListener(controlsRef.value as any, 'controlstart', () => emit('start', controlsRef.value))
@@ -492,7 +484,7 @@ export { default as BaseCameraControls } from 'camera-controls'
 
 <template>
   <TresCameraControls
-    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
+    v-if="(camera || activeCamera) && (domElement || renderer.domElement)"
     ref="controlsRef"
     :min-polar-angle="minPolarAngle"
     :max-polar-angle="maxPolarAngle"
@@ -518,7 +510,7 @@ export { default as BaseCameraControls } from 'camera-controls'
     :boundary-friction="boundaryFriction"
     :rest-threshold="restThreshold"
     :collider-meshes="colliderMeshes"
-    :args="[camera || activeCamera, domElement || contextDomElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
     :mouse-buttons="mouseButtons"
     :touches="touches"
   />

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { PointerLockControls } from 'three-stdlib'
-import { computed, onUnmounted, shallowRef, watch } from 'vue'
+import { onUnmounted, shallowRef, watch } from 'vue'
 import type { Camera, EventDispatcher } from 'three'
 
 // Define the event types for PointerLockControls
@@ -57,15 +57,10 @@ const props = withDefaults(defineProps<PointerLockControlsProps>(), {
 
 const emit = defineEmits(['isLock', 'change'])
 
-const { camera: ctxCamera, renderer, extend, controls } = useTresContext()
+const { camera: activeCamera, renderer, extend, controls, invalidate } = useTres()
 
-const { activeCamera } = ctxCamera
-
-const contextDomElement = computed(() => renderer.instance.value.domElement)
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const controlsRef = shallowRef<ExtendedPointerLockControls | null>(null)
@@ -85,16 +80,14 @@ watch(controlsRef, (value) => {
     controls.value = null
   }
   const selector = document.getElementById(props.selector || '')
-  triggerSelector = selector || renderer.instance.value.domElement
+  triggerSelector = selector || renderer.domElement
 
   useEventListener(triggerSelector, 'click', () => {
     if (controlsRef.value) {
       controlsRef.value.lock()
       controlsRef.value.addEventListener('lock', () => isLockEmitter(true))
       controlsRef.value.addEventListener('unlock', () => isLockEmitter(false))
-      if (renderer.canBeInvalidated.value) {
-        renderer.invalidate()
-      }
+      invalidate()
     }
   })
 })
@@ -115,8 +108,8 @@ defineExpose({
 
 <template>
   <TresPointerLockControls
-    v-if="(camera || activeCamera) && (domElement || contextDomElement)"
+    v-if="(camera || activeCamera) && (domElement || renderer.domElement)"
     ref="controlsRef"
-    :args="[camera || activeCamera, domElement || contextDomElement]"
+    :args="[camera || activeCamera, domElement || renderer.domElement]"
   />
 </template>
