@@ -24,7 +24,7 @@ export interface CubeCameraOptions {
 
 export function useCubeCamera(props: CubeCameraOptions) {
   let { resolution, renderer, scene, envMap, fog, near, far } = props
-  renderer = renderer ?? useTres().renderer.instance
+  renderer = renderer ?? useTres().renderer
   scene = scene ?? useTres().scene
 
   const updateProps = () => {

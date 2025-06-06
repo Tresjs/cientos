@@ -168,16 +168,16 @@ function reset(renderer: WebGLRenderer, scene: Scene, camera: Camera) {
 }
 
 onUnmounted(() => {
-  if (camera.activeCamera.value) {
+  if (camera.value) {
     ShaderChunk.shadowmap_pars_fragment = originalShadowsFragment
-    reset(renderer.instance.value, scene.value, camera.activeCamera.value)
+    reset(renderer, scene.value, camera.value)
   }
 })
 
 watch(props, () => {
-  if (camera.activeCamera.value) {
-    injectSoftShadowsFragment(renderer.instance.value, props)
-    reset(renderer.instance.value, scene.value, camera.activeCamera.value)
+  if (camera.value) {
+    injectSoftShadowsFragment(renderer, props)
+    reset(renderer, scene.value, camera.value)
   }
 }, { immediate: true })
 </script>

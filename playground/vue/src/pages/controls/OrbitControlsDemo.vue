@@ -195,6 +195,7 @@ function onRender() {
     <TresPerspectiveCamera :position="[3, 3, 3]" />
     <OrbitControls
       v-bind="controlsState"
+      :
       @change="onChange"
       @start="onStart"
       @end="onEnd"
