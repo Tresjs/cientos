@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { SphereGeometry } from 'three'
 
@@ -24,13 +24,13 @@ export interface SphereProps {
 }
 
 const props = withDefaults(defineProps<SphereProps>(), { args: () => [2, 32, 16], color: '#ffffff' })
+const { invalidate } = useTres()
+
 const { args, color } = toRefs(props)
-const { renderer } = useTresContext()
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
+
 const sphereRef = shallowRef()
 
 defineExpose({

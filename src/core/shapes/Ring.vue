@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { RingGeometry } from 'three'
 
@@ -25,12 +25,13 @@ export interface RingProps {
 const props = withDefaults(defineProps<RingProps>(), { args: () => [0.5, 1, 32], color: '#ffffff' })
 
 const { args, color } = toRefs(props)
-const { renderer } = useTresContext()
+
+const { invalidate } = useTres()
+
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
+
 const ringRef = shallowRef()
 
 defineExpose({

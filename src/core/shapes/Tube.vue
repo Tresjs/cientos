@@ -1,6 +1,6 @@
 <!-- eslint-disable max-len -->
 <script setup lang="ts">
-import { type TresColor, useTresContext } from '@tresjs/core'
+import { type TresColor, useTres } from '@tresjs/core'
 import { QuadraticBezierCurve3, Vector3 } from 'three'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { TubeGeometry } from 'three'
@@ -34,12 +34,11 @@ const props = withDefaults(defineProps<TubeProps>(), {
   ],
   color: '#ffffff',
 })
+const { invalidate } = useTres()
+
 const { args, color } = toRefs(props)
-const { renderer } = useTresContext()
 watch(args, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 const tubeRef = shallowRef()
