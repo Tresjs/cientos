@@ -233,9 +233,9 @@ onBeforeRender(() => {
     const vector = transform.value
       ? previousPosition.value
       : calculatePosition(groupRef.value, camera.activeCamera.value as TresCamera, {
-        width: sizes.width.value || 0,
-        height: sizes.height.value || 0,
-      })
+          width: sizes.width.value || 0,
+          height: sizes.height.value || 0,
+        })
 
     if (
       transform.value
