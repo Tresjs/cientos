@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useTresContext } from '@tresjs/core'
+import { useTres } from '@tresjs/core'
 import { Reflector } from 'three-stdlib'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
@@ -72,7 +72,7 @@ const props = withDefaults(defineProps<ReflectorProps>(), {
   shader: Reflector.ReflectorShader,
 })
 
-const { extend, renderer } = useTresContext()
+const { extend, invalidate } = useTres()
 
 const reflectorRef = shallowRef<Reflector>()
 
@@ -82,9 +82,7 @@ const { color, textureWidth, textureHeight, clipBias, multisample, shader }
   = toRefs(props)
 
 watch(props, () => {
-  if (renderer.canBeInvalidated.value) {
-    renderer.invalidate()
-  }
+  invalidate()
 })
 
 defineExpose({

@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
-import { logWarning, useLoop, useTresContext } from '@tresjs/core'
+import { logWarning, useLoop, useTres } from '@tresjs/core'
 import {
   Color,
   DepthTexture,
@@ -151,7 +151,7 @@ const props = withDefaults(
   },
 )
 
-const { extend, renderer: tresRenderer } = useTresContext()
+const { extend, invalidate } = useTres()
 extend({ MeshReflectionMaterial })
 
 const blurWidth = computed(() => 500 - (Array.isArray(props.blurSize) ? props.blurSize[0] : props.blurSize))
@@ -205,9 +205,7 @@ const fboBlur = new WebGLRenderTarget(
 )
 
 function onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, object: Object3D) {
-  if (tresRenderer.canBeInvalidated.value) {
-    tresRenderer.invalidate()
-  }
+  invalidate()
 
   const currentXrEnabled = renderer.xr.enabled
   const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate
@@ -367,9 +365,7 @@ useLoop().onBeforeRender(({ renderer, scene, camera }) => {
   const parent = (materialRef.value as any)?.__tres?.parent
   if (!parent) { return }
   onBeforeRender(renderer, scene, camera, parent)
-  if (tresRenderer.canBeInvalidated.value) {
-    tresRenderer.invalidate()
-  }
+  invalidate()
 })
 defineExpose({ instance: materialRef })
 </script>
