@@ -3,7 +3,7 @@ import { useLoop, useTres } from '@tresjs/core'
 import { useEventListener } from '@vueuse/core'
 import { MOUSE, TOUCH } from 'three'
 import { OrbitControls } from 'three-stdlib'
-import { computed, onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { onUnmounted, shallowRef, toRefs, watch } from 'vue'
 import type { TresVector3 } from '@tresjs/core'
 import type { Camera } from 'three'
 
