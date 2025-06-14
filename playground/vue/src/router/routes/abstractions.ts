@@ -60,6 +60,11 @@ export const abstractionsRoutes = [
     component: () => import('../../pages/abstractions/PositionalAudioDemo.vue'),
   },
   {
+    path: '/abstractions/Decal',
+    name: 'Decal',
+    component: () => import('../../pages/abstractions/DecalDemo.vue'),
+  },
+  {
     path: '/abstractions/animated-sprite',
     name: 'AnimatedSprite',
     component: () => import('../../pages/abstractions/AnimatedSpriteDemo.vue'),
