@@ -3,7 +3,7 @@ import { useLoop, useTres } from '@tresjs/core'
 import { useElementSize, useMouse, useWindowSize } from '@vueuse/core'
 import { computed, ref, shallowRef, toRefs, watch } from 'vue'
 import type { UseMouseOptions } from '@vueuse/core'
-import type { Group, Object3D } from 'three'
+import type { Group } from 'three'
 
 export interface MouseParallaxProps {
   /**
