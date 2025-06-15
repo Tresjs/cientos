@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.0-next.2](https://github.com/Tresjs/cientos/compare/5.0.0-next.1...5.0.0-next.2) (2025-06-15)
+
+### Bug Fixes
+
+* adapt to renderer.isntance no longer being shallowRef ([430534a](https://github.com/Tresjs/cientos/commit/430534a40d37e44dc026facfe9a4faac461decab))
+* remove unused type import in MouseParallax.vue ([0899ecf](https://github.com/Tresjs/cientos/commit/0899ecfc0e02a7ded4b1368d5ad22dc352b1f1ce))
+* type issues from v5 ([bd0e0c6](https://github.com/Tresjs/cientos/commit/bd0e0c6abbe2616fb73d44171716fa54c2ac54b9))
+
 ## [5.0.0-next.1](https://github.com/Tresjs/cientos/compare/5.0.0-next.0...5.0.0-next.1) (2025-06-15)
 
 ## [5.0.0-next.0](https://github.com/Tresjs/cientos/compare/4.3.1...5.0.0-next.0) (2025-06-06)
