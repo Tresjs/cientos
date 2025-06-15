@@ -1,5 +1,7 @@
 # Changelog
 
+## [5.0.0-next.1](https://github.com/Tresjs/cientos/compare/5.0.0-next.0...5.0.0-next.1) (2025-06-15)
+
 ## [5.0.0-next.0](https://github.com/Tresjs/cientos/compare/4.3.1...5.0.0-next.0) (2025-06-06)
 
 ### ⚠ BREAKING CHANGES
