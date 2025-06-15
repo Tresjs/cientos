@@ -51,8 +51,7 @@ const props = withDefaults(defineProps<AlignProps>(), {
 })
 
 const emit = defineEmits<{
-  (e: 'update', props: AlignCallbackOptions): void
-  (e: 'change', props: AlignCallbackOptions): void
+  (e: 'update' | 'change', props: AlignCallbackOptions): void
 }>()
 
 const ref = shallowRef<Group>()

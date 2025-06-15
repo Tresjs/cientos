@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, shallowRef, watch, watchEffect } from 'vue'
-import type { ColorRepresentation, Mesh, PlaneGeometry, ShaderMaterial, Texture } from 'three'
+import type { ColorRepresentation, Mesh, PlaneGeometry, ShaderMaterial, Texture, WebGLRenderer } from 'three'
 import { Group } from 'three'
 import { extend, useLoop, useTres } from '@tresjs/core'
 import RandomizedLights from '../RandomizedLights/component.vue'
@@ -67,7 +67,7 @@ const { renderer, scene, camera, invalidate } = useTres()
 const gOuter = shallowRef<Group>()
 const gPlane = shallowRef<Mesh<PlaneGeometry, SoftShadowMaterialProps & ShaderMaterial>>(null!)
 const gLights = shallowRef<Group>(new Group())
-const progressiveLightMap = computed(() => new ProgressiveLightMap(renderer, scene.value, props.resolution))
+const progressiveLightMap = computed(() => new ProgressiveLightMap(renderer as WebGLRenderer, scene.value, props.resolution))
 const shadowMapTexture = shallowRef<Texture>()
 
 let frameCount = 0

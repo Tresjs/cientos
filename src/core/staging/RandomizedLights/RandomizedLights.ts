@@ -79,7 +79,7 @@ export default class RandomizedLights extends Group {
 
   set near(n: number) {
     for (const light of this.lights) {
-      light.shadow.camera.near = this.near
+      light.shadow.camera.near = n
     }
   }
 
@@ -89,7 +89,7 @@ export default class RandomizedLights extends Group {
 
   set far(n: number) {
     for (const light of this.lights) {
-      light.shadow.camera.far = this.far
+      light.shadow.camera.far = n
     }
   }
 

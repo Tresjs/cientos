@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { TresCanvas } from '@tresjs/core'
 import { ScreenQuad } from '@tresjs/cientos'
+import type { WebGLRenderer } from 'three'
 import { RawShaderMaterial, RGBFormat, Vector2, WebGLRenderTarget } from 'three'
 import OverlayInfo from '../../components/OverlayInfo.vue'
 
