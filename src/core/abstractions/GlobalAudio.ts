@@ -91,7 +91,7 @@ export const GlobalAudio = defineComponent<AudioProps>({
     }, { immediate: true })
 
     const selector = document.getElementById(props.playTrigger ?? '')
-    const btnPlay = selector || renderer.instance.value.domElement
+    const btnPlay = selector || renderer.instance.domElement
     useEventListener(btnPlay, 'click', () => {
       if (sound.isPlaying) {
         sound.pause()

@@ -105,7 +105,7 @@ const calculateOpacity = (scale: number, density: number): number => (scale / 6)
 const { state: map } = useTexture(texture.value)
 
 const { renderer, camera } = useTresContext()
-const colorSpace = computed(() => renderer.instance.value?.outputColorSpace)
+const colorSpace = computed(() => renderer.instance?.outputColorSpace)
 
 const { onBeforeRender } = useLoop()
 
