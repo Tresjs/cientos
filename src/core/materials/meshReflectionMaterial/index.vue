@@ -12,10 +12,8 @@ import {
   HalfFloatType,
   LinearFilter,
   Matrix4,
-  Object3D,
   PerspectiveCamera,
   Plane,
-  Scene,
   TangentSpaceNormalMap,
   Vector2,
   Vector3,
@@ -24,7 +22,7 @@ import {
   WebGLRenderTarget,
 } from 'three'
 import { computed, onBeforeUnmount, shallowRef, toValue, watch } from 'vue'
-import type { TresColor, TresRenderer } from '@tresjs/core'
+import type { TresColor } from '@tresjs/core'
 import { BlurPass } from './BlurPass'
 import { MeshReflectionMaterial } from './material'
 import { WebGPURenderer } from 'three/webgpu'
