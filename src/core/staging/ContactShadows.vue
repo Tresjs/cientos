@@ -23,7 +23,6 @@ import type { TresColor, TresRenderer } from '@tresjs/core'
 import type {
   ColorRepresentation,
   Scene,
-  WebGLRenderer,
 } from 'three'
 
 export interface ContactShadowsProps {
