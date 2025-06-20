@@ -18,8 +18,8 @@ import {
   WebGLRenderTarget,
 } from 'three'
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib'
-import { onUnmounted, watch } from 'vue'
-import type { TresColor } from '@tresjs/core'
+import { onUnmounted, toValue, watch } from 'vue'
+import type { TresColor, TresRenderer } from '@tresjs/core'
 import type {
   ColorRepresentation,
   Scene,
@@ -157,7 +157,7 @@ const props = withDefaults(defineProps<ContactShadowsProps>(), {
 
 function blurShadow(
   blur: number,
-  renderer: WebGLRenderer,
+  renderer: TresRenderer,
   pool: ReturnType<typeof init>,
 ) {
   pool.blurPlane.visible = true
@@ -166,6 +166,7 @@ function blurShadow(
   pool.horizontalBlurMaterial.uniforms.h.value = blur / 256
 
   renderer.setRenderTarget(pool.renderTargetBlur)
+  // @ts-expect-error - TODO: wait for https://github.com/Tresjs/tres/issues/1040 to be fixed
   renderer.render(pool.blurPlane, pool.shadowCamera)
 
   pool.blurPlane.material = pool.verticalBlurMaterial
@@ -173,6 +174,7 @@ function blurShadow(
   pool.verticalBlurMaterial.uniforms.v.value = blur / 256
 
   renderer.setRenderTarget(pool.renderTarget)
+  // @ts-expect-error - TODO: wait for https://github.com/Tresjs/tres/issues/1040 to be fixed
   renderer.render(pool.blurPlane, pool.shadowCamera)
 
   pool.blurPlane.visible = false
@@ -181,7 +183,7 @@ function blurShadow(
 function update(
   ps: typeof props,
   scene: Scene,
-  renderer: WebGLRenderer,
+  renderer: TresRenderer,
   pool: ReturnType<typeof init>,
 ) {
   const {
@@ -327,7 +329,7 @@ onBeforeRender(
   ({ renderer, scene /* invalidate */ }) => {
     if (count < props.frames) {
       count++
-      update(props, scene, renderer, pool)
+      update(props, toValue(scene), renderer, pool)
       // TODO: comment this until invalidate is back in the loop callback on v5
       // invalidate()
     }
