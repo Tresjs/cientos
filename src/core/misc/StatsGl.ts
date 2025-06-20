@@ -99,11 +99,11 @@ export const StatsGl = defineComponent<StatsGlProps>({
 
     const { renderer } = useTresContext()
 
-    const { onAfterRender } = useLoop()
+    const { onRender } = useLoop()
 
     statsGl.init(renderer.instance)
 
-    onAfterRender(() => statsGl.update(), Number.POSITIVE_INFINITY)
+    onRender(() => statsGl.update(), Number.POSITIVE_INFINITY)
 
     onUnmounted(() => {
       node?.removeChild(statContainer)
