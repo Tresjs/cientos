@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Object3D } from 'three'
+import type { Object3D, Object3DEventMap } from 'three'
 import { LOD } from 'three'
 import { isReactive, onMounted, shallowRef, watch } from 'vue'
 
@@ -38,11 +38,11 @@ function onChange() {
   // NOTE: Levels can be in any order, but the THREE implementation doesn't work
   // work properly unless the levels are pushed in ascending order of `distance`.
   // So, construct ascending order of `distance`.
-  const levels = [] as { distance: number, hysteresis: number, object: Object3D }[]
+  const levels = [] as { distance: number, hysteresis: number, object: Object3D<Object3DEventMap> }[]
   for (let i = 0; i < lodRef.value.children.length; i++) {
     const hysteresis = props.hysteresis
     const distance = distances[i]
-    const object = lodRef.value.children[i]
+    const object = lodRef.value.children[i] as Object3D<Object3DEventMap>
     levels.push({ hysteresis, distance, object })
   }
   levels.sort((a, b) => a.distance - b.distance)
