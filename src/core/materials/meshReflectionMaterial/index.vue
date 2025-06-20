@@ -5,7 +5,6 @@ import type {
   Texture,
 } from 'three'
 import {
-  Camera,
   Color,
   DepthTexture,
   Euler,

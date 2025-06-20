@@ -82,7 +82,7 @@ let modelObject: Group | null = null
 watch(state, (newVal) => {
   if (newVal?.scene) {
     modelObject = newVal.scene
-    if (props.castShadow || props.receiveShadow && modelObject) {
+    if ((props.castShadow || props.receiveShadow) && modelObject) {
       modelObject.traverse((child) => {
         if (child instanceof Mesh) {
           child.castShadow = props.castShadow

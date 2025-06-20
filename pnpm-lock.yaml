@@ -34,8 +34,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.1.0)(release-it@19.0.3(@types/node@24.0.3))
       '@tresjs/core':
-        specifier: 5.0.0-next.4
-        version: 5.0.0-next.4(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
+        specifier: https://pkg.pr.new/@tresjs/core@bb01f3d
+        version: https://pkg.pr.new/@tresjs/core@bb01f3d(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
       '@tresjs/eslint-config':
         specifier: ^1.4.0
         version: 1.4.0(@typescript-eslint/utils@8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(@vue/compiler-sfc@3.5.16)(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
@@ -128,8 +128,8 @@ importers:
   playground/vue:
     dependencies:
       '@tresjs/core':
-        specifier: 5.0.0-next.4
-        version: 5.0.0-next.4(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
+        specifier: https://pkg.pr.new/@tresjs/core@bb01f3d
+        version: https://pkg.pr.new/@tresjs/core@bb01f3d(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
       vue-router:
         specifier: ^4.5.0
         version: 4.5.1(vue@3.5.16(typescript@5.8.3))
@@ -1183,8 +1183,9 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@tresjs/core@5.0.0-next.4':
-    resolution: {integrity: sha512-EmFmm6lc0HjWol8mmcv5NMePXi/trrM3++73tp6pf9PPHFvaDy6mMJkH3PRZ2RLGVB5+1mGevw3dRCv75o5WkA==}
+  '@tresjs/core@https://pkg.pr.new/@tresjs/core@bb01f3d':
+    resolution: {tarball: https://pkg.pr.new/@tresjs/core@bb01f3d}
+    version: 5.0.0-next.4
     peerDependencies:
       three: '>=0.133'
       vue: '>=3.4'
@@ -5270,7 +5271,7 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@tresjs/core@5.0.0-next.4(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))':
+  '@tresjs/core@https://pkg.pr.new/@tresjs/core@bb01f3d(three@0.176.0)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))':
     dependencies:
       '@alvarosabu/utils': 3.2.0
       '@pmndrs/pointer-events': 6.6.17
