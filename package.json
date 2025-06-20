@@ -50,6 +50,7 @@
     "build": "vite build",
     "release": "release-it",
     "lint": "eslint .",
+    "typecheck": "vue-tsc --noEmit",
     "lint:fix": "eslint . --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -70,7 +71,7 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^10.0.1",
-    "@tresjs/core": "5.0.0-next.2",
+    "@tresjs/core": "5.0.0-next.4",
     "@tresjs/eslint-config": "^1.4.0",
     "@types/node": "^22.10.5",
     "@types/three": "^0.176.0",

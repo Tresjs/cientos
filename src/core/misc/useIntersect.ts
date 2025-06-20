@@ -42,7 +42,7 @@ export function useIntersect<T extends Object3D>(onChange: Ref<UseIntersectCallb
       obj.onBeforeRender = () => (_isIntersected = true)
     })
 
-    const { off: off1 } = loop.onAfterRender(() => {
+    const { off: off1 } = loop.onRender(() => {
       if (_isIntersected !== _oldIsIntersected) {
         intersect.value = _isIntersected
         unref(onChange)?.(_isIntersected)
