@@ -6,7 +6,7 @@ import {
 } from 'three'
 import { MeshSurfaceSampler } from 'three-stdlib'
 import { ref } from 'vue'
-import type { InstancedMesh, Mesh } from 'three'
+import type { InstancedMesh, Mesh, Object3DEventMap } from 'three'
 
 export interface useSurfaceSamplerProps {
   /*
@@ -67,7 +67,7 @@ type TransformPayload = SamplePayload & {
    * This object's matrix will be updated after transforming & it will be used
    * to set the instance's matrix.
    */
-  dummy: Object3D
+  dummy: Object3D<Object3DEventMap>
   /**
    * The mesh that's initially passed to the sampler.
    * Use this if you need to apply transforms from your mesh to your instances
@@ -101,7 +101,7 @@ export const useSurfaceSampler = (
     const position = new Vector3()
     const normal = new Vector3()
     const color = new Color()
-    const dummy = new Object3D()
+    const dummy = new Object3D<Object3DEventMap>()
 
     mesh.updateMatrixWorld(true)
 

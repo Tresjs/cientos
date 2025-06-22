@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
-import type { Group, Object3D } from 'three'
+import type { Group, Object3D, Object3DEventMap } from 'three'
 import { Box3, Sphere, Vector3 } from 'three'
 import type { MaybeRefOrGetter } from 'vue'
 import { shallowRef, toValue, watchEffect } from 'vue'
@@ -10,9 +10,9 @@ import { shallowRef, toValue, watchEffect } from 'vue'
 
 export interface AlignCallbackOptions {
   /** The next parent above <Align /> */
-  parent: Object3D
+  parent: Object3D<Object3DEventMap>
   /** The outmost container group of the <Align/> component */
-  container: Object3D
+  container: Group
   width: number
   height: number
   depth: number
@@ -88,7 +88,7 @@ function update() {
     || previous.depth !== depth
     || !outer.value.position.equals(previous.position)) {
     emit('change', {
-      parent: ref.value.parent!,
+      parent: ref.value.parent! as Object3D<Object3DEventMap>,
       container: ref.value,
       width,
       height,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import type { TresObject } from '@tresjs/core'
+import { type Group, Mesh } from 'three'
 import { useGLTF } from '.'
 
 export interface GLTFModelProps {
@@ -77,14 +77,14 @@ const { state, isLoading } = useGLTF(props.path as string, {
   decoderPath: props.decoderPath,
 })
 
-let modelObject: TresObject | null = null
+let modelObject: Group | null = null
 
 watch(state, (newVal) => {
   if (newVal?.scene) {
     modelObject = newVal.scene
-    if (props.castShadow || props.receiveShadow) {
-      modelObject.traverse((child: TresObject) => {
-        if (child.isMesh) {
+    if ((props.castShadow || props.receiveShadow) && modelObject) {
+      modelObject.traverse((child) => {
+        if (child instanceof Mesh) {
           child.castShadow = props.castShadow
           child.receiveShadow = props.receiveShadow
         }

@@ -1,4 +1,4 @@
-import type { TresLoader, TresLoaderOptions } from '@tresjs/core'
+import type { TresLoader, TresLoaderOptions, TresObject } from '@tresjs/core'
 import { buildGraph, useLoader } from '@tresjs/core'
 
 import { computed, type MaybeRef } from 'vue'
@@ -51,13 +51,12 @@ export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
   }
 
   const result = useLoader(GLTFLoader, path, useLoaderOptions)
-
   const nodes = computed(() => {
-    return result.state.value?.scene ? buildGraph(result.state.value?.scene).nodes : {}
+    return result.state.value?.scene ? buildGraph(result.state.value?.scene as unknown as TresObject).nodes : {}
   })
 
   const materials = computed(() => {
-    return result.state.value?.scene ? buildGraph(result.state.value?.scene).materials : {}
+    return result.state.value?.scene ? buildGraph(result.state.value?.scene as unknown as TresObject).materials : {}
   })
 
   return {
