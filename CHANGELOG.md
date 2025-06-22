@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.0-next.3](https://github.com/Tresjs/cientos/compare/5.0.0-next.2...5.0.0-next.3) (2025-06-22)
+
+### Bug Fixes
+
+* typescript issues ([#624](https://github.com/Tresjs/cientos/issues/624)) ([3c1640e](https://github.com/Tresjs/cientos/commit/3c1640e512cd77f0f980a63d1aa9414d4cc4d608))
+
 ## [5.0.0-next.2](https://github.com/Tresjs/cientos/compare/5.0.0-next.1...5.0.0-next.2) (2025-06-15)
 
 ### Bug Fixes
