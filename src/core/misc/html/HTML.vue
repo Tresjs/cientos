@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { useLoop, useTresContext } from '@tresjs/core'
+import type {
+  OrthographicCamera,
+} from 'three'
 import {
   DoubleSide,
   PlaneGeometry,
+  Raycaster,
   ShaderMaterial,
   Vector3,
 } from 'three'
 import { computed, createVNode, isRef, onUnmounted, ref, render, toRefs, useAttrs, watch, watchEffect } from 'vue'
 import type { TresCamera, TresObject, TresObject3D } from '@tresjs/core'
 import type { Mutable } from '@vueuse/core'
-import type {
-  OrthographicCamera,
-} from 'three'
 
 import type { VNode } from 'vue'
 import fragmentShader from './shaders/fragment.glsl'
@@ -97,13 +98,14 @@ const {
   zIndexRange,
 } = toRefs(props)
 
-const { renderer, scene, camera, raycaster, sizes } = useTresContext()
+const { renderer, scene, camera, sizes } = useTresContext()
 
 const el = computed(() => document.createElement(as.value))
 
 const previousPosition = ref([0, 0, 0])
 const previousZoom = ref(0)
 const vnode = ref<VNode>()
+const raycaster = ref<Raycaster>(new Raycaster())
 
 const styles = computed(() => {
   if (transform.value) {
