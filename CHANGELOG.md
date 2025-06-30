@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.0-next.4](https://github.com/Tresjs/cientos/compare/5.0.0-next.3...5.0.0-next.4) (2025-06-30)
+
+### Bug Fixes
+
+* create a local raycast for the HTML component ([#627](https://github.com/Tresjs/cientos/issues/627)) ([614505f](https://github.com/Tresjs/cientos/commit/614505fd84381919308136d510ffb69b805a5038))
+* **transform-controls:** use correct emit on mouse up ([#625](https://github.com/Tresjs/cientos/issues/625)) ([f04a63c](https://github.com/Tresjs/cientos/commit/f04a63cab66b9e0cc0fc17f7622944999c417787))
+
 ## [5.0.0-next.3](https://github.com/Tresjs/cientos/compare/5.0.0-next.2...5.0.0-next.3) (2025-06-22)
 
 ### Bug Fixes
