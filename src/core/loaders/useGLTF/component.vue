@@ -3,6 +3,39 @@ import { watch } from 'vue'
 import { type Group, Mesh } from 'three'
 import { useGLTF } from '.'
 
+const props = withDefaults(
+  defineProps<GLTFModelProps>(),
+  {
+    draco: false,
+    castShadow: false,
+    receiveShadow: false,
+    decoderPath: 'https://www.gstatic.com/draco/versioned/decoders/1.4.1/',
+  },
+)
+
+const { state, isLoading } = useGLTF(props.path as string, {
+  draco: props.draco,
+  decoderPath: props.decoderPath,
+})
+
+let modelObject: Group | null = null
+
+watch(state, (newVal) => {
+  if (newVal?.scene) {
+    modelObject = newVal.scene
+    if ((props.castShadow || props.receiveShadow) && modelObject) {
+      modelObject.traverse((child) => {
+        if (child instanceof Mesh) {
+          child.castShadow = props.castShadow
+          child.receiveShadow = props.receiveShadow
+        }
+      })
+    }
+  }
+})
+</script>
+
+<script lang="ts">
 export interface GLTFModelProps {
   /**
    *
@@ -55,43 +88,6 @@ export interface GLTFModelProps {
    */
   decoderPath?: string
 }
-
-const props = withDefaults(
-  defineProps<{
-    path: string
-    draco?: boolean
-    decoderPath?: string
-    castShadow?: boolean
-    receiveShadow?: boolean
-  }>(),
-  {
-    draco: false,
-    castShadow: false,
-    receiveShadow: false,
-    decoderPath: 'https://www.gstatic.com/draco/versioned/decoders/1.4.1/',
-  },
-)
-
-const { state, isLoading } = useGLTF(props.path as string, {
-  draco: props.draco,
-  decoderPath: props.decoderPath,
-})
-
-let modelObject: Group | null = null
-
-watch(state, (newVal) => {
-  if (newVal?.scene) {
-    modelObject = newVal.scene
-    if ((props.castShadow || props.receiveShadow) && modelObject) {
-      modelObject.traverse((child) => {
-        if (child instanceof Mesh) {
-          child.castShadow = props.castShadow
-          child.receiveShadow = props.receiveShadow
-        }
-      })
-    }
-  }
-})
 </script>
 
 <template>

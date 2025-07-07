@@ -28,6 +28,9 @@ export default defineConfig({
     }),
     dts({
       insertTypesEntry: true,
+      compilerOptions: {
+        skipLibCheck: true, // Make DTS plugin skip lib check too
+      },
     }),
     glsl(),
     banner({

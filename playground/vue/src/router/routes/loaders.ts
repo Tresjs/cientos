@@ -27,12 +27,12 @@ export const loadersRoutes = [
   {
     path: '/loaders/use-fbx',
     name: 'useFBX',
-    component: () => import('../../pages/loaders/UseFBXDemo.vue'),
+    component: () => import('../../pages/loaders/use-fbx/index.vue'),
   },
   {
     path: '/loaders/fbx-model',
     name: 'FBXModel',
-    component: () => import('../../pages/loaders/FBXModelDemo.vue'),
+    component: () => import('../../pages/loaders/use-fbx/FBXModelDemo.vue'),
   },
   {
     path: '/loaders/use-video-texture',
