@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import { useFBX } from '@tresjs/cientos'
 import { Mesh } from 'three'
-import type { Group } from 'three'
 
 // Inject the shared state for loading progress
 const state = inject<{
