@@ -18,6 +18,10 @@ const { state, isLoading } = useGLTF(props.path as string, {
   decoderPath: props.decoderPath,
 })
 
+defineExpose({
+  instance: state,
+})
+
 let modelObject: Group | null = null
 
 watch(state, (newVal) => {

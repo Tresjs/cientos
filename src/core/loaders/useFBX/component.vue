@@ -12,6 +12,10 @@ const props = withDefaults(defineProps<FBXModelProps>(), {
 // Use the new reactive useFBX composable with reactive path
 const { state: model } = useFBX(props.path as string)
 
+defineExpose({
+  instance: model
+})
+
 // Apply shadow settings when the model loads or shadow props change
 watchEffect(() => {
   if (model.value && (props.castShadow || props.receiveShadow)) {
