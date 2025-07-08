@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<FBXModelProps>(), {
 const { state: model } = useFBX(props.path as string)
 
 defineExpose({
-  instance: model
+  instance: model,
 })
 
 // Apply shadow settings when the model loads or shadow props change
