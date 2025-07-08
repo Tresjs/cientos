@@ -79,7 +79,7 @@ const imageRef = shallowRef()
 const texture = shallowRef<Texture | null>(props.texture ?? null)
 const size = useTres().sizes
 const planeBounds = computed(() => Array.isArray(props.scale) ? [props.scale[0], props.scale[1]] : [props.scale, props.scale])
-const imageBounds = computed(() => [texture.value?.image.width ?? 0, texture.value?.image.height ?? 0])
+const imageBounds = computed(() => [texture.value?.image?.width ?? 0, texture.value?.image?.height ?? 0])
 const resolution = computed(() => Math.max(size.width.value, size.height.value))
 
 watchEffect(() => {
@@ -88,7 +88,7 @@ watchEffect(() => {
   }
   else {
     const { state: t } = useTexture(props.url!)
-    texture.value = t
+    texture.value = t.value
   }
 })
 

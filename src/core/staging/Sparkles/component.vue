@@ -11,7 +11,7 @@ import {
   Uniform,
   Vector3,
 } from 'three'
-import { onMounted, onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { onMounted, onUnmounted, toRefs, watch } from 'vue'
 import type { TresColor, VectorFlexibleParams } from '@tresjs/core'
 import type { Blending, BufferGeometry, IUniform, ShaderMaterialParameters, Texture } from 'three'
 import type { Ref } from 'vue'
