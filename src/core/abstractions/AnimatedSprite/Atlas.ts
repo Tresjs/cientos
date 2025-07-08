@@ -1,6 +1,5 @@
-import { logError, useLoader } from '@tresjs/core'
+import { logError } from '@tresjs/core'
 import { type Texture, TextureLoader } from 'three'
-import type { LoaderProto } from '@tresjs/core'
 import { expand } from './AtlasAnimationDefinitionParser'
 import { getNumbersFromEnd, stripUnderscoresNumbersFromEnd } from './StringOps'
 
@@ -8,22 +7,30 @@ export async function getTextureAndAtlasAsync(
   imagePathOrImageData: string,
   atlasPathOrAtlasish: string | Atlasish,
 ): Promise<[Texture | Texture[], Atlas]> {
-  const texturePromise: Promise<Texture | Texture[]> = useLoader<Texture>(
-    TextureLoader as LoaderProto<Texture>,
-    imagePathOrImageData,
-  )
+  // Use plain Three.js TextureLoader for loading the texture
+  const loader = new TextureLoader()
+  const texturePromise = new Promise<Texture>((resolve, reject) => {
+    loader.load(
+      imagePathOrImageData,
+      resolve,
+      undefined,
+      reject,
+    )
+  })
+
   const atlasishPromise: Promise<Atlasish>
     = typeof atlasPathOrAtlasish !== 'string'
       ? new Promise(resolve => resolve(atlasPathOrAtlasish as Atlasish))
       : fetch(atlasPathOrAtlasish)
           .then(response => response.json())
           .catch(e => logError(`Cientos Atlas - ${e}`))
+
   return Promise.all([texturePromise, atlasishPromise]).then(
     ([texture, atlasish]) => {
       const atlas = getAtlas(
         atlasish,
-        (texture as Texture).image.width,
-        (texture as Texture).image.height,
+        texture.image.width,
+        texture.image.height,
       )
       return [texture, atlas]
     },
