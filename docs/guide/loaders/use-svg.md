@@ -106,9 +106,9 @@ The `layers` computed property returns an array of processed SVG elements, each 
 
 ```ts
 interface SVGLayer {
-  geometry: BufferGeometry     // Three.js geometry for the layer
-  material: MeshBasicMaterialParameters  // Material properties
-  isStroke: boolean           // Whether this layer is a stroke or fill
+  geometry: BufferGeometry // Three.js geometry for the layer
+  material: MeshBasicMaterialParameters // Material properties
+  isStroke: boolean // Whether this layer is a stroke or fill
 }
 ```
 
@@ -133,7 +133,7 @@ const getFillColor = (layer: SVGLayer, index: number) => {
       :key="index"
       :geometry="layer.geometry"
     >
-      <TresMeshBasicMaterial 
+      <TresMeshBasicMaterial
         v-bind="layer.material"
         :color="getFillColor(layer, index)"
       />
@@ -262,9 +262,9 @@ import { computed } from 'vue'
 const showDetails = ref(true)
 const { layers } = useSVG('/detailed-icon.svg')
 
-const visibleLayers = computed(() => 
-  showDetails.value 
-    ? layers.value 
+const visibleLayers = computed(() =>
+  showDetails.value
+    ? layers.value
     : layers.value.filter(layer => !layer.isStroke)
 )
 </script>
@@ -289,11 +289,11 @@ const visibleLayers = computed(() =>
 import { useSVG } from '@tresjs/cientos'
 
 const { layers } = useSVG('/logo.svg', {
-  fillMaterial: { 
+  fillMaterial: {
     transparent: true,
-    opacity: 0.9 
+    opacity: 0.9
   },
-  strokeMaterial: { 
+  strokeMaterial: {
     transparent: true,
     opacity: 1.0,
     color: '#000000'
@@ -308,7 +308,7 @@ const { layers } = useSVG('/logo.svg', {
       :key="index"
       :geometry="layer.geometry"
     >
-      <TresMeshBasicMaterial 
+      <TresMeshBasicMaterial
         v-bind="layer.material"
         :wireframe="layer.isStroke"
       />
@@ -399,4 +399,4 @@ Here are some things to try if you run into problems:
 - Simple, declarative SVG rendering
 - Quick prototyping
 - Standard SVG display without custom logic
-- Less code and setup 
+- Less code and setup

@@ -110,7 +110,7 @@ const { state, isLoading, layers, dispose } = useSVG(props.src, {
   depth: props.depth,
 })
 
-defineExpose({ 
+defineExpose({
   instance: state,
   layers,
 })
