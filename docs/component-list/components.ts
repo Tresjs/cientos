@@ -57,7 +57,7 @@ export default [
       { text: 'useFBX', link: '/guide/loaders/use-fbx' },
       { text: 'FBXModel', link: '/guide/loaders/fbx-model' },
       { text: 'useVideoTexture', link: '/guide/loaders/use-video-texture' },
-      { text: 'SVG', link: '/guide/loaders/svg' },
+      { text: 'useSVG', link: '/guide/loaders/use-svg' },
     ],
   },
   {

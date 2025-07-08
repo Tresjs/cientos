@@ -1,10 +1,5 @@
 export const loadersRoutes = [
   {
-    path: '/loaders/svg',
-    name: 'SVG',
-    component: () => import('../../pages/loaders/SVGDemo.vue'),
-  },
-  {
     path: '/loaders/use-gltf',
     name: 'useGLTF',
     component: () => import('../../pages/loaders/use-gltf/index.vue'),
@@ -13,6 +8,16 @@ export const loadersRoutes = [
     path: '/loaders/gltf-model',
     name: 'GLTFModel',
     component: () => import('../../pages/loaders/use-gltf/GLTFModelDemo.vue'),
+  },
+  {
+    path: '/loaders/use-svg',
+    name: 'useSVG',
+    component: () => import('../../pages/loaders/use-svg/index.vue'),
+  },
+  {
+    path: '/loaders/use-svg-component',
+    name: 'useSVGComponent',
+    component: () => import('../../pages/loaders/use-svg/SVGModelDemo.vue'),
   },
   {
     path: '/loaders/use-texture',
