@@ -323,6 +323,8 @@ const shaderMaterialParameters: ShaderMaterialParameters = {
 const mat = new ShaderMaterial(shaderMaterialParameters)
 const sparkles = new Points(undefined, mat)
 
+defineExpose({ instance: sparkles })
+
 const u = mat.uniforms
 const NOW = { immediate: true }
 
@@ -414,11 +416,8 @@ onUnmounted(() => {
   infoTexture.value.dispose()
   mat.dispose()
 })
-
-const sparkleRef = shallowRef()
-defineExpose({ instance: sparkles })
 </script>
 
 <template>
-  <primitive ref="sparkleRef" :object="sparkles" />
+  <primitive :object="sparkles" />
 </template>
