@@ -165,7 +165,7 @@ function blurShadow(
   pool.horizontalBlurMaterial.uniforms.h.value = blur / 256
 
   renderer.setRenderTarget(pool.renderTargetBlur)
-  // @ts-expect-error - TODO: wait for https://github.com/Tresjs/tres/issues/1040 to be fixed
+
   renderer.render(pool.blurPlane, pool.shadowCamera)
 
   pool.blurPlane.material = pool.verticalBlurMaterial
@@ -173,7 +173,7 @@ function blurShadow(
   pool.verticalBlurMaterial.uniforms.v.value = blur / 256
 
   renderer.setRenderTarget(pool.renderTarget)
-  // @ts-expect-error - TODO: wait for https://github.com/Tresjs/tres/issues/1040 to be fixed
+
   renderer.render(pool.blurPlane, pool.shadowCamera)
 
   pool.blurPlane.visible = false

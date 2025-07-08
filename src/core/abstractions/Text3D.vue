@@ -2,6 +2,7 @@
 import { useTres } from '@tresjs/core'
 import { FontLoader, TextGeometry } from 'three-stdlib'
 import { computed, shallowRef, toRefs, toValue, useSlots, watch, watchEffect } from 'vue'
+import type { Slots } from 'vue'
 import type { TextGeometryParameters } from 'three-stdlib'
 
 export interface Glyph {
@@ -161,9 +162,9 @@ extend({ TextGeometry })
 
 const loader = new FontLoader()
 
-const slots = useSlots()
+const slots: Slots = useSlots()
 
-const localText = computed(() => {
+const localText = computed((): string => {
   if (text?.value) { return text.value }
   else if (slots.default) { return (slots.default()[0].children as string)?.trim() }
   return needUpdates.value ? '' : 'TresJS'

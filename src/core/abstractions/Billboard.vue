@@ -60,7 +60,7 @@ function update(camera?: Camera) {
 }
 
 useLoop().onBeforeRender(({ camera }) => {
-  if (props.autoUpdate) { update(camera) }
+  if (props.autoUpdate) { update(camera.value) }
 })
 
 defineExpose({ instance: outerRef, update })

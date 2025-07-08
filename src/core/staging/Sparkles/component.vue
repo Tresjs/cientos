@@ -11,7 +11,7 @@ import {
   Uniform,
   Vector3,
 } from 'three'
-import { onMounted, onUnmounted, shallowRef, toRefs, watch } from 'vue'
+import { onMounted, onUnmounted, toRefs, watch } from 'vue'
 import type { TresColor, VectorFlexibleParams } from '@tresjs/core'
 import type { Blending, BufferGeometry, IUniform, ShaderMaterialParameters, Texture } from 'three'
 import type { Ref } from 'vue'
@@ -323,6 +323,8 @@ const shaderMaterialParameters: ShaderMaterialParameters = {
 const mat = new ShaderMaterial(shaderMaterialParameters)
 const sparkles = new Points(undefined, mat)
 
+defineExpose({ instance: sparkles })
+
 const u = mat.uniforms
 const NOW = { immediate: true }
 
@@ -414,11 +416,8 @@ onUnmounted(() => {
   infoTexture.value.dispose()
   mat.dispose()
 })
-
-const sparkleRef = shallowRef()
-defineExpose({ instance: sparkles })
 </script>
 
 <template>
-  <primitive ref="sparkleRef" :object="sparkles" />
+  <primitive :object="sparkles" />
 </template>

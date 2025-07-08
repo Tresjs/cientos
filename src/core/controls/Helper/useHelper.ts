@@ -1,6 +1,7 @@
 import type { Object3D } from 'three'
 import type { MaybeRefOrGetter } from 'vue'
 import { onBeforeUnmount, shallowRef, toValue, watchEffect } from 'vue'
+import type { TresObject } from '@tresjs/core'
 import { useLoop, useTres } from '@tresjs/core'
 
 // NOTE: Source
@@ -10,7 +11,7 @@ type HelperType = Object3D & { update: () => void, dispose: () => void }
 type HelperConstructor = new (...args: any[]) => any
 
 export function useHelper<T extends HelperConstructor>(
-  object3D: MaybeRefOrGetter<Object3D | null | undefined | false>,
+  object3D: MaybeRefOrGetter<TresObject | null | undefined | false>,
   helperConstructor: T,
   ...args: any[]
 ) {
