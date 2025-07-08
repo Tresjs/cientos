@@ -3,7 +3,6 @@ import { useLoader, useTresContext } from '@tresjs/core'
 import { AudioListener, AudioLoader, Box3 } from 'three'
 import { PositionalAudioHelper } from 'three-stdlib'
 import { onBeforeUnmount, onMounted, shallowReactive, shallowRef, toRefs, watch } from 'vue'
-import type { LoaderProto } from '@tresjs/core'
 import type { Material, Object3D, PositionalAudio } from 'three'
 
 // TODO: Add & Dynamize : setRolloffFactor 'FLOAT' from https://threejs.org/docs/index.html?q=posi#api/en/audio/PositionalAudio.setRolloffFactor
@@ -41,7 +40,7 @@ const { camera } = useTresContext()
 
 const positionalAudioRef = shallowRef<PositionalAudio | null>(null)
 const positionalAudioHelperRef = shallowRef<PositionalAudioHelper | null>(null)
-const buffer = shallowRef<AudioBuffer | null>(null)
+
 const listener = shallowReactive<AudioListener>(new AudioListener())
 
 const playAudio = () => {
@@ -133,7 +132,7 @@ defineExpose({
   dispose,
 })
 
-buffer.value = await useLoader<AudioBuffer | AudioBuffer[]>(AudioLoader as LoaderProto<AudioBuffer | AudioBuffer[]>, url.value) as AudioBuffer
+const { state: buffer } = useLoader<AudioBuffer | AudioBuffer[]>(AudioLoader, url.value)
 
 watch(positionalAudioRef, () => {
   if (!positionalAudioRef?.value) { return }
