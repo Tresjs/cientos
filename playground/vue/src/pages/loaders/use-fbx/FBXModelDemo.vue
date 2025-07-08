@@ -17,15 +17,13 @@ const gl = {
   <TresCanvas v-bind="gl">
     <TresPerspectiveCamera :position="[5.3, 2.45, 9.3]" :look-at="[0, 0, 0]" />
     <OrbitControls />
-    <Suspense>
-      <FBXModel
-        scale="0.01"
-        :position="[0, -1.6, 0]"
-        :rotation-y="-Math.PI * 0.5"
-        cast-shadow
-        path="https://raw.githubusercontent.com/Tresjs/assets/main/models/fbx/low-poly-truck/Jeep_done.fbx"
-      />
-    </Suspense>
+    <FBXModel
+      path="https://raw.githubusercontent.com/Tresjs/assets/main/models/fbx/low-poly-truck/Jeep_done.fbx"
+      cast-shadow
+      :scale="0.01"
+      :position="[0, -1.6, 0]"
+      :rotation-y="-Math.PI * 0.5"
+    />
     <TresMesh
       :rotate-x="Math.PI * -0.5"
       :position-y="-2"
