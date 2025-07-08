@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Object3D } from 'three'
 import { shallowRef, watchEffect } from 'vue'
 import { useHelper } from './useHelper'
 import type { TresObject } from '@tresjs/core'
