@@ -36,6 +36,8 @@ const emit = defineEmits(['isPlaying'])
 
 const { ready, url, distance, helper, loop, autoplay, innerAngle, outerAngle, outerGain } = toRefs(props)
 
+const { state: buffer } = useLoader<AudioBuffer | AudioBuffer[]>(AudioLoader, url.value)
+
 const { camera } = useTresContext()
 
 const positionalAudioRef = shallowRef<PositionalAudio | null>(null)
@@ -131,8 +133,6 @@ defineExpose({
   pause: pauseAudio,
   dispose,
 })
-
-const { state: buffer } = useLoader<AudioBuffer | AudioBuffer[]>(AudioLoader, url.value)
 
 watch(positionalAudioRef, () => {
   if (!positionalAudioRef?.value) { return }
