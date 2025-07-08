@@ -1,5 +1,34 @@
 # Changelog
 
+## [5.0.0-next.5](https://github.com/Tresjs/cientos/compare/5.0.0-next.4...5.0.0-next.5) (2025-07-08)
+
+### ⚠ BREAKING CHANGES
+
+* useFBX no longer returns the plain obj, it now returns an object with reactive data (state, isLoading, error) and a load method.
+
+- Updated `vue` to version `3.5.17` and `three` to version `0.178.0` in `package.json` for enhanced compatibility and features.
+- Upgraded `@vitejs/plugin-vue` to version `6.0.0` and `vite` to version `7.0.2` to leverage the latest improvements in the build process.
+- Enhanced the `useFBX` composable to provide a reactive state for loading FBX models, allowing for better handling of model properties and loading states.
+- Improved the `FBXModel` component to support shadow properties and added a new demo for better visualization of FBX model loading.
+- Updated documentation to reflect changes in the FBX model loading process and added examples for better clarity.
+
+* fix(TheModel.vue): remove unused type import for improved clarity
+
+- Removed the unused import of `Group` from TheModel.vue to enhance code clarity and maintainability. This change aligns with the ongoing effort to streamline type imports and improve type safety across the codebase.
+
+* feat: expose model state in useFBX and useGLTF components
+
+- Added `defineExpose` to both `useFBX` and `useGLTF` components to expose the reactive model state, allowing for better integration and access to the model instance in parent components.
+- This enhancement improves the usability of the components by providing a direct reference to the model state, facilitating more dynamic interactions and updates.
+
+* fix(useFBX): add missing comma in defineExpose for model instance
+
+- Added a missing comma in the `defineExpose` call within the `useFBX` component to ensure proper syntax and prevent potential runtime errors. This minor fix enhances code clarity and maintains consistency in the component's structure.
+
+### Features
+
+* refactor useFBX ([#628](https://github.com/Tresjs/cientos/issues/628)) ([d59ef26](https://github.com/Tresjs/cientos/commit/d59ef26ff9e1924c12188f458324b83f72196f96))
+
 ## [5.0.0-next.4](https://github.com/Tresjs/cientos/compare/5.0.0-next.3...5.0.0-next.4) (2025-06-30)
 
 ### Bug Fixes
