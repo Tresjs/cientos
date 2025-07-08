@@ -2,6 +2,7 @@
 import type { Object3D } from 'three'
 import { shallowRef, watchEffect } from 'vue'
 import { useHelper } from './useHelper'
+import type { TresObject } from '@tresjs/core'
 
 type HelperConstructor = new (...args: any[]) => any
 
@@ -12,8 +13,8 @@ export interface HelperProps {
 
 const props = defineProps<HelperProps>()
 
-const objRef = shallowRef<Object3D>()
-const parentRef = shallowRef<Object3D>()
+const objRef = shallowRef<TresObject>()
+const parentRef = shallowRef<TresObject>()
 
 watchEffect(() => {
   if (objRef.value && objRef.value.parent) {
