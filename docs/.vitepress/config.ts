@@ -1,4 +1,3 @@
-import { resolve } from 'pathe'
 import { defineConfig } from 'vitepress'
 import components from '../component-list/components'
 
