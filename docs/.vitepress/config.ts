@@ -85,7 +85,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        '@tresjs/cientos': resolve(__dirname, '../../src'),
+        '@tresjs/cientos': resolve(__dirname, '../../dist/trescientos.js'),
       },
       dedupe: ['three'],
     },
