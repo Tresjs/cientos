@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MeshReflectionMaterial, SVG as MySVG, OrbitControls, useTexture } from '@tresjs/cientos'
+import { MeshReflectionMaterial, UseSVG as MySVG, OrbitControls, useTexture } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 
 const normalMapSrc = 'https://raw.githubusercontent.com/'
