@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+import { resolve } from 'pathe'
+
 import components from '../component-list/components'
 
 const whitelist = ['TresCanvas', 'TresLeches', 'TresScene']
@@ -82,9 +84,9 @@ export default defineConfig({
       },
     },
     resolve: {
-      /* alias: {
-        '@tresjs/cientos': resolve(__dirname, '../../dist/trescientos.js'),
-      }, */
+      alias: {
+        '@tresjs/cientos': resolve(__dirname, '../../src'),
+      },
       dedupe: ['three'],
     },
   },
