@@ -27,7 +27,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/trescientos.js"
+      "import": "./dist/trescientos.js",
+      "require": "./dist/trescientos.cjs"
     },
     "./core": {
       "types": "./dist/core/index.d.ts"
