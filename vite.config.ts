@@ -23,7 +23,6 @@ export default defineConfig({
   },
   plugins: [
     vue({
-      isProduction: false,
       ...templateCompilerOptions,
     }),
     dts({
@@ -59,13 +58,19 @@ export default defineConfig({
           open: true,
         }), */
       ],
-      external: ['three', 'vue', '@tresjs/core'],
+      external: ['three', 'vue', '@tresjs/core', '@vueuse/core'],
       output: {
         exports: 'named',
+        globals: {
+          '@tresjs/core': 'TresjsCore',
+          'three': 'Three',
+          'vue': 'Vue',
+          '@vueuse/core': 'VueUseCore',
+        },
       },
     },
   },
   optimizeDeps: {
-    exclude: ['three', 'vue', '@tresjs/core'],
+    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core'],
   },
 })
