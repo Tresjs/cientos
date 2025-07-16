@@ -1,10 +1,11 @@
 import type { TresLoader, TresLoaderOptions, TresObject } from '@tresjs/core'
 import { buildGraph, useLoader } from '@tresjs/core'
 
-import { computed, type MaybeRef } from 'vue'
+import { computed, type MaybeRef, watch } from 'vue'
 
 import type { GLTF } from 'three-stdlib'
 import { DRACOLoader, GLTFLoader } from 'three-stdlib'
+import type { Object3D } from 'three'
 
 export interface UseGLTFOptions {
   /**
@@ -17,6 +18,11 @@ export interface UseGLTFOptions {
    * @type {string}
    */
   decoderPath?: string
+  /**
+   * A traverse function applied to the scene upon loading the model.
+   * @type {Function}
+   */
+  traverse?: (child: Object3D) => void
 }
 
 /**
@@ -51,6 +57,13 @@ export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
   }
 
   const result = useLoader(GLTFLoader, path, useLoaderOptions)
+  if (options?.traverse) {
+    watch(result.state, (state) => {
+      // GLTF loader types aren't aligned with Three.js types
+      state.scene.traverse(child => options.traverse?.(child as Object3D))
+    })
+  }
+
   const nodes = computed(() => {
     return result.state.value?.scene ? buildGraph(result.state.value?.scene as unknown as TresObject).nodes : {}
   })

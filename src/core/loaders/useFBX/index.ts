@@ -1,9 +1,18 @@
 import type { TresObject } from '@tresjs/core'
 import { buildGraph, useLoader } from '@tresjs/core'
 
-import { computed, type MaybeRef } from 'vue'
+import { computed, type MaybeRef, watch } from 'vue'
 
 import { FBXLoader } from 'three-stdlib'
+import type { Object3D } from 'three'
+
+export interface UseFBXOptions {
+  /**
+   * A traverse function applied to the scene upon loading the model.
+   * @type {Function}
+   */
+  traverse?: (child: Object3D) => void
+}
 
 /**
  * Vue composable for loading FBX models in TresJS
@@ -20,8 +29,14 @@ import { FBXLoader } from 'three-stdlib'
  * @param {MaybeRef<string>} path - Path to the FBX model file
  * @returns {{ state: Group, isLoading: boolean, execute: () => Promise<void>, nodes: object, materials: object }} Object containing the model state, loading state, reload function, and parsed nodes/materials
  */
-export function useFBX(path: MaybeRef<string>) {
+export function useFBX(path: MaybeRef<string>, options?: UseFBXOptions) {
   const result = useLoader(FBXLoader, path)
+  if (options?.traverse) {
+    watch(result.state, (state) => {
+      // GLTF loader types aren't aligned with Three.js types
+      state.traverse(child => options.traverse?.(child as Object3D))
+    })
+  }
 
   // Extract nodes from the loaded FBX model for easy access
   const nodes = computed(() => {
