@@ -43,6 +43,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'trescientos',
       fileName: 'trescientos',
+      formats: ['es'],
     },
     copyPublicDir: false,
     watch: {
@@ -51,7 +52,7 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         /*  analyze(), */
-        /* visualizer({
+        /*    visualizer({
           gzipSize: true,
           brotliSize: true,
           open: true,
@@ -68,16 +69,10 @@ export default defineConfig({
       ],
       output: {
         exports: 'named',
-        globals: {
-          '@tresjs/core': 'TresjsCore',
-          'three': 'Three',
-          'vue': 'Vue',
-          '@vueuse/core': 'VueUseCore',
-        },
       },
     },
   },
   optimizeDeps: {
-    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core'],
+    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core', 'three-stdlib', 'three-custom-shader-material', 'camera-controls'],
   },
 })
