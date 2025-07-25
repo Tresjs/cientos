@@ -73,11 +73,14 @@ export default defineConfig({
           'three': 'Three',
           'vue': 'Vue',
           '@vueuse/core': 'VueUseCore',
+          'three-stdlib': 'ThreeStdlib',
+          'three-custom-shader-material': 'ThreeCustomShaderMaterial',
+          'camera-controls': 'CameraControls',
         },
       },
     },
   },
   optimizeDeps: {
-    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core'],
+    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core', 'three-stdlib', 'three-custom-shader-material', 'camera-controls'],
   },
 })
