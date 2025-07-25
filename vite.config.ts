@@ -57,7 +57,15 @@ export default defineConfig({
           open: true,
         }), */
       ],
-      external: ['three', 'vue', '@tresjs/core', '@vueuse/core'],
+      external: [
+        'three',
+        'vue',
+        '@tresjs/core',
+        '@vueuse/core',
+        'three-stdlib',
+        'three-custom-shader-material',
+        'camera-controls',
+      ],
       output: {
         exports: 'named',
         globals: {
