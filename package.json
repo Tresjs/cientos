@@ -63,11 +63,11 @@
     "vue": ">=3.5.17"
   },
   "dependencies": {
-    "@vueuse/core": "^12.3.0",
-    "camera-controls": "^2.9.0",
-    "stats-gl": "^2.0.1",
+    "@vueuse/core": "^13.5.0",
+    "camera-controls": "^3.1.0",
+    "stats-gl": "^3.6.0",
     "stats.js": "^0.17.0",
-    "three-custom-shader-material": "^5.4.0",
+    "three-custom-shader-material": "^6.3.7",
     "three-stdlib": "^2.35.2"
   },
   "devDependencies": {
@@ -90,12 +90,12 @@
     "three": "^0.178.0",
     "typescript": "^5.8.3",
     "unocss": "^66.1.2",
-    "vite": "^7.0.2",
+    "vite": "^7.0.6",
     "vite-plugin-banner": "^0.8.1",
     "vite-plugin-dts": "4.5.4",
-    "vite-plugin-glsl": "^1.4.1",
+    "vite-plugin-glsl": "^1.5.1",
     "vite-svg-loader": "^5.1.0",
     "vitepress": "1.6.3",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.4"
   }
 }
