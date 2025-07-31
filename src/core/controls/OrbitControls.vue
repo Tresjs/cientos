@@ -349,6 +349,7 @@ defineExpose({ instance: controlsRef })
   <TresOrbitControls
     v-if="(camera || activeCamera) && (domElement || renderer.domElement)"
     ref="controlsRef"
+    :key="(camera || activeCamera)?.uuid"
     :target="target"
     :auto-rotate="autoRotate"
     :auto-rotate-speed="autoRotateSpeed"
