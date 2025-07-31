@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.0-next.6](https://github.com/Tresjs/cientos/compare/5.0.0-next.5...5.0.0-next.6) (2025-07-31)
+
+### Bug Fixes
+
+* **orbit-controls:** added key to force re-render ([c93f6c1](https://github.com/Tresjs/cientos/commit/c93f6c18750dd1a3499ec85c89e9bd567edc6ae5))
+
 ## [5.0.0-next.5](https://github.com/Tresjs/cientos/compare/5.0.0-next.4...5.0.0-next.5) (2025-07-08)
 
 ### ⚠ BREAKING CHANGES
