@@ -4,14 +4,13 @@ import { buildGraph, useLoader } from '@tresjs/core'
 import { computed, type MaybeRef, watch } from 'vue'
 
 import { FBXLoader } from 'three-stdlib'
-import type { Object3D } from 'three'
 
 export interface UseFBXOptions {
   /**
    * A traverse function applied to the scene upon loading the model.
    * @type {Function}
    */
-  traverse?: (child: Object3D) => void
+  traverse?: (child: TresObject) => void
 }
 
 /**
@@ -34,7 +33,7 @@ export function useFBX(path: MaybeRef<string>, options?: UseFBXOptions) {
   if (options?.traverse) {
     watch(result.state, (state) => {
       // GLTF loader types aren't aligned with Three.js types
-      state.traverse(child => options.traverse?.(child as Object3D))
+      state.traverse(child => options.traverse?.(child as TresObject))
     })
   }
 
