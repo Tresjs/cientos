@@ -58,7 +58,6 @@ export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
   const result = useLoader(GLTFLoader, path, useLoaderOptions)
   if (options?.traverse) {
     watch(result.state, (state) => {
-      // GLTF loader types aren't aligned with Three.js types
       state.scene.traverse(child => options.traverse?.(child as TresObject))
     })
   }

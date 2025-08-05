@@ -32,7 +32,6 @@ export function useFBX(path: MaybeRef<string>, options?: UseFBXOptions) {
   const result = useLoader(FBXLoader, path)
   if (options?.traverse) {
     watch(result.state, (state) => {
-      // GLTF loader types aren't aligned with Three.js types
       state.traverse(child => options.traverse?.(child as TresObject))
     })
   }
