@@ -5,7 +5,6 @@ import { computed, type MaybeRef, watch } from 'vue'
 
 import type { GLTF } from 'three-stdlib'
 import { DRACOLoader, GLTFLoader } from 'three-stdlib'
-import type { Object3D } from 'three'
 
 export interface UseGLTFOptions {
   /**
@@ -22,7 +21,7 @@ export interface UseGLTFOptions {
    * A traverse function applied to the scene upon loading the model.
    * @type {Function}
    */
-  traverse?: (child: Object3D) => void
+  traverse?: (child: TresObject) => void
 }
 
 /**
@@ -60,7 +59,7 @@ export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
   if (options?.traverse) {
     watch(result.state, (state) => {
       // GLTF loader types aren't aligned with Three.js types
-      state.scene.traverse(child => options.traverse?.(child as Object3D))
+      state.scene.traverse(child => options.traverse?.(child as TresObject))
     })
   }
 
