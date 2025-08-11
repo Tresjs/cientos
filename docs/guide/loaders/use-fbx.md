@@ -54,6 +54,12 @@ import TheModel from './TheModel.vue'
 | **isLoading**| `boolean` | Whether the model is currently loading         |
 | **execute**  | `() => Promise<void>` | Function to reload the model |
 
+## Options
+
+| Name            | Type       | Description                                |
+| :-------------- | ---------- | ------------------------------------------ |
+| **traverse**    | `Function` | A traverse function applied to the scene upon loading the model. |
+
 ## Accessing Nodes and Materials
 
 The composable provides computed properties to easily access nodes and materials in your scene:
