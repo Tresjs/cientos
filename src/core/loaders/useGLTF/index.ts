@@ -1,7 +1,7 @@
 import type { TresLoader, TresLoaderOptions, TresObject } from '@tresjs/core'
 import { buildGraph, useLoader } from '@tresjs/core'
 
-import { computed, type MaybeRef, watch } from 'vue'
+import { computed, type ComputedRef, type MaybeRef, type Ref, watch } from 'vue'
 
 import type { GLTF } from 'three-stdlib'
 import { DRACOLoader, GLTFLoader } from 'three-stdlib'
@@ -40,7 +40,13 @@ export interface UseGLTFOptions {
  * @param {UseGLTFOptions} options - Options for loading the model
  * @returns {{ state: GLTF, isLoading: boolean, execute: () => Promise<void> }} Object containing the model state, loading state and reload function
  */
-export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions) {
+export function useGLTF(path: MaybeRef<string>, options?: UseGLTFOptions): {
+  state: Ref<GLTF | null>
+  isLoading: Ref<boolean>
+  execute: (delay?: number, ...args: any[]) => Promise<GLTF>
+  nodes: ComputedRef<Record<string, any>>
+  materials: ComputedRef<Record<string, any>>
+} {
   const useLoaderOptions: TresLoaderOptions<GLTF, true> = {
 
   }

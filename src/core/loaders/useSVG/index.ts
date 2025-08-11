@@ -1,6 +1,6 @@
 import type { TresLoaderOptions } from '@tresjs/core'
 import { useLoader } from '@tresjs/core'
-import { computed, type MaybeRef } from 'vue'
+import { computed, type ComputedRef, type MaybeRef, type Ref } from 'vue'
 import { DoubleSide, ShapeGeometry, Vector2 } from 'three'
 import { SVGLoader } from 'three-stdlib'
 import type { BufferGeometry, MeshBasicMaterialParameters } from 'three'
@@ -63,7 +63,13 @@ export interface SVGLayer {
  * @param {UseSVGOptions} options - Options for processing the SVG
  * @returns Object containing the SVG state, loading state, processed layers and disposal function
  */
-export function useSVG(path: MaybeRef<string>, options: UseSVGOptions = {}) {
+export function useSVG(path: MaybeRef<string>, options: UseSVGOptions = {}): {
+  state: Ref<SVGResult | null>
+  isLoading: Ref<boolean>
+  execute: (delay?: number, ...args: any[]) => Promise<SVGResult>
+  layers: ComputedRef<SVGLayer[]>
+  dispose: () => void
+} {
   const {
     skipStrokes = false,
     skipFills = false,

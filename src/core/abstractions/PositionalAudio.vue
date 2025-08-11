@@ -86,9 +86,10 @@ const disposeHelper = () => {
 }
 
 const updatePositionalAudio = () => {
-  if (!positionalAudioRef.value) { return }
+  if (!positionalAudioRef.value || !buffer.value) { return }
 
-  positionalAudioRef.value.setBuffer(buffer.value as AudioBuffer)
+  const audioBuffer = Array.isArray(buffer.value) ? buffer.value[0] : buffer.value
+  positionalAudioRef.value.setBuffer(audioBuffer)
   positionalAudioRef.value.setRefDistance(distance.value)
   positionalAudioRef.value.setLoop(loop.value)
   positionalAudioRef.value.setDirectionalCone(innerAngle.value, outerAngle.value, outerGain.value)

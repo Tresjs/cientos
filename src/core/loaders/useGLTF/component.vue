@@ -24,7 +24,7 @@ defineExpose({
 
 // Apply shadow settings when the model loads or shadow props change
 watchEffect(() => {
-  if (state.value.scene && (props.castShadow || props.receiveShadow)) {
+  if (state.value?.scene && (props.castShadow || props.receiveShadow)) {
     state.value.scene.traverse((child) => {
       if (child instanceof Mesh) {
         child.castShadow = props.castShadow
@@ -92,8 +92,8 @@ export interface GLTFModelProps {
 
 <template>
   <primitive
-    v-if="!isLoading && state.scene"
-    :object="state.scene"
+    v-if="!isLoading && state?.scene"
+    :object="state?.scene"
     v-bind="$attrs"
   />
 </template>
