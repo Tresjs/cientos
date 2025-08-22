@@ -70,7 +70,7 @@ const onMouseDown = () => {
 
 const onMouseUp = () => {
   invalidate()
-  emit('mouseDown')
+  emit('mouseUp')
 }
 
 const onObjectChange = () => {
