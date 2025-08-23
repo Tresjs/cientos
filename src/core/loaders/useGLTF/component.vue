@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import { type Group, Mesh } from 'three'
+import { watchEffect } from 'vue'
+import { Mesh } from 'three'
 import { useGLTF } from '.'
 
 const props = withDefaults(
@@ -22,19 +22,15 @@ defineExpose({
   instance: state,
 })
 
-let modelObject: Group | null = null
-
-watch(state, (newVal) => {
-  if (newVal?.scene) {
-    modelObject = newVal.scene
-    if ((props.castShadow || props.receiveShadow) && modelObject) {
-      modelObject.traverse((child) => {
-        if (child instanceof Mesh) {
-          child.castShadow = props.castShadow
-          child.receiveShadow = props.receiveShadow
-        }
-      })
-    }
+// Apply shadow settings when the model loads or shadow props change
+watchEffect(() => {
+  if (state.value?.scene && (props.castShadow || props.receiveShadow)) {
+    state.value.scene.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.castShadow = props.castShadow
+        child.receiveShadow = props.receiveShadow
+      }
+    })
   }
 })
 </script>
@@ -96,8 +92,8 @@ export interface GLTFModelProps {
 
 <template>
   <primitive
-    v-if="!isLoading && modelObject"
-    :object="modelObject"
+    v-if="!isLoading && state?.scene"
+    :object="state?.scene"
     v-bind="$attrs"
   />
 </template>

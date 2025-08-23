@@ -65,10 +65,11 @@ const { state, nodes, materials } = useGLTF('/models/AkuAku.gltf', { draco: true
 
 ## Options
 
-| Name            | Type      | Default     | Description                          |
-| :-------------- | --------- | ----------- | ------------------------------------ |
-| **draco**       | `boolean` | `false`     | Whether to enable Draco compression. |
-| **decoderPath** | `string`  | `'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'` | Path to the Draco decoder.     |
+| Name            | Type       | Default     | Description                          |
+| :-------------- | ---------- | ----------- | ------------------------------------ |
+| **draco**       | `boolean`  | `false`     | Whether to enable Draco compression. |
+| **decoderPath** | `string`   | `'https://www.gstatic.com/draco/versioned/decoders/1.5.6/'` | Path to the Draco decoder.     |
+| **traverse**    | `Function` |             | A traverse function applied to the scene upon loading the model. |
 
 ## Accessing Nodes and Materials
 

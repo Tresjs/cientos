@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.0.0-next.7](https://github.com/Tresjs/cientos/compare/5.0.0-next.6...5.0.0-next.7) (2025-08-11)
+
+### Features
+
+* add `traverse` option to model loaders ([#635](https://github.com/Tresjs/cientos/issues/635)) ([421350f](https://github.com/Tresjs/cientos/commit/421350fc7c3fca0806f61f21fe8bc765bf7d4589))
+
+### Bug Fixes
+
+* enhance audio and sprite loading logic ([4319fa9](https://github.com/Tresjs/cientos/commit/4319fa94e2578d5ed37ad381854984deeae9d17e))
+
 ## [5.0.0-next.6](https://github.com/Tresjs/cientos/compare/5.0.0-next.5...5.0.0-next.6) (2025-07-31)
 
 ### Bug Fixes
