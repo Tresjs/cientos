@@ -10,15 +10,16 @@ import {
   ShaderMaterial,
   Vector3,
 } from 'three'
-import { computed, createVNode, isRef, onUnmounted, ref, render, toRefs, useAttrs, watch, watchEffect } from 'vue'
-import type { TresCamera, TresObject, TresObject3D } from '@tresjs/core'
+import { computed, createVNode, isRef, onUnmounted, ref, render, shallowRef, toRefs, useAttrs, watch, watchEffect } from 'vue'
+import type { TresCamera, TresObject3D } from '@tresjs/core'
 import type { Mutable } from '@vueuse/core'
 
 import type { VNode } from 'vue'
 import fragmentShader from './shaders/fragment.glsl'
 import vertexShader from './shaders/vertex.glsl'
+import passthroughVertex from './shaders/passthrough-vertex.glsl'
 import {
-  calculatePosition,
+  defaultCalculatePosition,
   epsilon,
   getCameraCSSMatrix,
   getObjectCSSMatrix,
@@ -33,6 +34,7 @@ export interface HTMLProps {
   material?: any
   as?: string
   transform?: boolean
+  prepend?: boolean
   portal?: Mutable<HTMLElement>
   wrapperClass?: string
   eps?: number
@@ -42,21 +44,27 @@ export interface HTMLProps {
   pointerEvents?: PointerEventsProperties
   sprite?: boolean
   zIndexRange?: Array<number>
+  calculatePosition?: typeof defaultCalculatePosition
 
   // Occlusion based off work by Jerome Etienne and James Baicoianu
   // https://www.youtube.com/watch?v=ScZcUEDGjJI
   // as well as Joe Pea in CodePen: https://codepen.io/trusktr/pen/RjzKJx
-  occlude?: TresObject3D | null | (TresObject3D | null)[] | boolean | 'raycast' | 'blending'
+  occlude?: TresObject3D | null | (TresObject3D | null)[] | boolean | 'blending'
+  castShadow?: boolean // Enable shadow casting for the occlusion plane
+  receiveShadow?: boolean // Enable shadow receiving for the occlusion plane
 }
 
 const props = withDefaults(defineProps<HTMLProps>(), {
-  geometry: new PlaneGeometry(),
   zIndexRange: () => [16777271, 0],
   as: 'div',
   transform: false,
   eps: 0.0001,
   pointerEvents: 'auto',
   sprite: false,
+  prepend: false,
+  castShadow: false,
+  receiveShadow: false,
+  calculatePosition: () => defaultCalculatePosition,
 })
 
 const emits = defineEmits(['onOcclude'])
@@ -78,8 +86,10 @@ type PointerEventsProperties =
 
 const attrs = useAttrs()
 
-const groupRef = ref<TresObject3D>()
-const meshRef = ref<TresObject3D>()
+const groupRef = shallowRef<TresObject3D | null>(null)
+const occlusionMeshRef = shallowRef<TresObject3D | null>(null)
+
+const defaultPlaneGeometry = shallowRef(new PlaneGeometry())
 
 const {
   geometry,
@@ -94,8 +104,12 @@ const {
   center,
   pointerEvents,
   sprite,
+  prepend,
   occlude,
   zIndexRange,
+  castShadow,
+  receiveShadow,
+  calculatePosition,
 } = toRefs(props)
 
 const { renderer, scene, camera, sizes } = useTresContext()
@@ -117,7 +131,7 @@ const styles = computed(() => {
       height: `${sizes.height.value}px`,
       transformStyle: 'preserve-3d',
       pointerEvents: 'none',
-      zIndex: 2,
+      willChange: 'transform',
     }
   }
   else {
@@ -125,12 +139,13 @@ const styles = computed(() => {
       position: 'absolute',
       transform: center.value ? 'translate3d(-50%,-50%,0)' : 'none',
       ...(fullscreen.value && {
-        top: -(sizes.height.value) / 2,
-        left: -(sizes.width.value) / 2,
+        top: `-${(sizes.height.value) / 2}px`,
+        left: `-${(sizes.width.value) / 2}px`,
         width: `${sizes.width.value}px`,
         height: `${sizes.height.value}px`,
       }),
-      zIndex: 2,
+      pointerEvents: fullscreen.value ? 'none' : pointerEvents.value,
+      willChange: 'transform',
       ...Object.assign({}, attrs.style),
     }
   }
@@ -141,8 +156,6 @@ const transformInnerStyles = computed(() => ({
   pointerEvents: pointerEvents.value,
 }))
 
-// Occlussion
-const occlusionMeshRef = ref<TresObject>(null!)
 const isMeshSizeSet = ref(false)
 
 const isRayCastOcclusion = computed(
@@ -152,50 +165,82 @@ const isRayCastOcclusion = computed(
 )
 
 watch(
-  () => occlude,
-  ({ value }) => {
-    if (value === 'blending') {
-      el.value.style.zIndex = `${Math.floor(zIndexRange.value[0] / 2)}`
-      el.value.style.position = 'absolute'
-      el.value.style.pointerEvents = 'none'
+  [occlude, () => renderer.instance],
+  ([occludeVal, rendererVal]) => {
+    if (!rendererVal || occludeVal === false) { return }
+
+    const target = rendererVal.domElement
+
+    if (occludeVal && occludeVal === 'blending') {
+      target.style.zIndex = `${Math.floor(zIndexRange.value[0] / 2)}`
+      target.style.position = 'absolute'
+      // target.style.pointerEvents = 'none'
     }
     else {
-      el.value.style.zIndex = null!
-      el.value.style.position = null!
-      el.value.style.pointerEvents = null!
+      // Avoids z-index conflicts when mixing occlusion blending with regular objects
+      // target.style.zIndex = null!
+      // target.style.position = null!
+      // target.style.pointerEvents = null!
     }
   },
+  { immediate: true },
 )
 
 watch(
-  () => [groupRef.value, renderer.instance, sizes.width.value, sizes.height.value, slots.default?.()],
+  () => [groupRef.value, renderer.instance, sizes.width.value, sizes.height.value, slots.default?.(), camera.activeCamera.value],
   ([group, renderer]): void => {
-    if (group && renderer) {
-      const target = portal?.value || renderer.domElement
+    if (group && renderer && camera.activeCamera.value) {
+      isMeshSizeSet.value = false
+
       scene.value?.updateMatrixWorld()
 
       if (transform.value) {
-        el.value.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;overflow:hidden;'
+        el.value.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;overflow:hidden;transform-style:preserve-3d;'
       }
       else {
-        const vector = calculatePosition(group, camera.activeCamera.value as TresCamera, {
+        const vector = calculatePosition.value(group, camera.activeCamera.value as TresCamera, {
           width: sizes.width.value,
           height: sizes.height.value,
         })
-        el.value.style.cssText
-        = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;`
+
+        el.value.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vector[0]}px,${vector[1]}px,0);transform-origin:0 0;will-change: transform`
+
+        if (!occlude.value) {
+          const halfRange = Math.floor(zIndexRange.value[0] / 2)
+
+          const zRange = occlude?.value
+            ? isRayCastOcclusion.value
+              ? [zIndexRange.value[0], halfRange]
+              : [halfRange - 1, 0]
+            : zIndexRange.value
+
+          el.value.style.zIndex = `${zRange[0]}`
+        }
       }
 
-      if (target && !el.value.parentNode) {
-        target.parentNode?.appendChild(el.value)
+      let mountTarget: HTMLElement | null = null
+
+      if (portal?.value) {
+        mountTarget = portal.value as HTMLElement
+      }
+      else {
+        const canvas = renderer?.domElement
+        mountTarget = canvas?.parentNode as HTMLElement
+      }
+
+      if (mountTarget && !el.value.parentNode) {
+        if (prepend.value) {
+          mountTarget.prepend(el.value)
+        }
+        else { mountTarget.appendChild(el.value) }
       }
 
       if (transform.value) {
         vnode.value = createVNode('div', { id: 'outer', style: styles.value }, [
           createVNode('div', { id: 'inner', style: transformInnerStyles.value }, [
             createVNode('div', {
-              key: meshRef.value?.uuid,
-              id: scene?.value.uuid,
+              key: groupRef.value?.uuid,
+              id: `${scene?.value.uuid}`,
               class: attrs.class,
               style: attrs.style,
             }, slots.default?.()),
@@ -204,9 +249,10 @@ watch(
       }
       else {
         vnode.value = createVNode('div', {
-          key: meshRef.value?.uuid,
-          id: scene?.value.uuid,
+          key: groupRef.value?.uuid,
+          id: `${scene?.value.uuid}`,
           style: styles.value,
+          class: attrs.class,
         }, slots.default?.())
       }
       render(vnode.value, el.value)
@@ -220,13 +266,12 @@ watchEffect(() => {
   }
 })
 
-const visible = ref(true)
+const isVisible = ref(true)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(() => {
-  // TODO: comment this until invalidate is back in the loop callback on v5
-  // invalidate()
+onBeforeRender(({ invalidate }) => {
+  let changed = false
 
   if (groupRef.value && camera.activeCamera.value && renderer.instance) {
     camera.activeCamera.value?.updateMatrixWorld()
@@ -234,7 +279,7 @@ onBeforeRender(() => {
 
     const vector = transform.value
       ? previousPosition.value
-      : calculatePosition(groupRef.value, camera.activeCamera.value as TresCamera, {
+      : calculatePosition.value(groupRef.value, camera.activeCamera.value as TresCamera, {
           width: sizes.width.value || 0,
           height: sizes.height.value || 0,
         })
@@ -246,6 +291,8 @@ onBeforeRender(() => {
       || Math.abs(previousPosition.value[1] - vector[1]) > eps.value
       || Math.abs(previousPosition.value[2] - vector[2]) > eps.value
     ) {
+      changed = true
+
       const isBehindCamera = isObjectBehindCamera(groupRef.value, camera.activeCamera.value as TresCamera)
       let raytraceTarget: null | undefined | boolean | TresObject3D[] = false
 
@@ -258,34 +305,35 @@ onBeforeRender(() => {
         }
       }
 
-      const previouslyVisible = visible.value
+      const previouslyVisible = isVisible.value
 
       if (raytraceTarget) {
-        const isVisible = isObjectVisible(
+        const isCurrentlyVisible = isObjectVisible(
           groupRef.value,
           camera.activeCamera.value as TresCamera,
           raycaster.value,
           raytraceTarget as TresObject3D[],
         )
-        visible.value = isVisible && !isBehindCamera
+        isVisible.value = isCurrentlyVisible && !isBehindCamera
       }
       else {
-        visible.value = !isBehindCamera
+        isVisible.value = !isBehindCamera
       }
 
-      if (previouslyVisible !== visible.value) {
-        emits('onOcclude', !visible.value)
-        el.value.style.display = visible.value ? 'block' : 'none'
+      if (previouslyVisible !== isVisible.value) {
+        emits('onOcclude', !isVisible.value)
+        el.value.style.display = isVisible.value ? 'block' : 'none'
       }
 
       const halfRange = Math.floor(zIndexRange.value[0] / 2)
       const zRange = occlude?.value
-        ? isRayCastOcclusion.value //
+        ? isRayCastOcclusion.value
           ? [zIndexRange.value[0], halfRange]
           : [halfRange - 1, 0]
         : zIndexRange.value
 
       el.value.style.zIndex = `${objectZIndex(groupRef.value, camera.activeCamera.value as TresCamera, zRange)}`
+
       if (transform.value) {
         const [widthHalf, heightHalf] = [
           (sizes.width.value) / 2,
@@ -332,33 +380,31 @@ onBeforeRender(() => {
     previousZoom.value = (camera.activeCamera.value as TresCamera).zoom
   }
 
-  if (!isRayCastOcclusion.value && meshRef.value && !isMeshSizeSet.value) {
+  if (!isRayCastOcclusion.value && occlusionMeshRef.value && !isMeshSizeSet.value) {
     if (transform.value) {
       if (vnode.value?.el && vnode.value?.children) {
-        const el = (vnode.value?.children as unknown as Array<HTMLElement>)[0]
-
-        if (el?.clientWidth && el?.clientHeight) {
+        const childVNode = (vnode.value.children as VNode[])[0]
+        const childEl = childVNode?.el as HTMLElement | null
+        if (childEl) {
           const { isOrthographicCamera } = camera.activeCamera.value as OrthographicCamera
 
-          if (isOrthographicCamera || geometry) {
-            if (attrs.scale) {
-              if (!Array.isArray(attrs.scale)) {
-                meshRef.value.scale.setScalar(1 / (attrs.scale as number))
-              }
-              else if (attrs.scale instanceof Vector3) {
-                meshRef.value.scale.copy(attrs.scale.clone().divideScalar(1))
-              }
-              else {
-                meshRef.value.scale.set(1 / attrs.scale[0], 1 / attrs.scale[1], 1 / attrs.scale[2])
-              }
+          if ((isOrthographicCamera && geometry.value) && attrs.scale) {
+            if (!Array.isArray(attrs.scale)) {
+              occlusionMeshRef.value.scale.setScalar(1 / (attrs.scale as number))
+            }
+            else if (attrs.scale instanceof Vector3) {
+              occlusionMeshRef.value.scale.copy(attrs.scale.clone().divideScalar(1))
+            }
+            else {
+              occlusionMeshRef.value.scale.set(1 / attrs.scale[0], 1 / attrs.scale[1], 1 / attrs.scale[2])
             }
           }
-          else {
+          else if (!isOrthographicCamera && !geometry.value) {
             const ratio = (distanceFactor?.value || 10) / 400
-            const w = el.clientWidth * ratio
-            const h = el.clientHeight * ratio
+            const w = childEl.clientWidth * ratio
+            const h = childEl.clientHeight * ratio
 
-            meshRef.value.scale.set(w, h, 1)
+            occlusionMeshRef.value.scale.set(w, h, 1)
           }
 
           isMeshSizeSet.value = true
@@ -369,11 +415,13 @@ onBeforeRender(() => {
       const ele = el.value.children[0]
 
       if (ele?.clientWidth && ele?.clientHeight) {
+        // TODO: Create factor value (1 / sizes.factor)
+        // Ratio of canvas pixels to Three.js world units (size.width / viewport.width)
         const ratio = 1 / 1
         const w = ele.clientWidth * ratio
         const h = ele.clientHeight * ratio
 
-        meshRef.value.scale.set(w, h, 1)
+        occlusionMeshRef.value.scale.set(w, h, 1)
 
         isMeshSizeSet.value = true
       }
@@ -381,45 +429,39 @@ onBeforeRender(() => {
       occlusionMeshRef.value.lookAt(camera.activeCamera.value?.position)
     }
   }
+
+  if (changed) { invalidate() }
 })
 
-// TODO: Check ShaderMaterial disposal
-const shaders = computed(() => ({
-  vertexShader: transform.value
-    ? undefined
-    : vertexShader,
-  fragmentShader,
-}))
+const effectiveMaterial = computed(() => {
+  if (material.value) { return material.value }
 
-const shaderMaterial = computed(() => {
-  const shader = shaders.value
-  return (
-    material.value
-    || new ShaderMaterial({
-      vertexShader: shader.vertexShader as string,
-      fragmentShader: shader.fragmentShader as string,
-      side: DoubleSide,
-    })
-  )
+  return new ShaderMaterial({
+    vertexShader: transform.value ? (passthroughVertex as string) : (vertexShader as string),
+    fragmentShader: fragmentShader as string,
+    side: DoubleSide,
+  })
 })
 
 onUnmounted(() => {
-  if (shaderMaterial.value) {
-    shaderMaterial.value.dispose()
-  }
+  defaultPlaneGeometry.value?.dispose?.()
+  effectiveMaterial.value?.dispose?.()
+
   el.value.remove()
 })
 
-defineExpose({ instance: groupRef })
+defineExpose({ instance: groupRef, isVisible, occlusionMesh: occlusionMeshRef })
 </script>
 
 <template>
-  <TresGroup ref="groupRef">
+  <TresGroup v-bind="$attrs" ref="groupRef">
     <template v-if="occlude && !isRayCastOcclusion">
       <TresMesh
-        ref="meshRef"
-        :geometry="geometry"
-        :material="shaderMaterial"
+        ref="occlusionMeshRef"
+        :material="effectiveMaterial"
+        :cast-shadow="castShadow"
+        :receive-shadow="receiveShadow"
+        :geometry="geometry || defaultPlaneGeometry"
       />
     </template>
   </TresGroup>
