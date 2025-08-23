@@ -4,7 +4,6 @@ import { TresCanvas, useGraph, useLoader } from '@tresjs/core'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { computed } from 'vue'
-import { MeshBasicMaterial, PlaneGeometry } from 'three'
 
 const gl = {
   clearColor: '#241a1a',
