@@ -23,7 +23,6 @@ export default defineConfig({
   },
   plugins: [
     vue({
-      isProduction: false,
       ...templateCompilerOptions,
     }),
     dts({
@@ -53,19 +52,27 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         /*  analyze(), */
-        /* visualizer({
+        /*    visualizer({
           gzipSize: true,
           brotliSize: true,
           open: true,
         }), */
       ],
-      external: ['three', 'vue', '@tresjs/core'],
+      external: [
+        'three',
+        'vue',
+        '@tresjs/core',
+        '@vueuse/core',
+        'three-stdlib',
+        'three-custom-shader-material',
+        'camera-controls',
+      ],
       output: {
         exports: 'named',
       },
     },
   },
   optimizeDeps: {
-    exclude: ['three', 'vue', '@tresjs/core'],
+    exclude: ['three', 'vue', '@tresjs/core', '@vueuse/core', 'three-stdlib', 'three-custom-shader-material', 'camera-controls'],
   },
 })
