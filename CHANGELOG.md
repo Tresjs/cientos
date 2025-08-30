@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.0-alpha.0](https://github.com/Tresjs/cientos/compare/5.0.0-next.7...5.0.0-alpha.0) (2025-08-30)
+
+### Features
+
+* set peer @tresjs/core to 5.0.0 and alpha, updated dev deps ([#641](https://github.com/Tresjs/cientos/issues/641)) ([48817fd](https://github.com/Tresjs/cientos/commit/48817fdd092fb8b6658245160b6cacfac3cf2f3d))
+
 ## [5.0.0-next.7](https://github.com/Tresjs/cientos/compare/5.0.0-next.6...5.0.0-next.7) (2025-08-11)
 
 ### Features
