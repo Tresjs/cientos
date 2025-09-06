@@ -99,8 +99,14 @@ const yawNoise = new SimplexNoise()
 const pitchNoise = new SimplexNoise()
 const rollNoise = new SimplexNoise()
 
+function constrainIntensity() {
+  if (currentIntensity.value < 0) { currentIntensity.value = 0 }
+  if (currentIntensity.value > 1) { currentIntensity.value = 1 }
+}
+
 watch(intensity, (newVal) => {
   currentIntensity.value = newVal
+  constrainIntensity()
 })
 
 function updateInitialRotation() {
@@ -138,7 +144,7 @@ onBeforeRender(({ elapsed, delta }) => {
 
   if (decay.value && currentIntensity.value > 0) {
     currentIntensity.value -= decayRate.value * delta
-    if (currentIntensity.value < 0) { currentIntensity.value = 0 }
+    constrainIntensity()
   }
 })
 
