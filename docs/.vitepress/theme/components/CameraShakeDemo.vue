@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { Backdrop, CameraShake, ContactShadows, Environment, OrbitControls, useGLTF } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { NoToneMapping, SRGBColorSpace } from 'three'
+import { SRGBColorSpace } from 'three'
 import { computed } from 'vue'
 
 const gl = {
   clearColor: '#333',
   alpha: true,
-  shadows: true,
   outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
 }
 
 const { state } = useGLTF('https://raw.githubusercontent.com/Tresjs/assets/main/models/gltf/ugly-naked-bunny/ugly-naked-bunny-animated.gltf', { draco: true })
@@ -18,7 +16,8 @@ const model = computed(() => state?.value?.scene)
 </script>
 
 <template>
-  <div class="fdsfsdfds"></div>
+  <div class="hud-overlay"></div>
+
   <TresCanvas
     v-bind="gl"
   >
@@ -45,13 +44,13 @@ const model = computed(() => state?.value?.scene)
       :opacity="0.5"
     />
 
-    <TresAmbientLight :intensity="1" />
+    <TresAmbientLight :intensity="0.5" />
 
     <Suspense>
       <Environment preset="dawn" :environment-intensity="0.5" />
     </Suspense>
 
-    <OrbitControls make-default />
+    <OrbitControls make-default :max-polar-angle="Math.PI / 2" />
 
     <CameraShake
       :intensity="1"
@@ -67,7 +66,7 @@ const model = computed(() => state?.value?.scene)
 </template>
 
 <style scoped>
-.fdsfsdfds {
+.hud-overlay {
   position: absolute;
   z-index: 999;
   width: 90%;

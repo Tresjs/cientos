@@ -130,6 +130,13 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(({ elapsed, delta }) => {
   if (!camera.activeCamera.value) { return }
 
+  if (!decay.value && currentIntensity.value < intensity.value) {
+    currentIntensity.value = Math.min(
+      intensity.value,
+      currentIntensity.value + decayRate.value * delta,
+    )
+  }
+
   const shake = currentIntensity.value ** 2
 
   const yaw = maxYaw.value * shake * yawNoise.noise(elapsed * yawFrequency.value, 1)
