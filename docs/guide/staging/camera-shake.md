@@ -1,7 +1,7 @@
 # Camera Shake
 
 `<CameraShake />` is a component that adds **natural**, *noise-driven motion* to the **active camera**.
-It offers **per-axis control**, **adjustable intensity**, and *optional decay* — perfect for *handheld feel*, *footsteps*, *impacts*, or *engine rumble*.
+It offers **per-axis control**, **adjustable intensity**, and *optional decay* — perfect for *handheld feel*, *footsteps*, *impacts*, or *engine rumble* — and is based on the [Drei `CameraShake` component](https://drei.docs.pmnd.rs/staging/camera-shake#camerashake).
 
 <DocsDemo>
   <CameraShakeDemo />
