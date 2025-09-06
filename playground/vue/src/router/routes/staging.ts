@@ -5,6 +5,11 @@ export const stagingRoutes = [
     component: () => import('../../pages/staging/SmokeDemo.vue'),
   },
   {
+    path: '/staging/camera-shake',
+    name: 'CameraShake',
+    component: () => import('../../pages/staging/CameraShakeDemo.vue'),
+  },
+  {
     path: '/staging/precipitation',
     name: 'Precipitation',
     component: () => import('../../pages/staging/PrecipitationDemo.vue'),

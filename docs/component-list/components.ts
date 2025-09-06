@@ -124,6 +124,7 @@ export default [
       { text: 'AccumulativeShadows', link: '/guide/staging/accumulative-shadows' },
       { text: 'ContactShadows', link: '/guide/staging/contact-shadows' },
       { text: 'Precipitation', link: '/guide/staging/precipitation' },
+      { text: 'CameraShake', link: '/guide/staging/camera-shake' },
       { text: 'Sparkles', link: '/guide/staging/sparkles' },
       { text: 'Ocean', link: '/guide/staging/ocean' },
       { text: 'Fit', link: '/guide/staging/fit' },
