@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.0-alpha.1](https://github.com/Tresjs/cientos/compare/5.0.0-alpha.0...5.0.0-alpha.1) (2025-09-06)
+
+### Features
+
+* enhance `useAnimations` composable with manual update option ([#637](https://github.com/Tresjs/cientos/issues/637)) ([b2b60e6](https://github.com/Tresjs/cientos/commit/b2b60e67aaa8d62012cf67f030acdb7c08c56a9a))
+
 ## [5.0.0-alpha.0](https://github.com/Tresjs/cientos/compare/5.0.0-next.7...5.0.0-alpha.0) (2025-08-30)
 
 ### Features
