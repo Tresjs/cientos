@@ -1,5 +1,7 @@
 # Changelog
 
+## [5.0.0-rc.0](https://github.com/Tresjs/cientos/compare/5.0.0-alpha.1...5.0.0-rc.0) (2025-09-20)
+
 ## [5.0.0-alpha.1](https://github.com/Tresjs/cientos/compare/5.0.0-alpha.0...5.0.0-alpha.1) (2025-09-06)
 
 ### Features
