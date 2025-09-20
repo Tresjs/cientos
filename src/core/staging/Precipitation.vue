@@ -168,8 +168,12 @@ const setSpeed = () => {
 setSpeed()
 setPosition()
 
-watchEffect(() => {
+watch((speed), () => {
   setSpeed()
+})
+
+watchEffect(() => {
+  if (speed.value) { return }
   setPosition()
 })
 
