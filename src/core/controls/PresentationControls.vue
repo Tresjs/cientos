@@ -1,195 +1,361 @@
-<script setup lang="ts">
-import { useRenderLoop, useTresContext } from '@tresjs/core'
-import { easing } from 'maath'
-import type { Group } from 'three'
-import { MathUtils } from 'three'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+<script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
+import { useLoop, useTres } from '@tresjs/core'
+import { MathUtils } from 'three'
+import type { Group } from 'three'
+import {
+  computed,
+  onUnmounted,
+  reactive,
+  ref,
+  shallowRef,
+  toRefs,
+  watchEffect,
+} from 'vue'
 
-interface PresentationControlsProps {
-  snap?: boolean | number
+type EulerArray = [number, number, number]
+type RangeTuple = [number, number]
+
+export interface PresentationControlsProps {
+  enabled?: boolean
+  snap?: boolean | number | { mass?: number, tension?: number }
+  /**
+   * Spring configuration while dragging
+   * @default { mass: 2, tension: 500 }
+   */
+  config?: { mass?: number, tension?: number }
   global?: boolean
   cursor?: boolean
   speed?: number
   zoom?: number
-  rotation?: [number, number, number]
-  polar?: [number, number]
-  azimuth?: [number, number]
+  rotation?: EulerArray
+  polar?: RangeTuple
+  azimuth?: RangeTuple
   damping?: number
-  enabled?: boolean
   domElement?: HTMLElement
 }
 
-const props = withDefaults(defineProps<PresentationControlsProps>(), {
-  enabled: true,
-  cursor: true,
-  speed: 1,
-  rotation: () => [0, 0, 0],
-  zoom: 1,
-  polar: () => [0, Math.PI / 2],
-  azimuth: () => [-Infinity, Infinity],
-  damping: 0.25,
-})
+const props = withDefaults(
+  defineProps<PresentationControlsProps>(),
+  {
+    enabled: true,
+    snap: undefined,
+    config: () => ({ mass: 2, tension: 500 }),
+    global: false,
+    cursor: true,
+    speed: 1,
+    rotation: () => [0, 0, 0],
+    zoom: 1,
+    polar: () => [0, Math.PI / 2],
+    azimuth: () => [
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+    ],
+    damping: 0.25,
+  },
+)
 
-const three = useTresContext()
-const renderer = three.renderer.value
-const sizes = three.sizes
-const explDomElement = props.domElement || renderer?.domElement
+const {
+  enabled,
+  snap,
+  global,
+  cursor,
+  speed,
+  rotation,
+  zoom,
+  polar,
+  azimuth,
+  damping,
+  config,
+  domElement,
+} = toRefs(props)
 
-const rPolar = computed<[number, number]>(() => [
-  props.rotation[0] + props.polar[0],
-  props.rotation[0] + props.polar[1],
+const { sizes, renderer, invalidate } = useTres()
+
+const explDomElement = computed<
+  HTMLElement | undefined
+>(() => domElement.value || renderer.domElement)
+
+// Derived ranges and initial rotation (clamped)
+const rPolar = computed<RangeTuple>(() => [
+  rotation.value[0] + polar.value[0],
+  rotation.value[0] + polar.value[1],
+])
+const rAzimuth = computed<RangeTuple>(() => [
+  rotation.value[1] + azimuth.value[0],
+  rotation.value[1] + azimuth.value[1],
+])
+const rInitial = computed<EulerArray>(() => [
+  MathUtils.clamp(
+    rotation.value[0],
+    rPolar.value[0],
+    rPolar.value[1],
+  ),
+  MathUtils.clamp(
+    rotation.value[1],
+    rAzimuth.value[0],
+    rAzimuth.value[1],
+  ),
+  rotation.value[2],
 ])
 
-const rAzimuth = computed<[number, number]>(() => [
-  props.rotation[1] + props.azimuth[0],
-  props.rotation[1] + props.azimuth[1],
-])
-
-const rInitial = computed<[number, number, number]>(() => [
-  MathUtils.clamp(props.rotation[0], ...rPolar.value),
-  MathUtils.clamp(props.rotation[1], ...rAzimuth.value),
-  props.rotation[2],
-])
-
-const groupRef = ref<Group | null>(null)
-let isDragging = false
-const animation = {
+// Animation target state
+const animation = reactive({
   scale: 1,
-  rotation: rInitial.value,
-  damping: props.damping,
-}
-
-watch(() => [props.global, props.cursor, props.enabled], ([global, cursor, enabled]) => {
-  if (global && cursor && enabled && explDomElement) {
-    explDomElement.style.cursor = 'grab'
-    if (renderer?.domElement) {
-      renderer.domElement.style.cursor = ''
-    }
-  }
-}, { immediate: true })
-
-watch(() => rInitial.value, (newValue) => {
-  if (!isDragging) {
-    animation.rotation = newValue
-  }
-}, { immediate: true })
-
-const { onLoop } = useRenderLoop()
-onLoop(({ delta }) => {
-  if (!groupRef.value) { return }
-  const adjustedDelta = delta * 2.5
-  easing.damp3(groupRef.value.scale, animation.scale, animation.damping, adjustedDelta)
-  easing.dampE(groupRef.value.rotation, animation.rotation, animation.damping, adjustedDelta)
+  rotation: rInitial.value.slice() as EulerArray,
+  damping: damping.value,
 })
 
-let lastPosition = { x: 0, y: 0 }
-let memo: [number, number] = [0, 0]
+// Spring velocities for scale and rotation components
+const velocity = reactive({
+  scale: 0,
+  rotation: [0, 0, 0] as EulerArray,
+})
 
-const handlePointerDown = (event: PointerEvent) => {
-  if (!props.enabled) { return }
-  isDragging = true
-  lastPosition = { x: event.clientX, y: event.clientY }
-  memo = [animation.rotation[0], animation.rotation[1]]
-  if (props.cursor && explDomElement) {
-    explDomElement.style.cursor = 'grabbing'
+// 3D group ref
+const groupRef = shallowRef<Group | null>(null)
+
+// Drag handling (declare before render loop to satisfy linter ordering)
+const isDragging = ref(false)
+let startX = 0
+let startY = 0
+let startRotX = rInitial.value[1] // azimuth (around y)
+let startRotY = rInitial.value[0] // polar (around x)
+
+// Initialize once and integrate spring motion per-frame
+const initialized = ref(false)
+const { onBeforeRender } = useLoop()
+onBeforeRender(({ delta }) => {
+  const group = groupRef.value
+  if (!group) { return }
+
+  if (!initialized.value) {
+    group.rotation.set(rInitial.value[0], rInitial.value[1], rInitial.value[2])
+    group.scale.set(1, 1, 1)
+    initialized.value = true
+  }
+
+  const dt = Math.max(0.000001, Math.min(0.05, delta))
+
+  // Choose config depending on dragging/snap state
+  const isSnapping = (!isDragging.value) && !!snap.value
+  const baseConfig = isSnapping
+    ? (typeof snap.value === 'object' ? (snap.value as any) : {})
+    : (config.value || {})
+  const mass = Math.max(0.0001, Number(baseConfig.mass ?? (isSnapping ? 4 : 2)))
+  const tension = Math.max(0, Number(baseConfig.tension ?? (isSnapping ? 1500 : 500)))
+  const dampingRatio = (typeof snap.value === 'number' && isSnapping)
+    ? Math.max(0, Number(snap.value))
+    : Math.max(0, Number(animation.damping))
+  const c = 2 * Math.sqrt(tension * mass) * dampingRatio
+
+  function stepScalar(current: number, target: number, v: number): [number, number] {
+    const a = (-(tension / mass) * (current - target)) - ((c / mass) * v)
+    const nv = v + a * dt
+    const nx = current + nv * dt
+    return [nx, nv]
+  }
+
+  // Scale spring (uniform)
+  const [nx, nv] = stepScalar(group.scale.x, animation.scale, velocity.scale)
+  const clampedScale = Math.max(0.001, nx)
+  group.scale.set(clampedScale, clampedScale, clampedScale)
+  velocity.scale = nv
+
+  // Rotation springs per axis
+  const rTargets = animation.rotation
+  const rCurr = [group.rotation.x, group.rotation.y, group.rotation.z] as EulerArray
+  const newRot: EulerArray = [0, 0, 0]
+  const newVel: EulerArray = [0, 0, 0]
+  for (let i = 0; i < 3; i++) {
+    const [nr, nrv] = stepScalar(rCurr[i], rTargets[i], velocity.rotation[i])
+    newRot[i] = nr
+    newVel[i] = nrv
+  }
+  group.rotation.set(newRot[0], newRot[1], newRot[2])
+  velocity.rotation = newVel as EulerArray
+})
+
+// Cursor management for global mode
+watchEffect((onCleanup) => {
+  const el = explDomElement.value
+  if (!el) {
+    return
+  }
+  if (
+    global.value
+    && cursor.value
+    && enabled.value
+  ) {
+    const original = el.style.cursor
+    el.style.cursor = 'grab'
+    onCleanup(() => {
+      el.style.cursor = original || 'default'
+    })
+  }
+})
+
+function beginDrag(
+  clientX: number,
+  clientY: number,
+) {
+  if (!enabled.value) {
+    return
+  }
+  isDragging.value = true
+  startX = clientX
+  startY = clientY
+  const current = (animation.rotation
+    || rInitial.value) as EulerArray
+  startRotY = current[0]
+  startRotX = current[1]
+  if (cursor.value && explDomElement.value) {
+    explDomElement.value.style.cursor
+      = 'grabbing'
   }
 }
 
-const handlePointerMove = (event: PointerEvent) => {
-  if (!isDragging || !props.enabled || !sizes) { return }
-
-  if (props.cursor) {
-    explDomElement.style.cursor = isDragging ? 'grabbing' : 'grab'
+function updateDrag(
+  clientX: number,
+  clientY: number,
+) {
+  if (!enabled.value || !isDragging.value) {
+    return
   }
-
-  const deltaX = event.clientX - lastPosition.x
-  const deltaY = event.clientY - lastPosition.y
-
-  const width = typeof sizes.width.value === 'number' ? sizes.width.value : Number(sizes.width.value)
-  const height = typeof sizes.height.value === 'number' ? sizes.height.value : Number(sizes.height.value)
-
-  const movementMultiplier = 2.5
-  const x = MathUtils.clamp(
-    memo[1] + (deltaX / width) * Math.PI * props.speed * movementMultiplier,
+  const dx = clientX - startX
+  const dy = clientY - startY
+  const width = Math.max(1, sizes.width.value)
+  const height = Math.max(1, sizes.height.value)
+  let nextX
+    = startRotX
+      + (dx / width) * Math.PI * speed.value
+  let nextY
+    = startRotY
+      + (dy / height) * Math.PI * speed.value
+  nextX = MathUtils.clamp(
+    nextX,
     rAzimuth.value[0],
     rAzimuth.value[1],
   )
-  const y = MathUtils.clamp(
-    memo[0] + (deltaY / height) * Math.PI * props.speed * movementMultiplier,
+  nextY = MathUtils.clamp(
+    nextY,
     rPolar.value[0],
     rPolar.value[1],
   )
 
-  animation.scale = isDragging && y > rPolar.value[1] / 2 ? props.zoom : 1
-  animation.rotation = [y, x, 0]
-  animation.damping = props.damping * 0.1
-
-  memo = [y, x]
-  lastPosition = { x: event.clientX, y: event.clientY }
+  animation.scale
+    = nextY > rPolar.value[1] / 2 ? zoom.value : 1
+  animation.rotation = [nextY, nextX, 0]
+  animation.damping = damping.value
+  invalidate()
 }
 
-const handlePointerUp = () => {
-  isDragging = false
-  if (props.cursor && explDomElement) {
-    explDomElement.style.cursor = 'grab'
+function endDrag() {
+  if (!enabled.value) {
+    return
   }
-
-  animation.damping = props.damping * 0.01
-
-  if (props.snap) {
-    animation.scale = 1
-    animation.rotation = rInitial.value
-    animation.damping = typeof props.snap === 'number' ? props.snap : props.damping * 0.01
+  isDragging.value = false
+  animation.scale = 1
+  if (cursor.value && explDomElement.value) {
+    explDomElement.value.style.cursor = 'grab'
   }
-
-  setTimeout(() => {
-    animation.damping = props.damping
-  }, 500)
+  if (snap.value) {
+    animation.rotation
+      = rInitial.value.slice() as EulerArray
+  }
+  animation.damping
+    = typeof snap.value === 'number'
+      ? snap.value
+      : damping.value
+  invalidate()
 }
 
-const handleHover = (event: MouseEvent) => {
-  if (props.cursor && !props.global && props.enabled && explDomElement) {
-    explDomElement.style.cursor = event.type === 'mouseleave' ? 'auto' : 'grab'
+// Local (non-global) pointer handlers – early-return if global mode
+function onPointerEnter() {
+  if (global.value || !enabled.value) {
+    return
+  }
+  if (cursor.value && explDomElement.value) {
+    explDomElement.value.style.cursor = 'grab'
   }
 }
-
-onMounted(() => {
-  if (props.global) {
-    const target = props.domElement || renderer?.domElement || window
-    useEventListener(target, 'pointerdown', handlePointerDown)
-    useEventListener(window, 'pointermove', handlePointerMove)
-    useEventListener(window, 'pointerup', handlePointerUp)
-    useEventListener(target, 'mouseenter', handleHover)
-    useEventListener(target, 'mouseleave', handleHover)
+function onPointerLeave() {
+  if (global.value || !enabled.value) {
+    return
   }
+  if (
+    cursor.value
+    && explDomElement.value
+    && !isDragging.value
+  ) {
+    explDomElement.value.style.cursor = 'auto'
+  }
+}
+function onPointerDown(e: PointerEvent) {
+  if (global.value) {
+    return
+  }
+  beginDrag(e.clientX, e.clientY)
+}
+function onPointerMove(e: PointerEvent) {
+  if (global.value) {
+    return
+  }
+  updateDrag(e.clientX, e.clientY)
+}
+function onPointerUp() {
+  if (global.value) {
+    return
+  }
+  endDrag()
+}
+
+// Global listeners when global=true
+watchEffect((onCleanup) => {
+  if (!global.value || !explDomElement.value) {
+    return
+  }
+  const el = explDomElement.value
+  const down = (e: PointerEvent) =>
+    beginDrag(e.clientX, e.clientY)
+  const move = (e: PointerEvent) =>
+    updateDrag(e.clientX, e.clientY)
+  const up = () => endDrag()
+  const leave = () => {
+    if (!isDragging.value) {
+      if (cursor.value) {
+        el.style.cursor = 'grab'
+      }
+    }
+  }
+  useEventListener(el, 'pointerdown', down)
+  useEventListener(el, 'pointermove', move)
+  useEventListener(el, 'pointerup', up)
+  useEventListener(el, 'pointerleave', leave)
+  onCleanup(() => {
+    // listeners auto-removed by useEventListener's scope disposal
+  })
 })
 
 onUnmounted(() => {
-  if (explDomElement) {
-    explDomElement.style.cursor = 'default'
-  }
-  if (renderer?.domElement) {
-    renderer.domElement.style.cursor = 'default'
+  // Reset cursor if we changed it
+  const el = explDomElement.value
+  if (el && cursor.value) {
+    el.style.cursor = 'default'
   }
 })
+
+defineExpose({ instance: groupRef })
 </script>
 
 <template>
   <TresGroup
-    v-if="!global"
     ref="groupRef"
-    @pointerdown="handlePointerDown"
-    @pointermove="handlePointerMove"
-    @pointerup="handlePointerUp"
-    @mouseenter="handleHover"
-    @mouseleave="handleHover"
-  >
-    <slot></slot>
-  </TresGroup>
-  <TresGroup
-    v-else
-    ref="groupRef"
+    @pointerenter="onPointerEnter"
+    @pointerleave="onPointerLeave"
+    @pointerdown="onPointerDown"
+    @pointermove="onPointerMove"
+    @pointerup="onPointerUp"
   >
     <slot></slot>
   </TresGroup>
