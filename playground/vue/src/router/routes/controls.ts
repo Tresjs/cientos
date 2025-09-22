@@ -39,4 +39,9 @@ export const controlsRoutes = [
     name: 'PresentationControls',
     component: () => import('../../pages/controls/PresentationControlsDemo.vue'),
   },
+  {
+    path: '/controls/helper',
+    name: 'Helper',
+    component: () => import('../../pages/controls/HelperDemo.vue'),
+  },
 ]

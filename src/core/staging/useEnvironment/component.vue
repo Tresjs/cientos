@@ -18,6 +18,8 @@ const props = withDefaults(defineProps<EnvironmentOptions>(), {
   near: 1,
   far: 1000,
   frames: Number.POSITIVE_INFINITY,
+  backgroundIntensity: 1,
+  environmentIntensity: 1,
 })
 
 const texture: Ref<Texture | CubeTexture | null> = ref(null)
@@ -35,16 +37,17 @@ const useEnvironmentTexture = await useEnvironment(props, fbo)
 
 const { onBeforeRender } = useLoop()
 let count = 1
+
 onBeforeRender(() => {
   if (cubeCamera && environmentScene.value && fbo.value) {
     if (props.frames === Number.POSITIVE_INFINITY || count < props.frames) {
       // Update cube camera
-      const autoClear = renderer.value.autoClear
-      renderer.value.autoClear = true
+      const autoClear = renderer.instance.autoClear
+      renderer.instance.autoClear = true
       // Use raw scene to avoid proxy issues
       const rawScene = toRaw(environmentScene.value).virtualScene
-      cubeCamera.update(renderer.value, rawScene)
-      renderer.value.autoClear = autoClear
+      cubeCamera.update(renderer.instance, rawScene)
+      renderer.instance.autoClear = autoClear
       count++
     }
   }
