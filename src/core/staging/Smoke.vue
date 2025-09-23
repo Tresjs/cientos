@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useLoop, useTexture, useTresContext } from '@tresjs/core'
+import { useLoop, useTresContext } from '@tresjs/core'
 import { computed, shallowRef, toRefs } from 'vue'
 import type { TresColor } from '@tresjs/core'
-import type { Object3D, Texture } from 'three'
+import type { Object3D } from 'three'
+import { useTexture } from '../loaders/useTexture'
 
 export interface SmokeProps {
   /**
@@ -93,21 +94,21 @@ const smoke = computed(() =>
   })),
 )
 
-const { map } = (await useTexture({ map: texture.value })) as { map: Texture }
+const { state: map } = useTexture(texture.value)
 
 const { renderer, camera } = useTresContext()
-
-const colorSpace = computed(() => renderer.value?.outputColorSpace)
+const colorSpace = computed(() => renderer.instance?.outputColorSpace)
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ invalidate }) => {
-  if (smokeRef.value && camera.value && groupRef.value) {
+onBeforeRender(() => {
+  if (smokeRef.value && camera.activeCamera.value && groupRef.value) {
     groupRef.value?.children.forEach((child: Object3D) => {
       child.rotation.z += Math.max(0.002, 0.005 * Math.random()) * speed.value
     })
-    smokeRef.value.lookAt(camera.value?.position)
-    invalidate()
+    smokeRef.value.lookAt(camera.activeCamera.value?.position)
+    // TODO: comment this until invalidate is back in the loop callback on v5
+    // invalidate()
   }
 })
 </script>
