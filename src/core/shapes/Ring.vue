@@ -40,10 +40,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="ringRef"
-    v-bind="$attrs"
-  >
+  <TresMesh ref="ringRef">
     <TresRingGeometry :args="args" />
     <slot>
       <TresMeshBasicMaterial :color="color" />
