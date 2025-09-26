@@ -3,6 +3,18 @@ import { useTres } from '@tresjs/core'
 import { Reflector } from 'three-stdlib'
 import { shallowRef, toRefs, watch } from 'vue'
 import type { TresColor } from '@tresjs/core'
+import type { ShaderMaterial } from 'three'
+
+const props = withDefaults(defineProps<ReflectorProps>(), {
+  color: '#333',
+  textureWidth: 512,
+  textureHeight: 512,
+  clipBias: 0,
+  multisample: 4,
+  // @ts-expect-error: `ReflectorShader` is not present in imported type but is present here:
+  // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js#L32
+  shader: Reflector.ReflectorShader,
+})
 
 export interface ReflectorProps {
   /**
@@ -61,20 +73,16 @@ export interface ReflectorProps {
   shader?: object
 }
 
-const props = withDefaults(defineProps<ReflectorProps>(), {
-  color: '#333',
-  textureWidth: 512,
-  textureHeight: 512,
-  clipBias: 0,
-  multisample: 4,
-  // @ts-expect-error: `ReflectorShader` is not present in imported type but is present here:
-  // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js#L32
-  shader: Reflector.ReflectorShader,
-})
-
 const { extend, invalidate } = useTres()
 
 const reflectorRef = shallowRef<Reflector>()
+
+watch(reflectorRef, (value) => {
+  if (value) {
+    const material = value.material as ShaderMaterial
+    material.uniforms.color.value.set(props.color as string)
+  }
+})
 
 extend({ Reflector })
 
@@ -83,6 +91,11 @@ const { color, textureWidth, textureHeight, clipBias, multisample, shader }
 
 watch(props, () => {
   invalidate()
+})
+
+watch(color, (_color) => {
+  const material = reflectorRef.value?.material as ShaderMaterial
+  material?.uniforms.color.value.set(_color as string)
 })
 
 defineExpose({
@@ -94,7 +107,6 @@ defineExpose({
   <TresReflector
     ref="reflectorRef"
     :args="[undefined, { textureWidth, textureHeight, clipBias, multisample, shader }]"
-    :material-uniforms-color-value="color"
   >
     <slot>
       <TresPlaneGeometry :args="[5, 5]" />
