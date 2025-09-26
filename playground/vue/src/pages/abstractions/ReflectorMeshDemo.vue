@@ -7,7 +7,8 @@ import {
 } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import { BasicShadowMap, NoToneMapping, SRGBColorSpace } from 'three'
-import { shallowRef, watch } from 'vue'
+import { TresLeches, useControls } from '@tresjs/leches'
+import '@tresjs/leches/styles'
 
 const gl = {
   clearColor: '#111',
@@ -18,22 +19,19 @@ const gl = {
   toneMapping: NoToneMapping,
 }
 
-const reflectorRef = shallowRef()
-
-watch(reflectorRef, (value) => {
-  // eslint-disable-next-line no-console
-  console.log(value)
-})
-
 const options = {
-  color: '#f7f7f7',
   clipBias: 0,
   textureWidth: 1024,
   textureHeight: 1024,
 }
+
+const { color } = useControls({
+  color: { value: '#f7f7f7', type: 'color', label: 'Color' },
+})
 </script>
 
 <template>
+  <TresLeches />
   <TresCanvas
     v-bind="gl"
   >
@@ -51,10 +49,9 @@ const options = {
       />
     </TresMesh>
     <Reflector
-      ref="reflectorRef"
       :rotation="[-Math.PI * 0.5, 0, 0]"
       :position="[0, -2, 0]"
-      :color="options.color"
+      :color="color"
       :clip-bias="options.clipBias"
       :texture-width="options.textureWidth"
       :texture-height="options.textureHeight"
