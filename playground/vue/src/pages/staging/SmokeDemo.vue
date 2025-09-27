@@ -5,7 +5,7 @@ import { NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
 import '@tresjs/leches/styles'
 
-const { segments, opacity, speed, depth, color, depthTest } = useControls({
+const { segments, opacity, speed, depth, color, depthTest, spreadY, spreadX, scale } = useControls({
   segments: {
     label: 'Segments',
     value: 5,
@@ -44,6 +44,27 @@ const { segments, opacity, speed, depth, color, depthTest } = useControls({
     label: 'Depth Test',
     value: false,
   },
+  spreadY: {
+    label: 'Spread Y',
+    value: 0.1,
+    min: 0,
+    max: 4,
+    step: 0.1,
+  },
+  spreadX: {
+    label: 'Spread X',
+    value: 0.5,
+    min: 0,
+    max: 4,
+    step: 0.1,
+  },
+  scale: {
+    label: 'Scale',
+    value: 1,
+    min: 0.1,
+    max: 4,
+    step: 0.1,
+  },
 })
 
 const gl = {
@@ -66,6 +87,9 @@ const gl = {
         :depth="depth.value"
         :color="color.value"
         :depth-test="depthTest.value"
+        :spreadY="spreadY.value"
+        :spreadX="spreadX.value"
+        :scale="scale.value"
       />
     </Suspense>
     <Box :args="[2, 2]">

@@ -26,24 +26,6 @@ You can use `<Smoke />` component without passing any props, but still if you wa
 </template>
 ```
 
-Notice that you can pass a texture in combination with props,  to personalize your effect
-
-```vue
-<template>
-  <TresCanvas>
-    ...
-    <Suspense>
-      <Smoke
-        :speed="0.8"
-        :segments="12"
-        texture="my_texture_path"
-        :color="#f7f"
-      />
-    </Suspense>
-    ...
-  </TresCanvas>
-</template>
-```
 ## Props
 
 <table><thead><tr class="row-header"><th class="col-name">Name</th><th class="col-type">Type</th><th class="col-description">Description</th><th class="col-default">Default</th><th class="col-required">Required</th></tr></thead><tbody><tr class="row-color"><td class="col-name"><strong><nobr>color</nobr></strong></td><td class="col-type"><code>TresColor</code></td><td class="col-description">The color of the smoke.<br>
@@ -51,6 +33,13 @@ Notice that you can pass a texture in combination with props,  to personalize yo
 </td><td class="col-default"><code>0.5</code></td><td class="col-required">No</td></tr><tr class="row-speed"><td class="col-name"><strong><nobr>speed</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">The rotation speed of the smoke.<br>
 </td><td class="col-default"><code>0.4</code></td><td class="col-required">No</td></tr><tr class="row-depth"><td class="col-name"><strong><nobr>depth</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">The base depth.<br>
 </td><td class="col-default"><code>1.5</code></td><td class="col-required">No</td></tr><tr class="row-segments"><td class="col-name"><strong><nobr>segments</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">The number of smoke to render.<br>
-</td><td class="col-default"><code>20</code></td><td class="col-required">No</td></tr><tr class="row-texture"><td class="col-name"><strong><nobr>texture</nobr></strong></td><td class="col-type"><code>string</code></td><td class="col-description">The texture of the smoke.<br>
+</td><td class="col-default"><code>20</code></td><td class="col-required">No</td></tr>
+<tr class="row-segments"><td class="col-name"><strong><nobr>SpreadX</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">Spread factor on the X axis.<br>
+</td><td class="col-default"><code>20</code></td><td class="col-required">No</td></tr>
+<tr class="row-segments"><td class="col-name"><strong><nobr>SpreadY</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">Spread factor on the Y axis.<br>
+</td><td class="col-default"><code>20</code></td><td class="col-required">No</td></tr>
+<tr class="row-segments"><td class="col-name"><strong><nobr>Scale</nobr></strong></td><td class="col-type"><code>number</code></td><td class="col-description">controls the overall size of the smoke segments<br>
+</td><td class="col-default"><code>1</code></td><td class="col-required">No</td></tr>
+<tr class="row-texture"><td class="col-name"><strong><nobr>texture</nobr></strong></td><td class="col-type"><code>string</code></td><td class="col-description">The texture of the smoke.<br>
 </td><td class="col-default">default component texture</td><td class="col-required">No</td></tr><tr class="row-depth-test"><td class="col-name"><strong><nobr>depthTest</nobr></strong></td><td class="col-type"><code>boolean</code></td><td class="col-description">The depthTest.<br>
 </td><td class="col-default"><code>true</code></td><td class="col-required">No</td></tr></tbody></table>

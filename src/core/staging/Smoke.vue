@@ -19,7 +19,6 @@ export interface SmokeProps {
    * @default 0.5
    * @type {number}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
    */
   opacity?: number
   /**
@@ -27,7 +26,6 @@ export interface SmokeProps {
    * @default 0.4
    * @type {number}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
    */
   speed?: number
   /**
@@ -35,7 +33,6 @@ export interface SmokeProps {
    * @default 10
    * @type {number}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/geometries/PlaneGeometry
    */
   depth?: number
   /**
@@ -43,7 +40,6 @@ export interface SmokeProps {
    * @default 10
    * @type {number}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
    */
   segments?: number
   /**
@@ -51,7 +47,6 @@ export interface SmokeProps {
    * @default 'https://raw.githubusercontent.com/Tresjs/assets/main/textures/clouds/defaultCloud.png'
    * @type {string}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
    */
   texture?: string
   /**
@@ -59,9 +54,29 @@ export interface SmokeProps {
    * @default true
    * @type {boolean}
    * @memberof SmokeProps
-   * @see https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
    */
   depthTest?: boolean
+  /**
+   * Spread on the Y axis.
+   * @default 0.1
+   * @type {number}
+   * @memberof SmokeProps
+   */
+  spreadY?: number
+  /**
+   * Spread on the X axis.
+   * @default 0.5
+   * @type {number}
+   * @memberof SmokeProps
+   */
+  spreadX?: number
+  /**
+   * Scale.
+   * @default 1
+   * @type {number}
+   * @memberof SmokeProps
+   */
+  scale?: number
 }
 
 const props = withDefaults(defineProps<SmokeProps>(), {
@@ -73,9 +88,12 @@ const props = withDefaults(defineProps<SmokeProps>(), {
     'https://raw.githubusercontent.com/Tresjs/assets/main/textures/clouds/defaultCloud.png',
   color: '#f7f7f7',
   depthTest: false,
+  spreadY: 0.1,
+  spreadX: 0.5,
+  scale: 1,
 })
 
-const { depth, segments, texture, color, depthTest, opacity, speed } = toRefs(
+const { depth, segments, texture, color, depthTest, opacity, speed, spreadY, spreadX, scale } = toRefs(
   props,
 )
 
@@ -88,9 +106,9 @@ defineExpose({
 
 const smoke = computed(() =>
   Array.from({ length: segments.value }, (_, index) => ({
-    x: (Math.random() - 0.5) * 0.5,
-    y: (Math.random() - 0.5) * 0.1,
-    scale: Math.sin((index + 1) / segments.value),
+    x: (Math.random() - 0.5) * spreadX.value,
+    y: (Math.random() - 0.5) * spreadY.value,
+    scale: Math.sin((index + 1) / segments.value) * scale.value,
   })),
 )
 
@@ -117,9 +135,10 @@ onBeforeRender(() => {
   <TresGroup ref="smokeRef">
     <TresGroup ref="groupRef" :position="[0, 0, (segments / 2) * depth]">
       <TresMesh
-        v-for="({ x, y }, index) in smoke"
+        v-for="({ x, y, scale: smokeScale }, index) in smoke"
         :key="`${index}`"
         :position="[x, y, -index * depth]"
+        :scale="smokeScale"
       >
         <TresPlaneGeometry />
         <TresMeshStandardMaterial
