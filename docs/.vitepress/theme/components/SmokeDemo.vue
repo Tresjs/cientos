@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Box, OrbitControls, Smoke } from '@tresjs/cientos'
+import { Smoke } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import { NoToneMapping, SRGBColorSpace } from 'three'
 import { TresLeches, useControls } from '@tresjs/leches'
