@@ -66,11 +66,6 @@ const { progress, hasFinishLoading } = await useProgress()
         :blur="blur.value"
         path="https://raw.githubusercontent.com/Tresjs/assets/main/textures/environmentMap"
       />
-      <!-- <Environment
-        :background="background.value"
-        :blur="blur.value"
-        preset="sunset"
-      /> -->
     </Suspense>
     <Sphere>
       <TresMeshStandardMaterial
