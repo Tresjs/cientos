@@ -68,7 +68,7 @@ const model = computed(() => state?.value?.scene)
 <style scoped>
 .hud-overlay {
   position: absolute;
-  z-index: 999;
+  z-index: 2;
   width: 90%;
   height: 100%;
   background-image: url('/camera-shake/fake-hud.svg');
