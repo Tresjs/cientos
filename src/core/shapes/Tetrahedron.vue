@@ -38,11 +38,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="tetrahedronRef"
-    :rotation="[-Math.PI / 2, 0, 0]"
-    v-bind="$attrs"
-  >
+  <TresMesh ref="tetrahedronRef" :rotation="[-Math.PI / 2, 0, 0]">
     <TresTetrahedronGeometry :args="args" />
     <slot>
       <TresMeshBasicMaterial :color="color" />
