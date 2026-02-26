@@ -49,10 +49,7 @@ defineExpose({
 </script>
 
 <template>
-  <TresMesh
-    ref="tubeRef"
-    v-bind="$attrs"
-  >
+  <TresMesh ref="tubeRef">
     <TresTubeGeometry :args="args" />
     <slot>
       <TresMeshBasicMaterial :color="color" />
